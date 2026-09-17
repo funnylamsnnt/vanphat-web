@@ -1346,19 +1346,6 @@ body.cart-open { overflow: hidden; }
 }
 
 
-.logo-img {
-  height: 52px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-  flex-shrink: 0;
-}
-.logo-img-sm { height: 44px; }
-.logo-text small { display: block; }
-@media (max-width: 720px) {
-  .logo-text { display: none; }
-  .logo-img { height: 44px; }
-}
 
 .cart-email-hint {
   margin: 0.35rem 0 0;
@@ -1368,3 +1355,196 @@ body.cart-open { overflow: hidden; }
   text-align: center;
 }
 .cart-btn-email { width: 100%; }
+
+
+/* Compact brand mark in header */
+.logo {
+  gap: 0.55rem;
+  max-width: min(280px, 42vw);
+}
+.logo-img {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  background: transparent;
+  border-radius: 6px;
+}
+.logo-img-sm { height: 32px; width: 32px; }
+.logo-text {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.logo-text small {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+.logo-mark { display: none !important; }
+
+.nav-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 260px;
+  margin: 0 0.5rem;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.15rem 0.15rem 0.85rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.nav-search:focus-within {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(31,78,120,0.12);
+  background: #fff;
+}
+.nav-search input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--text);
+  min-width: 0;
+  padding: 0.4rem 0;
+}
+.nav-search button {
+  border: 0;
+  background: var(--navy);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.nav-search button:hover { background: var(--navy-dark); }
+@media (max-width: 900px) {
+  .nav-search { display: none; }
+}
+
+/* Product card — clearer color hierarchy */
+.product-card {
+  border: 1px solid var(--border);
+  background: #fff;
+  overflow: hidden;
+}
+.product-card:hover {
+  border-color: rgba(31,78,120,0.28);
+  box-shadow: var(--shadow-lg);
+}
+.product-nhom {
+  display: inline-block;
+  background: rgba(201,162,39,0.14);
+  color: var(--gold-dark);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  margin-bottom: 0.45rem;
+}
+.product-name {
+  color: var(--navy-deep);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.35;
+  min-height: 2.6em;
+}
+.product-dvt {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 0.35rem 0 0.5rem;
+}
+.product-price {
+  color: #b42318;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.65rem;
+}
+.product-actions {
+  border-top: 1px dashed var(--border);
+  padding-top: 0.65rem;
+  margin-top: auto;
+  gap: 0.5rem;
+}
+.btn-add-cart {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  color: #fff !important;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(31,78,120,0.25);
+}
+.btn-add-cart:hover {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-deep) 100%);
+  transform: translateY(-1px);
+}
+.qty-control {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.qty-btn {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.cart-alt-channels {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.cart-alt-channels summary {
+  cursor: pointer;
+  list-style: none;
+  text-align: center;
+  padding: 0.35rem;
+}
+.cart-alt-channels summary::-webkit-details-marker { display: none; }
+.cart-alt-channels[open] summary { margin-bottom: 0.5rem; }
+.cart-alt-channels .btn {
+  width: 100%;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.product-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0.45rem;
+}
+.product-ma {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--navy);
+  background: rgba(31,78,120,0.08);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+.price-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.product-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

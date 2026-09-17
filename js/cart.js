@@ -143,18 +143,21 @@
             <textarea name="ghichu" data-cart-note rows="2" placeholder="Địa chỉ giao, thời gian…"></textarea>
           </label>
           <button type="button" class="btn btn-gold cart-btn-email" data-cart-email>
-            Chốt đơn · Gửi email công ty
+            Chốt đơn · Gửi email
           </button>
-          <button type="button" class="btn btn-outline-navy cart-btn-wa" data-cart-wa>
-            Gửi qua Zalo/WhatsApp
-          </button>
-          <a class="btn btn-outline-navy cart-btn-order" data-cart-order href="#" target="_blank" rel="noopener">
-            Mở hệ thống đặt hàng online
-          </a>
-          <p class="cart-email-hint">Đơn sẽ gửi về <strong>congtytnhhvanphat999@gmail.com</strong></p>
+          <p class="cart-email-hint">Đơn gửi về <strong>congtytnhhvanphat999@gmail.com</strong></p>
+          <details class="cart-alt-channels">
+            <summary>Tuỳ chọn khác</summary>
+            <button type="button" class="btn btn-outline-navy cart-btn-wa" data-cart-wa>
+              Zalo / WhatsApp
+            </button>
+            <a class="btn btn-outline-navy cart-btn-order" data-cart-order href="#" target="_blank" rel="noopener">
+              Hệ thống đặt hàng online
+            </a>
+          </details>
         </div>
         <button type="button" class="btn btn-primary cart-btn-checkout" data-cart-show-checkout>
-          Gửi đơn / Đặt hàng
+          Chốt đơn (Email)
         </button>
         <p class="cart-empty-hint" data-cart-empty-hint>Giỏ hàng trống — chọn sản phẩm để đặt hàng.</p>
       </div>`;

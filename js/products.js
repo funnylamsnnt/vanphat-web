@@ -39,8 +39,11 @@
         <div class="product-body">
           <div class="product-nhom">${escapeHtml(p.nhom)}</div>
           <h3 class="product-name">${escapeHtml(p.ten)}</h3>
-          <div class="product-dvt">ĐVT: ${escapeHtml(p.dvt || "—")}</div>
-          <div class="product-price">${price}</div>
+          <div class="product-meta-row">
+            <span class="product-dvt">ĐVT: ${escapeHtml(p.dvt || "—")}</span>
+            <span class="product-ma">${escapeHtml(p.ma || "")}</span>
+          </div>
+          <div class="product-price"><span class="price-label">Giá</span> ${price}</div>
           <div class="product-actions">
             <div class="qty-control">
               <button type="button" class="qty-btn" data-qty-minus aria-label="Giảm số lượng">−</button>
