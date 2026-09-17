@@ -2,6 +2,7 @@
 (function () {
   const STORAGE_KEY = "vanphat_cart";
   const WA_NUMBER = "84335652832";
+  const ORDER_EMAIL = "congtytnhhvanphat999@gmail.com";
 
   function escapeHtml(s) {
     return String(s ?? "")
@@ -140,12 +141,16 @@
             <span>Ghi chú</span>
             <textarea name="ghichu" data-cart-note rows="2" placeholder="Địa chỉ giao, thời gian…"></textarea>
           </label>
-          <button type="button" class="btn btn-gold cart-btn-wa" data-cart-wa>
+          <button type="button" class="btn btn-gold cart-btn-email" data-cart-email>
+            Chốt đơn · Gửi email công ty
+          </button>
+          <button type="button" class="btn btn-outline-navy cart-btn-wa" data-cart-wa>
             Gửi qua Zalo/WhatsApp
           </button>
           <a class="btn btn-outline-navy cart-btn-order" data-cart-order href="#" target="_blank" rel="noopener">
             Mở hệ thống đặt hàng online
           </a>
+          <p class="cart-email-hint">Đơn sẽ gửi về <strong>congtytnhhvanphat999@gmail.com</strong></p>
         </div>
         <button type="button" class="btn btn-primary cart-btn-checkout" data-cart-show-checkout>
           Gửi đơn / Đặt hàng
@@ -190,6 +195,11 @@
       const rm = e.target.closest("[data-cart-remove]");
       if (rm) {
         remove(rm.getAttribute("data-ma"));
+        return;
+      }
+      const emailBtn = e.target.closest("[data-cart-email]");
+      if (emailBtn) {
+        sendEmailOrder(emailBtn);
         return;
       }
       const wa = e.target.closest("[data-cart-wa]");
@@ -264,9 +274,10 @@
     return lines.join("\n");
   }
 
-  function sendWhatsApp() {
+
+  function getCheckoutFields() {
     const drawer = document.getElementById("cart-drawer");
-    if (!drawer || !items.length) return;
+    if (!drawer || !items.length) return null;
     const phoneEl = drawer.querySelector("[data-cart-phone]");
     const nameEl = drawer.querySelector("[data-cart-name]");
     const noteEl = drawer.querySelector("[data-cart-note]");
@@ -277,15 +288,81 @@
         phoneEl.classList.add("is-invalid");
       }
       showToast("Vui lòng nhập số điện thoại");
-      return;
+      return null;
     }
     if (phoneEl) phoneEl.classList.remove("is-invalid");
-    const text = buildOrderText(
-      nameEl ? nameEl.value.trim() : "",
+    return {
+      name: nameEl ? nameEl.value.trim() : "",
       phone,
-      noteEl ? noteEl.value.trim() : ""
-    );
-    const url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text);
+      note: noteEl ? noteEl.value.trim() : "",
+      text: buildOrderText(
+        nameEl ? nameEl.value.trim() : "",
+        phone,
+        noteEl ? noteEl.value.trim() : ""
+      ),
+    };
+  }
+
+  async function sendEmailOrder(btn) {
+    const fields = getCheckoutFields();
+    if (!fields) return;
+    const original = btn ? btn.textContent : "";
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Đang gửi…";
+    }
+    const payload = {
+      _subject: "Đơn hàng web Vạn Phát — " + fields.phone,
+      _template: "table",
+      _captcha: "false",
+      name: fields.name || "(chưa ghi)",
+      phone: fields.phone,
+      note: fields.note || "",
+      order: fields.text,
+      total: formatPrice(getTotal()),
+      source: "vanphatcompany.vn",
+    };
+    let sent = false;
+    try {
+      const res = await fetch(
+        "https://formsubmit.co/ajax/" + ORDER_EMAIL,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      if (res.ok) sent = true;
+    } catch (_) {}
+
+    if (sent) {
+      showToast("Đã gửi đơn về email công ty");
+      // clear cart after successful send
+      items = [];
+      save();
+      render();
+      close();
+    } else {
+      // fallback: mailto
+      const subject = encodeURIComponent("Đơn hàng web Vạn Phát — " + fields.phone);
+      const body = encodeURIComponent(fields.text);
+      window.location.href =
+        "mailto:" + ORDER_EMAIL + "?subject=" + subject + "&body=" + body;
+      showToast("Mở email để gửi đơn cho công ty");
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = original || "Chốt đơn · Gửi email công ty";
+    }
+  }
+
+  function sendWhatsApp() {
+    const fields = getCheckoutFields();
+    if (!fields) return;
+    const url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(fields.text);
     window.open(url, "_blank", "noopener");
   }
 

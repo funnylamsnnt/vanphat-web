@@ -87,7 +87,9 @@ button, input, select { font: inherit; }
   color: var(--navy);
   letter-spacing: -0.02em;
 }
-.logo-mark {
+.logo-mark { /* replaced by img logo; kept for fallback */
+display: none; /* hide old VP mark */
+
   width: 42px;
   height: 42px;
   border-radius: 10px;
@@ -1342,3 +1344,27 @@ body.cart-open { overflow: hidden; }
   transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
+
+
+.logo-img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+.logo-img-sm { height: 44px; }
+.logo-text small { display: block; }
+@media (max-width: 720px) {
+  .logo-text { display: none; }
+  .logo-img { height: 44px; }
+}
+
+.cart-email-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  text-align: center;
+}
+.cart-btn-email { width: 100%; }
