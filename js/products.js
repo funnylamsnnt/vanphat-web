@@ -11,13 +11,27 @@
     return DATA;
   }
 
+  /** data.nhom may be string[] or {STT, TenNhom}[] */
+  function groupName(n) {
+    if (n && typeof n === "object") return String(n.TenNhom || "");
+    return String(n ?? "");
+  }
+
+  function groupList(data) {
+    return (data.nhom || []).map(groupName).filter(Boolean);
+  }
+
   function cardHTML(p) {
-    const img = p.anh
-      ? p.anh
-      : window.VanPhat.placeholderSvg();
+    const img = p.anh ? p.anh : window.VanPhat.placeholderSvg();
     const price = window.VanPhat.formatPrice(p.gia);
     return `
-      <article class="product-card" data-ma="${escapeAttr(p.ma)}" data-nhom="${escapeAttr(p.nhom)}">
+      <article class="product-card"
+        data-ma="${escapeAttr(p.ma)}"
+        data-ten="${escapeAttr(p.ten)}"
+        data-gia="${escapeAttr(p.gia)}"
+        data-dvt="${escapeAttr(p.dvt)}"
+        data-anh="${escapeAttr(p.anh || "")}"
+        data-nhom="${escapeAttr(p.nhom)}">
         <div class="product-img">
           <img src="${escapeAttr(img)}" alt="${escapeAttr(p.ten)}" loading="lazy"
                onerror="VanPhat.onImgError(this)" />
@@ -27,6 +41,14 @@
           <h3 class="product-name">${escapeHtml(p.ten)}</h3>
           <div class="product-dvt">ĐVT: ${escapeHtml(p.dvt || "—")}</div>
           <div class="product-price">${price}</div>
+          <div class="product-actions">
+            <div class="qty-control">
+              <button type="button" class="qty-btn" data-qty-minus aria-label="Giảm số lượng">−</button>
+              <input type="number" class="qty-input" value="1" min="1" max="999" data-qty-input aria-label="Số lượng" />
+              <button type="button" class="qty-btn" data-qty-plus aria-label="Tăng số lượng">+</button>
+            </div>
+            <button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>
+          </div>
         </div>
       </article>`;
   }
@@ -157,11 +179,12 @@
     try {
       const data = await loadData();
       all = data.sanpham || [];
+      const groups = groupList(data);
 
       if (groupSelect) {
         const opts = [`<option value="">Tất cả nhóm</option>`]
           .concat(
-            (data.nhom || []).map(
+            groups.map(
               (n) => `<option value="${escapeAttr(n)}">${escapeHtml(n)}</option>`
             )
           )
@@ -173,7 +196,7 @@
       if (chipRow) {
         const chips = [`<button type="button" class="chip" data-nhom="">Tất cả</button>`]
           .concat(
-            (data.nhom || []).map(
+            groups.map(
               (n) =>
                 `<button type="button" class="chip" data-nhom="${escapeAttr(n)}">${escapeHtml(n)}</button>`
             )
