@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sản phẩm | Vạn Phát</title>
+  <meta name="description" content="Catalog văn phòng phẩm Vạn Phát — giấy, bìa hồ sơ, bút mực, băng keo, dụng cụ VP. Lọc theo nhóm, tìm kiếm nhanh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <span>📍 LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</span>
+      <span>☎ Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark">VP</span>
+        <span class="logo-text">Vạn Phát<small>Văn phòng phẩm · Photocopy</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-links" aria-label="Chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="san-pham.html" class="active">Sản phẩm</a>
+        <a href="photocopy.html">Photocopy</a>
+        <a href="lien-he.html">Liên hệ</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-outline-navy btn-sm" href="tel:0335652832">Gọi hotline</a>
+        <a class="btn btn-gold btn-sm" href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Catalog sản phẩm</h1>
+        <p>Hơn 380 mặt hàng văn phòng phẩm — lọc theo nhóm, tìm theo tên hoặc mã sản phẩm.</p>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="container">
+        <div class="toolbar-inner">
+          <div class="search-wrap">
+            <span class="s-icon" aria-hidden="true">🔍</span>
+            <label class="sr-only" for="search-input">Tìm kiếm</label>
+            <input id="search-input" type="search" placeholder="Tìm theo tên, mã sản phẩm…" autocomplete="off" />
+          </div>
+          <label class="sr-only" for="group-select">Nhóm hàng</label>
+          <select id="group-select" class="filter-select">
+            <option value="">Tất cả nhóm</option>
+          </select>
+          <div id="result-count" class="result-count">Đang tải…</div>
+        </div>
+        <div id="chip-row" class="chip-row" role="group" aria-label="Lọc nhanh theo nhóm"></div>
+      </div>
+    </div>
+
+    <section class="catalog-section">
+      <div class="container">
+        <div id="product-grid" class="product-grid">
+          <div class="loading" style="grid-column:1/-1">Đang tải catalog…</div>
+        </div>
+        <div class="text-center mt-2">
+          <a class="btn btn-primary" href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng online</a>
+          <a class="btn btn-outline-navy" href="tel:0335652832" style="margin-left:0.5rem">Gọi 033 5652 832</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html">
+            <span class="logo-mark">VP</span>
+            <span class="logo-text">Vạn Phát<small>Tư vấn · Đầu tư · Thương mại</small></span>
+          </a>
+          <p>Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát — chuyên cung cấp văn phòng phẩm và dịch vụ photocopy tại Nha Trang.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Liên kết</h4>
+          <a href="index.html">Trang chủ</a>
+          <a href="san-pham.html">Sản phẩm</a>
+          <a href="photocopy.html">Photocopy</a>
+          <a href="lien-he.html">Liên hệ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <li>LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</li>
+          <a href="tel:0335652832">☎ 033 5652 832</a>
+          <br><a href="mailto:congtytnhhvanphat999@gmail.com">✉ congtytnhhvanphat999@gmail.com</a>
+          <a href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng online</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát. All rights reserved.</span>
+        <span>Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/products.js"></script>
+</body>
+</html>

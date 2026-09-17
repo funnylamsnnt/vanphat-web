@@ -1,0 +1,3209 @@
+{
+  "company": {
+    "Ten": "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT",
+    "DiaChi": "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang",
+    "Website": "http://vanphatcompany.vn",
+    "Email": "congtytnhhvanphat999@gmail.com",
+    "Hotline": "033 5652 832",
+    "STK": "4703201014329",
+    "NganHang": "Ngân hàng Nông nghiệp và PTNT (Agribank)"
+  },
+  "nhom": [
+    {
+      "STT": 1,
+      "TenNhom": "Bìa Hồ Sơ"
+    },
+    {
+      "STT": 2,
+      "TenNhom": "Bút & Mực"
+    },
+    {
+      "STT": 3,
+      "TenNhom": "Băng Keo"
+    },
+    {
+      "STT": 4,
+      "TenNhom": "Dụng cụ VP"
+    },
+    {
+      "STT": 5,
+      "TenNhom": "Giấy"
+    },
+    {
+      "STT": 6,
+      "TenNhom": "Điện"
+    }
+  ],
+  "sanpham": [
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP048",
+      "ten": "Bì hồ sơ A4 (Trắng)",
+      "dvt": "Cái",
+      "gia": 2000,
+      "anh": "https://lh3.googleusercontent.com/d/1E1AriU5lVlxcPpv0ULDBz3e_eM9fC4Wz",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP049",
+      "ten": "Bì hồ sơ A4 (Vàng)",
+      "dvt": "Cái",
+      "gia": 2000,
+      "anh": "https://lh3.googleusercontent.com/d/1ZGrMKBbF8RujN7N0RvoI5OuuyAC0yLP0",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP050",
+      "ten": "Bìa 3 dây 10cm",
+      "dvt": "Cái",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/12xENjtM7qXC5aJwLaMudE9euZRwIHE5U",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP051",
+      "ten": "Bìa 3 dây 20cm",
+      "dvt": "Cái",
+      "gia": 22000,
+      "anh": "https://lh3.googleusercontent.com/d/1orgR3oDiEDpkk3WDsiLcqXbRXWkOWYUf",
+      "ton": -12
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP052",
+      "ten": "Bìa còng 5F Plus",
+      "dvt": "Cái",
+      "gia": 53000,
+      "anh": "https://lh3.googleusercontent.com/d/1DFxbI3V-BdfJWBFxzvUbYkRUP2Hsu-y7",
+      "ton": 20
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP053",
+      "ten": "Bìa còng 5F Thiên Long",
+      "dvt": "Cái",
+      "gia": 53000,
+      "anh": "https://lh3.googleusercontent.com/d/1_RhuI5cowUorF-4ZCCK1TKM8ZswOaCb2",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP054",
+      "ten": "Bìa Còng 7 cm - Elephant 200F",
+      "dvt": "Cái",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1UfoXzvIjz9Jg6P3nrVlszeik0f46ccYU",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP055",
+      "ten": "Bìa còng 7F Plus",
+      "dvt": "Cái",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1DFxbI3V-BdfJWBFxzvUbYkRUP2Hsu-y7",
+      "ton": -8
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP056",
+      "ten": "Bìa còng 7F Thiên Long",
+      "dvt": "Cái",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1T9R61tmEmHa90JQ3_bK0fR1GjebfZ-0T",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP057",
+      "ten": "Bìa còng 9F Plus",
+      "dvt": "Cái",
+      "gia": 69000,
+      "anh": "https://lh3.googleusercontent.com/d/14eGkYHgb72IXkHgN7EW3074-O8rthe6o",
+      "ton": 40
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP058",
+      "ten": "Bìa còng 9F Thiên Long",
+      "dvt": "Cái",
+      "gia": 75000,
+      "anh": "https://lh3.googleusercontent.com/d/1MYn6dugvmLXWoeABHpdmBz4wU_R6DkAJ",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP059",
+      "ten": "Bìa còng King Jim A4 13cm",
+      "dvt": "Cái",
+      "gia": 175000,
+      "anh": "https://lh3.googleusercontent.com/d/1erUPYpCvDsrGdehIJ_nrqDeQeAkYteou",
+      "ton": -10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP060",
+      "ten": "Bìa còng King Jim A4 5cm",
+      "dvt": "Cái",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1oDL_qbtrQOrriM7ZMck0ltUWUCZ-lOP4",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP061",
+      "ten": "Bìa còng King Jim A4 7cm",
+      "dvt": "Cái",
+      "gia": 58000,
+      "anh": "https://lh3.googleusercontent.com/d/1WpRydb6xBRcIWqpWPVI1o0ZKRaMR373z",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP062",
+      "ten": "Bìa còng King Jim A4 9cm",
+      "dvt": "Cái",
+      "gia": 75000,
+      "anh": "https://lh3.googleusercontent.com/d/1-hb2i30GhMwo_e-hY7xZj1wO3kVqJUCL",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP063",
+      "ten": "Bìa đục lỗ 380g",
+      "dvt": "Xấp",
+      "gia": 38000,
+      "anh": "https://lh3.googleusercontent.com/d/1xEd3DVk-JlDsTcL7ZLJLiF8ALPRQ6mSe",
+      "ton": 10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP064",
+      "ten": "Bìa Đứng 13 Ngăn Dạng Cặp - Elephant",
+      "dvt": "Cái",
+      "gia": 110000,
+      "anh": "https://lh3.googleusercontent.com/d/1gloBT7P2zAIb7bqxrouO31FXddupss-s",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP065",
+      "ten": "Bìa hộp A4 150mm FO-BF05",
+      "dvt": "Cái",
+      "gia": 88000,
+      "anh": "https://lh3.googleusercontent.com/d/1P96_uWNRN5bsdSbkCpEJeJEDHKJl38lE",
+      "ton": 10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP066",
+      "ten": "Bìa hộp si 10F Thành Phát",
+      "dvt": "Cái",
+      "gia": 60000,
+      "anh": "",
+      "ton": -192
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP067",
+      "ten": "Bìa hộp si 20F Thành Phát",
+      "dvt": "Cái",
+      "gia": 70000,
+      "anh": "",
+      "ton": -10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP068",
+      "ten": "Bìa Hộp Vuông 10 cm - Deli",
+      "dvt": "Cái",
+      "gia": 115000,
+      "anh": "https://lh3.googleusercontent.com/d/1Kix6ynQHlwidh6Lx5reNNJ2apUpnPRKy",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP069",
+      "ten": "Bìa Hộp Vuông 15 cm - Deli",
+      "dvt": "Cái",
+      "gia": 155000,
+      "anh": "https://lh3.googleusercontent.com/d/1pCNzktWRu5hlNAPMbHiPpz9uTGFhd6s_",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP070",
+      "ten": "Bìa hộp vuông 7F si",
+      "dvt": "Cái",
+      "gia": 30000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP071",
+      "ten": "Bìa kiếng A3",
+      "dvt": "Xấp",
+      "gia": 140000,
+      "anh": "https://lh3.googleusercontent.com/d/10ZklkJe-i4OpvmRqk1fgARhwKoaj0Jki",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP072",
+      "ten": "Bìa kiếng A4 (100 bìa-Xấp)",
+      "dvt": "Xấp",
+      "gia": 75000,
+      "anh": "https://lh3.googleusercontent.com/d/13wvykyr82P1vhtMElpguyKlSGfu3wAs7",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP073",
+      "ten": "Bút chì đen Aimee-2B",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1Rg1UH7vpWIwPY4qMx_Moer875Aft5KBy",
+      "ton": 16
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP074",
+      "ten": "Bìa lá A4 88-V20",
+      "dvt": "Cái",
+      "gia": 2000,
+      "anh": "https://lh3.googleusercontent.com/d/1yYTiG8a8MRxIha-AzoF7SsY2AikLk57p",
+      "ton": 1000
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP075",
+      "ten": "Bìa lỗ Thiên Long dày",
+      "dvt": "Xấp",
+      "gia": 85000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP076",
+      "ten": "Bìa nhẫn FO - ORB02",
+      "dvt": "Cái",
+      "gia": 31000,
+      "anh": "https://lh3.googleusercontent.com/d/1UXY45sfMV_qO6QS65L8bLqQ9gRfdo2dG",
+      "ton": 30
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP077",
+      "ten": "Bìa nhựa trong 20 lá A4 TL",
+      "dvt": "Bìa",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/17Mk_7no4pNATeeKrcG0N_nX-lioKBRBc",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP078",
+      "ten": "Bìa nhựa trong 40 lá A4 TL",
+      "dvt": "Bìa",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/12a7oQkU4d0EYBD86Ip9vlzPzYaGQJiTa",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP079",
+      "ten": "Bìa nhựa trong 60 lá A4 TL",
+      "dvt": "Bìa",
+      "gia": 58000,
+      "anh": "https://lh3.googleusercontent.com/d/1VeZ8ebb_AHA4VbZ3sSG_1tuzquPndbkA",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP080",
+      "ten": "Bìa nhựa trong 80 lá A4 TL",
+      "dvt": "Bìa",
+      "gia": 88000,
+      "anh": "https://lh3.googleusercontent.com/d/1kMDa2KShot3kpbVnyY98FwmynY-YIXzC",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP081",
+      "ten": "Bìa nút",
+      "dvt": "Cái",
+      "gia": 4000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP082",
+      "ten": "Bìa nút F4 (My Clear)",
+      "dvt": "Cái",
+      "gia": 3500,
+      "anh": "https://lh3.googleusercontent.com/d/1paK6cPDuPLiQ4wHMPrwKwCpmkI3ZN-Km",
+      "ton": 950
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP083",
+      "ten": "Bìa phân trang nhựa 12 số",
+      "dvt": "Cái",
+      "gia": 16000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP084",
+      "ten": "Bìa thái A3 Màu",
+      "dvt": "Xấp",
+      "gia": 75000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP085",
+      "ten": "Bìa thái A4 Màu",
+      "dvt": "Xấp",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1x5Isl9iD6F3FcaZWEnj1xHYtP-ZFE_Zp",
+      "ton": -10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP086",
+      "ten": "Bìa thái A4 Màu (180 gsm)",
+      "dvt": "Xấp",
+      "gia": 80000,
+      "anh": "https://lh3.googleusercontent.com/d/1x5Isl9iD6F3FcaZWEnj1xHYtP-ZFE_Zp",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP087",
+      "ten": "Bìa Trình ký Da đôi A4",
+      "dvt": "Cái",
+      "gia": 38000,
+      "anh": "https://lh3.googleusercontent.com/d/1mMn7AhSbdXbHeYbKiioPfDVZnNz9sefd",
+      "ton": 10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP088",
+      "ten": "Bìa Trình ký đôi A4 Simili",
+      "dvt": "Cái",
+      "gia": 23000,
+      "anh": "https://lh3.googleusercontent.com/d/1acH_l1QXJcYw00AvnDNBoGvPo_q_94xO",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP089",
+      "ten": "Bìa Trình ký đơn A4 Simili",
+      "dvt": "Cái",
+      "gia": 23000,
+      "anh": "https://lh3.googleusercontent.com/d/1yYXSposN3KvBJBh3FDH0M7KKvkIjYpVH",
+      "ton": 10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP090",
+      "ten": "Bìa Trình Ký Kép Flexoffice FO-CB",
+      "dvt": "Bìa",
+      "gia": 30000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP091",
+      "ten": "Bìa trình ký nhựa A5",
+      "dvt": "Cái",
+      "gia": 20000,
+      "anh": "",
+      "ton": -4
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP092",
+      "ten": "Bìa trình ký nhựa đôi A4",
+      "dvt": "Cái",
+      "gia": 35000,
+      "anh": "",
+      "ton": -48
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP093",
+      "ten": "Bìa trình ký nhựa đơn A4",
+      "dvt": "Cái",
+      "gia": 28000,
+      "anh": "https://lh3.googleusercontent.com/d/1LobjFvbrygt2Mdf-TN9jzyVOpaE1DZOn",
+      "ton": 10
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP272",
+      "ten": "Kìm bấm 1 lỗ/OT-HP1001",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 5
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP094",
+      "ten": "Bút 093 xanh",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP095",
+      "ten": "Bút bi Plastic BP-1RT-F (12 cây/hộp)",
+      "dvt": "Cây",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1MimVXqvgKviTMKaXIcd__eE6bHKd8xDU",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP096",
+      "ten": "Bút bi Thiên Long Gel-072/PLUS",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1_g_MYhts-AikTktbyrZnuL9uHx-UapC0",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP097",
+      "ten": "Bút Bi Thiên Long TL-036",
+      "dvt": "Cây",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1fANntIMWrCaoh77ZgPzVLzdV5QEteNxZ",
+      "ton": 200
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP098",
+      "ten": "Bút bi TL-027 (Đen)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP099",
+      "ten": "Bút bi TL-027 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/13iz1K38V173AhI_1uI7G3Dtv2ucJZJgd",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP100",
+      "ten": "Bút bi TL-027 (Xanh)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1IsJcKlXujhZqJAaiXIdAvC3b1b0B0SUU",
+      "ton": 200
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP101",
+      "ten": "Bút bi TL-079",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
+      "ton": 360
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP102",
+      "ten": "Bút bi TL-095 Pro 0.5mm",
+      "dvt": "Cây",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/18w2z1oUUCaUdrbOIlCSqm4K-GiRpqaJI",
+      "ton": 200
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP103",
+      "ten": "Bút chì bấm",
+      "dvt": "Cây",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP104",
+      "ten": "Bút Chì Gỗ 2B Maped (Hộp 12 cây)",
+      "dvt": "Cây",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1bLkP-CfFaasIEEyo5pUv_r3v334WVK0a",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP105",
+      "ten": "Bút Chì Gỗ 2B Maped (Hộp 12 cây)",
+      "dvt": "Cây",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1bLkP-CfFaasIEEyo5pUv_r3v334WVK0a",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP106",
+      "ten": "Bút chì gỗ Batos 2B -PC-B02",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1mZlTQMUPr2gjhLV9Z5olnCKWFostr5MI",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP107",
+      "ten": "Bút chì gỗ Thiên Long (GP04)",
+      "dvt": "cây",
+      "gia": 5500,
+      "anh": "https://lh3.googleusercontent.com/d/1IUaAQEBnB6QnRo-U32wV5O2jqqIagRZP",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP108",
+      "ten": "Bút chì Gỗ TL (GP01)",
+      "dvt": "Cây",
+      "gia": 5500,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP109",
+      "ten": "Bút dạ quang FO-HL02",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
+      "ton": 50
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP110",
+      "ten": "Bút dạ quang FO-HL03",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1c4YzPCB4-Y0BaCW6zgX8MXFt1yoZASFR",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP111",
+      "ten": "Bút dạ quang HL-012 (hộp 10)",
+      "dvt": "",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1v1f3Id7n2ILA1oj8ZcR-wTo3I7hZmXz_",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP112",
+      "ten": "Bút dạ quang TL HL03",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP113",
+      "ten": "Bút Gel B Thiên Long GEL-B03",
+      "dvt": "Cây",
+      "gia": 16000,
+      "anh": "https://lh3.googleusercontent.com/d/1IEelWAnShKRBia47kHSBz_Wxq91Iz5Rv",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP114",
+      "ten": "Bút Gel Thiên Long GEL-029",
+      "dvt": "Cây",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1VBrzY7U8Ds_NQ7TaOZth8hFr7PigSAvs",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP115",
+      "ten": "Bút Gel Thiên Long GEL-08 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
+      "ton": 60
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP116",
+      "ten": "Bút Gel Thiên Long GEL-08 (Xanh)",
+      "dvt": "Cây",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
+      "ton": 60
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP117",
+      "ten": "Bút Gel TL B-011 (Hộp 20)",
+      "dvt": "Cây",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1jy0EmJeiRIvcY-fAwQ_N1lYSncJrD-fh",
+      "ton": -49
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP118",
+      "ten": "Bút gel Uni Ball UB-205 (ngòi 0.5mm)",
+      "dvt": "Cây",
+      "gia": 0,
+      "anh": "https://lh3.googleusercontent.com/d/1FJOXnhRnbLUWdKcpivMdQ_VUnpO5NXPC",
+      "ton": -5
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP119",
+      "ten": "Bút gel Uni-ball Eye Micro",
+      "dvt": "Cây",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP120",
+      "ten": "Bút gel Uni-ball Vision Elite UB-200 ngòi 0.8mm",
+      "dvt": "Cây",
+      "gia": 69000,
+      "anh": "https://lh3.googleusercontent.com/d/1eNfsAa75tIkJk5N4ss9FeA_g3-bZ8y_D",
+      "ton": 57
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP121",
+      "ten": "Bút lông bảng TL WB-03 (Đen)",
+      "dvt": "Cây",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/10H8aDbzBpEjQHX46LU7SiQlI83za-sdN",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP122",
+      "ten": "Bút lông bảng TL WB-03 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1W2-gKfTVX3UPP0WSvFy3QHcb4MMLBCDF",
+      "ton": 50
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP123",
+      "ten": "Bút lông bảng TL WB-03 (Xanh)",
+      "dvt": "Cây",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1jPvamqc_maSvhdhR4xA8kkh34SV-Tfi7",
+      "ton": 60
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP124",
+      "ten": "Bút lông dầu PM01",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1LymDzBXyYYK0VYdKLeg3QTKUfCHS34i9",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP125",
+      "ten": "Bút lông dầu TL PM04 (Xanh)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
+      "ton": 50
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP126",
+      "ten": "Bút lông dầu TL PM-09 (Đen)",
+      "dvt": "Cây",
+      "gia": 10500,
+      "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
+      "ton": -8
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP127",
+      "ten": "Bút lông dầu TL PM-09 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 10500,
+      "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP128",
+      "ten": "Bút lông dầu TL PM-09 (Xanh)",
+      "dvt": "Cây",
+      "gia": 10500,
+      "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
+      "ton": 150
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP129",
+      "ten": "Bút Unibal UB - 150 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 39000,
+      "anh": "https://lh3.googleusercontent.com/d/1gh3xmGu2Aw8UtM5xl42iwGKZXXcGOIl9",
+      "ton": 57
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP130",
+      "ten": "Bút Unibal UB - 150 (Xanh)",
+      "dvt": "Cây",
+      "gia": 41000,
+      "anh": "https://lh3.googleusercontent.com/d/1gh3xmGu2Aw8UtM5xl42iwGKZXXcGOIl9",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP131",
+      "ten": "Bút xóa FlexOffice FO-CP02",
+      "dvt": "Cây",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1aj_7BkcgFemTlPi-3gpFelCETBe_u_CR",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP132",
+      "ten": "Bút xóa kéo FlexOffice FO-CT02",
+      "dvt": "Cây",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1S2xC5AVPYcFWNkKNf8edDRgQPyF7fNao",
+      "ton": -8
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP133",
+      "ten": "Bút xoá kéo PLUS (12m)",
+      "dvt": "Cây",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1OHfuzYGI9rZc9tQnOeUwpkJywyWxHULv",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP134",
+      "ten": "Bút xoá kéo PLUS 7m (mini)",
+      "dvt": "Cây",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1ds3gmg1g_3P_f3vj5zECaZ0P_n5xz0X1",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP135",
+      "ten": "Bút xoá kéo Plus Whiper A BL 42-V346",
+      "dvt": "Cây",
+      "gia": 17000,
+      "anh": "https://lh3.googleusercontent.com/d/1uyP_y_Xeb13eOvHDy-9wXzxRDLn4sN0K",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP136",
+      "ten": "Bút xóa nước Thiên Long CP-012",
+      "dvt": "Cây",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1d5s-SHvkTsLXomAD2Kkgwx_cNm2ZP9Rc",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP137",
+      "ten": "Bút xóa TL-CP01",
+      "dvt": "Cây",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1JcXFhzb2iW8uiYR3qjBCi6MwYm3BMdc2",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP138",
+      "ten": "Bút xóa TL-CP02 (hộp 10c)",
+      "dvt": "Cây",
+      "gia": 22000,
+      "anh": "https://lh3.googleusercontent.com/d/1uKutKE8xEsFxMGyjZMOgqZw57yfE41WZ",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP288",
+      "ten": "Mực bút lông dầu (xanh)",
+      "dvt": "Hộp",
+      "gia": 16000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP352",
+      "ten": "Mực dấu Shini 28 ml (Đỏ)",
+      "dvt": "Chai",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1wAdOpDBJBAHSRj2RdbBBiVioKgCbSoEE",
+      "ton": 5
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP011",
+      "ten": "Băng keo 2 mặt 0.5F",
+      "dvt": "Cuộn",
+      "gia": 3000,
+      "anh": "https://lh3.googleusercontent.com/d/1MZt6D_SJuCOpR5TRLIv6LddYGxdCj_It",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP012",
+      "ten": "Băng keo 2 mặt 1.2F",
+      "dvt": "Cuộn",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1B86TOJT_Db8URIcd9D2q06MHP3oUt6dT",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP013",
+      "ten": "Băng keo 2 mặt 2.4F",
+      "dvt": "Cuộn",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1OKp0AMaSiD2vpVfyDZhSoiOT9zEAcp9x",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP014",
+      "ten": "Băng keo 2 mặt 4.8F",
+      "dvt": "Cuộn",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1OKp0AMaSiD2vpVfyDZhSoiOT9zEAcp9x",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP015",
+      "ten": "Băng keo giấy 12mm",
+      "dvt": "Cuộn",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1vpwy-MRlgEBSAf_BB8XFm-h_fiESUlKY",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP016",
+      "ten": "Băng keo giấy 2.4F",
+      "dvt": "Cuộn",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1886S94rDmAueC9jJE2l-OSSK-tavGsRm",
+      "ton": 60
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP017",
+      "ten": "Băng keo giấy 4.8F",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1aq5-3gf2YVb7SQzwGlFChkJBMYv2wVNm",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP018",
+      "ten": "Băng Keo màu Simili 3.6F (35mm - 8 cuộn/cây)",
+      "dvt": "Cuộn",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP019",
+      "ten": "Băng Keo màu Simili 4.8F (6 cuộn/cây)",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP020",
+      "ten": "Băng keo ống nước (B-117)",
+      "dvt": "Cuộn",
+      "gia": 0,
+      "anh": "https://lh3.googleusercontent.com/d/1iJr9YesWsAxZvLcX0Yl1KYaHam2V2adM",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP021",
+      "ten": "Băng keo PVC 36mm  (8 cuộn/cây)",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1ePGemScJvBcWYEivvC78iWebfPfhav2w",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP022",
+      "ten": "Băng keo si đỏ 36mm",
+      "dvt": "Cuộn",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1SCukmwHv2aBuBQK7bbwWme3nyVWh5nz8",
+      "ton": -2
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP023",
+      "ten": "Băng keo si đỏ 48mm",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1oMIHHTKOcuuVboxNxbM_Bs9IIfV_PtRB",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP024",
+      "ten": "Băng keo si vàng 36mm",
+      "dvt": "Cuộn",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1ro23cBZYOxYHE2BCLW2FjwdbdSW32s1p",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP025",
+      "ten": "Băng keo si vàng 48mm",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1h6TVxRd36winn9lucjIJT19FP8tmfc4r",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP026",
+      "ten": "Băng keo si xanh dương 36mm",
+      "dvt": "Cuộn",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1Lms6i7iN-3aL274pUcvjuDB85vwX1MnG",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP027",
+      "ten": "Băng keo si xanh dương 48mm",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1wjP3jg81_bEyJeLtQwWxZD-5gqur6MLF",
+      "ton": -60
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP028",
+      "ten": "Băng keo si xanh lá 36mm",
+      "dvt": "Cuộn",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1i4tjRiZCHJG-IMN1CHZIuk-sNAjfPiea",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP029",
+      "ten": "Băng keo si xanh lá 48mm",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/15eLLSGxgUpQlPhyq02E9SDE806Bz_gRU",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP030",
+      "ten": "Băng keo sốp đen 12mm",
+      "dvt": "Cuộn",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1C-Qasr0ZIpGn_g7c1Iyg4NtQr3I8QB5j",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP031",
+      "ten": "Băng keo sốp đen 24mm",
+      "dvt": "Cuộn",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1UGVFgaZl9lzz4nuhU4G5GRNQDOl2HUQn",
+      "ton": -24
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP032",
+      "ten": "Băng keo trong 12mm",
+      "dvt": "Cuộn",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/11hJjmeMrCIBUzalXllgRaVuSMwdDYqSs",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP033",
+      "ten": "Băng keo trong 24mm",
+      "dvt": "Cuộn",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1n-mkEylCjnaXcsMX6Qwmq5Aso5zGSVeM",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP034",
+      "ten": "Băng keo trong 5F",
+      "dvt": "Cuộn",
+      "gia": 14000,
+      "anh": "https://lh3.googleusercontent.com/d/1OfeAwXL_GdjyBTj-pXJjw8OT1lQDYQJV",
+      "ton": 48
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP035",
+      "ten": "Băng keo vải bạc 48mm",
+      "dvt": "Cuộn",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1bO6U9Z6Uodze8OelbPmlU0TZXlFY0INO",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP036",
+      "ten": "Băng keo vải đen 48mm",
+      "dvt": "Cuộn",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1qYImc1YK9FFjZVxZ890NHYC7pVT5L7hk",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP037",
+      "ten": "Băng keo vải đỏ 48mm",
+      "dvt": "Cuộn",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1uMBYffzcez-yr6rLILUssfkn-FCMX4G3",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP038",
+      "ten": "Băng keo vải trắng 48mm",
+      "dvt": "Cuộn",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1iO7-HHXyDQ0yL6qQ5xwQQFe7JlvuV-gn",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP039",
+      "ten": "Băng keo vải vàng 48mm",
+      "dvt": "Cuộn",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1rCKVXFX1gYnyw9YxFOkGWDhXgtpMB3DZ",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP040",
+      "ten": "Băng keo vải xanh 48mm",
+      "dvt": "Cuộn",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1T7peno6cDqcmt8sMP-Gr8mygXq6l5CsI",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP041",
+      "ten": "Băng keo xốp 2.4F",
+      "dvt": "Cuộn",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1IssVE1pZaesxUCWSubo71BCLAzU3LCXq",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP042",
+      "ten": "Băng keo xốp 4.8F",
+      "dvt": "Cuộn",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/17uMy1xQEZ7bW0wWhgfGtHrCmcy4IMOWm",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP233",
+      "ten": "Hồ khô HQ 8g",
+      "dvt": "Lọ",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Băng Keo",
+      "ma": "VP234",
+      "ten": "Hồ nước Thiên Long 30ml",
+      "dvt": "Lọ",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/11-fvtnjyFswcXaitJ4OMTqJ7kCGAE7nq",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP001",
+      "ten": "Bấm 1 lổ Kwtrio 97A0 (8 tờ)",
+      "dvt": "Cái",
+      "gia": 36000,
+      "anh": "https://lh3.googleusercontent.com/d/19sWqJ9N1bu4O68ITsWyZQ49YzV8cS9wT",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP002",
+      "ten": "Bấm 2 lổ Kwtrio 978 (30 tờ)",
+      "dvt": "Cái",
+      "gia": 125000,
+      "anh": "https://lh3.googleusercontent.com/d/14-bACIqdS_OvXPk0cNdOr8BdeZhVTpom",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP003",
+      "ten": "Bấm gổ Kanex TP10",
+      "dvt": "Cái",
+      "gia": 250000,
+      "anh": "https://lh3.googleusercontent.com/d/1T8jRRPcsk4US0Zu0MYdWDEmLoQnRvXnX",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP004",
+      "ten": "Bấm kim Kwtrio 50SA (100 tờ)",
+      "dvt": "Cái",
+      "gia": 365000,
+      "anh": "https://lh3.googleusercontent.com/d/1F5LZpnrkFNzg35X6X7Qc5nR5etuFaqqI",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP005",
+      "ten": "Bấm kim số 10 plus",
+      "dvt": "Cái",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1hi6axlBkC-BfSxaD1UZ55UJYELC4iWbC",
+      "ton": 20
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP006",
+      "ten": "Bấm kim số 3 Kwtrio 5900",
+      "dvt": "Cái",
+      "gia": 185000,
+      "anh": "https://lh3.googleusercontent.com/d/1ZQCvMmJds-x1N9VG7ARQ8LohHEov8YhR",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP007",
+      "ten": "Bấm kim số 3 xoay Kwtrio 536R",
+      "dvt": "Cái",
+      "gia": 75000,
+      "anh": "https://lh3.googleusercontent.com/d/1itXv8cRD_Xcrc7AMdhHHNyYGIG03xJvh",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP008",
+      "ten": "Bấm kim Trio (210 tờ)",
+      "dvt": "Cái",
+      "gia": 490000,
+      "anh": "https://lh3.googleusercontent.com/d/15v4sYAWFp8Dv1uWsRYE6Yp_mkEtzWgBI",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP009",
+      "ten": "Bấm kim trợ lực Double A",
+      "dvt": "Cái",
+      "gia": 175000,
+      "anh": "https://lh3.googleusercontent.com/d/1k1aN463BwBf3B4_chfA-CZJgIYpCG084",
+      "ton": 8
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP010",
+      "ten": "Bấm Kim Trợ Lực Số 10 - ST024",
+      "dvt": "Cái",
+      "gia": 42000,
+      "anh": "https://lh3.googleusercontent.com/d/15hFLSvmHObnFK6C3TC7KgrqEHJkVPeJo",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP043",
+      "ten": "Bảng tên dẻo đứng",
+      "dvt": "Cái",
+      "gia": 3000,
+      "anh": "",
+      "ton": -3
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP044",
+      "ten": "Bảng tên dẻo ngang",
+      "dvt": "Cái",
+      "gia": 3000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP045",
+      "ten": "Băng xóa wh-v trộn màu",
+      "dvt": "Cây",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1OHfuzYGI9rZc9tQnOeUwpkJywyWxHULv",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP046",
+      "ten": "Bao thư 80 (12 x 22) (100 cái/xấp)",
+      "dvt": "Xấp",
+      "gia": 350,
+      "anh": "https://lh3.googleusercontent.com/d/1osVtP6S9lTqCdPtSTHafJuGhP2gmF8hR",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP047",
+      "ten": "Bao thư bưu điện (có keo - 25 cái/xấp)",
+      "dvt": "Cái",
+      "gia": 350,
+      "anh": "https://lh3.googleusercontent.com/d/1IhAREGaX42U3zWA6yoG1rMSg7tkgx2rg",
+      "ton": -16
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP139",
+      "ten": "Cắm bút gỗ 1018",
+      "dvt": "Cái",
+      "gia": 200000,
+      "anh": "https://lh3.googleusercontent.com/d/1fy70UGZIbKf27u6FNahctIi0MHNOUP_4",
+      "ton": 1
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP140",
+      "ten": "Cắm bút gỗ 1019",
+      "dvt": "Cái",
+      "gia": 230000,
+      "anh": "https://lh3.googleusercontent.com/d/1uaaAMrO0-ORZEjo3UBznHgfh-nB5lFZs",
+      "ton": 2
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP141",
+      "ten": "Cắm bút gỗ 1028",
+      "dvt": "Cái",
+      "gia": 225000,
+      "anh": "https://lh3.googleusercontent.com/d/1lBQ4ngjeHAR2Exrmqj8ClXJ1O35Bfl8B",
+      "ton": 1
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP142",
+      "ten": "Cắm bút sắt tròn (đen)",
+      "dvt": "Cái",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/1gASeQY1GuPPuagv1iw6WwnMwQzIJ_REk",
+      "ton": 25
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP143",
+      "ten": "Cắm bút sắt WY71116",
+      "dvt": "Cái",
+      "gia": 65000,
+      "anh": "",
+      "ton": 1
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP144",
+      "ten": "Cắm bút Xukiva 183",
+      "dvt": "Cái",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/12iOzJP2T2KonM677tAIlQMigpi9kLtLZ",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP145",
+      "ten": "Cắm bút Xukiva 192",
+      "dvt": "Cái",
+      "gia": 46000,
+      "anh": "https://lh3.googleusercontent.com/d/1W2ZG0F6SmW9x0Inr9AYh4_uQtwGg8ESt",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP146",
+      "ten": "Cắm bút Xukiva 203",
+      "dvt": "Cái",
+      "gia": 37000,
+      "anh": "https://lh3.googleusercontent.com/d/121me30o2A6rRUxE30fTM28y0WaI8l88u",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP147",
+      "ten": "Cắm bút Xukiva 220",
+      "dvt": "Cái",
+      "gia": 42000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP148",
+      "ten": "Cắm viết B11001D (Đen)",
+      "dvt": "Cái",
+      "gia": 55000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP149",
+      "ten": "Chuốt bút chì Deli (0545)",
+      "dvt": "Cái",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1ZBgzJhy9JmfZRzXyz0E4p0FOB1wBH8yu",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP150",
+      "ten": "Chuốt bút chì Maped",
+      "dvt": "Cái",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/10muTbjwgTC2mY7An7loGAJ9aKzTcJKm8",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP151",
+      "ten": "Chuốt Chì Mini Deli 0574",
+      "dvt": "Cái",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1YtUtMdAe1_WoYu3JHCJmvkQh4kEwz5FO",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP152",
+      "ten": "Chuốt Vivo 506301",
+      "dvt": "Cái",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1s_l71ZDTIKvckyyw8C5j7uIajdPN4YpK",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP153",
+      "ten": "Compa Chì Bấm Maped (T-20)",
+      "dvt": "Bộ",
+      "gia": 47000,
+      "anh": "https://lh3.googleusercontent.com/d/1Kpm0wicBsNFvFf1pVTW53d65qk2xbmKU",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP154",
+      "ten": "Compa Maped Study (T-2)",
+      "dvt": "Bộ",
+      "gia": 50000,
+      "anh": "https://lh3.googleusercontent.com/d/1P_8-K38HTUoS1tkEwCZH1DOs9BS0m6v_",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP155",
+      "ten": "Cục tẩy cao su ZEH-05E",
+      "dvt": "Viên",
+      "gia": 14000,
+      "anh": "https://lh3.googleusercontent.com/d/1ufj89Aw-3TM5A4c-A5EEiIVFiPMPNSH6",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP156",
+      "ten": "Dao rọc giấy lớn",
+      "dvt": "Cái",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1efNaieDpKc22L5mzqJ6t-oCCvS9hwEr1",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP157",
+      "ten": "Dao rọc giấy lớn SDI 0423",
+      "dvt": "Cái",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1f2Cx408kDyBFnVuV-f1oBMk0ZIvLNyTi",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP158",
+      "ten": "Dao rọc giấy nhỏ",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/116gfqOYx3GnyJS_h8HqwdVac4V_tHoBs",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP159",
+      "ten": "Dao rọc giấy nhỏ SDI 0404",
+      "dvt": "Cái",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1TEukkw5ukE2l-FEDRPIcjfHcgMKgkrGd",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP160",
+      "ten": "Dập Lỗ Kim Loại 25 Tờ - Stacom C225",
+      "dvt": "Cái",
+      "gia": 80000,
+      "anh": "https://lh3.googleusercontent.com/d/11KimQS_OlR0z1gQi6MPw2F0V8ttwgft2",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP161",
+      "ten": "Dây đeo thẻ có móc",
+      "dvt": "Dây",
+      "gia": 3500,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP162",
+      "ten": "Dây đeo thẻ kẹp",
+      "dvt": "Dây",
+      "gia": 2000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP163",
+      "ten": "Dây rút dài 15cm",
+      "dvt": "Bịch",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP164",
+      "ten": "Dây rút dài 20cm",
+      "dvt": "Bịch",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP165",
+      "ten": "Dây rút dài 25cm",
+      "dvt": "Bịch",
+      "gia": 22000,
+      "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP166",
+      "ten": "Dây rút dài 30cm",
+      "dvt": "Bịch",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP167",
+      "ten": "Dây thun nhỏ, lớn",
+      "dvt": "Bịch",
+      "gia": 50000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP168",
+      "ten": "Decal A4 bóng vàng",
+      "dvt": "Xấp",
+      "gia": 80000,
+      "anh": "https://lh3.googleusercontent.com/d/1PndMaf9KnkwldYL4NeBzQ2X--zqcu0RC",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP169",
+      "ten": "Decal A4 bóng xanh dương",
+      "dvt": "Xấp",
+      "gia": 80000,
+      "anh": "https://lh3.googleusercontent.com/d/1sVcH3IpmN58uIbfLZQWwHUrJz7nSilJQ",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP170",
+      "ten": "Decal A4 da bò",
+      "dvt": "Xấp",
+      "gia": 88000,
+      "anh": "https://lh3.googleusercontent.com/d/1rDolFC_Ol1SIXlbP2hMsQBhCbs6MV4ul",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP171",
+      "ten": "Ghim giấy C32",
+      "dvt": "Cái",
+      "gia": 4500,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP172",
+      "ten": "Ghim giấy C62 tam giác FO-PAC01",
+      "dvt": "Cái",
+      "gia": 4500,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP222",
+      "ten": "Giấy Than  G.Star (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 70000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP223",
+      "ten": "Giấy Than Horse (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 75000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP224",
+      "ten": "Gỡ Kim Gstar",
+      "dvt": "Cái",
+      "gia": 8000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP225",
+      "ten": "Gỡ kim Kanex SR500",
+      "dvt": "Cái",
+      "gia": 60000,
+      "anh": "https://lh3.googleusercontent.com/d/1p6eV01WsUZpDGSak8OFc9hQOiIvkMsCQ",
+      "ton": -1
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP226",
+      "ten": "Gỡ kim Kwtrio 508B",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1Jt9a0C0EF5NZH9weQ3tyKOOYYQZPanH1",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP227",
+      "ten": "Gôm",
+      "dvt": "Cái",
+      "gia": 5000,
+      "anh": "",
+      "ton": -1
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP228",
+      "ten": "Gôm Đen Thiên Long E-011",
+      "dvt": "Viên",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1r46hhliVNQfEqictWyRwcSd_C5E7FCZ_",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP229",
+      "ten": "Gôm FO-E02",
+      "dvt": "Viên",
+      "gia": 3000,
+      "anh": "https://lh3.googleusercontent.com/d/1IBYjZBampZW0_Sq7bx_DQufeit6xsZQy",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP230",
+      "ten": "Gôm Pentel ZEH 03",
+      "dvt": "Viên",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/11SoWSZ-Ez43TwBBVECVB6wPU7RWxSwnV",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP231",
+      "ten": "Gôm Pentel ZEH-10",
+      "dvt": "Viên",
+      "gia": 22000,
+      "anh": "https://lh3.googleusercontent.com/d/1QfCPYDoMzafdhppjKTmtGgbLOOeT_H4S",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP232",
+      "ten": "Gôm Thiên Long E08",
+      "dvt": "Viên",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1_gv_mCikMG-r-RNyi4XPvp4gDZiTXdhe",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP235",
+      "ten": "Hóa đơn bán lẻ loại dày (2L)",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP236",
+      "ten": "Hóa đơn lẻ 2 liên",
+      "dvt": "Cuốn",
+      "gia": 15000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP237",
+      "ten": "Kệ hồ sơ 2 tầng Mica",
+      "dvt": "Cái",
+      "gia": 120000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP238",
+      "ten": "Kệ hồ sơ 3 tầng Mica",
+      "dvt": "Cái",
+      "gia": 160000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP239",
+      "ten": "Kệ nhựa 2 tầng",
+      "dvt": "Cái",
+      "gia": 65000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP240",
+      "ten": "Kệ nhựa 3 tầng",
+      "dvt": "Cái",
+      "gia": 80000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP241",
+      "ten": "Kệ xéo nhựa 1 ngăn",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP242",
+      "ten": "Kệ xéo nhựa 3 ngăn",
+      "dvt": "Cái",
+      "gia": 32000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP243",
+      "ten": "Kềm gỡ kim Eagle 1039A",
+      "dvt": "Cái",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1ZubfUIbI1Aj0W6eXhcbZ__-3wnvZ6pC6",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP244",
+      "ten": "Kéo cắt chỉ",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1BkXvwIv5QM1MSFQuMEP83ZRnZ397550x",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP245",
+      "ten": "Keo dán 502 (K-14)",
+      "dvt": "Chai",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1bTKlm7UcaIiVaG7VVOS05ZCSzRO6LCJe",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP246",
+      "ten": "Keo dán giấy TP-G08 khay 12",
+      "dvt": "Lọ",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1EBwXCpHppgzDfl09ztlbAEtk9NrwdR9W",
+      "ton": 12
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP247",
+      "ten": "Keo dán lỏng (K-17.5)",
+      "dvt": "Chai",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1ifd1pwBzQdbmEk22LvX6jkaX0uG4NbyD",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP248",
+      "ten": "Keo khô Mic (400 ống/thùng)",
+      "dvt": "Ống",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1z8RkBjxT1YQR8t-CVG1rJUPudHg5Zykz",
+      "ton": 10
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP249",
+      "ten": "Keo nến lớn - 11mm",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1AmokuaqpADvH4Iuo8boqwqakAO1VcCct",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP250",
+      "ten": "Keo nến nhỏ - 7mm",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1wM7rAzgCx7TC1-WiMeaf1fdUOggsO51a",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP251",
+      "ten": "Keo Queen PG01 30 ml",
+      "dvt": "Cây",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP252",
+      "ten": "Kéo văn phòng",
+      "dvt": "Cái",
+      "gia": 30000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP253",
+      "ten": "Kéo văn phòng 215mm/ SC11 (1 cây/vỉ)",
+      "dvt": "Vỉ",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1RcGr5O0MvtcADpZw2v5zPiYPPRnOasYe",
+      "ton": 48
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP254",
+      "ten": "Kẹp bướm 15mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1sbTLhRDdV_l8EzjdiRtk1ydfjoQXigF8",
+      "ton": 36
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP255",
+      "ten": "Kẹp bướm 15mm Slecho",
+      "dvt": "Hộp",
+      "gia": 5500,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP256",
+      "ten": "Kẹp bướm 19mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1sbTLhRDdV_l8EzjdiRtk1ydfjoQXigF8",
+      "ton": 48
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP257",
+      "ten": "Kẹp bướm 25mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1sbTLhRDdV_l8EzjdiRtk1ydfjoQXigF8",
+      "ton": 60
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP258",
+      "ten": "Kẹp bướm 25mm Slecho",
+      "dvt": "Hộp",
+      "gia": 10000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP259",
+      "ten": "Kẹp bướm 32mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 17000,
+      "anh": "https://lh3.googleusercontent.com/d/1TywEtwJmMVdLuqxoDub2K357drHqwxYR",
+      "ton": 48
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP260",
+      "ten": "Kẹp bướm 32mm Slecho",
+      "dvt": "Hộp",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP261",
+      "ten": "Kẹp bướm 41mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 16000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP262",
+      "ten": "Kẹp bướm 41mm Slecho",
+      "dvt": "Hộp",
+      "gia": 22000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP263",
+      "ten": "Kẹp bướm 51mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 38000,
+      "anh": "https://lh3.googleusercontent.com/d/1Fa0HUUNo_TfO5BHWc2JrQcoPiZHEfAxQ",
+      "ton": 45
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP264",
+      "ten": "Kẹp bướm Màu 19mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 28000,
+      "anh": "https://lh3.googleusercontent.com/d/1-IguKuuz_46kXHmO4ptG1RJGKyZIc-Ol",
+      "ton": 10
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP265",
+      "ten": "Kẹp bướm Màu 25mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1-IguKuuz_46kXHmO4ptG1RJGKyZIc-Ol",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP266",
+      "ten": "Kẹp bướm Màu 32mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 32000,
+      "anh": "https://lh3.googleusercontent.com/d/1-IguKuuz_46kXHmO4ptG1RJGKyZIc-Ol",
+      "ton": 10
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP267",
+      "ten": "Kẹp bướm Màu 41mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/1-IguKuuz_46kXHmO4ptG1RJGKyZIc-Ol",
+      "ton": 2
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP268",
+      "ten": "Kẹp bướm Màu 51mm (G-Star)",
+      "dvt": "Hộp",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1-IguKuuz_46kXHmO4ptG1RJGKyZIc-Ol",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP269",
+      "ten": "Kẹp giấy tròn 28mm (Double A)",
+      "dvt": "Hộp",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/16PDg8r6raIZHTHMf0GmPdTWG5IBHKf54",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP270",
+      "ten": "Khăn giấy khô",
+      "dvt": "Hộp",
+      "gia": 23000,
+      "anh": "https://lh3.googleusercontent.com/d/1XCb--5jSJcZScpGQLyl_J0BQYPTLEy50",
+      "ton": 10
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP271",
+      "ten": "Khăn giấy ướt",
+      "dvt": "Hộp",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1thhSBKHrpulHV0iTCa2mru_ReKcVkytC",
+      "ton": 10
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP273",
+      "ten": "Kim bấm 10 KW (TriO)",
+      "dvt": "Hộp",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1sowS1T_ahyeIRt_LEV1raRZJufFAljmk",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP274",
+      "ten": "Kim bấm 23/13 (TriO - 100 tờ)",
+      "dvt": "Hộp",
+      "gia": 21000,
+      "anh": "https://lh3.googleusercontent.com/d/1lKSlkvd4ogS73aGiC_vkwNpUrR71zZ_u",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP275",
+      "ten": "Kim bấm 23/17 (TriO - 150 tờ)",
+      "dvt": "Hộp",
+      "gia": 28000,
+      "anh": "https://lh3.googleusercontent.com/d/1XBpX2PJ2GEORx_Lle8zsOUc2tf0l7Dkj",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP276",
+      "ten": "Kim bấm 23/23 (TriO - 200 tờ)",
+      "dvt": "Hộp",
+      "gia": 37000,
+      "anh": "https://lh3.googleusercontent.com/d/1HdXrwwjTAkLDsHB-77KNJPMeG8B_ZD1_",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP277",
+      "ten": "Kim bấm 23/8 (TriO - 50 tờ)",
+      "dvt": "Hộp",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1FJ_X5YlhzIqDYFborttpKHGeegR0mBvm",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP278",
+      "ten": "Kim bấm số 10 (Plus)",
+      "dvt": "Hộp",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1NgF7-8XROX6qpVjloBRlMohSRfgFDdaP",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP279",
+      "ten": "Kim bấm số 10 (Việt Đức)",
+      "dvt": "Hộp",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1tqNVoKOpbnkAMhC2DHuK32n7myJcbCQ4",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP280",
+      "ten": "Lau Bảng - Deli 7840",
+      "dvt": "Cái",
+      "gia": 32000,
+      "anh": "https://lh3.googleusercontent.com/d/1NnqE120_z3L27LeQh7KUonwDUNcEAhdR",
+      "ton": 17
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP281",
+      "ten": "Lau bảng Bến nghé",
+      "dvt": "Bịch",
+      "gia": 15000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP282",
+      "ten": "Lau bảng trắng FO-WBE01",
+      "dvt": "Cái",
+      "gia": 23000,
+      "anh": "https://lh3.googleusercontent.com/d/1fG5EAF6Xp0CfUOZ28CNvEgvyEjQbxftR",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP283",
+      "ten": "Lưỡi dao rọc giấy",
+      "dvt": "Hộp",
+      "gia": 12000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP284",
+      "ten": "Lưỡi dao rọc giấy lớn - 18mm",
+      "dvt": "Vỉ",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1TMraE9OVHtGlPVcaoPTYKQBlk4m8_aah",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP285",
+      "ten": "Lưỡi dao rọc giấy nhỏ - 9mm",
+      "dvt": "Vỉ",
+      "gia": 16000,
+      "anh": "https://lh3.googleusercontent.com/d/17RbxlPRaRxVto6W_QC1b7dkCkOLr2K2f",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP286",
+      "ten": "Lưỡi dao rọc giấy SDI lớn - 18mm 1404",
+      "dvt": "Vỉ",
+      "gia": 40000,
+      "anh": "https://lh3.googleusercontent.com/d/1gklOwyJlA844HeK8TwWG0oelgIHGqK1B",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP287",
+      "ten": "Lưỡi dao rọc giấy SDI nhỏ - 9mm 1403",
+      "dvt": "Vỉ",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1xVQ_ZQh13RzDfNlf7ZasMPhPd7TccVzA",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP289",
+      "ten": "Mực dấu Shini 28 ml (Xanh)",
+      "dvt": "Chai",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1w8mSmiKQiPTWeNjqr2YR1gN3RDvjzdrq",
+      "ton": 5
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP290",
+      "ten": "Mực lông dầu Thiên Long  PMI-01",
+      "dvt": "Hủ",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1K3XgyzHA_e_jLfu2rFWOcm6u78ZnH3v8",
+      "ton": 12
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP291",
+      "ten": "Nẹp Acco nhựa UNI",
+      "dvt": "Hộp",
+      "gia": 15000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP292",
+      "ten": "Nẹp giấy PF-08 (G-Star)",
+      "dvt": "Hộp",
+      "gia": 21000,
+      "anh": "https://lh3.googleusercontent.com/d/1vVn2E2QkKkJhLoUEf5o7SGSfLx6CYMxK",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP293",
+      "ten": "Note đủ màu (Bitex SN05)",
+      "dvt": "Xấp",
+      "gia": 16000,
+      "anh": "https://lh3.googleusercontent.com/d/12R-f3n7v7doFEj1JDlZeHhrlthwlqwQM",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP294",
+      "ten": "Note nhựa 5 màu Pronoti",
+      "dvt": "Xấp",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/11jOE3ZSBV70FmQzeXNKA42agyk_ilgIJ",
+      "ton": 240
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP295",
+      "ten": "Note trình ký nhựa nhiều màu (Hộp 48 cái)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP296",
+      "ten": "Note vàng 3*2 UNC",
+      "dvt": "Xấp",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP297",
+      "ten": "Note vàng 3*3 UNC",
+      "dvt": "Xấp",
+      "gia": 10000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP298",
+      "ten": "Note vàng 3*5 UNC",
+      "dvt": "Xấp",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP299",
+      "ten": "Nước suối Aquafina (355ml)",
+      "dvt": "Chai",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1ehwN1SCLxK5IWDJ8pMOmEivhNmQ1XKrq",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP300",
+      "ten": "Nước suối Aquafina (500ml)",
+      "dvt": "Chai",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1fpz5d7436X8xpZexN_6GmBVhSJnt1zVN",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP301",
+      "ten": "Nước suối Lavie (350ml)",
+      "dvt": "Chai",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP302",
+      "ten": "Nước suối Lavie (500ml)",
+      "dvt": "Chai",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP303",
+      "ten": "Nước suối Sanna (330ml)",
+      "dvt": "Chai",
+      "gia": 3000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP304",
+      "ten": "Nước suối Sanna (500ml)",
+      "dvt": "Chai",
+      "gia": 4000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP305",
+      "ten": "Nước suối Vikoda (350ml)",
+      "dvt": "Chai",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1WYNHupNdid6fpssYesEQ--qSjolrTUh8",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP306",
+      "ten": "Nước suối Vikoda (500ml)",
+      "dvt": "Chai",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1AmkLy1IiGeL9CpAbV5k4cD7OSByOJsii",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP311",
+      "ten": "Phân trang film SN05 (5 màu/20 tờ/túi)",
+      "dvt": "Túi",
+      "gia": 14800,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP312",
+      "ten": "Phấn viết bảng màu",
+      "dvt": "Hộp",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP313",
+      "ten": "Phấn viết bảng trắng",
+      "dvt": "Hộp",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP314",
+      "ten": "Phiếu Chi 2 liên khổ 13×19",
+      "dvt": "Quyển",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1g3QlNS3YV8TKcGDjSbVY06ITLybSxW29",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP315",
+      "ten": "Phiếu thu 2 liên 13x19cm",
+      "dvt": "Quyển",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/15FyyA1sDiOxWbFED-m-8JFZ1YHvKRReS",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP316",
+      "ten": "Phiếu thu 3 liên 13x19cm",
+      "dvt": "Quyển",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/15FyyA1sDiOxWbFED-m-8JFZ1YHvKRReS",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP317",
+      "ten": "Pin 2A Energizer",
+      "dvt": "Cặp",
+      "gia": 32000,
+      "anh": "https://lh3.googleusercontent.com/d/1rsUUZIotH_PiMK001k1ciBrWUk1g-oke",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP318",
+      "ten": "Pin 2A Maxell",
+      "dvt": "Cặp",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
+      "ton": 80
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP319",
+      "ten": "Pin 2A Maxell Super (Vỉ 4 viên)",
+      "dvt": "Vỉ",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1jNVykkf_LSqeKtTCP_BgfAT62i3AQrC4",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP320",
+      "ten": "Pin 2A Panasonic",
+      "dvt": "Cặp",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1dIl05TKHuvpbNNfbvdSodTESYxSVcJVD",
+      "ton": 120
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP321",
+      "ten": "Pin 3A Energizer",
+      "dvt": "Cặp",
+      "gia": 32000,
+      "anh": "https://lh3.googleusercontent.com/d/1rsUUZIotH_PiMK001k1ciBrWUk1g-oke",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP322",
+      "ten": "Pin 3A Maxell",
+      "dvt": "Cặp",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/13qSoayTUhUSAUFsajfVOEGW22qZlT4mf",
+      "ton": 200
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP323",
+      "ten": "Pin 3A Maxell Premium Alkaline",
+      "dvt": "Cặp",
+      "gia": 50000,
+      "anh": "https://lh3.googleusercontent.com/d/1U6kz6Xwg1Uq37Eqj6Dewl0AW7o1XUFhN",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP324",
+      "ten": "Pin CR2032 Maxell Lithium 3V Vỉ 5",
+      "dvt": "Vỉ",
+      "gia": 50000,
+      "anh": "https://lh3.googleusercontent.com/d/1OgdSh1FJJOwPH0kG2sCjltrHKrKEt6IR",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP325",
+      "ten": "Pin Đại Maxell Alkaline",
+      "dvt": "Cặp",
+      "gia": 120000,
+      "anh": "https://lh3.googleusercontent.com/d/1ezdNE5Rr9kW1DjWO-NmNuloCQU0uGiFV",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP326",
+      "ten": "Pin Đại Maxell Super",
+      "dvt": "Cặp",
+      "gia": 40000,
+      "anh": "https://lh3.googleusercontent.com/d/1EhgcLy2YWB_dkF-cvkSVkfAJpW8t7C1h",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP327",
+      "ten": "Pin LR44 A76 Maxell",
+      "dvt": "Cặp",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1iq3_v0OZ2UbT-N_xvYWuC2zWKdP-tMnU",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP328",
+      "ten": "Pin Trung Maxell Alkaline",
+      "dvt": "Cặp",
+      "gia": 90000,
+      "anh": "https://lh3.googleusercontent.com/d/12boQtvRlCqCn5_mpU7cYGxBOuvPkInpG",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP329",
+      "ten": "Pin Trung Maxell Super",
+      "dvt": "Cặp",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1uFwxhjWXhcCfiFODCoAN-dx37hb0hiSj",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP330",
+      "ten": "Ruy băng lụa 1cm - 22m",
+      "dvt": "Cuộn",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP331",
+      "ten": "Ruy băng lụa 2cm - 22m",
+      "dvt": "Cuộn",
+      "gia": 16000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP332",
+      "ten": "Ruy băng lụa 4cm - 22m",
+      "dvt": "Cuộn",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP333",
+      "ten": "Sáp đếm tiền",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP334",
+      "ten": "Sổ Da CK7 (Wonderful)",
+      "dvt": "Quyển",
+      "gia": 28000,
+      "anh": "https://lh3.googleusercontent.com/d/1QBuZsCsqSol7PuAIatmcNz5C49tnqdza",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP335",
+      "ten": "Sổ Bìa Da A5 (Hải Tiến 8403)",
+      "dvt": "Tập",
+      "gia": 68000,
+      "anh": "https://lh3.googleusercontent.com/d/1vodeJDsomtkWy0FjUkVJPbnUi_ZqP5QC",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP336",
+      "ten": "Sổ Bìa Da Có Nút Gài",
+      "dvt": "Quyển",
+      "gia": 65000,
+      "anh": "https://lh3.googleusercontent.com/d/1mrHR7ZuoB0PuDz3ztnDJmduazmzanUhx",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP337",
+      "ten": "Sổ Bìa Da Có Nút Gài DEPAI",
+      "dvt": "Quyển",
+      "gia": 110000,
+      "anh": "https://lh3.googleusercontent.com/d/1ZVLeukD3gfepLnoQzyRqpYx7oMOGDlQW",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP338",
+      "ten": "Sổ Bìa Da Có Nút Gài DEPAI 25-77",
+      "dvt": "Tập",
+      "gia": 105000,
+      "anh": "https://lh3.googleusercontent.com/d/1FTdes-wViWr9SNRD_FZm8Nqce0V2L9EJ",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP339",
+      "ten": "Sổ Classic 6 Khuy bấm - 240t 4757",
+      "dvt": "Quyển",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/11WjuT1xlfsP8Z8cYZkkktpmRt-ZVRpVw",
+      "ton": 15
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP340",
+      "ten": "Sổ Da Bìa Cứng Camellia A5",
+      "dvt": "Quyển",
+      "gia": 90000,
+      "anh": "https://lh3.googleusercontent.com/d/1juoNY-Wmq2l3dg6w-_cz-xSOkOYUgjIw",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP341",
+      "ten": "Sổ Da CK8 D 192T (Tiến Phát)",
+      "dvt": "Quyển",
+      "gia": 28000,
+      "anh": "",
+      "ton": 10
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP342",
+      "ten": "Sổ Moment 6 200 trang 8489",
+      "dvt": "Quyển",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1pz0iMWB2oGEFkkq63k84mS9vyZLhvcs8",
+      "ton": 15
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP343",
+      "ten": "Tệp hồ sơ có dây (10cm)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP344",
+      "ten": "Thước 20 cm cứng TL",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP345",
+      "ten": "Thước 30 cm cứng TL",
+      "dvt": "Cây",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP346",
+      "ten": "Thước chữ bộ Koh I Noor",
+      "dvt": "Cây",
+      "gia": 190000,
+      "anh": "https://lh3.googleusercontent.com/d/1fT9QhtS9Rk_xkFnLdwO7UmeencrPAREA",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP347",
+      "ten": "Thước cứng 20cm",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1YCtOE-LgT3AFbUbS4A66FtGEC_C3wcS-",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP348",
+      "ten": "Thước cứng 30cm",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/19R7NeITorTtl8F37JNP28aHxloyp6Gbe",
+      "ton": -1
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP349",
+      "ten": "Thước dẻo 20cm (Win C30)",
+      "dvt": "Cây",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1SZg730wSJZ9IaPUtVv4iVXHnSwQ5LvUb",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP350",
+      "ten": "Thước dẻo 30cm (Win C30)",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1v4RpQZ6rOXHXMndBk4dT-MSm0xkap_Fc",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP351",
+      "ten": "Xóa Kéo Dạng Bút Whiper WH-1905 - Plus",
+      "dvt": "Cây",
+      "gia": 27000,
+      "anh": "https://lh3.googleusercontent.com/d/1acq8kDa9p7jddAsX30l9RE5AoMuXy5P4",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP173",
+      "ten": "Giấy A3 70 gsm Double A",
+      "dvt": "Ram",
+      "gia": 136000,
+      "anh": "https://lh3.googleusercontent.com/d/1xnCH4m6CRd5eEh5p_R8cmZXDX9Aln5lg",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP174",
+      "ten": "Giấy A3 70 gsm IK plus",
+      "dvt": "Ram",
+      "gia": 128000,
+      "anh": "https://lh3.googleusercontent.com/d/1JowvxohHnt6yVinjQhRrst7M_hbs8P9L",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP175",
+      "ten": "Giấy A3 70 gsm Natural",
+      "dvt": "Ram",
+      "gia": 116000,
+      "anh": "https://lh3.googleusercontent.com/d/1i732LuM2Wfxhbj6cQngDpZHQKwli1eT8",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP176",
+      "ten": "Giấy A3 70 gsm Paper One",
+      "dvt": "Ram",
+      "gia": 134000,
+      "anh": "https://lh3.googleusercontent.com/d/1XdmGyW6wAxLe04_GiEUX8J9zSANhP0SW",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP177",
+      "ten": "Giấy A3 70 gsm Quality",
+      "dvt": "Ram",
+      "gia": 215000,
+      "anh": "https://lh3.googleusercontent.com/d/1cetEhbQqmF5LNuLeFsN_P-SbzhLcGKR8",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP178",
+      "ten": "Giấy A3 70 gsm Smartis",
+      "dvt": "Ram",
+      "gia": 124000,
+      "anh": "https://lh3.googleusercontent.com/d/1u26fNC309qhXsts_U4Qn_ORqJlJhR-ES",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP179",
+      "ten": "Giấy A3 70 gsm Supreme",
+      "dvt": "Ram",
+      "gia": 130000,
+      "anh": "https://lh3.googleusercontent.com/d/1npMCD9o-BprfcnEJENB_qQnHGEPHKisS",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP180",
+      "ten": "Giấy A4 70 gsm Double A",
+      "dvt": "Ram",
+      "gia": 81000,
+      "anh": "https://lh3.googleusercontent.com/d/1VzuqsIYMA2S1A9wgCGKLJ-ylIRskMR18",
+      "ton": 50
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP181",
+      "ten": "Giấy A4 70 gsm Excel",
+      "dvt": "Ram",
+      "gia": 53000,
+      "anh": "https://lh3.googleusercontent.com/d/1EXGYhIkmkLOlblDyWKb_B1rCnb9DUmoS",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP182",
+      "ten": "Giấy A4 70 gsm IK plus",
+      "dvt": "Ram",
+      "gia": 69000,
+      "anh": "https://lh3.googleusercontent.com/d/16OVwFlUO-TrYTNHbAqiBvffc9gfPhyDd",
+      "ton": 180
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP183",
+      "ten": "Giấy A4 70 gsm Natural",
+      "dvt": "Ram",
+      "gia": 64000,
+      "anh": "https://lh3.googleusercontent.com/d/128Q0FLSHghH9qYqWv3O89Hg9PcgRLVxD",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP184",
+      "ten": "Giấy A4 70 gsm Paper One",
+      "dvt": "Ram",
+      "gia": 69000,
+      "anh": "https://lh3.googleusercontent.com/d/19NvhV4bwqLei71Xq4jj1OIJHe-d-zUNT",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP185",
+      "ten": "Giấy A4 70 gsm Quality",
+      "dvt": "Ram",
+      "gia": 63000,
+      "anh": "https://lh3.googleusercontent.com/d/13KfaAjlpUGfzDQFUUKX9lFZcQpPP99_6",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP186",
+      "ten": "Giấy A4 70 gsm Smartis",
+      "dvt": "Ram",
+      "gia": 63000,
+      "anh": "https://lh3.googleusercontent.com/d/1FXCl8YNMhVIB34ZWE1UYEmJMA9_KzxTe",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP187",
+      "ten": "Giấy A4 70 gsm Supreme",
+      "dvt": "Ram",
+      "gia": 68000,
+      "anh": "https://lh3.googleusercontent.com/d/1dJmTpg1hEnahXy5jyJktYmWB4DCs7nkA",
+      "ton": 30
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP188",
+      "ten": "Giấy A4 80 gsm Double A",
+      "dvt": "Ram",
+      "gia": 110000,
+      "anh": "https://lh3.googleusercontent.com/d/1vsIDCEj61jrF9kPogWSWMB8x-RERE9_P",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP189",
+      "ten": "Giấy A4 80 gsm Excel",
+      "dvt": "Ram",
+      "gia": 60000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP190",
+      "ten": "Giấy A4 80 gsm Paper One",
+      "dvt": "Ram",
+      "gia": 80000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP191",
+      "ten": "Giấy A4 80 gsm Supreme",
+      "dvt": "Ram",
+      "gia": 75000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP192",
+      "ten": "Giấy A5 70 gsm Double A",
+      "dvt": "Ram",
+      "gia": 46000,
+      "anh": "https://lh3.googleusercontent.com/d/1DqsfRYw-2Ctz2OfpwjAnL_DgZBsQWwF6",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP193",
+      "ten": "Giấy A5 70 gsm Excel",
+      "dvt": "Ram",
+      "gia": 30000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP194",
+      "ten": "Giấy A5 70 gsm IK plus",
+      "dvt": "Ram",
+      "gia": 38000,
+      "anh": "https://lh3.googleusercontent.com/d/1Eb114kKdzze0FVggw1GskdF-nPQf9Aov",
+      "ton": 50
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP195",
+      "ten": "Giấy A5 70gsm Supreme",
+      "dvt": "Ram",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1AnsvHyJ0Srcsg1wavM_apC5vJFcdkU3A",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP196",
+      "ten": "Giấy A5 80 gsm Double A",
+      "dvt": "Ram",
+      "gia": 45000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP197",
+      "ten": "Giấy A5 80 gsm Excel",
+      "dvt": "Ram",
+      "gia": 32000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP198",
+      "ten": "Giấy bìa màu A4 (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 78000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP199",
+      "ten": "Giấy bìa Paperline A4 cam",
+      "dvt": "Xấp",
+      "gia": 82000,
+      "anh": "https://lh3.googleusercontent.com/d/1mA-L_Z7G6W3qb2ENse3RZs20SduzPSGV",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP200",
+      "ten": "Giấy bìa Paperline A4 đỏ",
+      "dvt": "Xấp",
+      "gia": 82000,
+      "anh": "https://lh3.googleusercontent.com/d/1jrjWX6gUVpWCpkcqy89GnrUz6iGMxxon",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP201",
+      "ten": "Giấy bìa Paperline A4 vàng",
+      "dvt": "Xấp",
+      "gia": 82000,
+      "anh": "https://lh3.googleusercontent.com/d/1gcQmMMYmyePSXoOmvht_UYqvUb-5Cmgb",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP202",
+      "ten": "Giấy bìa Paperline A4 xanh",
+      "dvt": "Xấp",
+      "gia": 82000,
+      "anh": "https://lh3.googleusercontent.com/d/1sPoBRxUA8CldPy0wgt9nBRNvp9jDahYF",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP203",
+      "ten": "Giấy bìa Paperline A4 Xanh lá",
+      "dvt": "Xấp",
+      "gia": 82000,
+      "anh": "https://lh3.googleusercontent.com/d/1NSUdP16TryvI47rZbTuoDq9LR_330dV3",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP204",
+      "ten": "Giấy Decal A4 Da bò",
+      "dvt": "Xấp",
+      "gia": 85000,
+      "anh": "https://lh3.googleusercontent.com/d/1rDolFC_Ol1SIXlbP2hMsQBhCbs6MV4ul",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP205",
+      "ten": "Giấy Decal A4 Đế Vàng",
+      "dvt": "Xấp",
+      "gia": 85000,
+      "anh": "https://lh3.googleusercontent.com/d/1PndMaf9KnkwldYL4NeBzQ2X--zqcu0RC",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP206",
+      "ten": "Giấy Decal A4 Đế Xanh",
+      "dvt": "Xấp",
+      "gia": 85000,
+      "anh": "https://lh3.googleusercontent.com/d/1sVcH3IpmN58uIbfLZQWwHUrJz7nSilJQ",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP207",
+      "ten": "Giấy dính mũi tên 5M 45502 (Pronoti)",
+      "dvt": "Xấp",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/18OJ6FSGPFW5iEO0sjiAehK7GagEgxKko",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP208",
+      "ten": "Giấy For màu A4 (70 gsm)",
+      "dvt": "Ram",
+      "gia": 70000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP209",
+      "ten": "Giấy For màu A4 (80 gsm)",
+      "dvt": "Ram",
+      "gia": 80000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP210",
+      "ten": "Giấy ghi chú 3 x 3 hiệu G-STAR",
+      "dvt": "Xấp",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1msICo2vDCblPY6eTOUe7wzl42yNVcw-X",
+      "ton": 120
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP211",
+      "ten": "Giấy ghi chú Bitex 3x2/SN01 (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1GsFlBU_36wz1cE1NVw3ngZ1Nb_eENPW5",
+      "ton": 72
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP212",
+      "ten": "Giấy ghi chú Bitex 3x3/SN02 (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 9500,
+      "anh": "https://lh3.googleusercontent.com/d/10FV-sto8b-ByayF0862v2cC07pHAusFh",
+      "ton": 84
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP213",
+      "ten": "Giấy ghi chú Bitex 3x5/SN04 (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1rzkZUgwvb2vLamy0povUo_nnKw8RcHvZ",
+      "ton": 12
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP214",
+      "ten": "Giấy ghi chú màu vàng có keo dán (76x127mm)",
+      "dvt": "Tập",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP215",
+      "ten": "Giấy in ảnh A4 1 mặt bóng",
+      "dvt": "Xấp",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP216",
+      "ten": "Giấy in ảnh A4 2 mặt bóng",
+      "dvt": "Xấp",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP217",
+      "ten": "Giấy In Bill K57 (57mm x 30m)",
+      "dvt": "Cuộn",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP218",
+      "ten": "Giấy In Bill K80 (80mm x 30m)",
+      "dvt": "Cuộn",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP219",
+      "ten": "Giấy in nhiệt 57mm",
+      "dvt": "Cuộn",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1Pw9JAdLjzBRTDoE_J7YT5zsjmRPW7JLP",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP220",
+      "ten": "Giấy in nhiệt 80mm",
+      "dvt": "Cuộn",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/17pLdbF_G7vWt_BTvV_Z7TkiV-9hh7n26",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP221",
+      "ten": "Giấy Supreme A3",
+      "dvt": "Ram",
+      "gia": 134259,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Điện",
+      "ma": "VP307",
+      "ten": "Ổ cắm điện ODN5 (3M)",
+      "dvt": "Cái",
+      "gia": 148000,
+      "anh": "https://lh3.googleusercontent.com/d/1DqPqWhn-eq3jNqR9urNKBG7321RGz3yJ",
+      "ton": 8
+    },
+    {
+      "nhom": "Điện",
+      "ma": "VP308",
+      "ten": "Ổ cắm ECO ( 6 lỗ 2 chấu, dây 2 mét)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 12
+    },
+    {
+      "nhom": "Điện",
+      "ma": "VP309",
+      "ten": "Ổ điện Lioa 3DNW 3.2.10 (3m)",
+      "dvt": "Chiếc",
+      "gia": 145000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Điện",
+      "ma": "VP310",
+      "ten": "Ổ điện Lioa 4DND 3.3.10 (5m)",
+      "dvt": "Chiếc",
+      "gia": 155000,
+      "anh": "",
+      "ton": 0
+    }
+  ],
+  "orderUrl": "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec",
+  "hotline": "033 5652 832"
+}

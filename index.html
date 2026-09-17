@@ -1,174 +1,208 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Vạn Phát - Đặt Hàng Trực Tuyến & Quản Trị Kho</title>
-<meta name="description" content="Công ty TNHH Tư Vấn Đầu Tư Thương Mại Vạn Phát - Đặt hàng văn phòng phẩm trực tuyến, tư vấn AI 24/7. Hotline 033 5652 832.">
-
-<!--
-  ============================================================================
-  FILE NÀY LÀ GÌ?
-  ============================================================================
-  Đây là trang "vỏ bọc" (wrapper) để khi khách truy cập vanphatcompany.vn thì
-  thấy đúng nội dung của Web App Vạn Phát Pro (đang chạy trên Google Apps
-  Script tại địa chỉ script.google.com/.../exec) — mà vẫn giữ nguyên URL
-  vanphatcompany.vn trên thanh địa chỉ trình duyệt, không bị nhảy sang
-  script.google.com.
-
-  Cách hoạt động: dùng 1 khung <iframe> full màn hình nhúng thẳng link Web
-  App vào. Cách này CHẠY ĐƯỢC vì trong Code.gs, hàm doGet() đã bật sẵn:
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-  → Google cho phép trang được nhúng trong iframe từ domain khác (mặc định
-  Google CHẶN việc này, nhưng dòng lệnh trên đã mở khoá rồi).
-
-  ANH HÀ CẦN LÀM GÌ ĐỂ FILE NÀY "SỐNG" TRÊN vanphatcompany.vn?
-  1) Upload file index.html này làm TRANG CHỦ trên nơi anh lưu trữ website
-     (hosting/CMS hiện tại của vanphatcompany.vn).
-  2) Đảm bảo tên miền vanphatcompany.vn đang trỏ DNS về đúng nơi lưu trữ đó
-     (bản ghi A hoặc CNAME tại nhà cung cấp domain).
-  Việc này bắt buộc phải làm trên tài khoản hosting/domain của anh Hà — em
-  không có quyền đăng nhập thay.
-
-  MUỐN ĐỔI SANG LINK WEB APP MỚI SAU NÀY (ví dụ Deploy lại bản mới trên Apps
-  Script ra link /exec khác)? Chỉ cần sửa 1 dòng DUY NHẤT bên dưới, chỗ biến
-  LINK_WEB_APP, rồi upload lại là xong — không cần sửa gì khác trong file.
-  ============================================================================
--->
-
-<style>
-  :root { --vp-blue: #1F4E78; }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0; height: 100%; width: 100%;
-    background: #f8fafc;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    overflow: hidden;
-  }
-  #vpFrame {
-    position: fixed; inset: 0;
-    width: 100%; height: 100%;
-    border: 0; display: block;
-    background: #fff;
-  }
-  #vpLoading {
-    position: fixed; inset: 0;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 16px;
-    background: linear-gradient(135deg, #f8fafc 0%, #e8f0f7 100%);
-    z-index: 10;
-    text-align: center;
-    padding: 20px;
-  }
-  #vpLoading .vp-logo {
-    font-size: 26px; font-weight: 800; color: var(--vp-blue); letter-spacing: 0.5px;
-  }
-  #vpLoading .vp-sub {
-    font-size: 13.5px; color: #64748b;
-  }
-  .vp-spinner {
-    width: 46px; height: 46px;
-    border: 4px solid #dbe6ee;
-    border-top-color: var(--vp-blue);
-    border-radius: 50%;
-    animation: vp-spin 0.8s linear infinite;
-  }
-  @keyframes vp-spin { to { transform: rotate(360deg); } }
-
-  #vpFallback {
-    display: none;
-    position: fixed; inset: 0;
-    z-index: 20;
-    background: #f8fafc;
-    align-items: center; justify-content: center;
-    padding: 24px;
-  }
-  #vpFallback .vp-card {
-    max-width: 420px; width: 100%;
-    background: #fff; border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    padding: 28px 26px; text-align: center;
-  }
-  #vpFallback h1 { font-size: 19px; color: var(--vp-blue); margin: 6px 0 10px; }
-  #vpFallback p { font-size: 13.5px; color: #475569; line-height: 1.6; margin: 0 0 18px; }
-  #vpFallback a.vp-btn {
-    display: inline-block; background: var(--vp-blue); color: #fff;
-    padding: 12px 22px; border-radius: 8px; text-decoration: none;
-    font-weight: 700; font-size: 14px;
-  }
-  #vpFallback a.vp-btn:hover { background: #153a5b; }
-  #vpFallback .vp-hotline { margin-top: 16px; font-size: 12.5px; color: #94a3b8; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vạn Phát | Văn phòng phẩm &amp; Photocopy Nha Trang</title>
+  <meta name="description" content="Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát — cung cấp văn phòng phẩm, giấy, dụng cụ VP và dịch vụ photocopy/in màu tại Mỹ Gia, Nam Nha Trang." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-
-  <!-- Màn hình chờ, hiện trong lúc iframe đang tải -->
-  <div id="vpLoading">
-    <div class="vp-spinner"></div>
-    <div class="vp-logo">VẠN PHÁT</div>
-    <div class="vp-sub">Đang tải hệ thống đặt hàng trực tuyến...</div>
-  </div>
-
-  <!-- Khung nhúng Web App thật (nội dung chính) -->
-  <iframe
-    id="vpFrame"
-    src=""
-    title="Vạn Phát - Đặt Hàng Trực Tuyến"
-    allow="clipboard-write; microphone; geolocation"
-    referrerpolicy="no-referrer-when-downgrade"
-    style="display:none;">
-  </iframe>
-
-  <!-- Màn hình dự phòng: hiện ra nếu trình duyệt của khách chặn iframe -->
-  <div id="vpFallback">
-    <div class="vp-card">
-      <div class="vp-logo" style="color:#1F4E78;font-weight:800;font-size:20px;">VẠN PHÁT</div>
-      <h1>Không thể hiển thị trực tiếp tại đây</h1>
-      <p>Trình duyệt của Quý khách đang chặn nội dung nhúng. Vui lòng bấm nút bên dưới để mở hệ thống đặt hàng trong tab mới.</p>
-      <a class="vp-btn" id="vpDirectLink" href="#" target="_top">Mở Hệ Thống Đặt Hàng</a>
-      <div class="vp-hotline">Hotline hỗ trợ: 033 5652 832</div>
+  <div class="topbar">
+    <div class="container">
+      <span>📍 LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</span>
+      <span>☎ Hotline: <a href="tel:0335652832">033 5652 832</a></span>
     </div>
   </div>
 
-  <script>
-    // ==========================================================================
-    // CHỈ SỬA DÒNG NÀY khi cần đổi sang link Web App khác (ví dụ Deploy bản mới):
-    var LINK_WEB_APP = "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec";
-    // ==========================================================================
+  <header class="site-header">
+    <div class="container nav">
+      <a class="logo" href="index.html">
+        <span class="logo-mark">VP</span>
+        <span class="logo-text">Vạn Phát<small>Văn phòng phẩm · Photocopy</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-links" aria-label="Chính">
+        <a href="index.html" class="active">Trang chủ</a>
+        <a href="san-pham.html">Sản phẩm</a>
+        <a href="photocopy.html">Photocopy</a>
+        <a href="lien-he.html">Liên hệ</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-outline-navy btn-sm" href="tel:0335652832">Gọi hotline</a>
+        <a class="btn btn-gold btn-sm" href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng</a>
+      </div>
+    </div>
+  </header>
 
-    var frame = document.getElementById('vpFrame');
-    var loading = document.getElementById('vpLoading');
-    var fallback = document.getElementById('vpFallback');
-    var directLink = document.getElementById('vpDirectLink');
-    directLink.href = LINK_WEB_APP;
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div>
+          <div class="hero-badge">✦ Đối tác văn phòng tin cậy tại Nha Trang</div>
+          <h1>Văn phòng phẩm &amp; <span>Photocopy</span><br />chuyên nghiệp — giao nhanh</h1>
+          <p class="hero-lead">
+            Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát cung cấp đầy đủ giấy, bìa hồ sơ, bút mực, dụng cụ văn phòng và dịch vụ photocopy / in màu khổ A5–A3.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-gold btn-lg" href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">🛒 Đặt hàng online</a>
+            <a class="btn btn-outline btn-lg" href="tel:0335652832">☎ 033 5652 832</a>
+            <a class="btn btn-ghost btn-lg" href="photocopy.html">Dịch vụ photocopy</a>
+          </div>
+          <div class="hero-meta">
+            <div><strong>380+</strong>Sản phẩm VP</div>
+            <div><strong>6</strong>Nhóm hàng chính</div>
+            <div><strong>A5–A3</strong>In &amp; photocopy</div>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Cam kết dịch vụ">
+          <h3>Cam kết Vạn Phát</h3>
+          <ul>
+            <li><span class="icon">✓</span><span>Hàng chính hãng, giá cạnh tranh cho văn phòng &amp; cửa hàng</span></li>
+            <li><span class="icon">✓</span><span>Đặt hàng online nhanh — hỗ trợ báo giá theo nhu cầu</span></li>
+            <li><span class="icon">✓</span><span>Photocopy, in màu, scan &amp; copy tại Mỹ Gia Nam Nha Trang</span></li>
+            <li><span class="icon">✓</span><span>Hotline phản hồi nhanh: 033 5652 832</span></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
 
-    var daXongChuaLoad = false;
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Danh mục</span>
+          <h2>Nhóm hàng nổi bật</h2>
+          <p>Chọn nhóm để xem toàn bộ sản phẩm phù hợp nhu cầu văn phòng của bạn.</p>
+        </div>
+        <div class="cat-grid">
+          <a class="cat-card" href="san-pham.html?nhom=Giấy">
+            <div class="cat-icon">📄</div>
+            <h3>Giấy</h3>
+            <p data-nhom-count="Giấy">—</p>
+          </a>
+          <a class="cat-card" href="san-pham.html?nhom=Bìa%20Hồ%20Sơ">
+            <div class="cat-icon">📁</div>
+            <h3>Bìa Hồ Sơ</h3>
+            <p data-nhom-count="Bìa Hồ Sơ">—</p>
+          </a>
+          <a class="cat-card" href="san-pham.html?nhom=Bút%20%26%20Mực">
+            <div class="cat-icon">✏️</div>
+            <h3>Bút &amp; Mực</h3>
+            <p data-nhom-count="Bút & Mực">—</p>
+          </a>
+          <a class="cat-card" href="san-pham.html?nhom=Băng%20Keo">
+            <div class="cat-icon">📎</div>
+            <h3>Băng Keo</h3>
+            <p data-nhom-count="Băng Keo">—</p>
+          </a>
+          <a class="cat-card" href="san-pham.html?nhom=Dụng%20cụ%20VP">
+            <div class="cat-icon">🛠️</div>
+            <h3>Dụng cụ VP</h3>
+            <p data-nhom-count="Dụng cụ VP">—</p>
+          </a>
+          <a class="cat-card" href="san-pham.html?nhom=%C4%90i%E1%BB%87n">
+            <div class="cat-icon">🔌</div>
+            <h3>Điện</h3>
+            <p data-nhom-count="Điện">—</p>
+          </a>
+        </div>
+      </div>
+    </section>
 
-    frame.addEventListener('load', function () {
-      daXongChuaLoad = true;
-      loading.style.display = 'none';
-      frame.style.display = 'block';
-    });
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Sản phẩm</span>
+          <h2>Sản phẩm nổi bật</h2>
+          <p>Tuyển chọn các mặt hàng có hình ảnh thực tế từ kho Vạn Phát.</p>
+        </div>
+        <div id="featured-products" class="product-grid">
+          <div class="loading" style="grid-column:1/-1">Đang tải sản phẩm…</div>
+        </div>
+        <div class="text-center mt-2">
+          <a class="btn btn-primary" href="san-pham.html">Xem toàn bộ catalog →</a>
+        </div>
+      </div>
+    </section>
 
-    frame.addEventListener('error', function () {
-      hienFallback();
-    });
+    <section class="trust">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item">
+            <div class="t-icon">📦</div>
+            <h4>Đầy đủ nhóm hàng</h4>
+            <p>Giấy, bìa, bút, keo, dụng cụ VP</p>
+          </div>
+          <div class="trust-item">
+            <div class="t-icon">🖨️</div>
+            <h4>Photocopy &amp; in màu</h4>
+            <p>Khổ A5, A4, A3 — scan/copy</p>
+          </div>
+          <div class="trust-item">
+            <div class="t-icon">⚡</div>
+            <h4>Đặt hàng nhanh</h4>
+            <p>Form online hoặc gọi hotline</p>
+          </div>
+          <div class="trust-item">
+            <div class="t-icon">📍</div>
+            <h4>Mỹ Gia · Nha Trang</h4>
+            <p>Gần KĐT Mỹ Gia, Nam Nha Trang</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    function hienFallback() {
-      if (daXongChuaLoad) return;
-      loading.style.display = 'none';
-      frame.style.display = 'none';
-      fallback.style.display = 'flex';
-    }
+    <section class="cta-band">
+      <div class="container">
+        <h2>Cần báo giá hoặc đặt hàng ngay?</h2>
+        <p>Liên hệ hotline hoặc gửi đơn qua form đặt hàng online — đội ngũ Vạn Phát hỗ trợ bạn nhanh chóng.</p>
+        <div class="actions">
+          <a class="btn btn-gold btn-lg" href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng online</a>
+          <a class="btn btn-outline btn-lg" href="tel:0335652832">Gọi 033 5652 832</a>
+          <a class="btn btn-ghost btn-lg" href="lien-he.html">Xem địa chỉ</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    // Nếu sau 14 giây iframe vẫn chưa "load" được (bị chặn / mạng chậm bất thường),
-    // tự động chuyển sang màn hình dự phòng thay vì để khách chờ vô thời hạn.
-    setTimeout(function () {
-      if (!daXongChuaLoad) hienFallback();
-    }, 14000);
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html">
+            <span class="logo-mark">VP</span>
+            <span class="logo-text">Vạn Phát<small>Tư vấn · Đầu tư · Thương mại</small></span>
+          </a>
+          <p>Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát — chuyên cung cấp văn phòng phẩm và dịch vụ photocopy tại Nha Trang.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Liên kết</h4>
+          <a href="index.html">Trang chủ</a>
+          <a href="san-pham.html">Sản phẩm</a>
+          <a href="photocopy.html">Photocopy</a>
+          <a href="lien-he.html">Liên hệ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <li>LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</li>
+          <a href="tel:0335652832">☎ 033 5652 832</a>
+          <br><a href="mailto:congtytnhhvanphat999@gmail.com">✉ congtytnhhvanphat999@gmail.com</a>
+          <a href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng online</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát. All rights reserved.</span>
+        <span>Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+      </div>
+    </div>
+  </footer>
 
-    // Bắt đầu tải iframe
-    frame.src = LINK_WEB_APP;
-  </script>
+  <script src="js/main.js"></script>
+  <script src="js/products.js"></script>
 </body>
 </html>
