@@ -25,7 +25,8 @@
     }
   }
 
-  function save(items) {
+  function save(next) {
+    if (next !== undefined) items = next;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
 
