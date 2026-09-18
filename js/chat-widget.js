@@ -1,6 +1,6 @@
 /* Vạn Phát — AI Gemini chat (catalog-grounded, no Zalo) */
 (function () {
-  const CONFIG_URL = "data/chat-config.json";
+  const CONFIG_URL = "data/chat-config.json?v=20260918b";
 
   function el(tag, attrs, children) {
     const node = document.createElement(tag);
@@ -28,6 +28,36 @@
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null);
   }
+
+  function parseGasResponse(res) {
+    return res.text().then((text) => {
+      const raw = String(text || "").trim();
+      if (!raw) return { ok: false, error: "Empty response" };
+      try {
+        return JSON.parse(raw);
+      } catch (e1) {
+        const start = raw.indexOf("{");
+        const end = raw.lastIndexOf("}");
+        if (start !== -1 && end > start) {
+          try {
+            return JSON.parse(raw.slice(start, end + 1));
+          } catch (e2) {}
+        }
+        return { ok: false, error: "Bad JSON from chat API" };
+      }
+    });
+  }
+
+  function postGas(apiUrl, payload) {
+    return fetch(apiUrl, {
+      method: "POST",
+      redirect: "follow",
+      credentials: "omit",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    }).then((res) => parseGasResponse(res));
+  }
+
 
   function norm(s) {
     return String(s || "")
@@ -289,26 +319,22 @@
       messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
 
-      fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          action: "chat",
-          message: msg,
-          history: history.slice(0, -1),
-          catalogContext: catalogContext,
-        }),
+      postGas(apiUrl, {
+        action: "chat",
+        message: msg,
+        history: history.slice(0, -1),
+        catalogContext: catalogContext,
       })
-        .then((r) => r.json().catch(() => ({})))
         .then((data) => {
           typing.remove();
-          const raw =
-            (data && data.ok && data.reply) ||
-            (data && data.error) ||
-            "Em chưa trả lời được. Anh/chị gọi " + hotline + " giúp em nhé.";
-          const parsed = stripLeadMarkers(raw);
-          addBubble("bot", parsed.clean || raw);
-          history.push({ role: "model", text: parsed.clean || raw });
+          const replyText =
+            data && data.ok && data.reply
+              ? data.reply
+              : (data && data.error) ||
+                "Em chưa trả lời được. Anh/chị gọi " + hotline + " giúp em nhé.";
+          const parsed = stripLeadMarkers(replyText);
+          addBubble("bot", parsed.clean || replyText);
+          history.push({ role: "model", text: parsed.clean || replyText });
           if (history.length > 16) history.splice(0, history.length - 16);
           if (parsed.lead || (data && data.needLead)) {
             showLeadForm(parsed.lead || { nhu_cau: msg });
@@ -366,14 +392,9 @@
         return;
       }
 
-      fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "lead", bill: bill }),
-      })
-        .then((r) => r.json().catch(() => ({})))
+      postGas(apiUrl, { action: "lead", bill: bill })
         .then((data) => {
-          if (data && data.ok === false) {
+          if (!data || data.ok === false) {
             addBubble("bot", "Ghi bill chưa thành công. Anh/chị gọi trực tiếp " + hotline + " giúp em.");
             leadSubmit.disabled = false;
             return;
