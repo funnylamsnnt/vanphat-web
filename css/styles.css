@@ -1562,8 +1562,8 @@ body.cart-open { overflow: hidden; }
   font-family: "Be Vietnam Pro", system-ui, sans-serif;
 }
 .vp-fab {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: none;
   display: inline-flex;
@@ -1575,7 +1575,6 @@ body.cart-open { overflow: hidden; }
   text-decoration: none;
 }
 .vp-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(15, 40, 70, 0.35); }
-.vp-fab-zalo { background: #0068FF; color: #fff; }
 .vp-fab-chat {
   background: linear-gradient(135deg, #1F4E78 0%, #163a5c 100%);
   color: #fff;
@@ -1716,5 +1715,41 @@ body.cart-open { overflow: hidden; }
 
 @media (max-width: 480px) {
   .vp-chat-dock { right: 0.65rem; bottom: 0.65rem; }
-  .vp-fab { width: 52px; height: 52px; }
+  .vp-fab { width: 58px; height: 58px; }
+    }
+
+
+/* Lead / bill capture in AI chat */
+.vp-lead-box {
+  padding: 0.55rem 0.75rem;
+  background: #fff8e8;
+  border-top: 1px dashed rgba(201,162,39,0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
+.vp-lead-box[hidden] { display: none !important; }
+.vp-lead-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #5A6577;
+  line-height: 1.35;
+}
+.vp-lead-input {
+  border: 1px solid rgba(31, 78, 120, 0.2);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  font-size: 0.85rem;
+}
+.vp-lead-submit {
+  border: none;
+  border-radius: 8px;
+  background: #1F4E78;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.vp-lead-submit:disabled { opacity: 0.55; }
