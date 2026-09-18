@@ -1,0 +1,10 @@
+{
+  "apiUrl": "",
+  "zaloUrl": "https://zalo.me/0335652832",
+  "hotline": "033 5652 832",
+  "hotlineTel": "0335652832",
+  "orderUrl": "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec",
+  "welcome": "Xin chào! Em là trợ lý tư vấn Vạn Phát. Anh/chị cần giấy, dụng cụ VP hay photocopy ạ?",
+  "primaryModel": "gemini-2.5-flash",
+  "fallbackModel": "gemini-3.5-flash-lite"
+}
