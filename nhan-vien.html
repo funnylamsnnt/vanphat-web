@@ -106,12 +106,24 @@
               <input type="text" id="staff-shop" name="cuahang" placeholder="VD: Quầy Mỹ Gia" autocomplete="organization" />
             </label>
             <label class="cart-field">
-              <span>Khách hàng</span>
-              <input type="text" id="staff-customer" name="khachhang" placeholder="Tên khách / cửa hàng" autocomplete="off" />
+              <span>Kính gửi (khách hàng)</span>
+              <input type="text" id="staff-customer" name="khachhang" placeholder="QUÝ KHÁCH HÀNG / tên công ty" autocomplete="organization" />
+            </label>
+            <label class="cart-field">
+              <span>Địa chỉ giao</span>
+              <input type="text" id="staff-address" name="diachi" placeholder="Số nhà, đường, phường…" autocomplete="street-address" />
+            </label>
+            <label class="cart-field">
+              <span>Tên người nhận</span>
+              <input type="text" id="staff-receiver" name="nguoinhan" placeholder="Họ tên người nhận hàng" autocomplete="name" />
             </label>
             <label class="cart-field">
               <span>SĐT <em>*</em></span>
               <input type="tel" id="staff-phone" name="sdt" placeholder="09xx xxx xxx" required autocomplete="tel" />
+            </label>
+            <label class="cart-field">
+              <span>Mã đối tác (B2B)</span>
+              <input type="text" id="staff-partner" name="madoitac" placeholder="Để trống nếu khách lẻ" autocomplete="off" />
             </label>
             <label class="cart-field">
               <span>Ghi chú</span>
@@ -148,15 +160,26 @@
           </div>
 
           <div class="staff-order-actions">
+            <div class="staff-print-actions">
+              <button type="button" class="btn btn-outline-navy" id="staff-print-delivery" title="In / Xuất PDF phiếu giao hàng (layout Excel)">
+                In phiếu giao
+              </button>
+              <button type="button" class="btn btn-outline-navy" id="staff-print-quote" title="In / Xuất PDF báo giá (cùng layout Excel)">
+                In báo giá
+              </button>
+            </div>
             <button type="button" class="btn btn-gold" id="staff-submit">
               Chốt đơn · Gửi email
             </button>
-            <p class="cart-email-hint">Đơn gửi về <strong>congtytnhhvanphat999@gmail.com</strong> · tiêu đề <code>[NV]</code></p>
+            <p class="cart-email-hint">In/PDF mở hộp thoại trình duyệt → chọn «Save as PDF». Đơn email gửi về <strong>congtytnhhvanphat999@gmail.com</strong> · tiêu đề <code>[NV]</code></p>
           </div>
         </aside>
       </div>
     </section>
   </main>
+
+  <!-- Print / PDF slip — matches Excel sheet «Đơn Đặt Hàng» cols A–H only -->
+  <div id="staff-print-slip" class="staff-print-slip" hidden aria-hidden="true"></div>
 
   <footer class="site-footer">
     <div class="container">

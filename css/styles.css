@@ -1708,6 +1708,229 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   }
 }
 
+/* —— Staff print / PDF slip (Excel «Đơn Đặt Hàng» A–H) —— */
+.staff-print-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin-bottom: 0.5rem;
+}
+.staff-print-actions .btn {
+  width: 100%;
+  font-size: 0.82rem;
+  padding: 0.55rem 0.4rem;
+}
+.staff-order-actions .btn-gold { width: 100%; }
+
+.staff-print-slip {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm 8mm;
+  }
+
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  body.staff-printing * {
+    visibility: hidden;
+  }
+  body.staff-printing .staff-print-slip,
+  body.staff-printing .staff-print-slip * {
+    visibility: visible;
+  }
+  body.staff-printing .staff-print-slip {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  .topbar,
+  .site-header,
+  .site-footer,
+  .page-hero,
+  .toolbar,
+  .staff-layout,
+  .staff-pin-gate,
+  .vp-chat-dock,
+  #cart-toast,
+  .nav-cta {
+    display: none !important;
+  }
+}
+
+.staff-print-slip .slip-inner {
+  font-family: "Times New Roman", "Be Vietnam Pro", Times, serif;
+  color: #000;
+  max-width: 190mm;
+  margin: 0 auto;
+}
+.staff-print-slip .slip-company {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border-bottom: 1.5px solid #1F4E78;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+}
+.staff-print-slip .slip-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.staff-print-slip .slip-company-text {
+  font-size: 9.5pt;
+  line-height: 1.35;
+}
+.staff-print-slip .slip-company-name {
+  font-weight: 700;
+  font-size: 11.5pt;
+  text-transform: uppercase;
+  color: #1F4E78;
+  margin-bottom: 2px;
+}
+.staff-print-slip .slip-title {
+  text-align: center;
+  font-size: 18pt;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin: 8px 0 2px;
+  color: #000;
+}
+.staff-print-slip .slip-date {
+  text-align: center;
+  font-size: 10.5pt;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+.staff-print-slip .slip-customer {
+  font-size: 10.5pt;
+  line-height: 1.45;
+  margin-bottom: 4px;
+}
+.staff-print-slip .slip-receiver-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2px;
+}
+.staff-print-slip .slip-partner {
+  margin-top: 2px;
+  font-size: 10pt;
+}
+.staff-print-slip .slip-intro {
+  font-size: 10pt;
+  margin: 6px 0 8px;
+  font-style: italic;
+}
+.staff-print-slip .slip-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 9.5pt;
+  margin-bottom: 8px;
+}
+.staff-print-slip .slip-table th,
+.staff-print-slip .slip-table td {
+  border: 1px solid #333;
+  padding: 3px 4px;
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+.staff-print-slip .slip-table th {
+  background: #d9e2f3;
+  font-weight: 700;
+  text-align: center;
+  font-size: 9pt;
+}
+.staff-print-slip .slip-table col,
+.staff-print-slip .slip-table th:nth-child(1),
+.staff-print-slip .slip-table td:nth-child(1) { width: 5%; }
+.staff-print-slip .slip-table th:nth-child(2),
+.staff-print-slip .slip-table td:nth-child(2) { width: 9%; }
+.staff-print-slip .slip-table th:nth-child(3),
+.staff-print-slip .slip-table td:nth-child(3) { width: 34%; }
+.staff-print-slip .slip-table th:nth-child(4),
+.staff-print-slip .slip-table td:nth-child(4) { width: 11%; }
+.staff-print-slip .slip-table th:nth-child(5),
+.staff-print-slip .slip-table td:nth-child(5) { width: 7%; }
+.staff-print-slip .slip-table th:nth-child(6),
+.staff-print-slip .slip-table td:nth-child(6) { width: 9%; }
+.staff-print-slip .slip-table th:nth-child(7),
+.staff-print-slip .slip-table td:nth-child(7) { width: 12%; }
+.staff-print-slip .slip-table th:nth-child(8),
+.staff-print-slip .slip-table td:nth-child(8) { width: 13%; }
+.staff-print-slip .slip-table .c { text-align: center; }
+.staff-print-slip .slip-table .r { text-align: right; font-variant-numeric: tabular-nums; }
+.staff-print-slip .slip-ten { text-align: left; line-height: 1.25; }
+.staff-print-slip .slip-thumb {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+.staff-print-slip .slip-thumb-empty {
+  color: #888;
+  font-size: 9pt;
+}
+.staff-print-slip .slip-total-label {
+  text-align: right !important;
+  font-weight: 800;
+  background: #fff2cc;
+}
+.staff-print-slip .slip-total-value {
+  font-weight: 800;
+  background: #fff2cc;
+}
+.staff-print-slip .slip-notes {
+  font-size: 8.5pt;
+  line-height: 1.4;
+  border: 1px solid #666;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  white-space: pre-wrap;
+}
+.staff-print-slip .slip-extra-note,
+.staff-print-slip .slip-staff-meta {
+  font-size: 8.5pt;
+  color: #333;
+  margin-bottom: 4px;
+}
+.staff-print-slip .slip-signs {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 18px;
+  page-break-inside: avoid;
+}
+.staff-print-slip .slip-sign {
+  text-align: center;
+  min-width: 35%;
+}
+.staff-print-slip .slip-sign-title {
+  font-weight: 700;
+  font-size: 11pt;
+}
+.staff-print-slip .slip-sign-hint {
+  font-size: 8.5pt;
+  font-style: italic;
+  color: #444;
+  margin-top: 2px;
+  min-height: 48px;
+}
+
 /* —— Floating Zalo + Gemini chat —— */
 .vp-chat-dock {
   position: fixed;

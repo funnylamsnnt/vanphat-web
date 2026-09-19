@@ -156,9 +156,12 @@
       "",
       "Nhân viên: " + meta.staff,
       "Cửa hàng: " + (meta.shop || "(không ghi)"),
-      "Khách hàng: " + (meta.customer || "(không ghi)"),
+      "Kính gửi: " + (meta.customer || "(không ghi)"),
+      "Địa chỉ: " + (meta.address || "(không ghi)"),
+      "Người nhận: " + (meta.receiver || meta.customer || "(không ghi)"),
       "SĐT: " + meta.phone,
     ];
+    if (meta.partner) lines.push("Mã đối tác: " + meta.partner);
     if (meta.note) lines.push("Ghi chú: " + meta.note);
     lines.push("", "— Chi tiết —");
     items.forEach((it, i) => {
@@ -184,35 +187,51 @@
     return lines.join("\n");
   }
 
-  function getMeta() {
+  function readFormFields() {
     const staffEl = document.getElementById("staff-name");
     const shopEl = document.getElementById("staff-shop");
     const customerEl = document.getElementById("staff-customer");
+    const addressEl = document.getElementById("staff-address");
+    const receiverEl = document.getElementById("staff-receiver");
     const phoneEl = document.getElementById("staff-phone");
+    const partnerEl = document.getElementById("staff-partner");
     const noteEl = document.getElementById("staff-note");
+    return {
+      staff: (staffEl && staffEl.value.trim()) || "",
+      shop: shopEl ? shopEl.value.trim() : "",
+      customer: customerEl ? customerEl.value.trim() : "",
+      address: addressEl ? addressEl.value.trim() : "",
+      receiver: receiverEl ? receiverEl.value.trim() : "",
+      phone: (phoneEl && phoneEl.value.trim()) || "",
+      partner: partnerEl ? partnerEl.value.trim() : "",
+      note: noteEl ? noteEl.value.trim() : "",
+      staffEl,
+      phoneEl,
+    };
+  }
 
-    const staff = (staffEl && staffEl.value.trim()) || "";
-    const phone = (phoneEl && phoneEl.value.trim()) || "";
+  function getMeta() {
+    const f = readFormFields();
 
-    if (!staff) {
-      if (staffEl) {
-        staffEl.focus();
-        staffEl.classList.add("is-invalid");
+    if (!f.staff) {
+      if (f.staffEl) {
+        f.staffEl.focus();
+        f.staffEl.classList.add("is-invalid");
       }
       showToast("Vui lòng nhập tên nhân viên");
       return null;
     }
-    if (staffEl) staffEl.classList.remove("is-invalid");
+    if (f.staffEl) f.staffEl.classList.remove("is-invalid");
 
-    if (!phone) {
-      if (phoneEl) {
-        phoneEl.focus();
-        phoneEl.classList.add("is-invalid");
+    if (!f.phone) {
+      if (f.phoneEl) {
+        f.phoneEl.focus();
+        f.phoneEl.classList.add("is-invalid");
       }
       showToast("Vui lòng nhập số điện thoại");
       return null;
     }
-    if (phoneEl) phoneEl.classList.remove("is-invalid");
+    if (f.phoneEl) f.phoneEl.classList.remove("is-invalid");
 
     if (!items.length) {
       showToast("Đơn trống — thêm sản phẩm trước");
@@ -220,11 +239,14 @@
     }
 
     return {
-      staff,
-      shop: shopEl ? shopEl.value.trim() : "",
-      customer: customerEl ? customerEl.value.trim() : "",
-      phone,
-      note: noteEl ? noteEl.value.trim() : "",
+      staff: f.staff,
+      shop: f.shop,
+      customer: f.customer,
+      address: f.address,
+      receiver: f.receiver,
+      phone: f.phone,
+      partner: f.partner,
+      note: f.note,
       orderId: makeOrderId(),
       total: getTotal(),
     };
@@ -248,6 +270,9 @@
       staff: meta.staff,
       shop: meta.shop || "",
       customer: meta.customer || "",
+      address: meta.address || "",
+      receiver: meta.receiver || "",
+      partner: meta.partner || "",
       phone: meta.phone,
       note: meta.note || "",
       order: orderText,
@@ -276,6 +301,9 @@
         staff: meta.staff,
         shop: meta.shop,
         customer: meta.customer,
+        address: meta.address,
+        receiver: meta.receiver,
+        partner: meta.partner,
         phone: meta.phone,
         note: meta.note,
         total: meta.total,
@@ -478,6 +506,196 @@
     };
   }
 
+
+  function formatSlipDate(d) {
+    const dt = d || new Date();
+    return (
+      "Ngày " +
+      dt.getDate() +
+      " tháng " +
+      (dt.getMonth() + 1) +
+      " năm " +
+      dt.getFullYear()
+    );
+  }
+
+  function formatSlipMoney(n) {
+    const v = Number(n) || 0;
+    if (!v) return "0";
+    return v.toLocaleString("vi-VN");
+  }
+
+  /** Soft meta for print — cart required; customer fields optional. */
+  function getPrintMeta(mode) {
+    if (!items.length) {
+      showToast("Đơn trống — thêm sản phẩm trước khi in");
+      return null;
+    }
+    const f = readFormFields();
+    const title =
+      mode === "quote" ? "PHIẾU BÁO GIÁ" : "PHIẾU GIAO HÀNG";
+    return {
+      mode: mode === "quote" ? "quote" : "delivery",
+      title,
+      staff: f.staff,
+      shop: f.shop,
+      customer: f.customer || "QUÝ KHÁCH HÀNG",
+      address: f.address,
+      receiver: f.receiver || f.customer || "",
+      phone: f.phone,
+      partner: f.partner,
+      note: f.note,
+      orderId: makeOrderId(),
+      total: getTotal(),
+      dateLabel: formatSlipDate(),
+    };
+  }
+
+  function buildPrintSlipHTML(meta) {
+    const addr =
+      meta.address ||
+      "…....................................., phường Nam Nha Trang, tỉnh Khánh Hòa";
+    const receiver =
+      meta.receiver || "…............................................";
+    const phone = meta.phone || "….................";
+    const partnerLine = meta.partner
+      ? `<div class="slip-partner">Mã đối tác: <strong>${escapeHtml(meta.partner)}</strong></div>`
+      : "";
+
+    const rows = items
+      .map((it, i) => {
+        const line = (Number(it.gia) || 0) * (Number(it.qty) || 0);
+        const img = it.anh
+          ? `<img class="slip-thumb" src="${escapeAttr(it.anh)}" alt="" onerror="this.style.display='none'" />`
+          : `<span class="slip-thumb-empty">—</span>`;
+        const giaLabel =
+          Number(it.gia) === 0
+            ? "Chờ báo giá"
+            : formatSlipMoney(it.gia);
+        const lineLabel =
+          Number(it.gia) === 0 ? "Chờ báo giá" : formatSlipMoney(line);
+        return `<tr>
+          <td class="c">${i + 1}</td>
+          <td class="c"><code>${escapeHtml(it.ma || "")}</code></td>
+          <td class="slip-ten">${escapeHtml(it.ten || "")}</td>
+          <td class="c slip-img-cell">${img}</td>
+          <td class="c">${escapeHtml(it.dvt || "—")}</td>
+          <td class="c">${Number(it.qty) || 0}</td>
+          <td class="r">${giaLabel}</td>
+          <td class="r">${lineLabel}</td>
+        </tr>`;
+      })
+      .join("");
+
+    const noteExtra = meta.note
+      ? `<div class="slip-extra-note">Ghi chú NV: ${escapeHtml(meta.note)}</div>`
+      : "";
+    const staffLine =
+      meta.staff || meta.shop
+        ? `<div class="slip-staff-meta">NV: ${escapeHtml(meta.staff || "—")}${
+            meta.shop ? " · " + escapeHtml(meta.shop) : ""
+          } · ${escapeHtml(meta.orderId || "")}</div>`
+        : `<div class="slip-staff-meta">${escapeHtml(meta.orderId || "")}</div>`;
+
+    return `
+      <div class="slip-inner">
+        <header class="slip-company">
+          <img class="slip-logo" src="assets/logo-header.png" alt="Vạn Phát" width="72" height="72" />
+          <div class="slip-company-text">
+            <div class="slip-company-name">CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT</div>
+            <div>Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</div>
+            <div>Website: http://vanphatcompany.vn &nbsp;|&nbsp; Email: congtytnhhvanphat999@gmail.com</div>
+            <div>Hotline: 033 5652 832 &nbsp;|&nbsp; STK Agribank: 4703201014329</div>
+          </div>
+        </header>
+        <h1 class="slip-title">${escapeHtml(meta.title)}</h1>
+        <div class="slip-date">${escapeHtml(meta.dateLabel)}</div>
+        <div class="slip-customer">
+          <div><strong>Kính gửi:</strong> ${escapeHtml(meta.customer)}</div>
+          <div>(Địa chỉ: ${escapeHtml(addr)})</div>
+          <div class="slip-receiver-row">
+            <span>Tên người nhận: ${escapeHtml(receiver)}</span>
+            <span>Điện thoại: ${escapeHtml(phone)}</span>
+          </div>
+          ${partnerLine}
+        </div>
+        <p class="slip-intro">Công ty TNHH Tư vấn đầu tư thương mại Vạn Phát trân trọng gửi đến Quý khách Danh mục sản phẩm như sau:</p>
+        <table class="slip-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã SP</th>
+              <th>Tên Sản Phẩm</th>
+              <th>Hình Ảnh</th>
+              <th>ĐVT</th>
+              <th>Số Lượng</th>
+              <th>Đơn Giá</th>
+              <th>Thành Tiền</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="slip-total-label">TỔNG CỘNG</td>
+              <td class="r slip-total-value">${formatSlipMoney(meta.total)}</td>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="slip-notes">
+          * Ghi chú:&nbsp;&nbsp;1) Đơn giá đã bao gồm thuế VAT (8%).&nbsp;&nbsp;&nbsp;&nbsp;2) Thời gian giao: 24h (khi nhận được Đơn đặt hàng).<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;3) Chi phí vận chuyển: Miễn phí.&nbsp;&nbsp;&nbsp;&nbsp;4) Hóa đơn VAT: xin vui lòng liên hệ Công ty.<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;5) Sản phẩm giao nhận chưa đạt theo Đơn đặt hàng: Quý khách vui lòng phản hồi để được đổi trả (trong 24h).
+        </div>
+        ${noteExtra}
+        ${staffLine}
+        <div class="slip-signs">
+          <div class="slip-sign">
+            <div class="slip-sign-title">Người nhận</div>
+            <div class="slip-sign-hint">(Ký, ghi rõ họ tên)</div>
+          </div>
+          <div class="slip-sign">
+            <div class="slip-sign-title">Người giao</div>
+            <div class="slip-sign-hint">(Ký, ghi rõ họ tên)</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function printSlip(mode) {
+    const meta = getPrintMeta(mode);
+    if (!meta) return;
+    const el = document.getElementById("staff-print-slip");
+    if (!el) {
+      showToast("Thiếu khung in phiếu");
+      return;
+    }
+    el.innerHTML = buildPrintSlipHTML(meta);
+    el.hidden = false;
+    el.setAttribute("aria-hidden", "false");
+    document.body.classList.add("staff-printing");
+
+    const cleanup = () => {
+      document.body.classList.remove("staff-printing");
+      el.hidden = true;
+      el.setAttribute("aria-hidden", "true");
+      window.removeEventListener("afterprint", cleanup);
+    };
+    window.addEventListener("afterprint", cleanup);
+
+    // Allow images a brief moment to paint before print dialog
+    setTimeout(() => {
+      try {
+        window.print();
+      } catch (_) {
+        cleanup();
+      }
+      // Fallback if afterprint never fires
+      setTimeout(() => {
+        if (document.body.classList.contains("staff-printing")) cleanup();
+      }, 1500);
+    }, 120);
+  }
+
   function bindUI() {
     document.addEventListener("click", (e) => {
       const card = e.target.closest(".product-card");
@@ -538,6 +756,15 @@
     const submitBtn = document.getElementById("staff-submit");
     if (submitBtn) {
       submitBtn.addEventListener("click", () => submitOrder(submitBtn));
+    }
+
+    const printDelivery = document.getElementById("staff-print-delivery");
+    if (printDelivery) {
+      printDelivery.addEventListener("click", () => printSlip("delivery"));
+    }
+    const printQuote = document.getElementById("staff-print-quote");
+    if (printQuote) {
+      printQuote.addEventListener("click", () => printSlip("quote"));
     }
 
     const clearBtn = document.getElementById("staff-clear-cart");
