@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đơn đặt hàng nhân viên | Vạn Phát</title>
+  <meta name="description" content="Trang nội bộ — nhân viên quầy lập đơn đặt hàng Vạn Phát." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="staff-page">
+  <div class="topbar">
+    <div class="container">
+      <span>📍 LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</span>
+      <span>☎ Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="logo" href="index.html" aria-label="Vạn Phát — Trang chủ">
+        <img class="logo-img" src="assets/logo-nav.png" width="40" height="40" alt="Vạn Phát" />
+        <span class="logo-text">Vạn Phát<small>Nhân viên · Đơn đặt hàng</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-links" aria-label="Chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="san-pham.html">Sản phẩm</a>
+        <a href="photocopy.html">Photocopy</a>
+        <a href="lien-he.html">Liên hệ</a>
+        <a href="nhan-vien.html" class="active">NV · Đơn hàng</a>
+      </nav>
+      <div class="nav-cta">
+        <button type="button" class="btn btn-outline-navy btn-sm" id="staff-clear-cart" hidden>Xóa đơn</button>
+        <span class="staff-badge">Nội bộ</span>
+      </div>
+    </div>
+  </header>
+
+  <div id="staff-pin-gate" class="staff-pin-gate" hidden>
+    <div class="staff-pin-card">
+      <h2>Trang nhân viên</h2>
+      <p>Nhập mã PIN để tiếp tục.</p>
+      <label class="cart-field">
+        <span>PIN</span>
+        <input type="password" id="staff-pin-input" inputmode="numeric" autocomplete="off" placeholder="••••" />
+      </label>
+      <button type="button" class="btn btn-gold" id="staff-pin-submit">Vào</button>
+      <p class="staff-pin-error" id="staff-pin-error" hidden>PIN không đúng.</p>
+    </div>
+  </div>
+
+  <main id="staff-main">
+    <section class="page-hero">
+      <div class="container">
+        <h1>Đơn đặt hàng — Nhân viên</h1>
+        <p>Lập đơn nhiều dòng như Excel «Đơn Đặt Hàng». Chỉ hiện giá bán — không hiện giá vốn.</p>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="container">
+        <div class="toolbar-inner">
+          <div class="search-wrap">
+            <span class="s-icon" aria-hidden="true">🔍</span>
+            <label class="sr-only" for="staff-search">Tìm kiếm</label>
+            <input id="staff-search" type="search" placeholder="Tìm theo tên, mã sản phẩm…" autocomplete="off" />
+          </div>
+          <label class="sr-only" for="staff-group">Nhóm hàng</label>
+          <select id="staff-group" class="filter-select">
+            <option value="">Tất cả nhóm</option>
+          </select>
+          <div id="staff-result-count" class="result-count">Đang tải…</div>
+        </div>
+        <div id="staff-chip-row" class="chip-row" role="group" aria-label="Lọc nhanh theo nhóm"></div>
+      </div>
+    </div>
+
+    <section class="staff-layout">
+      <div class="container staff-layout-inner">
+        <div class="staff-catalog">
+          <div id="staff-product-grid" class="product-grid">
+            <div class="loading" style="grid-column:1/-1">Đang tải catalog…</div>
+          </div>
+        </div>
+
+        <aside class="staff-order-panel" aria-label="Đơn đang lập">
+          <div class="staff-order-header">
+            <h2>Đơn đang lập</h2>
+            <span class="staff-cart-count" id="staff-cart-count">0 dòng</span>
+          </div>
+
+          <div class="staff-order-fields">
+            <label class="cart-field">
+              <span>Nhân viên <em>*</em></span>
+              <input type="text" id="staff-name" name="nhanvien" placeholder="Tên nhân viên" autocomplete="name" required />
+            </label>
+            <label class="cart-field">
+              <span>Cửa hàng</span>
+              <input type="text" id="staff-shop" name="cuahang" placeholder="VD: Quầy Mỹ Gia" autocomplete="organization" />
+            </label>
+            <label class="cart-field">
+              <span>Khách hàng</span>
+              <input type="text" id="staff-customer" name="khachhang" placeholder="Tên khách / cửa hàng" autocomplete="off" />
+            </label>
+            <label class="cart-field">
+              <span>SĐT <em>*</em></span>
+              <input type="tel" id="staff-phone" name="sdt" placeholder="09xx xxx xxx" required autocomplete="tel" />
+            </label>
+            <label class="cart-field">
+              <span>Ghi chú</span>
+              <textarea id="staff-note" name="ghichu" rows="2" placeholder="Giao hàng, thanh toán…"></textarea>
+            </label>
+          </div>
+
+          <div class="staff-order-table-wrap">
+            <table class="staff-order-table" aria-label="Chi tiết đơn">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Mã</th>
+                  <th>Tên</th>
+                  <th>ĐVT</th>
+                  <th>SL</th>
+                  <th>Đơn giá</th>
+                  <th>Thành tiền</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="staff-cart-body">
+                <tr class="staff-cart-empty-row">
+                  <td colspan="8">Chưa có sản phẩm — chọn từ catalog bên trái.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6" class="staff-total-label">Tổng</td>
+                  <td colspan="2" class="staff-total-value" id="staff-cart-total">0 ₫</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="staff-order-actions">
+            <button type="button" class="btn btn-gold" id="staff-submit">
+              Chốt đơn · Gửi email
+            </button>
+            <p class="cart-email-hint">Đơn gửi về <strong>congtytnhhvanphat999@gmail.com</strong> · tiêu đề <code>[NV]</code></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:1rem">
+        <span>© 2026 Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát — trang nội bộ nhân viên.</span>
+        <span>Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/staff-order.js"></script>
+</body>
+</html>
