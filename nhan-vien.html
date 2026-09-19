@@ -60,7 +60,7 @@
     <section class="page-hero">
       <div class="container">
         <h1>Đơn đặt hàng — Nhân viên</h1>
-        <p>Lập đơn nhiều dòng như Excel «Đơn Đặt Hàng». Chỉ hiện giá bán — không hiện giá vốn.</p>
+        <p>Lập đơn như Excel «Đơn Đặt Hàng». Xuất PDF / Gửi bill rõ ràng. Chỉ giá bán — không giá vốn.</p>
       </div>
     </section>
 
@@ -161,17 +161,28 @@
 
           <div class="staff-order-actions">
             <div class="staff-print-actions">
-              <button type="button" class="btn btn-outline-navy" id="staff-print-delivery" title="In / Xuất PDF phiếu giao hàng (layout Excel)">
-                In phiếu giao
+              <button type="button" class="btn btn-gold" id="staff-export-pdf" title="Tải phiếu giao hàng PDF (layout Excel Đơn Đặt Hàng)">
+                Xuất PDF
               </button>
-              <button type="button" class="btn btn-outline-navy" id="staff-print-quote" title="In / Xuất PDF báo giá (cùng layout Excel)">
-                In báo giá
+              <button type="button" class="btn btn-outline-navy" id="staff-export-pdf-quote" title="Tải phiếu báo giá PDF">
+                PDF báo giá
               </button>
             </div>
-            <button type="button" class="btn btn-gold" id="staff-submit">
-              Chốt đơn · Gửi email
+            <div class="staff-bill-actions">
+              <button type="button" class="btn btn-outline-navy" id="staff-send-bill" title="Gửi bill có cấu trúc về email công ty (không phải bảng FormSubmit thô)">
+                Gửi bill
+              </button>
+              <button type="button" class="btn btn-outline-navy" id="staff-send-whatsapp" title="Mở WhatsApp với nội dung bill">
+                WhatsApp
+              </button>
+            </div>
+            <button type="button" class="btn btn-outline-navy staff-print-fallback" id="staff-print-delivery" title="In hoặc Save as PDF qua hộp thoại trình duyệt">
+              In phiếu (tuỳ chọn)
             </button>
-            <p class="cart-email-hint">In/PDF mở hộp thoại trình duyệt → chọn «Save as PDF». Đơn email gửi về <strong>congtytnhhvanphat999@gmail.com</strong> · tiêu đề <code>[NV]</code></p>
+            <p class="cart-email-hint">
+              <strong>Xuất PDF</strong> tải file <code>Phieu_Giao_Hang_NV….pdf</code> giống Excel.
+              <strong>Gửi bill</strong> gửi tóm tắt có cấu trúc về <strong>congtytnhhvanphat999@gmail.com</strong> — phiếu PDF mới là bản chính thức.
+            </p>
           </div>
         </aside>
       </div>
@@ -190,6 +201,7 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="js/main.js"></script>
   <script src="js/staff-order.js"></script>
 </body>

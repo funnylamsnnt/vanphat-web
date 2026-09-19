@@ -1780,7 +1780,7 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  border-bottom: 1.5px solid #1F4E78;
+  border-bottom: 1.5px solid #185C34;
   padding-bottom: 6px;
   margin-bottom: 6px;
 }
@@ -1798,7 +1798,7 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   font-weight: 700;
   font-size: 11.5pt;
   text-transform: uppercase;
-  color: #1F4E78;
+  color: #185C34;
   margin-bottom: 2px;
 }
 .staff-print-slip .slip-title {
@@ -1807,13 +1807,25 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   font-weight: 800;
   letter-spacing: 0.04em;
   margin: 8px 0 2px;
-  color: #000;
+  color: #002060;
 }
 .staff-print-slip .slip-date {
   text-align: center;
   font-size: 10.5pt;
   font-style: italic;
   margin-bottom: 8px;
+}
+.staff-print-slip .slip-customer-name {
+  color: #C00000; /* Excel A5 */
+  font-weight: 700;
+  font-size: 12pt;
+  text-align: center;
+}
+.staff-print-slip .slip-date {
+  color: #002060;
+}
+.staff-print-slip .slip-intro {
+  color: #002060;
 }
 .staff-print-slip .slip-customer {
   font-size: 10.5pt;
@@ -1850,7 +1862,8 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   word-wrap: break-word;
 }
 .staff-print-slip .slip-table th {
-  background: #d9e2f3;
+  background: #0070C0;
+  color: #fff;
   font-weight: 700;
   text-align: center;
   font-size: 9pt;
@@ -1889,11 +1902,13 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
 .staff-print-slip .slip-total-label {
   text-align: right !important;
   font-weight: 800;
-  background: #fff2cc;
+  background: #0070C0;
+  color: #fff;
 }
 .staff-print-slip .slip-total-value {
   font-weight: 800;
-  background: #fff2cc;
+  background: #0070C0;
+  color: #fff;
 }
 .staff-print-slip .slip-notes {
   font-size: 8.5pt;
@@ -2135,3 +2150,63 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   font-size: 0.85rem;
 }
 .vp-lead-submit:disabled { opacity: 0.55; }
+
+
+/* Off-screen render target for html2pdf download */
+.staff-print-slip.staff-pdf-exporting {
+  display: block !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 190mm;
+  z-index: -1;
+  opacity: 1;
+  pointer-events: none;
+  background: #fff;
+  padding: 8mm;
+}
+
+.staff-bill-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin-bottom: 0.5rem;
+}
+.staff-bill-actions .btn { width: 100%; font-size: 0.82rem; padding: 0.55rem 0.4rem; }
+.staff-print-fallback { width: 100%; margin-bottom: 0.45rem; font-size: 0.82rem; }
+
+.staff-bill-sheet {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 30, 50, 0.45);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.staff-bill-sheet[hidden] { display: none !important; }
+.staff-bill-sheet-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+.staff-bill-sheet-card h3 { margin: 0 0 0.5rem; color: #002060; }
+.staff-bill-sheet-msg { font-size: 0.92rem; color: #333; margin: 0 0 1rem; line-height: 1.45; }
+.staff-bill-sheet-actions { display: grid; gap: 0.45rem; }
+.staff-bill-sheet-actions .btn { width: 100%; }
+.staff-bill-sheet-close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+}
