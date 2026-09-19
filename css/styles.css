@@ -1548,3 +1548,162 @@ body.cart-open { overflow: hidden; }
   flex-direction: column;
   flex: 1;
 }
+
+/* ===== Staff order page (nhan-vien.html) ===== */
+.staff-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--navy);
+  border-radius: 999px;
+}
+
+.staff-pin-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 35, 55, 0.72);
+  padding: 1.5rem;
+}
+.staff-pin-gate[hidden] { display: none !important; }
+.staff-pin-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  max-width: 22rem;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+.staff-pin-card h2 {
+  margin: 0 0 0.35rem;
+  color: var(--navy);
+  font-size: 1.25rem;
+}
+.staff-pin-card p { color: var(--text-muted); margin: 0 0 1rem; font-size: 0.9rem; }
+.staff-pin-error { color: #b42828; font-size: 0.85rem; margin-top: 0.75rem; }
+.staff-pin-error[hidden] { display: none !important; }
+body.staff-pin-locked #staff-main { visibility: hidden; }
+
+.staff-layout {
+  padding: 1.25rem 0 3rem;
+}
+.staff-layout-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (min-width: 1100px) {
+  .staff-layout-inner {
+    grid-template-columns: 1fr min(420px, 38%);
+  }
+}
+
+.staff-order-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(31,78,120,0.08);
+  padding: 1rem 1rem 1.25rem;
+  position: sticky;
+  top: 5.5rem;
+  max-height: calc(100vh - 6.5rem);
+  overflow: auto;
+}
+.staff-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--border);
+}
+.staff-order-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--navy);
+}
+.staff-cart-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.staff-order-fields {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+.staff-order-fields .cart-field { margin: 0; }
+
+.staff-order-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.staff-order-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.staff-order-table th,
+.staff-order-table td {
+  padding: 0.45rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+.staff-order-table th {
+  background: var(--cream);
+  color: var(--navy);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.staff-order-table tfoot td {
+  border-bottom: none;
+  font-weight: 700;
+  background: rgba(31,78,120,0.04);
+}
+.staff-td-ten {
+  max-width: 9rem;
+  line-height: 1.3;
+}
+.staff-td-num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.staff-total-label { text-align: right !important; }
+.staff-total-value {
+  color: var(--navy);
+  font-size: 0.95rem !important;
+  white-space: nowrap;
+}
+.staff-cart-empty-row td {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 1.25rem 0.75rem;
+}
+.staff-order-table .qty-control-sm {
+  display: inline-flex;
+  scale: 0.92;
+}
+.staff-order-actions .btn { width: 100%; }
+.staff-order-actions code {
+  font-size: 0.75rem;
+  background: rgba(31,78,120,0.08);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 1099px) {
+  .staff-order-panel {
+    position: static;
+    max-height: none;
+  }
+}
