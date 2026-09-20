@@ -1,9 +1,11 @@
 {
-  "driveFileId": "1eZm5vXkZArM7GO1eAhSDm8AxFdnEJE2l",
+  "driveFileId": "1hoye9O_ry9tpwx4jEWk2pUbFCmgVxnWI",
   "driveFileName": "VanPhat_Web_Catalog_SOURCE.xlsx",
-  "driveLink": "https://drive.google.com/file/d/1eZm5vXkZArM7GO1eAhSDm8AxFdnEJE2l/view",
-  "lastModifiedTime": "2026-09-20T11:17:36.522Z",
+  "driveLink": "https://drive.google.com/file/d/1hoye9O_ry9tpwx4jEWk2pUbFCmgVxnWI/view",
+  "lastModifiedTime": "2026-09-20T22:30:05.000Z",
   "repo": "funnylamsnnt/vanphat-web",
   "localCopy": "/workspace/vanphat-sync/VanPhat_Web_Catalog_SOURCE.xlsx",
-  "note": "Local sync from chat attachment (not re-uploaded to Drive); driveFileId unchanged (VanPhat_Web_Catalog_SOURCE)."
+  "previousDriveFileId": "1eZm5vXkZArM7GO1eAhSDm8AxFdnEJE2l",
+  "note": "Synced from chat attachment Excel this run (2026-09-21); source was agent attachment xlsx",
+  "sourceThisRun": "chat attachment: 06370f466cd08eba35abd12cfe77ab6cec5853cdee48d8649e7d71acad771b3d.xlsx"
 }

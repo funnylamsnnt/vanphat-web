@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thư ngỏ | Vạn Phát</title>
+  <meta name="description" content="Thư ngỏ giới thiệu năng lực cung cấp văn phòng phẩm của Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát — Nha Trang, Khánh Hòa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .letter-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid rgba(15, 35, 70, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(15, 35, 70, 0.08);
+      padding: 2.25rem 2rem 2.5rem;
+    }
+    .letter-head {
+      text-align: center;
+      border-bottom: 2px solid #c9a227;
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .letter-head .co-name {
+      color: #0f2346;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+    }
+    .letter-head .co-meta {
+      color: #5a6a85;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .letter-title {
+      text-align: center;
+      margin: 1.25rem 0 0.35rem;
+    }
+    .letter-title h2 {
+      margin: 0;
+      color: #0f2346;
+      font-size: 1.65rem;
+      font-weight: 800;
+    }
+    .letter-title .subj {
+      color: #5a6a85;
+      font-size: 0.95rem;
+      margin-top: 0.35rem;
+    }
+    .letter-body {
+      color: #24324a;
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+    .letter-body p { margin: 0 0 1rem; }
+    .letter-salute { font-weight: 600; }
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0 1.75rem;
+    }
+    @media (max-width: 640px) {
+      .pillars { grid-template-columns: 1fr; }
+      .letter-wrap { padding: 1.5rem 1.1rem 1.75rem; }
+    }
+    .pillar {
+      background: linear-gradient(180deg, #f7f9fc 0%, #fff 100%);
+      border: 1px solid rgba(15, 35, 70, 0.1);
+      border-radius: 12px;
+      padding: 1.1rem 1rem;
+    }
+    .pillar h3 {
+      margin: 0 0 0.45rem;
+      color: #0f2346;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .pillar h3::before {
+      content: "";
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #c9a227;
+      margin-right: 0.45rem;
+      vertical-align: middle;
+    }
+    .pillar p { margin: 0; font-size: 0.92rem; color: #3a4a63; line-height: 1.55; }
+    .letter-contact {
+      background: #0f2346;
+      color: #fff;
+      border-radius: 12px;
+      padding: 1.25rem 1.2rem;
+      margin: 1.25rem 0;
+    }
+    .letter-contact h3 {
+      margin: 0 0 0.65rem;
+      color: #c9a227;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .letter-contact p, .letter-contact a {
+      margin: 0.2rem 0;
+      color: #e8eef8;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .letter-contact a:hover { color: #c9a227; }
+    .letter-sign {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+      padding-top: 0.5rem;
+    }
+    .letter-sign .recv { color: #5a6a85; font-size: 0.9rem; line-height: 1.55; }
+    .letter-sign .sign-block { text-align: center; min-width: 180px; }
+    .letter-sign .sign-block .role {
+      font-weight: 700; color: #0f2346; text-transform: uppercase; font-size: 0.9rem;
+    }
+    .letter-sign .sign-block .name {
+      margin-top: 2.5rem; font-weight: 800; color: #0f2346;
+    }
+    .letter-actions {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      justify-content: center; margin-top: 1.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <span>📍 LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</span>
+      <span>☎ Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container nav">
+                  <a class="logo" href="index.html" aria-label="Vạn Phát — Trang chủ">
+        <img class="logo-img" src="assets/logo-nav.png" width="40" height="40" alt="Vạn Phát" />
+        <span class="logo-text">Vạn Phát<small>Văn phòng phẩm · Photocopy</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-links" aria-label="Chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="san-pham.html">Sản phẩm</a>
+        <a href="photocopy.html">Photocopy</a>
+        <a href="thu-ngo.html" class="active">Thư ngỏ</a>
+        <a href="lien-he.html">Liên hệ</a>
+      </nav>
+            <form class="nav-search" action="san-pham.html" method="get" role="search">
+        <input type="search" name="q" placeholder="Tìm sản phẩm…" aria-label="Tìm sản phẩm" autocomplete="off" />
+        <button type="submit" aria-label="Tìm">⌕</button>
+      </form>
+      <div class="nav-cta">
+        <button type="button" class="cart-toggle" data-cart-open aria-label="Mở giỏ hàng">
+          🛒<span class="cart-badge" data-cart-badge hidden>0</span>
+        </button>
+        <a class="btn btn-outline-navy btn-sm" href="tel:0335652832">Gọi hotline</a>
+        <a class="btn btn-gold btn-sm" href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Thư ngỏ</h1>
+        <p>Giới thiệu năng lực cung cấp văn phòng phẩm — đồng hành cùng cơ quan, doanh nghiệp tại Nha Trang &amp; Khánh Hòa.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <article class="letter-wrap">
+          <header class="letter-head">
+            <p class="co-name">CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT</p>
+            <p class="co-meta">
+              Hotline: 033.565.2832 · Email: congtytnhhvanphat999@gmail.com<br />
+              Website: www.vanphatcompany.vn<br />
+              Địa chỉ: LK19-06 đường số 20, KĐT Mỹ Gia, phường Nam Nha Trang
+            </p>
+          </header>
+
+          <div class="letter-title">
+            <h2>THƯ NGỎ</h2>
+            <p class="subj">V/v giới thiệu năng lực cung cấp văn phòng phẩm</p>
+          </div>
+
+          <div class="letter-body">
+            <p class="letter-salute">Kính gửi: Quý Khách hàng, Quý Cơ quan – Doanh nghiệp.</p>
+            <p>
+              Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát, chúng tôi xin gửi đến Quý Khách hàng lời chào
+              trân trọng và lời chúc thịnh vượng, thành công.
+            </p>
+            <p>
+              Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát là đơn vị chuyên cung cấp văn phòng phẩm và vật tư
+              văn phòng cho các cơ quan, doanh nghiệp tại Nha Trang, Khánh Hòa và khu vực lân cận. Với phương châm
+              <em>“Tư vấn tận tâm – Đầu tư bền vững – Thương mại phát triển”</em>, chúng tôi cam kết đồng hành cùng Quý Khách hàng
+              bằng sản phẩm chất lượng, giá cả hợp lý và dịch vụ chuyên nghiệp.
+            </p>
+            <p>
+              Vạn Phát mong muốn trở thành đối tác cung ứng văn phòng phẩm tin cậy, đồng hành lâu dài cùng
+              Quý Khách hàng, với những giá trị và cam kết cụ thể như sau:
+            </p>
+
+            <div class="pillars">
+              <div class="pillar">
+                <h3>Cung ứng văn phòng phẩm</h3>
+                <p>Cung cấp tất cả sản phẩm thuộc danh mục văn phòng phẩm, đáp ứng tối đa mọi nhu cầu đối với mọi loại hình cơ quan, doanh nghiệp và cá thể.</p>
+              </div>
+              <div class="pillar">
+                <h3>Nguồn gốc, chứng từ sản phẩm</h3>
+                <p>Nguồn gốc xuất xứ sản phẩm chính hãng, chất lượng, đảm bảo chứng từ minh bạch.</p>
+              </div>
+              <div class="pillar">
+                <h3>Giá cả &amp; chính sách cạnh tranh</h3>
+                <p>Giá cả cạnh tranh, linh hoạt, chính sách chiết khấu và ưu đãi hấp dẫn với từng khách hàng.</p>
+              </div>
+              <div class="pillar">
+                <h3>Hệ thống số hóa – Công nghệ</h3>
+                <p>Hình thức vận hành số hóa, hệ thống đặt hàng trực tuyến, tra cứu bảng giá, tối ưu hóa công nghệ hiện đại.</p>
+              </div>
+            </div>
+
+            <p>Mọi thông tin trao đổi, đặt hàng, yêu cầu báo giá, kính mời Quý Khách hàng liên hệ:</p>
+
+            <div class="letter-contact">
+              <h3>CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT</h3>
+              <p>Hotline: <a href="tel:0335652832">033.565.2832</a></p>
+              <p>Email: <a href="mailto:congtytnhhvanphat999@gmail.com">congtytnhhvanphat999@gmail.com</a></p>
+              <p>Website: <a href="https://vanphatcompany.vn" target="_blank" rel="noopener">www.vanphatcompany.vn</a></p>
+              <p>Địa chỉ: LK19-06 đường số 20, KĐT Mỹ Gia, phường Nam Nha Trang</p>
+            </div>
+
+            <p>
+              Trân trọng cảm ơn Quý Khách hàng đã dành thời gian quan tâm. Kính chúc Quý Khách hàng ngày càng
+              phát triển bền vững và thịnh vượng!
+            </p>
+
+            <div class="letter-sign">
+              <div class="recv">
+                <strong>Nơi nhận:</strong><br />
+                - Như trên;<br />
+                - Lưu: VT, VP.
+              </div>
+              <div class="sign-block">
+                <div class="role">Trân trọng. /.</div>
+                <div class="role" style="margin-top:0.75rem">GIÁM ĐỐC</div>
+                <div class="name">LÊ THỊ KIỀU OANH</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="letter-actions">
+            <a class="btn btn-gold btn-lg" href="assets/thu-ngo-van-phat.pdf" target="_blank" rel="noopener">📄 Tải PDF Thư ngỏ</a>
+            <a class="btn btn-outline-navy btn-lg" href="lien-he.html">Liên hệ Vạn Phát</a>
+            <a class="btn btn-outline-navy btn-lg" href="san-pham.html">Xem catalog sản phẩm</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+                              <a class="logo" href="index.html" aria-label="Vạn Phát">
+            <img class="logo-img logo-img-sm" src="assets/logo-nav.png" width="36" height="36" alt="Vạn Phát" />
+            <span class="logo-text">Vạn Phát<small>Tư vấn · Đầu tư · Thương mại</small></span>
+          </a>
+          <p>Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát — chuyên cung cấp văn phòng phẩm và dịch vụ photocopy tại Nha Trang.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Liên kết</h4>
+          <a href="index.html">Trang chủ</a>
+          <a href="san-pham.html">Sản phẩm</a>
+          <a href="photocopy.html">Photocopy</a>
+          <a href="thu-ngo.html">Thư ngỏ</a>
+          <a href="lien-he.html">Liên hệ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <li>LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</li>
+          <a href="tel:0335652832">☎ 033 5652 832</a>
+          <a href="https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec" target="_blank" rel="noopener">Đặt hàng online</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát. All rights reserved.</span>
+        <span>Hotline: <a href="tel:0335652832">033 5652 832</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/chat-widget.js?v=20260918b"></script>
+</body>
+</html>
