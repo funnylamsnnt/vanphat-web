@@ -85,7 +85,7 @@
       "ma": "VP068",
       "ten": "Bìa còng 5F Thiên Long",
       "dvt": "Cái",
-      "gia": 55000,
+      "gia": 53000,
       "anh": "https://lh3.googleusercontent.com/d/1_RhuI5cowUorF-4ZCCK1TKM8ZswOaCb2",
       "ton": 0
     },
@@ -635,7 +635,7 @@
       "ten": "Bút dạ quang TL HL03",
       "dvt": "Cây",
       "gia": 8000,
-      "anh": "https://lh3.googleusercontent.com/d/1zPYBBaghBpvxXNCf2cJ3Fws_bsU2hiXd",
+      "anh": "",
       "ton": 0
     },
     {
@@ -1687,7 +1687,7 @@
       "ma": "VP179",
       "ten": "Dây rút dài 20cm",
       "dvt": "Bịch",
-      "gia": 20000,
+      "gia": 19000,
       "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
       "ton": 0
     },
@@ -1696,7 +1696,7 @@
       "ma": "VP180",
       "ten": "Dây rút dài 25cm",
       "dvt": "Bịch",
-      "gia": 25000,
+      "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
       "ton": 0
     },
@@ -1705,7 +1705,7 @@
       "ma": "VP181",
       "ten": "Dây rút dài 30cm",
       "dvt": "Bịch",
-      "gia": 30000,
+      "gia": 25000,
       "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
       "ton": 0
     },
@@ -2128,7 +2128,7 @@
       "ma": "VP279",
       "ten": "Kẹp bướm 51mm (G-Star)",
       "dvt": "Hộp",
-      "gia": 35000,
+      "gia": 38000,
       "anh": "https://lh3.googleusercontent.com/d/1Fa0HUUNo_TfO5BHWc2JrQcoPiZHEfAxQ",
       "ton": 45
     },
@@ -2192,8 +2192,8 @@
       "ten": "Khăn giấy Hộp PULPPY 2L 180T",
       "dvt": "Hộp",
       "gia": 23000,
-      "anh": "https://lh3.googleusercontent.com/d/1G67KF2NeGZebypkZ5BpP-SJHUcdGsB0r",
-      "ton": 5
+      "anh": "https://lh3.googleusercontent.com/d/1XCb--5jSJcZScpGQLyl_J0BQYPTLEy50",
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3377,5 +3377,5 @@
   ],
   "orderUrl": "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec",
   "hotline": "033 5652 832",
-  "syncedFrom": "06370f466cd08eba35abd12cfe77ab6cec5853cdee48d8649e7d71acad771b3d.xlsx"
+  "syncedFrom": "source.xlsx"
 }
