@@ -1,11 +1,11 @@
 {
-  "driveFileId": "1eS5c3Xtnf1h_CGsmKzR5nUE4UY2uX2mA",
+  "driveFileId": "1JSTr601dMAXYVlPQkqLPxYoy1M2auC3X",
   "driveFileName": "VanPhat_Web_Catalog_SOURCE.xlsx",
-  "driveLink": "https://drive.google.com/file/d/1eS5c3Xtnf1h_CGsmKzR5nUE4UY2uX2mA/view",
-  "lastModifiedTime": "2026-09-24T22:53:56.085Z",
+  "driveLink": "https://drive.google.com/file/d/1JSTr601dMAXYVlPQkqLPxYoy1M2auC3X/view",
+  "lastModifiedTime": "2026-09-24T23:02:42.220Z",
   "repo": "funnylamsnnt/vanphat-web",
   "localCopy": "/workspace/vanphat-sync/VanPhat_Web_Catalog_SOURCE.xlsx",
-  "previousDriveFileId": "1eZm5vXkZArM7GO1eAhSDm8AxFdnEJE2l",
-  "note": "Synced from chat attachment Excel this run (2026-09-21); source was agent attachment xlsx",
+  "previousDriveFileId": "1eS5c3Xtnf1h_CGsmKzR5nUE4UY2uX2mA",
+  "note": "Source fixed dropdown 25/09 (direct range instead of INDEX named range)",
   "sourceThisRun": "chat attachment: 06370f466cd08eba35abd12cfe77ab6cec5853cdee48d8649e7d71acad771b3d.xlsx"
 }
