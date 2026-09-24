@@ -3,6 +3,51 @@
 import argparse, json, re, hashlib
 from pathlib import Path
 
+# Default (legacy) layout: A nhóm, B mã, C tên, D ĐVT, E giá, F link ảnh, K tồn.
+DEFAULT_COLS = {"nhom": 0, "ma": 1, "ten": 2, "dvt": 3, "gia": 4, "anh": 5, "ton": 10}
+HEADER_PATTERNS = {
+    "nhom": [r"^nh[oó]m"],
+    "ma": [r"^m[aã]\s*(sp|s[aả]n ph[aẩ]m|h[aà]ng|vt)?$"],
+    "ten": [r"^t[eê]n\s*(s[aả]n ph[aẩ]m|sp|h[aà]ng|m[aặ]t h[aà]ng|v[aậ]t t[uư])"],
+    "dvt": [r"^đvt$", r"^đ[oơ]n v[iị] t[ií]nh"],
+    "gia": [r"^đ[oơ]n gi[aá]", r"^gi[aá] b[aá]n", r"^gi[aá]$"],
+    "anh": [r"(link|url).*(h[iì]nh|[aả]nh)", r"^h[iì]nh [aả]nh", r"^[aả]nh$"],
+    "ton": [r"^t[oồ]n kho", r"^t[oồ]n$"],
+}
+
+def detect_columns(header) -> dict:
+    """Map fields to column indexes from the header row; fall back to the legacy layout."""
+    cols = dict(DEFAULT_COLS)
+    names = [re.sub(r"\s+", " ", str(h or "")).strip().lower() for h in header]
+    found = {}
+    for key, pats in HEADER_PATTERNS.items():
+        for idx, name in enumerate(names):
+            if name and any(re.search(p, name) for p in pats):
+                found[key] = idx
+                break
+    # Only trust header detection if the essential columns were all found.
+    if all(k in found for k in ("ma", "ten", "gia")):
+        cols.update(found)
+    return cols
+
+def clean(v) -> str:
+    if v is None:
+        return ""
+    return re.sub(r"\s+", " ", str(v)).strip()
+
+def to_int(v):
+    if v is None or v == "":
+        return None
+    if isinstance(v, (int, float)):
+        return int(round(v))
+    s = str(v).strip().replace("₫", "").replace("đ", "").replace(" ", "")
+    if re.fullmatch(r"\d{1,3}([.,]\d{3})+", s):
+        s = re.sub(r"[.,]", "", s)
+    try:
+        return int(round(float(s.replace(",", "."))))
+    except Exception:
+        return None
+
 def export(xlsx_path: Path, out_json: Path) -> dict:
     from openpyxl import load_workbook
     wb = load_workbook(xlsx_path, read_only=True, data_only=True)
@@ -41,27 +86,25 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
 
     products = []
     ws = wb[sheet]
-    for i, row in enumerate(ws.iter_rows(values_only=True)):
-        if i == 0 or not row or not row[1]:
+    rows = ws.iter_rows(values_only=True)
+    header = next(rows, None) or ()
+    col = detect_columns(header)
+    for row in rows:
+        if not row:
             continue
-        nh = str(row[0] or "").strip() or "Khác"
+        cell = lambda k: row[col[k]] if col.get(k) is not None and col[k] < len(row) else None
+        ma = clean(cell("ma"))
+        if not ma:
+            continue
+        nh = clean(cell("nhom")) or "Khác"
         if nh.lower() == "dụng cụ vp":
             nh = "Dụng cụ VP"
-        ma = str(row[1]).strip()
-        ten = str(row[2] or "").strip()
-        dvt = str(row[3] or "").strip()
-        gia = row[4]
-        try:
-            gia = int(float(gia)) if gia is not None and gia != "" else 0
-        except Exception:
-            gia = 0
-        anh = str(row[5] or "").strip() if len(row) > 5 and row[5] else ""
-        ton = None
-        if len(row) > 10 and row[10] is not None and row[10] != "":
-            try:
-                ton = int(float(row[10]))
-            except Exception:
-                ton = None
+        ten = clean(cell("ten"))
+        dvt = clean(cell("dvt"))
+        gia = to_int(cell("gia"))
+        gia = gia if gia is not None and gia >= 0 else 0
+        anh = clean(cell("anh"))
+        ton = to_int(cell("ton"))
         products.append({"nhom": nh, "ma": ma, "ten": ten, "dvt": dvt, "gia": gia, "anh": anh, "ton": ton})
     wb.close()
 
