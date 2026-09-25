@@ -1,17 +1,23 @@
 {
-  "driveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
-  "driveFileName": "VanPhat_Web_Catalog_SOURCE.xlsx",
-  "driveLink": "https://docs.google.com/spreadsheets/d/1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK/edit",
-  "lastModifiedTime": "2026-09-24T23:29:42.528Z",
+  "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
+  "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
+  "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
+  "lastModifiedTime": "2026-09-25T06:14:43.754Z",
+  "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
+  "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "localCopy": "/workspace/vanphat-sync/VanPhat_Web_Catalog_SOURCE.xlsx",
-  "previousDriveFileId": "12ElEddUrVhqvK1faEjNYc6OHRDLeskI8",
-  "note": "25/09 06:28: verified in Google Sheets (dropdown + images). Never re-upload a Sheets-saved xlsx as the source.",
-  "lastSyncAt": "2026-09-25T01:18:09Z",
+  "lastSyncAt": "2026-09-25T06:18:33Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 382,
-    "with_img": 283,
-    "price_chg": 3
-  }
+    "count": 383,
+    "with_img": 286,
+    "added": [
+      "VP383"
+    ],
+    "removed": [],
+    "price_chg": 18,
+    "zero_price": 18,
+    "brief_deltas": "1 added (VP383), 0 removed, 18 price changes; with_img +3"
+  },
+  "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }

@@ -823,7 +823,7 @@
       "ma": "VP148",
       "ten": "Bút Unibal Eye UB - 150 (Đen)",
       "dvt": "Cây",
-      "gia": 42000,
+      "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 48
     },
@@ -832,7 +832,7 @@
       "ma": "VP149",
       "ten": "Bút Unibal Eye UB - 150 (Đỏ)",
       "dvt": "Cây",
-      "gia": 42000,
+      "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 120
     },
@@ -841,7 +841,7 @@
       "ma": "VP150",
       "ten": "Bút Unibal Eye UB - 150 (Xanh)",
       "dvt": "Cây",
-      "gia": 42000,
+      "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 120
     },
@@ -2146,7 +2146,7 @@
       "ma": "VP277",
       "ten": "Kẹp bướm 15mm Slecho",
       "dvt": "Hộp",
-      "gia": 5500,
+      "gia": 6000,
       "anh": "",
       "ton": 0
     },
@@ -2191,7 +2191,7 @@
       "ma": "VP282",
       "ten": "Kẹp bướm 32mm Slecho",
       "dvt": "Hộp",
-      "gia": 11000,
+      "gia": 17000,
       "anh": "",
       "ton": 0
     },
@@ -2200,8 +2200,8 @@
       "ma": "VP283",
       "ten": "Kẹp bướm 41mm (G-Star)",
       "dvt": "Hộp",
-      "gia": 16000,
-      "anh": "",
+      "gia": 26000,
+      "anh": "https://lh3.googleusercontent.com/d/1TywEtwJmMVdLuqxoDub2K357drHqwxYR",
       "ton": 0
     },
     {
@@ -2209,7 +2209,7 @@
       "ma": "VP284",
       "ten": "Kẹp bướm 41mm Slecho",
       "dvt": "Hộp",
-      "gia": 22000,
+      "gia": 26000,
       "anh": "",
       "ton": 0
     },
@@ -2443,8 +2443,8 @@
       "ma": "VP317",
       "ten": "Nẹp Acco nhựa UNI",
       "dvt": "Hộp",
-      "gia": 15000,
-      "anh": "",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1Pcd6aIVESN7d6QMZHHk0_r1TrXyPm1dx",
       "ton": 0
     },
     {
@@ -2452,7 +2452,7 @@
       "ma": "VP318",
       "ten": "Nẹp giấy PF-08 (G-Star)",
       "dvt": "Hộp",
-      "gia": 21000,
+      "gia": 19000,
       "anh": "https://lh3.googleusercontent.com/d/1vVn2E2QkKkJhLoUEf5o7SGSfLx6CYMxK",
       "ton": 0
     },
@@ -2891,6 +2891,15 @@
     {
       "nhom": "Dụng cụ VP",
       "ma": "VP374",
+      "ten": "Sổ lò xo A5 Business Hải Tiến",
+      "dvt": "Quyển",
+      "gia": 23000,
+      "anh": "https://lh3.googleusercontent.com/d/1tt-4KJ04rgLAt7CQ6wFFGR_egd_2nPFz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP375",
       "ten": "Sổ Moment 6 200 trang 8489",
       "dvt": "Quyển",
       "gia": 45000,
@@ -2899,7 +2908,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP375",
+      "ma": "VP376",
       "ten": "Tệp hồ sơ có dây (10cm)",
       "dvt": "Cái",
       "gia": 0,
@@ -2908,7 +2917,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP376",
+      "ma": "VP377",
       "ten": "Thước 20 cm cứng TL",
       "dvt": "Cây",
       "gia": 4000,
@@ -2917,7 +2926,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP377",
+      "ma": "VP378",
       "ten": "Thước 30 cm cứng TL",
       "dvt": "Cây",
       "gia": 6000,
@@ -2926,7 +2935,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP378",
+      "ma": "VP379",
       "ten": "Thước chữ bộ Koh I Noor",
       "dvt": "Cây",
       "gia": 190000,
@@ -2935,7 +2944,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP379",
+      "ma": "VP380",
       "ten": "Thước cứng 20cm",
       "dvt": "Cây",
       "gia": 8000,
@@ -2944,7 +2953,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP380",
+      "ma": "VP381",
       "ten": "Thước cứng 30cm",
       "dvt": "Cây",
       "gia": 10000,
@@ -2953,7 +2962,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP381",
+      "ma": "VP382",
       "ten": "Thước dẻo 20cm (Win C30)",
       "dvt": "Cây",
       "gia": 6000,
@@ -2962,7 +2971,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP382",
+      "ma": "VP383",
       "ten": "Thước dẻo 30cm (Win C30)",
       "dvt": "Cây",
       "gia": 8000,
@@ -3476,5 +3485,5 @@
   ],
   "orderUrl": "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec",
   "hotline": "033 5652 832",
-  "syncedFrom": "VanPhat_Web_Catalog_SOURCE.xlsx"
+  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
 }
