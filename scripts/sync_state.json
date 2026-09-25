@@ -2,10 +2,16 @@
   "driveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "driveFileName": "VanPhat_Web_Catalog_SOURCE.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK/edit",
-  "lastModifiedTime": "",
+  "lastModifiedTime": "2026-09-24T23:29:42.528Z",
   "repo": "funnylamsnnt/vanphat-web",
   "localCopy": "/workspace/vanphat-sync/VanPhat_Web_Catalog_SOURCE.xlsx",
   "previousDriveFileId": "12ElEddUrVhqvK1faEjNYc6OHRDLeskI8",
   "note": "25/09 06:28: verified in Google Sheets (dropdown + images). Never re-upload a Sheets-saved xlsx as the source.",
-  "sourceThisRun": "chat attachment: 06370f466cd08eba35abd12cfe77ab6cec5853cdee48d8649e7d71acad771b3d.xlsx"
+  "lastSyncAt": "2026-09-25T01:18:09Z",
+  "lastSyncResult": {
+    "changed": true,
+    "count": 382,
+    "with_img": 283,
+    "price_chg": 3
+  }
 }

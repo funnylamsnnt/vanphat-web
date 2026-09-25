@@ -823,7 +823,7 @@
       "ma": "VP148",
       "ten": "Bút Unibal Eye UB - 150 (Đen)",
       "dvt": "Cây",
-      "gia": 45000,
+      "gia": 42000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 48
     },
@@ -832,7 +832,7 @@
       "ma": "VP149",
       "ten": "Bút Unibal Eye UB - 150 (Đỏ)",
       "dvt": "Cây",
-      "gia": 45000,
+      "gia": 42000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 120
     },
@@ -841,7 +841,7 @@
       "ma": "VP150",
       "ten": "Bút Unibal Eye UB - 150 (Xanh)",
       "dvt": "Cây",
-      "gia": 45000,
+      "gia": 42000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 120
     },
@@ -3476,5 +3476,5 @@
   ],
   "orderUrl": "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec",
   "hotline": "033 5652 832",
-  "syncedFrom": "VanPhat_Catalog_2026-09-25.xlsx"
+  "syncedFrom": "VanPhat_Web_Catalog_SOURCE.xlsx"
 }
