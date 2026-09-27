@@ -32,7 +32,8 @@
         data-dvt="${escapeAttr(p.dvt)}"
         data-anh="${escapeAttr(p.anh || "")}"
         data-nhom="${escapeAttr(p.nhom)}">
-        <div class="product-img">
+        <div class="product-img" data-product-zoom role="button" tabindex="0"
+             aria-label="Xem ảnh lớn: ${escapeAttr(p.ten)}" title="Xem ảnh lớn">
           <img src="${escapeAttr(img)}" alt="${escapeAttr(p.ten)}" loading="lazy"
                onerror="VanPhat.onImgError(this)" />
         </div>
