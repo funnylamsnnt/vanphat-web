@@ -19,7 +19,7 @@
     "web_deployed": true,
     "bridge_refreshed": false,
     "bridge_note": "PENDING Import→Replace; local VP_DanhMuc_LIVE_BRIDGE.xlsx rebuilt 386 rows; Drive MCP cannot media-replace native Sheet 15i18OW…",
-    "commit": "9ac3fc0e87c199d0c6ab6149b7e07de98d2a96d8"
+    "commit": "8418112fff5cf6655034c8a4c13e491def4839b4"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
