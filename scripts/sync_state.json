@@ -2,25 +2,24 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-09-25T09:33:38.116Z",
+  "lastModifiedTime": "2026-09-27T15:32:04.788Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-09-26T01:17:32Z",
+  "lastSyncAt": "2026-09-27T16:12:51Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 384,
-    "with_img": 286,
-    "added": [
-      "VP384"
-    ],
+    "count": 386,
+    "with_img": 289,
+    "added": [],
     "removed": [],
-    "price_chg": 0,
-    "brief_deltas": "1 added, 0 removed, 0 price changes (VP384 Thước kẻ 50); with_img 285→286",
+    "price_chg": 24,
+    "name_chg": 1,
+    "brief_deltas": "0 added, 0 removed, 24 price cuts, 1 name tweak (VP069 Elephant); with_img 288→289 (VP375 gained image)",
     "web_deployed": true,
-    "bridge_refreshed": true,
-    "bridge_note": "Local rebuild matched Drive bridge (384 rows, 0 diffs incl. VP384); no Import/Replace needed",
-    "commit": "82faa9d39c1db4af831741ebfab1993450c29786"
+    "bridge_refreshed": false,
+    "bridge_note": "PENDING Import→Replace; local VP_DanhMuc_LIVE_BRIDGE.xlsx rebuilt 386 rows; Drive MCP cannot media-replace native Sheet 15i18OW…",
+    "commit": "9ac3fc0e87c199d0c6ab6149b7e07de98d2a96d8"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }

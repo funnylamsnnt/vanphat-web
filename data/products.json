@@ -76,7 +76,7 @@
       "ma": "VP067",
       "ten": "Bìa còng 5F Plus",
       "dvt": "Cái",
-      "gia": 51000,
+      "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1DFxbI3V-BdfJWBFxzvUbYkRUP2Hsu-y7",
       "ton": 25
     },
@@ -85,14 +85,14 @@
       "ma": "VP068",
       "ten": "Bìa còng 5F Thiên Long",
       "dvt": "Cái",
-      "gia": 55000,
+      "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1_RhuI5cowUorF-4ZCCK1TKM8ZswOaCb2",
       "ton": 0
     },
     {
       "nhom": "Bìa Hồ Sơ",
       "ma": "VP069",
-      "ten": "Bìa Còng 7 cm - Elephant 200F",
+      "ten": "Bìa Còng 7 cm - Elephant",
       "dvt": "Cái",
       "gia": 55000,
       "anh": "https://lh3.googleusercontent.com/d/1UfoXzvIjz9Jg6P3nrVlszeik0f46ccYU",
@@ -103,7 +103,7 @@
       "ma": "VP070",
       "ten": "Bìa còng 7F Plus",
       "dvt": "Cái",
-      "gia": 55000,
+      "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1DFxbI3V-BdfJWBFxzvUbYkRUP2Hsu-y7",
       "ton": 15
     },
@@ -112,7 +112,7 @@
       "ma": "VP071",
       "ten": "Bìa còng 7F Thiên Long",
       "dvt": "Cái",
-      "gia": 55000,
+      "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1T9R61tmEmHa90JQ3_bK0fR1GjebfZ-0T",
       "ton": 0
     },
@@ -121,7 +121,7 @@
       "ma": "VP072",
       "ten": "Bìa còng 9F Plus",
       "dvt": "Cái",
-      "gia": 69000,
+      "gia": 64000,
       "anh": "https://lh3.googleusercontent.com/d/14eGkYHgb72IXkHgN7EW3074-O8rthe6o",
       "ton": 40
     },
@@ -301,7 +301,7 @@
       "ma": "VP092",
       "ten": "Bìa nhẫn FO - ORB02",
       "dvt": "Cái",
-      "gia": 31000,
+      "gia": 28000,
       "anh": "https://lh3.googleusercontent.com/d/1UXY45sfMV_qO6QS65L8bLqQ9gRfdo2dG",
       "ton": -18
     },
@@ -454,7 +454,7 @@
       "ma": "VP109",
       "ten": "Bìa trình ký nhựa đơn A4",
       "dvt": "Cái",
-      "gia": 28000,
+      "gia": 26000,
       "anh": "https://lh3.googleusercontent.com/d/1LobjFvbrygt2Mdf-TN9jzyVOpaE1DZOn",
       "ton": 10
     },
@@ -589,7 +589,7 @@
       "ma": "VP121",
       "ten": "Bút bi TL-095 Pro 0.5mm",
       "dvt": "Cây",
-      "gia": 10000,
+      "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/18w2z1oUUCaUdrbOIlCSqm4K-GiRpqaJI",
       "ton": 200
     },
@@ -697,7 +697,7 @@
       "ma": "VP134",
       "ten": "Bút Gel Thiên Long GEL-029",
       "dvt": "Cây",
-      "gia": 13000,
+      "gia": 11500,
       "anh": "https://lh3.googleusercontent.com/d/1VBrzY7U8Ds_NQ7TaOZth8hFr7PigSAvs",
       "ton": 20
     },
@@ -706,7 +706,7 @@
       "ma": "VP135",
       "ten": "Bút Gel Thiên Long GEL-08 (Đỏ)",
       "dvt": "Cây",
-      "gia": 9000,
+      "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
       "ton": 60
     },
@@ -715,7 +715,7 @@
       "ma": "VP136",
       "ten": "Bút Gel Thiên Long GEL-08 (Xanh)",
       "dvt": "Cây",
-      "gia": 9000,
+      "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
       "ton": 60
     },
@@ -814,7 +814,7 @@
       "ma": "VP147",
       "ten": "Bút lông dầu TL PM-09 (Xanh)",
       "dvt": "Cây",
-      "gia": 10500,
+      "gia": 9500,
       "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
       "ton": 150
     },
@@ -823,7 +823,7 @@
       "ma": "VP148",
       "ten": "Bút Unibal Eye UB - 150 (Đen)",
       "dvt": "Cây",
-      "gia": 42000,
+      "gia": 37000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 48
     },
@@ -832,7 +832,7 @@
       "ma": "VP149",
       "ten": "Bút Unibal Eye UB - 150 (Đỏ)",
       "dvt": "Cây",
-      "gia": 42000,
+      "gia": 37000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 180
     },
@@ -841,7 +841,7 @@
       "ma": "VP150",
       "ten": "Bút Unibal Eye UB - 150 (Xanh)",
       "dvt": "Cây",
-      "gia": 42000,
+      "gia": 37000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
       "ton": 120
     },
@@ -931,7 +931,7 @@
       "ma": "VP313",
       "ten": "Mực dấu Shini 28 ml (Đỏ)",
       "dvt": "Chai",
-      "gia": 45000,
+      "gia": 43000,
       "anh": "https://lh3.googleusercontent.com/d/1wAdOpDBJBAHSRj2RdbBBiVioKgCbSoEE",
       "ton": 5
     },
@@ -940,7 +940,7 @@
       "ma": "VP314",
       "ten": "Mực dấu Shini 28 ml (Xanh)",
       "dvt": "Chai",
-      "gia": 45000,
+      "gia": 43000,
       "anh": "https://lh3.googleusercontent.com/d/1w8mSmiKQiPTWeNjqr2YR1gN3RDvjzdrq",
       "ton": 5
     },
@@ -1021,7 +1021,7 @@
       "ma": "VP031",
       "ten": "Băng keo giấy 2.4F",
       "dvt": "Cuộn",
-      "gia": 9000,
+      "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1886S94rDmAueC9jJE2l-OSSK-tavGsRm",
       "ton": 48
     },
@@ -1345,7 +1345,7 @@
       "ma": "VP009",
       "ten": "Bấm kim số 10 plus",
       "dvt": "Cái",
-      "gia": 35000,
+      "gia": 32000,
       "anh": "https://lh3.googleusercontent.com/d/1hi6axlBkC-BfSxaD1UZ55UJYELC4iWbC",
       "ton": 30
     },
@@ -2650,7 +2650,7 @@
       "ma": "VP348",
       "ten": "Pin 2A Maxell",
       "dvt": "Cặp",
-      "gia": 8000,
+      "gia": 6500,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
       "ton": 79
     },
@@ -2668,7 +2668,7 @@
       "ma": "VP350",
       "ten": "Pin 2A Panasonic",
       "dvt": "Cặp",
-      "gia": 9000,
+      "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1dIl05TKHuvpbNNfbvdSodTESYxSVcJVD",
       "ton": 120
     },
@@ -2686,7 +2686,7 @@
       "ma": "VP352",
       "ten": "Pin 3A Maxell",
       "dvt": "Cặp",
-      "gia": 8000,
+      "gia": 6500,
       "anh": "https://lh3.googleusercontent.com/d/13qSoayTUhUSAUFsajfVOEGW22qZlT4mf",
       "ton": 200
     },
@@ -2894,7 +2894,7 @@
       "ten": "Sổ Da CK8 D 192T (Tiến Phát)",
       "dvt": "Quyển",
       "gia": 28000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1cIpev6E8Go8mrnqoiHvjReZUeXdpOslK",
       "ton": 20
     },
     {
@@ -3064,7 +3064,7 @@
       "ma": "VP203",
       "ten": "Giấy A4 70 gsm Double A",
       "dvt": "Ram",
-      "gia": 82000,
+      "gia": 80000,
       "anh": "https://lh3.googleusercontent.com/d/1VzuqsIYMA2S1A9wgCGKLJ-ylIRskMR18",
       "ton": 100
     },
@@ -3334,7 +3334,7 @@
       "ma": "VP233",
       "ten": "Giấy ghi chú 3 x 3 hiệu G-STAR",
       "dvt": "Xấp",
-      "gia": 8000,
+      "gia": 6500,
       "anh": "https://lh3.googleusercontent.com/d/1msICo2vDCblPY6eTOUe7wzl42yNVcw-X",
       "ton": 120
     },
