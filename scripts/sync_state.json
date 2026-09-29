@@ -2,24 +2,29 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-09-27T15:32:04.788Z",
+  "lastModifiedTime": "2026-09-29T04:08:11.656Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-09-27T16:16:59Z",
+  "lastSyncAt": "2026-09-29T04:09:39Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 386,
-    "with_img": 289,
-    "added": [],
+    "count": 389,
+    "with_img": 292,
+    "added": [
+      "VP387",
+      "VP388",
+      "VP389"
+    ],
     "removed": [],
-    "price_chg": 24,
-    "name_chg": 1,
-    "brief_deltas": "0 added, 0 removed, 24 price cuts, 1 name tweak (VP069 Elephant); with_img 288→289 (VP375 gained image)",
+    "price_chg": 71,
+    "name_chg": 75,
+    "brief_deltas": "3 added (VP387–389), 0 removed; 2 calculators inserted at VP312–313 causing renumber/name+price shifts VP312–VP386 (71 price / 75 name); with_img 289→292",
     "web_deployed": true,
-    "bridge_refreshed": true,
-    "bridge_note": "Browser Import→Replace kept fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; Danh Mục Vật Tư 386 rows VP001–VP386 (+ Chính Sách Đối Tác); verified 0 price diffs vs local bridge; bridge modifiedTime 2026-09-27T16:16:28.151Z",
-    "commit": "8418112fff5cf6655034c8a4c13e491def4839b4"
+    "bridge_refreshed": false,
+    "bridge_note": "pending",
+    "commit": null
   },
-  "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
+  "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
+  "previousModifiedTime": "2026-09-27T15:32:04.788Z"
 }

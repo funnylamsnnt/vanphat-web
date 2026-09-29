@@ -919,7 +919,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP312",
+      "ma": "VP314",
       "ten": "Mực bút lông dầu (xanh)",
       "dvt": "Hộp",
       "gia": 16000,
@@ -928,7 +928,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP313",
+      "ma": "VP315",
       "ten": "Mực dấu Shini 28 ml (Đỏ)",
       "dvt": "Chai",
       "gia": 43000,
@@ -937,7 +937,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP314",
+      "ma": "VP316",
       "ten": "Mực dấu Shini 28 ml (Xanh)",
       "dvt": "Chai",
       "gia": 43000,
@@ -946,7 +946,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP315",
+      "ma": "VP317",
       "ten": "Mực lông bảng TL WBI-01 (Đen)",
       "dvt": "Hộp",
       "gia": 22000,
@@ -955,7 +955,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP316",
+      "ma": "VP318",
       "ten": "Mực lông bảng TL WBI-01 (Đỏ)",
       "dvt": "Hộp",
       "gia": 22000,
@@ -964,7 +964,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP317",
+      "ma": "VP319",
       "ten": "Mực lông bảng TL WBI-01 (Xanh)",
       "dvt": "Hộp",
       "gia": 22000,
@@ -2440,7 +2440,25 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP318",
+      "ma": "VP312",
+      "ten": "Máy tính văn phòng TL CAL-007",
+      "dvt": "Cái",
+      "gia": 78000,
+      "anh": "https://lh3.googleusercontent.com/d/13Gumc-zzpoCjuH9sezcXZitLV7RDLueo",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP313",
+      "ten": "Máy tính văn phòng TL CAL-008",
+      "dvt": "Cái",
+      "gia": 94000,
+      "anh": "https://lh3.googleusercontent.com/d/1a_xZgKvqJGXDwgD88LWFsaZU73Sfuo6C",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP320",
       "ten": "Mực lông dầu Thiên Long PMI-01",
       "dvt": "Hủ",
       "gia": 12000,
@@ -2449,7 +2467,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP319",
+      "ma": "VP321",
       "ten": "Nẹp Acco nhựa UNI",
       "dvt": "Hộp",
       "gia": 19000,
@@ -2458,7 +2476,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP320",
+      "ma": "VP322",
       "ten": "Nẹp giấy PF-08 (G-Star)",
       "dvt": "Hộp",
       "gia": 19000,
@@ -2467,7 +2485,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP321",
+      "ma": "VP323",
       "ten": "Nhựa ép A4",
       "dvt": "Xấp",
       "gia": 0,
@@ -2476,25 +2494,34 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP322",
+      "ma": "VP324",
       "ten": "Note đủ màu (Bitex SN05)",
       "dvt": "Xấp",
-      "gia": 16000,
+      "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/12R-f3n7v7doFEj1JDlZeHhrlthwlqwQM",
       "ton": 90
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP323",
-      "ten": "Note nhựa 5 màu Pronoti",
+      "ma": "VP325",
+      "ten": "Note nhựa 5 màu (G Star)",
       "dvt": "Xấp",
-      "gia": 13000,
-      "anh": "https://lh3.googleusercontent.com/d/11jOE3ZSBV70FmQzeXNKA42agyk_ilgIJ",
-      "ton": 240
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/15WdjFyGdVAB846okFS-qLIx81RW9EQlN",
+      "ton": 100
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP324",
+      "ma": "VP326",
+      "ten": "Note nhựa 5 màu (Pronoti)",
+      "dvt": "Xấp",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/11jOE3ZSBV70FmQzeXNKA42agyk_ilgIJ",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP327",
       "ten": "Note trình ký nhựa nhiều màu (Hộp 48 cái)",
       "dvt": "Cái",
       "gia": 0,
@@ -2503,7 +2530,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP325",
+      "ma": "VP328",
       "ten": "Note vàng 3*5 UNC",
       "dvt": "Xấp",
       "gia": 0,
@@ -2512,7 +2539,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP326",
+      "ma": "VP329",
       "ten": "Nước suối Aquafina (355ml)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2521,7 +2548,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP327",
+      "ma": "VP330",
       "ten": "Nước suối Aquafina (500ml)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2530,7 +2557,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP328",
+      "ma": "VP331",
       "ten": "Nước suối Lavie (350ml)",
       "dvt": "Chai",
       "gia": 0,
@@ -2539,7 +2566,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP329",
+      "ma": "VP332",
       "ten": "Nước suối Lavie (500ml)",
       "dvt": "Chai",
       "gia": 0,
@@ -2548,7 +2575,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP330",
+      "ma": "VP333",
       "ten": "Nước suối Sanna (330ml)",
       "dvt": "Chai",
       "gia": 3000,
@@ -2557,7 +2584,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP331",
+      "ma": "VP334",
       "ten": "Nước suối Sanna (500ml)",
       "dvt": "Chai",
       "gia": 4000,
@@ -2566,7 +2593,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP332",
+      "ma": "VP335",
       "ten": "Nước suối Vikoda (350ml)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2575,7 +2602,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP333",
+      "ma": "VP336",
       "ten": "Nước suối Vikoda (500ml)",
       "dvt": "Chai",
       "gia": 6000,
@@ -2584,7 +2611,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP341",
+      "ma": "VP344",
       "ten": "Phân trang film SN05 (5 màu/20 tờ/túi)",
       "dvt": "Túi",
       "gia": 14800,
@@ -2593,7 +2620,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP342",
+      "ma": "VP345",
       "ten": "Phấn viết bảng màu",
       "dvt": "Hộp",
       "gia": 5000,
@@ -2602,7 +2629,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP343",
+      "ma": "VP346",
       "ten": "Phấn viết bảng trắng",
       "dvt": "Hộp",
       "gia": 5000,
@@ -2611,7 +2638,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP344",
+      "ma": "VP347",
       "ten": "Phiếu Chi 2 liên khổ 13×19",
       "dvt": "Quyển",
       "gia": 13000,
@@ -2620,16 +2647,16 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP345",
+      "ma": "VP348",
       "ten": "Phiếu thu 2 liên 13x19cm",
       "dvt": "Quyển",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/15FyyA1sDiOxWbFED-m-8JFZ1YHvKRReS",
-      "ton": 0
+      "ton": -1
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP346",
+      "ma": "VP349",
       "ten": "Phiếu thu 3 liên 13x19cm",
       "dvt": "Quyển",
       "gia": 18000,
@@ -2638,7 +2665,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP347",
+      "ma": "VP350",
       "ten": "Pin 2A Energizer",
       "dvt": "Cặp",
       "gia": 32000,
@@ -2647,16 +2674,16 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP348",
+      "ma": "VP351",
       "ten": "Pin 2A Maxell",
       "dvt": "Cặp",
       "gia": 6500,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
-      "ton": 79
+      "ton": 80
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP349",
+      "ma": "VP352",
       "ten": "Pin 2A Maxell Super (Vỉ 4 viên)",
       "dvt": "Vỉ",
       "gia": 16000,
@@ -2665,7 +2692,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP350",
+      "ma": "VP353",
       "ten": "Pin 2A Panasonic",
       "dvt": "Cặp",
       "gia": 8000,
@@ -2674,7 +2701,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP351",
+      "ma": "VP354",
       "ten": "Pin 3A Energizer",
       "dvt": "Cặp",
       "gia": 32000,
@@ -2683,7 +2710,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP352",
+      "ma": "VP355",
       "ten": "Pin 3A Maxell",
       "dvt": "Cặp",
       "gia": 6500,
@@ -2692,7 +2719,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP353",
+      "ma": "VP356",
       "ten": "Pin 3A Maxell Premium Alkaline",
       "dvt": "Cặp",
       "gia": 50000,
@@ -2701,7 +2728,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP354",
+      "ma": "VP357",
       "ten": "Pin 3A Panasonic",
       "dvt": "Cặp",
       "gia": 9000,
@@ -2710,7 +2737,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP355",
+      "ma": "VP358",
       "ten": "Pin CR2032 Maxell Lithium 3V (Vỉ 5 viên)",
       "dvt": "Viên",
       "gia": 13000,
@@ -2719,7 +2746,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP356",
+      "ma": "VP359",
       "ten": "Pin CR2032 Panasonic",
       "dvt": "Viên",
       "gia": 19000,
@@ -2728,7 +2755,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP357",
+      "ma": "VP360",
       "ten": "Pin Đại Maxell Alkaline",
       "dvt": "Cặp",
       "gia": 120000,
@@ -2737,7 +2764,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP358",
+      "ma": "VP361",
       "ten": "Pin Đại Maxell Super",
       "dvt": "Cặp",
       "gia": 40000,
@@ -2746,7 +2773,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP359",
+      "ma": "VP362",
       "ten": "Pin LR44 A76 Maxell",
       "dvt": "Cặp",
       "gia": 16000,
@@ -2755,7 +2782,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP360",
+      "ma": "VP363",
       "ten": "Pin LR44 A76 NP",
       "dvt": "Cặp",
       "gia": 15000,
@@ -2764,7 +2791,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP361",
+      "ma": "VP364",
       "ten": "Pin LR44 A76 Panasonic",
       "dvt": "Cặp",
       "gia": 16000,
@@ -2773,7 +2800,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP362",
+      "ma": "VP365",
       "ten": "Pin Trung Maxell Alkaline",
       "dvt": "Cặp",
       "gia": 90000,
@@ -2782,7 +2809,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP363",
+      "ma": "VP366",
       "ten": "Pin Trung Maxell Super",
       "dvt": "Cặp",
       "gia": 30000,
@@ -2791,7 +2818,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP364",
+      "ma": "VP367",
       "ten": "Ruy băng lụa 1cm - 22m",
       "dvt": "Cuộn",
       "gia": 11000,
@@ -2800,7 +2827,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP365",
+      "ma": "VP368",
       "ten": "Ruy băng lụa 2cm - 22m",
       "dvt": "Cuộn",
       "gia": 16000,
@@ -2809,7 +2836,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP366",
+      "ma": "VP369",
       "ten": "Ruy băng lụa 4cm - 22m",
       "dvt": "Cuộn",
       "gia": 0,
@@ -2818,7 +2845,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP367",
+      "ma": "VP370",
       "ten": "Sáp đếm tiền",
       "dvt": "Cái",
       "gia": 10000,
@@ -2827,7 +2854,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP368",
+      "ma": "VP371",
       "ten": "Sổ Bìa Da A5 (Hải Tiến 8403)",
       "dvt": "Tập",
       "gia": 68000,
@@ -2836,7 +2863,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP369",
+      "ma": "VP372",
       "ten": "Sổ Bìa Da Có Nút Gài",
       "dvt": "Quyển",
       "gia": 65000,
@@ -2845,7 +2872,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP370",
+      "ma": "VP373",
       "ten": "Sổ Bìa Da Có Nút Gài DEPAI",
       "dvt": "Quyển",
       "gia": 110000,
@@ -2854,7 +2881,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP371",
+      "ma": "VP374",
       "ten": "Sổ Bìa Da Có Nút Gài DEPAI 25-77",
       "dvt": "Tập",
       "gia": 105000,
@@ -2863,7 +2890,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP372",
+      "ma": "VP375",
       "ten": "Sổ Classic 6 Khuy bấm - 240t 4757",
       "dvt": "Quyển",
       "gia": 35000,
@@ -2872,7 +2899,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP373",
+      "ma": "VP376",
       "ten": "Sổ Da Bìa Cứng Camellia A5",
       "dvt": "Quyển",
       "gia": 90000,
@@ -2881,7 +2908,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP374",
+      "ma": "VP377",
       "ten": "Sổ Da CK7 (Wonderful)",
       "dvt": "Quyển",
       "gia": 28000,
@@ -2890,7 +2917,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP375",
+      "ma": "VP378",
       "ten": "Sổ Da CK8 D 192T (Tiến Phát)",
       "dvt": "Quyển",
       "gia": 28000,
@@ -2899,7 +2926,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP376",
+      "ma": "VP379",
       "ten": "Sổ lò xo A5 Business Hải Tiến",
       "dvt": "Quyển",
       "gia": 23000,
@@ -2908,7 +2935,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP377",
+      "ma": "VP380",
       "ten": "Sổ Moment 6 200 trang 8489",
       "dvt": "Quyển",
       "gia": 45000,
@@ -2917,7 +2944,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP378",
+      "ma": "VP381",
       "ten": "Tệp hồ sơ có dây (10cm)",
       "dvt": "Cái",
       "gia": 0,
@@ -2926,7 +2953,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP379",
+      "ma": "VP382",
       "ten": "Thước 20 cm cứng TL",
       "dvt": "Cây",
       "gia": 4000,
@@ -2935,7 +2962,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP380",
+      "ma": "VP383",
       "ten": "Thước 30 cm cứng TL",
       "dvt": "Cây",
       "gia": 6000,
@@ -2944,7 +2971,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP381",
+      "ma": "VP384",
       "ten": "Thước chữ bộ Koh I Noor",
       "dvt": "Cây",
       "gia": 190000,
@@ -2953,7 +2980,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP382",
+      "ma": "VP385",
       "ten": "Thước cứng 20cm",
       "dvt": "Cây",
       "gia": 8000,
@@ -2962,7 +2989,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP383",
+      "ma": "VP386",
       "ten": "Thước cứng 30cm",
       "dvt": "Cây",
       "gia": 10000,
@@ -2971,7 +2998,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP384",
+      "ma": "VP387",
       "ten": "Thước dẻo 20cm (Win C30)",
       "dvt": "Cây",
       "gia": 6000,
@@ -2980,7 +3007,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP385",
+      "ma": "VP388",
       "ten": "Thước dẻo 30cm (Win C30)",
       "dvt": "Cây",
       "gia": 8000,
@@ -2989,7 +3016,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP386",
+      "ma": "VP389",
       "ten": "Thước kẻ 50",
       "dvt": "Cây",
       "gia": 0,
@@ -3448,7 +3475,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP334",
+      "ma": "VP337",
       "ten": "Ổ cắm",
       "dvt": "Cái",
       "gia": 0,
@@ -3457,7 +3484,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP335",
+      "ma": "VP338",
       "ten": "Ổ cắm 5 (5 ổ 3 chấu - 5 công tắc, dây 3 mét)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3466,7 +3493,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP336",
+      "ma": "VP339",
       "ten": "Ổ cắm điện KIP OC 38 (5M)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3475,7 +3502,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP337",
+      "ma": "VP340",
       "ten": "Ổ cắm điện ODN5 (3M)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3484,7 +3511,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP338",
+      "ma": "VP341",
       "ten": "Ổ cắm ECO ( 6 lỗ 2 chấu, dây 2 mét)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3493,7 +3520,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP339",
+      "ma": "VP342",
       "ten": "Ổ điện Lioa 3DNW 3.2.10 (3m)",
       "dvt": "Chiếc",
       "gia": 145000,
@@ -3502,7 +3529,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP340",
+      "ma": "VP343",
       "ten": "Ổ điện Lioa 4DND 3.3.10 (5m)",
       "dvt": "Chiếc",
       "gia": 155000,
