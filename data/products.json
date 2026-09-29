@@ -460,7 +460,16 @@
     },
     {
       "nhom": "Bìa Hồ Sơ",
-      "ma": "VP123",
+      "ma": "VP110",
+      "ten": "Bọc Nhựa Trong Thẻ CCCD - ATM",
+      "dvt": "Cái",
+      "gia": 3000,
+      "anh": "https://lh3.googleusercontent.com/d/1qVfHvm2-kKLfmucZdjA3gk5w9-uLYt0u",
+      "ton": 500
+    },
+    {
+      "nhom": "Bìa Hồ Sơ",
+      "ma": "VP124",
       "ten": "Bút chì đen Aimee-2B",
       "dvt": "Cây",
       "gia": 4000,
@@ -469,7 +478,7 @@
     },
     {
       "nhom": "Bìa Hồ Sơ",
-      "ma": "VP296",
+      "ma": "VP297",
       "ten": "Kìm bấm 1 lỗ/OT-HP1001",
       "dvt": "Cái",
       "gia": 0,
@@ -487,7 +496,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP110",
+      "ma": "VP111",
       "ten": "Bút bi Plastic BP-1RT-F (Đen 12 cây/hộp)",
       "dvt": "Cây",
       "gia": 7000,
@@ -496,7 +505,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP111",
+      "ma": "VP112",
       "ten": "Bút bi Plastic BP-1RT-F (Đỏ 12 cây/hộp)",
       "dvt": "Cây",
       "gia": 7000,
@@ -505,7 +514,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP112",
+      "ma": "VP113",
       "ten": "Bút bi Plastic BP-1RT-F (Xanh12 cây/hộp)",
       "dvt": "Cây",
       "gia": 7000,
@@ -514,7 +523,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP113",
+      "ma": "VP114",
       "ten": "Bút bi Thiên Long Gel-072/PLUS",
       "dvt": "Cây",
       "gia": 10000,
@@ -523,7 +532,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP114",
+      "ma": "VP115",
       "ten": "Bút Bi Thiên Long TL-036",
       "dvt": "Cây",
       "gia": 11000,
@@ -532,7 +541,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP115",
+      "ma": "VP116",
       "ten": "Bút bi TL 093 xanh",
       "dvt": "Cây",
       "gia": 4500,
@@ -541,52 +550,52 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP116",
+      "ma": "VP117",
       "ten": "Bút bi TL Gel B-029",
       "dvt": "Cây",
       "gia": 0,
       "anh": "",
-      "ton": 10
-    },
-    {
-      "nhom": "Bút & Mực",
-      "ma": "VP117",
-      "ten": "Bút bi TL-027 (Đen)",
-      "dvt": "Cây",
-      "gia": 4500,
-      "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
-      "ton": 11
+      "ton": -39
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP118",
-      "ten": "Bút bi TL-027 (Đỏ)",
+      "ten": "Bút bi TL-027 (Đen)",
       "dvt": "Cây",
       "gia": 4500,
-      "anh": "https://lh3.googleusercontent.com/d/13iz1K38V173AhI_1uI7G3Dtv2ucJZJgd",
+      "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
       "ton": 55
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP119",
-      "ten": "Bút bi TL-027 (Xanh)",
+      "ten": "Bút bi TL-027 (Đỏ)",
       "dvt": "Cây",
       "gia": 4500,
-      "anh": "https://lh3.googleusercontent.com/d/1IsJcKlXujhZqJAaiXIdAvC3b1b0B0SUU",
-      "ton": 560
+      "anh": "https://lh3.googleusercontent.com/d/13iz1K38V173AhI_1uI7G3Dtv2ucJZJgd",
+      "ton": 60
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP120",
-      "ten": "Bút bi TL-079",
+      "ten": "Bút bi TL-027 (Xanh)",
       "dvt": "Cây",
-      "gia": 5000,
-      "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
-      "ton": 357
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1IsJcKlXujhZqJAaiXIdAvC3b1b0B0SUU",
+      "ton": 557
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP121",
+      "ten": "Bút bi TL-079",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
+      "ton": 360
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP122",
       "ten": "Bút bi TL-095 Pro 0.5mm",
       "dvt": "Cây",
       "gia": 9000,
@@ -595,20 +604,11 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP122",
+      "ma": "VP123",
       "ten": "Bút chì bấm",
       "dvt": "Cây",
       "gia": 0,
       "anh": "",
-      "ton": 0
-    },
-    {
-      "nhom": "Bút & Mực",
-      "ma": "VP124",
-      "ten": "Bút Chì Gỗ 2B Maped (Hộp 12 cây)",
-      "dvt": "Cây",
-      "gia": 7000,
-      "anh": "https://lh3.googleusercontent.com/d/1bLkP-CfFaasIEEyo5pUv_r3v334WVK0a",
       "ton": 0
     },
     {
@@ -623,15 +623,24 @@
     {
       "nhom": "Bút & Mực",
       "ma": "VP126",
-      "ten": "Bút chì gỗ Batos 2B -PC-B02",
+      "ten": "Bút Chì Gỗ 2B Maped (Hộp 12 cây)",
       "dvt": "Cây",
-      "gia": 4000,
-      "anh": "https://lh3.googleusercontent.com/d/1mZlTQMUPr2gjhLV9Z5olnCKWFostr5MI",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1bLkP-CfFaasIEEyo5pUv_r3v334WVK0a",
       "ton": -8
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP127",
+      "ten": "Bút chì gỗ Batos 2B -PC-B02",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1mZlTQMUPr2gjhLV9Z5olnCKWFostr5MI",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP128",
       "ten": "Bút chì gỗ Thiên Long (GP04)",
       "dvt": "cây",
       "gia": 5500,
@@ -640,25 +649,25 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP128",
+      "ma": "VP129",
       "ten": "Bút chì Gỗ TL (GP01)",
       "dvt": "Cây",
       "gia": 5500,
       "anh": "",
-      "ton": 0
-    },
-    {
-      "nhom": "Bút & Mực",
-      "ma": "VP129",
-      "ten": "Bút dạ quang FO-HL02",
-      "dvt": "Cây",
-      "gia": 10000,
-      "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
-      "ton": 57
+      "ton": -3
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP130",
+      "ten": "Bút dạ quang FO-HL02",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
+      "ton": 60
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP131",
       "ten": "Bút dạ quang FO-HL03",
       "dvt": "Cây",
       "gia": 8000,
@@ -667,25 +676,25 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP131",
+      "ma": "VP132",
       "ten": "Bút dạ quang HL-012 (hộp 10)",
       "dvt": "Cây",
       "gia": 11000,
       "anh": "https://lh3.googleusercontent.com/d/1v1f3Id7n2ILA1oj8ZcR-wTo3I7hZmXz_",
-      "ton": 100
-    },
-    {
-      "nhom": "Bút & Mực",
-      "ma": "VP132",
-      "ten": "Bút dạ quang TL HL03",
-      "dvt": "Cây",
-      "gia": 8000,
-      "anh": "https://lh3.googleusercontent.com/d/1zPYBBaghBpvxXNCf2cJ3Fws_bsU2hiXd",
-      "ton": -8
+      "ton": 92
     },
     {
       "nhom": "Bút & Mực",
       "ma": "VP133",
+      "ten": "Bút dạ quang TL HL03",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1zPYBBaghBpvxXNCf2cJ3Fws_bsU2hiXd",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "ma": "VP134",
       "ten": "Bút Gel B Thiên Long GEL-B03",
       "dvt": "Cây",
       "gia": 16000,
@@ -694,7 +703,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP134",
+      "ma": "VP135",
       "ten": "Bút Gel Thiên Long GEL-029",
       "dvt": "Cây",
       "gia": 11500,
@@ -703,7 +712,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP135",
+      "ma": "VP136",
       "ten": "Bút Gel Thiên Long GEL-08 (Đỏ)",
       "dvt": "Cây",
       "gia": 8000,
@@ -712,7 +721,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP136",
+      "ma": "VP137",
       "ten": "Bút Gel Thiên Long GEL-08 (Xanh)",
       "dvt": "Cây",
       "gia": 8000,
@@ -721,7 +730,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP137",
+      "ma": "VP138",
       "ten": "Bút Gel TL B-011 (Hộp 20)",
       "dvt": "Cây",
       "gia": 7000,
@@ -730,7 +739,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP138",
+      "ma": "VP139",
       "ten": "Bút gel Uni Ball UB-205 (ngòi 0.5mm)",
       "dvt": "Cây",
       "gia": 0,
@@ -739,7 +748,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP139",
+      "ma": "VP140",
       "ten": "Bút gel Uni-ball Vision Elite UB-200 ngòi 0.8mm",
       "dvt": "Cây",
       "gia": 69000,
@@ -748,7 +757,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP140",
+      "ma": "VP141",
       "ten": "Bút lông bảng TL WB-03 (Đen)",
       "dvt": "Cây",
       "gia": 9000,
@@ -757,7 +766,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP141",
+      "ma": "VP142",
       "ten": "Bút lông bảng TL WB-03 (Đỏ)",
       "dvt": "Cây",
       "gia": 9000,
@@ -766,7 +775,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP142",
+      "ma": "VP143",
       "ten": "Bút lông bảng TL WB-03 (Xanh)",
       "dvt": "Cây",
       "gia": 9000,
@@ -775,7 +784,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP143",
+      "ma": "VP144",
       "ten": "Bút lông dầu PM01",
       "dvt": "Cây",
       "gia": 10000,
@@ -784,7 +793,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP144",
+      "ma": "VP145",
       "ten": "Bút lông dầu TL PM04 (Xanh)",
       "dvt": "Cây",
       "gia": 10000,
@@ -793,7 +802,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP145",
+      "ma": "VP146",
       "ten": "Bút lông dầu TL PM-09 (Đen)",
       "dvt": "Cây",
       "gia": 10500,
@@ -802,7 +811,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP146",
+      "ma": "VP147",
       "ten": "Bút lông dầu TL PM-09 (Đỏ)",
       "dvt": "Cây",
       "gia": 10500,
@@ -811,7 +820,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP147",
+      "ma": "VP148",
       "ten": "Bút lông dầu TL PM-09 (Xanh)",
       "dvt": "Cây",
       "gia": 9500,
@@ -820,7 +829,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP148",
+      "ma": "VP149",
       "ten": "Bút Unibal Eye UB - 150 (Đen)",
       "dvt": "Cây",
       "gia": 37000,
@@ -829,7 +838,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP149",
+      "ma": "VP150",
       "ten": "Bút Unibal Eye UB - 150 (Đỏ)",
       "dvt": "Cây",
       "gia": 37000,
@@ -838,7 +847,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP150",
+      "ma": "VP151",
       "ten": "Bút Unibal Eye UB - 150 (Xanh)",
       "dvt": "Cây",
       "gia": 37000,
@@ -847,7 +856,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP151",
+      "ma": "VP152",
       "ten": "Bút xóa FlexOffice FO-CP02",
       "dvt": "Cây",
       "gia": 18000,
@@ -856,7 +865,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP152",
+      "ma": "VP153",
       "ten": "Bút xóa kéo FlexOffice FO-CT02",
       "dvt": "Cây",
       "gia": 15000,
@@ -865,7 +874,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP153",
+      "ma": "VP154",
       "ten": "Bút xoá kéo PLUS (12m)",
       "dvt": "Cây",
       "gia": 25000,
@@ -874,7 +883,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP154",
+      "ma": "VP155",
       "ten": "Bút xoá kéo PLUS 7m (mini)",
       "dvt": "Cây",
       "gia": 15000,
@@ -883,7 +892,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP155",
+      "ma": "VP156",
       "ten": "Bút xoá kéo Plus Whiper A BL 42-V346",
       "dvt": "Cây",
       "gia": 17000,
@@ -892,7 +901,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP157",
+      "ma": "VP158",
       "ten": "Bút xóa nước Thiên Long CP-012",
       "dvt": "Cây",
       "gia": 6000,
@@ -901,7 +910,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP158",
+      "ma": "VP159",
       "ten": "Bút xóa TL-CP01",
       "dvt": "Cây",
       "gia": 18000,
@@ -910,7 +919,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP159",
+      "ma": "VP160",
       "ten": "Bút xóa TL-CP02 (hộp 10c)",
       "dvt": "Cây",
       "gia": 22000,
@@ -919,7 +928,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP314",
+      "ma": "VP315",
       "ten": "Mực bút lông dầu (xanh)",
       "dvt": "Hộp",
       "gia": 16000,
@@ -928,7 +937,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP315",
+      "ma": "VP316",
       "ten": "Mực dấu Shini 28 ml (Đỏ)",
       "dvt": "Chai",
       "gia": 43000,
@@ -937,7 +946,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP316",
+      "ma": "VP317",
       "ten": "Mực dấu Shini 28 ml (Xanh)",
       "dvt": "Chai",
       "gia": 43000,
@@ -946,7 +955,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP317",
+      "ma": "VP318",
       "ten": "Mực lông bảng TL WBI-01 (Đen)",
       "dvt": "Hộp",
       "gia": 22000,
@@ -955,7 +964,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP318",
+      "ma": "VP319",
       "ten": "Mực lông bảng TL WBI-01 (Đỏ)",
       "dvt": "Hộp",
       "gia": 22000,
@@ -964,7 +973,7 @@
     },
     {
       "nhom": "Bút & Mực",
-      "ma": "VP319",
+      "ma": "VP320",
       "ten": "Mực lông bảng TL WBI-01 (Xanh)",
       "dvt": "Hộp",
       "gia": 22000,
@@ -1261,7 +1270,7 @@
     },
     {
       "nhom": "Băng Keo",
-      "ma": "VP257",
+      "ma": "VP258",
       "ten": "Hồ khô HQ 8g",
       "dvt": "Lọ",
       "gia": 6000,
@@ -1270,7 +1279,7 @@
     },
     {
       "nhom": "Băng Keo",
-      "ma": "VP258",
+      "ma": "VP259",
       "ten": "Hồ nước Thiên Long 30ml",
       "dvt": "Lọ",
       "gia": 4000,
@@ -1540,7 +1549,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP156",
+      "ma": "VP157",
       "ten": "Bút xóa Kéo Whiper WH-1905 - Plus",
       "dvt": "Cây",
       "gia": 27000,
@@ -1549,7 +1558,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP160",
+      "ma": "VP161",
       "ten": "Cắm bút gỗ 1018",
       "dvt": "Cái",
       "gia": 200000,
@@ -1558,7 +1567,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP161",
+      "ma": "VP162",
       "ten": "Cắm bút gỗ 1019",
       "dvt": "Cái",
       "gia": 230000,
@@ -1567,7 +1576,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP162",
+      "ma": "VP163",
       "ten": "Cắm bút gỗ 1028",
       "dvt": "Cái",
       "gia": 225000,
@@ -1576,7 +1585,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP163",
+      "ma": "VP164",
       "ten": "Cắm bút sắt tròn (đen)",
       "dvt": "Cái",
       "gia": 48000,
@@ -1585,7 +1594,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP164",
+      "ma": "VP165",
       "ten": "Cắm bút sắt WY71116",
       "dvt": "Cái",
       "gia": 65000,
@@ -1594,7 +1603,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP165",
+      "ma": "VP166",
       "ten": "Cắm bút Xukiva 183",
       "dvt": "Cái",
       "gia": 55000,
@@ -1603,7 +1612,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP166",
+      "ma": "VP167",
       "ten": "Cắm bút Xukiva 192",
       "dvt": "Cái",
       "gia": 46000,
@@ -1612,7 +1621,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP167",
+      "ma": "VP168",
       "ten": "Cắm bút Xukiva 203",
       "dvt": "Cái",
       "gia": 37000,
@@ -1621,7 +1630,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP168",
+      "ma": "VP169",
       "ten": "Cắm bút Xukiva 220",
       "dvt": "Cái",
       "gia": 42000,
@@ -1630,7 +1639,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP169",
+      "ma": "VP170",
       "ten": "Cắm viết B11001D (Đen)",
       "dvt": "Cái",
       "gia": 55000,
@@ -1639,7 +1648,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP170",
+      "ma": "VP171",
       "ten": "Chuốt bút chì Deli (0545)",
       "dvt": "Cái",
       "gia": 9000,
@@ -1648,7 +1657,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP171",
+      "ma": "VP172",
       "ten": "Chuốt bút chì Maped",
       "dvt": "Cái",
       "gia": 18000,
@@ -1657,7 +1666,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP172",
+      "ma": "VP173",
       "ten": "Chuốt bút chì Smartkids SP15",
       "dvt": "Cái",
       "gia": 9000,
@@ -1666,7 +1675,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP173",
+      "ma": "VP174",
       "ten": "Chuốt Chì Mini Deli 0574",
       "dvt": "Cái",
       "gia": 11000,
@@ -1675,7 +1684,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP174",
+      "ma": "VP175",
       "ten": "Chuốt Vivo 506301",
       "dvt": "Cái",
       "gia": 6000,
@@ -1684,7 +1693,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP175",
+      "ma": "VP176",
       "ten": "Compa Chì Bấm Maped (T-20)",
       "dvt": "Bộ",
       "gia": 47000,
@@ -1693,7 +1702,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP176",
+      "ma": "VP177",
       "ten": "Compa Maped Study (T-2)",
       "dvt": "Bộ",
       "gia": 50000,
@@ -1702,7 +1711,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP177",
+      "ma": "VP178",
       "ten": "Cục tẩy cao su ZEH-05E",
       "dvt": "Viên",
       "gia": 14000,
@@ -1711,7 +1720,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP178",
+      "ma": "VP179",
       "ten": "Dao rọc giấy lớn",
       "dvt": "Cái",
       "gia": 25000,
@@ -1720,7 +1729,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP179",
+      "ma": "VP180",
       "ten": "Dao rọc giấy lớn SDI 0423",
       "dvt": "Cái",
       "gia": 35000,
@@ -1729,7 +1738,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP180",
+      "ma": "VP181",
       "ten": "Dao rọc giấy nhỏ",
       "dvt": "Cái",
       "gia": 15000,
@@ -1738,7 +1747,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP181",
+      "ma": "VP182",
       "ten": "Dao rọc giấy nhỏ SDI 0404",
       "dvt": "Cái",
       "gia": 25000,
@@ -1747,7 +1756,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP182",
+      "ma": "VP183",
       "ten": "Dập Lỗ Kim Loại 25 Tờ - Stacom C225",
       "dvt": "Cái",
       "gia": 80000,
@@ -1756,7 +1765,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP183",
+      "ma": "VP184",
       "ten": "Dây đeo thẻ có móc",
       "dvt": "Dây",
       "gia": 3500,
@@ -1765,7 +1774,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP184",
+      "ma": "VP185",
       "ten": "Dây đeo thẻ kẹp",
       "dvt": "Dây",
       "gia": 2000,
@@ -1774,7 +1783,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP185",
+      "ma": "VP186",
       "ten": "Dây rút dài 15cm",
       "dvt": "Bịch",
       "gia": 15000,
@@ -1783,7 +1792,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP186",
+      "ma": "VP187",
       "ten": "Dây rút dài 20cm",
       "dvt": "Bịch",
       "gia": 20000,
@@ -1792,7 +1801,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP187",
+      "ma": "VP188",
       "ten": "Dây rút dài 25cm",
       "dvt": "Bịch",
       "gia": 25000,
@@ -1801,7 +1810,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP188",
+      "ma": "VP189",
       "ten": "Dây rút dài 30cm",
       "dvt": "Bịch",
       "gia": 30000,
@@ -1810,7 +1819,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP189",
+      "ma": "VP190",
       "ten": "Dây thun nhỏ, lớn",
       "dvt": "Bịch",
       "gia": 50000,
@@ -1819,7 +1828,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP191",
+      "ma": "VP192",
       "ten": "Decal A4 bóng vàng",
       "dvt": "Xấp",
       "gia": 80000,
@@ -1828,7 +1837,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP192",
+      "ma": "VP193",
       "ten": "Decal A4 bóng xanh dương",
       "dvt": "Xấp",
       "gia": 80000,
@@ -1837,7 +1846,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP193",
+      "ma": "VP194",
       "ten": "Decal A4 da bò",
       "dvt": "Xấp",
       "gia": 88000,
@@ -1846,7 +1855,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP194",
+      "ma": "VP195",
       "ten": "Ghim giấy C32",
       "dvt": "Cái",
       "gia": 4500,
@@ -1855,7 +1864,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP195",
+      "ma": "VP196",
       "ten": "Ghim giấy C62 tam giác FO-PAC01",
       "dvt": "Cái",
       "gia": 4500,
@@ -1864,7 +1873,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP245",
+      "ma": "VP246",
       "ten": "Giấy Than G.Star (100 tờ/xấp)",
       "dvt": "Xấp",
       "gia": 70000,
@@ -1873,7 +1882,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP246",
+      "ma": "VP247",
       "ten": "Giấy Than Horse (100 tờ/xấp)",
       "dvt": "Xấp",
       "gia": 75000,
@@ -1882,7 +1891,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP247",
+      "ma": "VP248",
       "ten": "Gỡ Kim Gstar",
       "dvt": "Cái",
       "gia": 8000,
@@ -1891,7 +1900,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP248",
+      "ma": "VP249",
       "ten": "Gỡ kim Kanex SR500",
       "dvt": "Cái",
       "gia": 60000,
@@ -1900,7 +1909,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP249",
+      "ma": "VP250",
       "ten": "Gỡ kim Kwtrio 508B",
       "dvt": "Cái",
       "gia": 15000,
@@ -1909,7 +1918,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP250",
+      "ma": "VP251",
       "ten": "Gỡ kim Trio 5091",
       "dvt": "Cái",
       "gia": 35000,
@@ -1918,7 +1927,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP251",
+      "ma": "VP252",
       "ten": "Gôm",
       "dvt": "Cái",
       "gia": 5000,
@@ -1927,7 +1936,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP252",
+      "ma": "VP253",
       "ten": "Gôm Đen Thiên Long E-011",
       "dvt": "Viên",
       "gia": 7000,
@@ -1936,7 +1945,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP253",
+      "ma": "VP254",
       "ten": "Gôm FO-E02",
       "dvt": "Viên",
       "gia": 3000,
@@ -1945,7 +1954,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP254",
+      "ma": "VP255",
       "ten": "Gôm Pentel ZEH 03",
       "dvt": "Viên",
       "gia": 10000,
@@ -1954,7 +1963,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP255",
+      "ma": "VP256",
       "ten": "Gôm Pentel ZEH-10",
       "dvt": "Viên",
       "gia": 22000,
@@ -1963,7 +1972,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP256",
+      "ma": "VP257",
       "ten": "Gôm Thiên Long E08",
       "dvt": "Viên",
       "gia": 5000,
@@ -1972,7 +1981,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP259",
+      "ma": "VP260",
       "ten": "Hóa đơn bán lẻ loại dày (2L)",
       "dvt": "Cái",
       "gia": 15000,
@@ -1981,7 +1990,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP260",
+      "ma": "VP261",
       "ten": "Hóa đơn lẻ 2 liên",
       "dvt": "Cuốn",
       "gia": 15000,
@@ -1990,7 +1999,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP261",
+      "ma": "VP262",
       "ten": "Kệ hồ sơ 2 tầng Mica",
       "dvt": "Cái",
       "gia": 120000,
@@ -1999,7 +2008,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP262",
+      "ma": "VP263",
       "ten": "Kệ hồ sơ 3 tầng Mica",
       "dvt": "Cái",
       "gia": 160000,
@@ -2008,7 +2017,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP263",
+      "ma": "VP264",
       "ten": "Kệ nhựa 2 tầng",
       "dvt": "Cái",
       "gia": 65000,
@@ -2017,7 +2026,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP264",
+      "ma": "VP265",
       "ten": "Kệ nhựa 3 tầng",
       "dvt": "Cái",
       "gia": 80000,
@@ -2026,7 +2035,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP265",
+      "ma": "VP266",
       "ten": "Kệ xéo nhựa 1 ngăn",
       "dvt": "Cái",
       "gia": 15000,
@@ -2035,7 +2044,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP266",
+      "ma": "VP267",
       "ten": "Kệ xéo nhựa 3 ngăn",
       "dvt": "Cái",
       "gia": 32000,
@@ -2044,7 +2053,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP267",
+      "ma": "VP268",
       "ten": "Kềm gỡ kim Eagle 1039A",
       "dvt": "Cái",
       "gia": 45000,
@@ -2053,7 +2062,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP268",
+      "ma": "VP269",
       "ten": "Kéo cắt chỉ",
       "dvt": "Cái",
       "gia": 15000,
@@ -2062,7 +2071,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP269",
+      "ma": "VP270",
       "ten": "Keo dán 502 (K-14)",
       "dvt": "Chai",
       "gia": 15000,
@@ -2071,7 +2080,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP270",
+      "ma": "VP271",
       "ten": "Keo dán giấy TP-G08 khay 12",
       "dvt": "Lọ",
       "gia": 5000,
@@ -2080,7 +2089,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP271",
+      "ma": "VP272",
       "ten": "Keo dán lỏng (K-17.5)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2089,7 +2098,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP272",
+      "ma": "VP273",
       "ten": "Keo khô Mic (400 ống/thùng)",
       "dvt": "Ống",
       "gia": 6000,
@@ -2098,7 +2107,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP273",
+      "ma": "VP274",
       "ten": "Keo nến lớn - 11mm",
       "dvt": "Cây",
       "gia": 5000,
@@ -2107,7 +2116,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP274",
+      "ma": "VP275",
       "ten": "Keo nến nhỏ - 7mm",
       "dvt": "Cây",
       "gia": 4000,
@@ -2116,7 +2125,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP275",
+      "ma": "VP276",
       "ten": "Keo Queen PG01 30 ml",
       "dvt": "Cây",
       "gia": 6000,
@@ -2125,7 +2134,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP276",
+      "ma": "VP277",
       "ten": "Kéo văn phòng",
       "dvt": "Cái",
       "gia": 30000,
@@ -2134,7 +2143,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP277",
+      "ma": "VP278",
       "ten": "Kéo văn phòng 215mm/ SC11 (1 cây/vỉ)",
       "dvt": "Vỉ",
       "gia": 30000,
@@ -2143,7 +2152,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP278",
+      "ma": "VP279",
       "ten": "Kẹp bướm 15mm (G-Star)",
       "dvt": "Hộp",
       "gia": 6000,
@@ -2152,7 +2161,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP279",
+      "ma": "VP280",
       "ten": "Kẹp bướm 15mm Slecho",
       "dvt": "Hộp",
       "gia": 6000,
@@ -2161,7 +2170,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP280",
+      "ma": "VP281",
       "ten": "Kẹp bướm 19mm (G-Star)",
       "dvt": "Hộp",
       "gia": 8000,
@@ -2170,7 +2179,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP281",
+      "ma": "VP282",
       "ten": "Kẹp bướm 25mm (G-Star)",
       "dvt": "Hộp",
       "gia": 10000,
@@ -2179,7 +2188,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP282",
+      "ma": "VP283",
       "ten": "Kẹp bướm 25mm Slecho",
       "dvt": "Hộp",
       "gia": 10000,
@@ -2188,7 +2197,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP283",
+      "ma": "VP284",
       "ten": "Kẹp bướm 32mm (G-Star)",
       "dvt": "Hộp",
       "gia": 17000,
@@ -2197,7 +2206,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP284",
+      "ma": "VP285",
       "ten": "Kẹp bướm 32mm Slecho",
       "dvt": "Hộp",
       "gia": 17000,
@@ -2206,7 +2215,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP285",
+      "ma": "VP286",
       "ten": "Kẹp bướm 41mm (G-Star)",
       "dvt": "Hộp",
       "gia": 26000,
@@ -2215,7 +2224,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP286",
+      "ma": "VP287",
       "ten": "Kẹp bướm 41mm Slecho",
       "dvt": "Hộp",
       "gia": 26000,
@@ -2224,7 +2233,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP287",
+      "ma": "VP288",
       "ten": "Kẹp bướm 51mm (G-Star)",
       "dvt": "Hộp",
       "gia": 35000,
@@ -2233,7 +2242,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP288",
+      "ma": "VP289",
       "ten": "Kẹp bướm Màu 19mm (G-Star)",
       "dvt": "Hộp",
       "gia": 28000,
@@ -2242,7 +2251,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP289",
+      "ma": "VP290",
       "ten": "Kẹp bướm Màu 25mm (G-Star)",
       "dvt": "Hộp",
       "gia": 30000,
@@ -2251,7 +2260,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP290",
+      "ma": "VP291",
       "ten": "Kẹp bướm Màu 32mm (G-Star)",
       "dvt": "Hộp",
       "gia": 32000,
@@ -2260,7 +2269,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP291",
+      "ma": "VP292",
       "ten": "Kẹp bướm Màu 41mm (G-Star)",
       "dvt": "Hộp",
       "gia": 48000,
@@ -2269,7 +2278,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP292",
+      "ma": "VP293",
       "ten": "Kẹp bướm Màu 51mm (G-Star)",
       "dvt": "Hộp",
       "gia": 55000,
@@ -2278,7 +2287,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP293",
+      "ma": "VP294",
       "ten": "Kẹp giấy tròn 28mm (Double A)",
       "dvt": "Hộp",
       "gia": 8000,
@@ -2287,7 +2296,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP294",
+      "ma": "VP295",
       "ten": "Khăn giấy Hộp PULPPY 2L 180T",
       "dvt": "Hộp",
       "gia": 24000,
@@ -2296,7 +2305,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP295",
+      "ma": "VP296",
       "ten": "Khăn giấy ướt",
       "dvt": "Hộp",
       "gia": 25000,
@@ -2305,7 +2314,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP297",
+      "ma": "VP298",
       "ten": "Kim bấm 10 KW (TriO)",
       "dvt": "Hộp",
       "gia": 4000,
@@ -2314,7 +2323,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP298",
+      "ma": "VP299",
       "ten": "Kim bấm 23/13 (TriO - 100 tờ)",
       "dvt": "Hộp",
       "gia": 21000,
@@ -2323,7 +2332,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP299",
+      "ma": "VP300",
       "ten": "Kim bấm 23/17 (TriO - 150 tờ)",
       "dvt": "Hộp",
       "gia": 28000,
@@ -2332,7 +2341,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP300",
+      "ma": "VP301",
       "ten": "Kim bấm 23/23 (TriO - 200 tờ)",
       "dvt": "Hộp",
       "gia": 37000,
@@ -2341,7 +2350,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP301",
+      "ma": "VP302",
       "ten": "Kim bấm 23/8 (TriO - 50 tờ)",
       "dvt": "Hộp",
       "gia": 19000,
@@ -2350,7 +2359,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP302",
+      "ma": "VP303",
       "ten": "Kim bấm số 10 (Plus)",
       "dvt": "Hộp",
       "gia": 4000,
@@ -2359,7 +2368,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP303",
+      "ma": "VP304",
       "ten": "Kim bấm số 10 (Việt Đức)",
       "dvt": "Hộp",
       "gia": 4000,
@@ -2368,7 +2377,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP304",
+      "ma": "VP305",
       "ten": "Lau Bảng - Deli 7840",
       "dvt": "Cái",
       "gia": 16000,
@@ -2377,7 +2386,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP305",
+      "ma": "VP306",
       "ten": "Lau bảng Deli 7837",
       "dvt": "Cái",
       "gia": 35000,
@@ -2386,7 +2395,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP306",
+      "ma": "VP307",
       "ten": "Lau bảng trắng FO-WBE01",
       "dvt": "Cái",
       "gia": 23000,
@@ -2395,7 +2404,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP307",
+      "ma": "VP308",
       "ten": "Lưỡi dao rọc giấy",
       "dvt": "Hộp",
       "gia": 12000,
@@ -2404,7 +2413,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP308",
+      "ma": "VP309",
       "ten": "Lưỡi dao rọc giấy lớn - 18mm",
       "dvt": "Vỉ",
       "gia": 25000,
@@ -2413,7 +2422,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP309",
+      "ma": "VP310",
       "ten": "Lưỡi dao rọc giấy nhỏ - 9mm",
       "dvt": "Vỉ",
       "gia": 16000,
@@ -2422,7 +2431,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP310",
+      "ma": "VP311",
       "ten": "Lưỡi dao rọc giấy SDI lớn - 18mm 1404",
       "dvt": "Vỉ",
       "gia": 40000,
@@ -2431,7 +2440,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP311",
+      "ma": "VP312",
       "ten": "Lưỡi dao rọc giấy SDI nhỏ - 9mm 1403",
       "dvt": "Vỉ",
       "gia": 30000,
@@ -2440,7 +2449,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP312",
+      "ma": "VP313",
       "ten": "Máy tính văn phòng TL CAL-007",
       "dvt": "Cái",
       "gia": 78000,
@@ -2449,7 +2458,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP313",
+      "ma": "VP314",
       "ten": "Máy tính văn phòng TL CAL-008",
       "dvt": "Cái",
       "gia": 94000,
@@ -2458,7 +2467,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP320",
+      "ma": "VP321",
       "ten": "Mực lông dầu Thiên Long PMI-01",
       "dvt": "Hủ",
       "gia": 12000,
@@ -2467,7 +2476,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP321",
+      "ma": "VP322",
       "ten": "Nẹp Acco nhựa UNI",
       "dvt": "Hộp",
       "gia": 19000,
@@ -2476,7 +2485,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP322",
+      "ma": "VP323",
       "ten": "Nẹp giấy PF-08 (G-Star)",
       "dvt": "Hộp",
       "gia": 19000,
@@ -2485,16 +2494,16 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP323",
+      "ma": "VP324",
       "ten": "Nhựa ép A4",
       "dvt": "Xấp",
       "gia": 0,
       "anh": "",
-      "ton": 5
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP324",
+      "ma": "VP325",
       "ten": "Note đủ màu (Bitex SN05)",
       "dvt": "Xấp",
       "gia": 13000,
@@ -2503,16 +2512,16 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP325",
+      "ma": "VP326",
       "ten": "Note nhựa 5 màu (G Star)",
       "dvt": "Xấp",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/15WdjFyGdVAB846okFS-qLIx81RW9EQlN",
-      "ton": 100
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP326",
+      "ma": "VP327",
       "ten": "Note nhựa 5 màu (Pronoti)",
       "dvt": "Xấp",
       "gia": 13000,
@@ -2521,7 +2530,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP327",
+      "ma": "VP328",
       "ten": "Note trình ký nhựa nhiều màu (Hộp 48 cái)",
       "dvt": "Cái",
       "gia": 0,
@@ -2530,7 +2539,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP328",
+      "ma": "VP329",
       "ten": "Note vàng 3*5 UNC",
       "dvt": "Xấp",
       "gia": 0,
@@ -2539,7 +2548,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP329",
+      "ma": "VP330",
       "ten": "Nước suối Aquafina (355ml)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2548,7 +2557,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP330",
+      "ma": "VP331",
       "ten": "Nước suối Aquafina (500ml)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2557,7 +2566,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP331",
+      "ma": "VP332",
       "ten": "Nước suối Lavie (350ml)",
       "dvt": "Chai",
       "gia": 0,
@@ -2566,7 +2575,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP332",
+      "ma": "VP333",
       "ten": "Nước suối Lavie (500ml)",
       "dvt": "Chai",
       "gia": 0,
@@ -2575,7 +2584,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP333",
+      "ma": "VP334",
       "ten": "Nước suối Sanna (330ml)",
       "dvt": "Chai",
       "gia": 3000,
@@ -2584,7 +2593,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP334",
+      "ma": "VP335",
       "ten": "Nước suối Sanna (500ml)",
       "dvt": "Chai",
       "gia": 4000,
@@ -2593,7 +2602,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP335",
+      "ma": "VP336",
       "ten": "Nước suối Vikoda (350ml)",
       "dvt": "Chai",
       "gia": 5000,
@@ -2602,7 +2611,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP336",
+      "ma": "VP337",
       "ten": "Nước suối Vikoda (500ml)",
       "dvt": "Chai",
       "gia": 6000,
@@ -2611,7 +2620,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP344",
+      "ma": "VP345",
       "ten": "Phân trang film SN05 (5 màu/20 tờ/túi)",
       "dvt": "Túi",
       "gia": 14800,
@@ -2620,7 +2629,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP345",
+      "ma": "VP346",
       "ten": "Phấn viết bảng màu",
       "dvt": "Hộp",
       "gia": 5000,
@@ -2629,7 +2638,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP346",
+      "ma": "VP347",
       "ten": "Phấn viết bảng trắng",
       "dvt": "Hộp",
       "gia": 5000,
@@ -2638,25 +2647,25 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP347",
+      "ma": "VP348",
       "ten": "Phiếu Chi 2 liên khổ 13×19",
       "dvt": "Quyển",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1g3QlNS3YV8TKcGDjSbVY06ITLybSxW29",
-      "ton": 0
-    },
-    {
-      "nhom": "Dụng cụ VP",
-      "ma": "VP348",
-      "ten": "Phiếu thu 2 liên 13x19cm",
-      "dvt": "Quyển",
-      "gia": 13000,
-      "anh": "https://lh3.googleusercontent.com/d/15FyyA1sDiOxWbFED-m-8JFZ1YHvKRReS",
       "ton": -1
     },
     {
       "nhom": "Dụng cụ VP",
       "ma": "VP349",
+      "ten": "Phiếu thu 2 liên 13x19cm",
+      "dvt": "Quyển",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/15FyyA1sDiOxWbFED-m-8JFZ1YHvKRReS",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "ma": "VP350",
       "ten": "Phiếu thu 3 liên 13x19cm",
       "dvt": "Quyển",
       "gia": 18000,
@@ -2665,7 +2674,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP350",
+      "ma": "VP351",
       "ten": "Pin 2A Energizer",
       "dvt": "Cặp",
       "gia": 32000,
@@ -2674,7 +2683,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP351",
+      "ma": "VP352",
       "ten": "Pin 2A Maxell",
       "dvt": "Cặp",
       "gia": 6500,
@@ -2683,7 +2692,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP352",
+      "ma": "VP353",
       "ten": "Pin 2A Maxell Super (Vỉ 4 viên)",
       "dvt": "Vỉ",
       "gia": 16000,
@@ -2692,7 +2701,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP353",
+      "ma": "VP354",
       "ten": "Pin 2A Panasonic",
       "dvt": "Cặp",
       "gia": 8000,
@@ -2701,7 +2710,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP354",
+      "ma": "VP355",
       "ten": "Pin 3A Energizer",
       "dvt": "Cặp",
       "gia": 32000,
@@ -2710,7 +2719,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP355",
+      "ma": "VP356",
       "ten": "Pin 3A Maxell",
       "dvt": "Cặp",
       "gia": 6500,
@@ -2719,7 +2728,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP356",
+      "ma": "VP357",
       "ten": "Pin 3A Maxell Premium Alkaline",
       "dvt": "Cặp",
       "gia": 50000,
@@ -2728,7 +2737,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP357",
+      "ma": "VP358",
       "ten": "Pin 3A Panasonic",
       "dvt": "Cặp",
       "gia": 9000,
@@ -2737,7 +2746,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP358",
+      "ma": "VP359",
       "ten": "Pin CR2032 Maxell Lithium 3V (Vỉ 5 viên)",
       "dvt": "Viên",
       "gia": 13000,
@@ -2746,7 +2755,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP359",
+      "ma": "VP360",
       "ten": "Pin CR2032 Panasonic",
       "dvt": "Viên",
       "gia": 19000,
@@ -2755,7 +2764,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP360",
+      "ma": "VP361",
       "ten": "Pin Đại Maxell Alkaline",
       "dvt": "Cặp",
       "gia": 120000,
@@ -2764,7 +2773,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP361",
+      "ma": "VP362",
       "ten": "Pin Đại Maxell Super",
       "dvt": "Cặp",
       "gia": 40000,
@@ -2773,7 +2782,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP362",
+      "ma": "VP363",
       "ten": "Pin LR44 A76 Maxell",
       "dvt": "Cặp",
       "gia": 16000,
@@ -2782,7 +2791,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP363",
+      "ma": "VP364",
       "ten": "Pin LR44 A76 NP",
       "dvt": "Cặp",
       "gia": 15000,
@@ -2791,7 +2800,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP364",
+      "ma": "VP365",
       "ten": "Pin LR44 A76 Panasonic",
       "dvt": "Cặp",
       "gia": 16000,
@@ -2800,7 +2809,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP365",
+      "ma": "VP366",
       "ten": "Pin Trung Maxell Alkaline",
       "dvt": "Cặp",
       "gia": 90000,
@@ -2809,7 +2818,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP366",
+      "ma": "VP367",
       "ten": "Pin Trung Maxell Super",
       "dvt": "Cặp",
       "gia": 30000,
@@ -2818,7 +2827,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP367",
+      "ma": "VP368",
       "ten": "Ruy băng lụa 1cm - 22m",
       "dvt": "Cuộn",
       "gia": 11000,
@@ -2827,7 +2836,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP368",
+      "ma": "VP369",
       "ten": "Ruy băng lụa 2cm - 22m",
       "dvt": "Cuộn",
       "gia": 16000,
@@ -2836,7 +2845,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP369",
+      "ma": "VP370",
       "ten": "Ruy băng lụa 4cm - 22m",
       "dvt": "Cuộn",
       "gia": 0,
@@ -2845,7 +2854,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP370",
+      "ma": "VP371",
       "ten": "Sáp đếm tiền",
       "dvt": "Cái",
       "gia": 10000,
@@ -2854,7 +2863,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP371",
+      "ma": "VP372",
       "ten": "Sổ Bìa Da A5 (Hải Tiến 8403)",
       "dvt": "Tập",
       "gia": 68000,
@@ -2863,7 +2872,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP372",
+      "ma": "VP373",
       "ten": "Sổ Bìa Da Có Nút Gài",
       "dvt": "Quyển",
       "gia": 65000,
@@ -2872,7 +2881,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP373",
+      "ma": "VP374",
       "ten": "Sổ Bìa Da Có Nút Gài DEPAI",
       "dvt": "Quyển",
       "gia": 110000,
@@ -2881,7 +2890,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP374",
+      "ma": "VP375",
       "ten": "Sổ Bìa Da Có Nút Gài DEPAI 25-77",
       "dvt": "Tập",
       "gia": 105000,
@@ -2890,7 +2899,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP375",
+      "ma": "VP376",
       "ten": "Sổ Classic 6 Khuy bấm - 240t 4757",
       "dvt": "Quyển",
       "gia": 35000,
@@ -2899,7 +2908,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP376",
+      "ma": "VP377",
       "ten": "Sổ Da Bìa Cứng Camellia A5",
       "dvt": "Quyển",
       "gia": 90000,
@@ -2908,7 +2917,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP377",
+      "ma": "VP378",
       "ten": "Sổ Da CK7 (Wonderful)",
       "dvt": "Quyển",
       "gia": 28000,
@@ -2917,7 +2926,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP378",
+      "ma": "VP379",
       "ten": "Sổ Da CK8 D 192T (Tiến Phát)",
       "dvt": "Quyển",
       "gia": 28000,
@@ -2926,7 +2935,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP379",
+      "ma": "VP380",
       "ten": "Sổ lò xo A5 Business Hải Tiến",
       "dvt": "Quyển",
       "gia": 23000,
@@ -2935,7 +2944,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP380",
+      "ma": "VP381",
       "ten": "Sổ Moment 6 200 trang 8489",
       "dvt": "Quyển",
       "gia": 45000,
@@ -2944,7 +2953,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP381",
+      "ma": "VP382",
       "ten": "Tệp hồ sơ có dây (10cm)",
       "dvt": "Cái",
       "gia": 0,
@@ -2953,7 +2962,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP382",
+      "ma": "VP383",
       "ten": "Thước 20 cm cứng TL",
       "dvt": "Cây",
       "gia": 4000,
@@ -2962,7 +2971,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP383",
+      "ma": "VP384",
       "ten": "Thước 30 cm cứng TL",
       "dvt": "Cây",
       "gia": 6000,
@@ -2971,7 +2980,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP384",
+      "ma": "VP385",
       "ten": "Thước chữ bộ Koh I Noor",
       "dvt": "Cây",
       "gia": 190000,
@@ -2980,7 +2989,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP385",
+      "ma": "VP386",
       "ten": "Thước cứng 20cm",
       "dvt": "Cây",
       "gia": 8000,
@@ -2989,7 +2998,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP386",
+      "ma": "VP387",
       "ten": "Thước cứng 30cm",
       "dvt": "Cây",
       "gia": 10000,
@@ -2998,7 +3007,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP387",
+      "ma": "VP388",
       "ten": "Thước dẻo 20cm (Win C30)",
       "dvt": "Cây",
       "gia": 6000,
@@ -3007,7 +3016,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP388",
+      "ma": "VP389",
       "ten": "Thước dẻo 30cm (Win C30)",
       "dvt": "Cây",
       "gia": 8000,
@@ -3016,7 +3025,7 @@
     },
     {
       "nhom": "Dụng cụ VP",
-      "ma": "VP389",
+      "ma": "VP390",
       "ten": "Thước kẻ 50",
       "dvt": "Cây",
       "gia": 0,
@@ -3025,7 +3034,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP196",
+      "ma": "VP197",
       "ten": "Giấy A3 70 gsm Double A",
       "dvt": "Ram",
       "gia": 136000,
@@ -3034,7 +3043,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP197",
+      "ma": "VP198",
       "ten": "Giấy A3 70 gsm IK plus",
       "dvt": "Ram",
       "gia": 128000,
@@ -3043,7 +3052,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP198",
+      "ma": "VP199",
       "ten": "Giấy A3 70 gsm Natural",
       "dvt": "Ram",
       "gia": 116000,
@@ -3052,7 +3061,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP199",
+      "ma": "VP200",
       "ten": "Giấy A3 70 gsm Paper One",
       "dvt": "Ram",
       "gia": 134000,
@@ -3061,7 +3070,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP200",
+      "ma": "VP201",
       "ten": "Giấy A3 70 gsm Quality",
       "dvt": "Ram",
       "gia": 215000,
@@ -3070,7 +3079,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP201",
+      "ma": "VP202",
       "ten": "Giấy A3 70 gsm Smartis",
       "dvt": "Ram",
       "gia": 124000,
@@ -3079,7 +3088,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP202",
+      "ma": "VP203",
       "ten": "Giấy A3 70 gsm Supreme",
       "dvt": "Ram",
       "gia": 130000,
@@ -3088,7 +3097,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP203",
+      "ma": "VP204",
       "ten": "Giấy A4 70 gsm Double A",
       "dvt": "Ram",
       "gia": 80000,
@@ -3097,7 +3106,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP204",
+      "ma": "VP205",
       "ten": "Giấy A4 70 gsm Excel",
       "dvt": "Ram",
       "gia": 53000,
@@ -3106,7 +3115,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP205",
+      "ma": "VP206",
       "ten": "Giấy A4 70 gsm IK plus",
       "dvt": "Ram",
       "gia": 69000,
@@ -3115,7 +3124,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP206",
+      "ma": "VP207",
       "ten": "Giấy A4 70 gsm Natural",
       "dvt": "Ram",
       "gia": 64000,
@@ -3124,7 +3133,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP207",
+      "ma": "VP208",
       "ten": "Giấy A4 70 gsm Paper One",
       "dvt": "Ram",
       "gia": 69000,
@@ -3133,7 +3142,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP208",
+      "ma": "VP209",
       "ten": "Giấy A4 70 gsm Quality",
       "dvt": "Ram",
       "gia": 63000,
@@ -3142,7 +3151,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP209",
+      "ma": "VP210",
       "ten": "Giấy A4 70 gsm Smartis",
       "dvt": "Ram",
       "gia": 63000,
@@ -3151,7 +3160,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP210",
+      "ma": "VP211",
       "ten": "Giấy A4 70 gsm Supreme",
       "dvt": "Ram",
       "gia": 68000,
@@ -3160,7 +3169,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP211",
+      "ma": "VP212",
       "ten": "Giấy A4 80 gsm Double A",
       "dvt": "Ram",
       "gia": 110000,
@@ -3169,7 +3178,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP212",
+      "ma": "VP213",
       "ten": "Giấy A4 80 gsm Excel",
       "dvt": "Ram",
       "gia": 60000,
@@ -3178,7 +3187,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP213",
+      "ma": "VP214",
       "ten": "Giấy A4 80 gsm Paper One",
       "dvt": "Ram",
       "gia": 80000,
@@ -3187,7 +3196,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP214",
+      "ma": "VP215",
       "ten": "Giấy A4 80 gsm Supreme",
       "dvt": "Ram",
       "gia": 75000,
@@ -3196,7 +3205,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP215",
+      "ma": "VP216",
       "ten": "Giấy A5 70 gsm Double A",
       "dvt": "Ram",
       "gia": 46000,
@@ -3205,7 +3214,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP216",
+      "ma": "VP217",
       "ten": "Giấy A5 70 gsm Excel",
       "dvt": "Ram",
       "gia": 30000,
@@ -3214,7 +3223,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP217",
+      "ma": "VP218",
       "ten": "Giấy A5 70 gsm IK plus",
       "dvt": "Ram",
       "gia": 38000,
@@ -3223,7 +3232,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP218",
+      "ma": "VP219",
       "ten": "Giấy A5 70gsm Supreme",
       "dvt": "Ram",
       "gia": 35000,
@@ -3232,7 +3241,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP219",
+      "ma": "VP220",
       "ten": "Giấy A5 80 gsm Double A",
       "dvt": "Ram",
       "gia": 45000,
@@ -3241,7 +3250,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP220",
+      "ma": "VP221",
       "ten": "Giấy A5 80 gsm Excel",
       "dvt": "Ram",
       "gia": 32000,
@@ -3250,7 +3259,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP221",
+      "ma": "VP222",
       "ten": "Giấy bìa màu A4 (100 tờ/xấp)",
       "dvt": "Xấp",
       "gia": 78000,
@@ -3259,7 +3268,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP222",
+      "ma": "VP223",
       "ten": "Giấy bìa Paperline A4 cam",
       "dvt": "Xấp",
       "gia": 82000,
@@ -3268,7 +3277,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP223",
+      "ma": "VP224",
       "ten": "Giấy bìa Paperline A4 đỏ",
       "dvt": "Xấp",
       "gia": 82000,
@@ -3277,43 +3286,43 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP224",
+      "ma": "VP225",
       "ten": "Giấy bìa Paperline A4 vàng",
       "dvt": "Xấp",
       "gia": 82000,
       "anh": "https://lh3.googleusercontent.com/d/1gcQmMMYmyePSXoOmvht_UYqvUb-5Cmgb",
-      "ton": 0
-    },
-    {
-      "nhom": "Giấy",
-      "ma": "VP225",
-      "ten": "Giấy bìa Paperline A4 xanh",
-      "dvt": "Xấp",
-      "gia": 82000,
-      "anh": "https://lh3.googleusercontent.com/d/1sPoBRxUA8CldPy0wgt9nBRNvp9jDahYF",
       "ton": -1
     },
     {
       "nhom": "Giấy",
       "ma": "VP226",
-      "ten": "Giấy bìa Paperline A4 Xanh lá",
+      "ten": "Giấy bìa Paperline A4 xanh",
       "dvt": "Xấp",
       "gia": 82000,
-      "anh": "https://lh3.googleusercontent.com/d/1NSUdP16TryvI47rZbTuoDq9LR_330dV3",
+      "anh": "https://lh3.googleusercontent.com/d/1sPoBRxUA8CldPy0wgt9nBRNvp9jDahYF",
       "ton": 0
     },
     {
       "nhom": "Giấy",
       "ma": "VP227",
-      "ten": "Giấy Decal A4 Da bò",
+      "ten": "Giấy bìa Paperline A4 Xanh lá",
       "dvt": "Xấp",
-      "gia": 85000,
-      "anh": "https://lh3.googleusercontent.com/d/1rDolFC_Ol1SIXlbP2hMsQBhCbs6MV4ul",
+      "gia": 82000,
+      "anh": "https://lh3.googleusercontent.com/d/1NSUdP16TryvI47rZbTuoDq9LR_330dV3",
       "ton": -1
     },
     {
       "nhom": "Giấy",
       "ma": "VP228",
+      "ten": "Giấy Decal A4 Da bò",
+      "dvt": "Xấp",
+      "gia": 85000,
+      "anh": "https://lh3.googleusercontent.com/d/1rDolFC_Ol1SIXlbP2hMsQBhCbs6MV4ul",
+      "ton": 0
+    },
+    {
+      "nhom": "Giấy",
+      "ma": "VP229",
       "ten": "Giấy Decal A4 Đế Vàng",
       "dvt": "Xấp",
       "gia": 85000,
@@ -3322,7 +3331,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP229",
+      "ma": "VP230",
       "ten": "Giấy Decal A4 Đế Xanh",
       "dvt": "Xấp",
       "gia": 85000,
@@ -3331,7 +3340,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP230",
+      "ma": "VP231",
       "ten": "Giấy dính mũi tên 5M 45502 (Pronoti)",
       "dvt": "Xấp",
       "gia": 13000,
@@ -3340,7 +3349,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP231",
+      "ma": "VP232",
       "ten": "Giấy For màu A4 (70 gsm)",
       "dvt": "Ram",
       "gia": 70000,
@@ -3349,7 +3358,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP232",
+      "ma": "VP233",
       "ten": "Giấy For màu A4 (80 gsm)",
       "dvt": "Ram",
       "gia": 80000,
@@ -3358,7 +3367,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP233",
+      "ma": "VP234",
       "ten": "Giấy ghi chú 3 x 3 hiệu G-STAR",
       "dvt": "Xấp",
       "gia": 6500,
@@ -3367,7 +3376,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP234",
+      "ma": "VP235",
       "ten": "Giấy ghi chú Bitex 3x2/SN01 (100 tờ/xấp)",
       "dvt": "Xấp",
       "gia": 8000,
@@ -3376,7 +3385,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP235",
+      "ma": "VP236",
       "ten": "Giấy ghi chú Bitex 3x3/SN02 (100 tờ/xấp)",
       "dvt": "Xấp",
       "gia": 9500,
@@ -3385,7 +3394,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP236",
+      "ma": "VP237",
       "ten": "Giấy ghi chú Bitex 3x5/SN04 (100 tờ/xấp)",
       "dvt": "Xấp",
       "gia": 18000,
@@ -3394,7 +3403,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP237",
+      "ma": "VP238",
       "ten": "Giấy ghi chú màu vàng có keo dán (76x127mm)",
       "dvt": "Tập",
       "gia": 0,
@@ -3403,7 +3412,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP238",
+      "ma": "VP239",
       "ten": "Giấy in ảnh A4 1 mặt bóng",
       "dvt": "Xấp",
       "gia": 0,
@@ -3412,7 +3421,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP239",
+      "ma": "VP240",
       "ten": "Giấy in ảnh A4 2 mặt bóng",
       "dvt": "Xấp",
       "gia": 0,
@@ -3421,7 +3430,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP240",
+      "ma": "VP241",
       "ten": "Giấy In Bill K57 (57mm x 30m)",
       "dvt": "Cuộn",
       "gia": 0,
@@ -3430,7 +3439,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP241",
+      "ma": "VP242",
       "ten": "Giấy In Bill K80 (80mm x 30m)",
       "dvt": "Cuộn",
       "gia": 0,
@@ -3439,7 +3448,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP242",
+      "ma": "VP243",
       "ten": "Giấy in nhiệt 57mm",
       "dvt": "Cuộn",
       "gia": 11000,
@@ -3448,7 +3457,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP243",
+      "ma": "VP244",
       "ten": "Giấy in nhiệt 80mm",
       "dvt": "Cuộn",
       "gia": 13000,
@@ -3457,7 +3466,7 @@
     },
     {
       "nhom": "Giấy",
-      "ma": "VP244",
+      "ma": "VP245",
       "ten": "Giấy Supreme A3",
       "dvt": "Ram",
       "gia": 134259,
@@ -3466,7 +3475,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP190",
+      "ma": "VP191",
       "ten": "Dây, cáp điện Vcmo 2x2.5 300/500V",
       "dvt": "m",
       "gia": 29000,
@@ -3475,7 +3484,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP337",
+      "ma": "VP338",
       "ten": "Ổ cắm",
       "dvt": "Cái",
       "gia": 0,
@@ -3484,7 +3493,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP338",
+      "ma": "VP339",
       "ten": "Ổ cắm 5 (5 ổ 3 chấu - 5 công tắc, dây 3 mét)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3493,7 +3502,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP339",
+      "ma": "VP340",
       "ten": "Ổ cắm điện KIP OC 38 (5M)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3502,7 +3511,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP340",
+      "ma": "VP341",
       "ten": "Ổ cắm điện ODN5 (3M)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3511,7 +3520,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP341",
+      "ma": "VP342",
       "ten": "Ổ cắm ECO ( 6 lỗ 2 chấu, dây 2 mét)",
       "dvt": "Cái",
       "gia": 148000,
@@ -3520,7 +3529,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP342",
+      "ma": "VP343",
       "ten": "Ổ điện Lioa 3DNW 3.2.10 (3m)",
       "dvt": "Chiếc",
       "gia": 145000,
@@ -3529,7 +3538,7 @@
     },
     {
       "nhom": "Điện",
-      "ma": "VP343",
+      "ma": "VP344",
       "ten": "Ổ điện Lioa 4DND 3.3.10 (5m)",
       "dvt": "Chiếc",
       "gia": 155000,
