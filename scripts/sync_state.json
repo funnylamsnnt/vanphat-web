@@ -3,10 +3,11 @@
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
   "lastModifiedTime": "2026-09-29T04:08:11.656Z",
+  "previousModifiedTime": "2026-09-27T15:32:04.788Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-09-29T04:09:39Z",
+  "lastSyncAt": "2026-09-29T04:14:44Z",
   "lastSyncResult": {
     "changed": true,
     "count": 389,
@@ -19,12 +20,13 @@
     "removed": [],
     "price_chg": 71,
     "name_chg": 75,
-    "brief_deltas": "3 added (VP387–389), 0 removed; 2 calculators inserted at VP312–313 causing renumber/name+price shifts VP312–VP386 (71 price / 75 name); with_img 289→292",
+    "brief_deltas": "3 added (VP387–389), 0 removed; insert TL CAL-007/008 at VP312–313 with renumber/name+price shifts VP312–VP386 (71 price / 75 name); with_img 289→292",
     "web_deployed": true,
-    "bridge_refreshed": false,
-    "bridge_note": "pending",
-    "commit": null
+    "bridge_refreshed": true,
+    "bridge_note": "Browser Import→Upload→Thay thế bảng tính kept fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; Danh Mục Vật Tư 389 rows VP001–VP389 (+ Chính Sách Đối Tác); verified 0 price/name diffs vs local bridge; bridge modifiedTime 2026-09-29T04:13:16.738Z; staging upload Drive id 1L3nviVrNJMxEK8YcqR6FZgQgwq7_hgWI",
+    "commit": "9b2e515fd9a2aa20a8bcca4cd3900f1e27c2bb45",
+    "pages_run": "https://github.com/funnylamsnnt/vanphat-web/actions/runs/36520370487",
+    "lightbox_ok": true
   },
-  "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "previousModifiedTime": "2026-09-27T15:32:04.788Z"
+  "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
