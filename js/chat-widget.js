@@ -1,6 +1,12 @@
 /* Vạn Phát — AI Gemini chat (catalog-grounded, no Zalo) */
 (function () {
-  const CONFIG_URL = "data/chat-config.json?v=20260918b";
+  const CONFIG_URL = "/data/chat-config.json?v=20261002";
+
+  function absDataUrl(url) {
+    const u = String(url || "");
+    if (!u || /^https?:\/\//i.test(u) || u.charAt(0) === "/") return u;
+    return "/" + u.replace(/^\.\//, "");
+  }
 
   function el(tag, attrs, children) {
     const node = document.createElement(tag);
@@ -134,6 +140,16 @@
     const history = [];
     let pendingLead = null;
 
+    const fabZalo = el("a", {
+      className: "vp-fab vp-fab-zalo",
+      href: "https://zalo.me/" + String(hotlineTel || "").replace(/\s+/g, ""),
+      target: "_blank",
+      rel: "noopener",
+      "aria-label": "Chat Zalo " + hotline,
+      title: "Chat Zalo " + hotline,
+      text: "Zalo",
+    });
+
     const fabChat = el("button", {
       className: "vp-fab vp-fab-chat",
       type: "button",
@@ -234,7 +250,7 @@
     panel.appendChild(form);
     panel.appendChild(footer);
 
-    const wrap = el("div", { className: "vp-chat-dock" }, [panel, fabChat]);
+    const wrap = el("div", { className: "vp-chat-dock" }, [panel, fabZalo, fabChat]);
     document.body.appendChild(wrap);
 
     function addBubble(role, text) {
@@ -422,7 +438,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     loadJson(CONFIG_URL).then((cfg) => {
       const c = cfg || {};
-      const productsUrl = c.productsUrl || "data/products.json";
+      const productsUrl = absDataUrl(c.productsUrl || "/data/products.json");
       return loadJson(productsUrl).then((catalog) => mount(c, catalog || { sanpham: [] }));
     });
   });

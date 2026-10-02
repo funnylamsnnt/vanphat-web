@@ -2,7 +2,7 @@
 (function () {
   const STORAGE_KEY = "vanphat_staff_cart";
   const ORDER_EMAIL = "congtytnhhvanphat999@gmail.com";
-  const DATA_URL = "data/products.json";
+  const DATA_URL = "/data/products.json";
   const HOTLINE = "033 5652 832";
 
   // Optional: set after deploying gas/StaffOrderInbox.gs as Web app (Anyone).

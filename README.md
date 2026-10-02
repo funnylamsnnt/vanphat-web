@@ -7,26 +7,50 @@ Site tĩnh (HTML/CSS/JS) cho **Công ty TNHH Tư vấn Đầu tư Thương mại
 ```
 vanphat-website/
 ├── index.html          # Trang chủ
-├── san-pham.html       # Catalog sản phẩm (lọc / tìm kiếm)
+├── san-pham.html       # Catalog sản phẩm (lọc / tìm kiếm, JS)
+├── san-pham/           # Trang nhóm + trang SKU tĩnh (sinh bởi script)
 ├── photocopy.html      # Dịch vụ photocopy & in màu
 ├── lien-he.html        # Liên hệ
+├── khu-vuc.html        # Khu vực phục vụ Nam Nha Trang / Mỹ Gia
 ├── nhan-vien.html      # Nội bộ — nhân viên lập đơn (không có trên nav khách)
+├── robots.txt
+├── sitemap.xml
 ├── css/styles.css
 ├── js/main.js          # Nav, format giá, fallback ảnh
 ├── js/products.js      # Load JSON, filter/search, featured
+├── js/catalog-paths.js # Map mã → URL tĩnh (sinh bởi script)
 ├── js/cart.js          # Giỏ hàng khách
 ├── js/staff-order.js   # Đơn NV (localStorage riêng, formsubmit + GAS tuỳ chọn)
 ├── gas/StaffOrderInbox.gs  # Apps Script ghi Sheet đơn NV
-├── data/products.json  # ~381 sản phẩm (chỉ giá bán trên web)
+├── scripts/generate_catalog_pages.py
+├── data/products.json  # ~390 sản phẩm (chỉ giá bán trên web)
+├── docs/SEO-SEMRUSH.md
 └── README.md
 ```
+
+## SEO — trang sản phẩm tĩnh
+
+Catalog trên `san-pham.html` vẫn lọc bằng JavaScript. Google đọc thêm trang HTML tĩnh:
+
+- Nhóm: `san-pham/nhom-<slug>.html` (ví dụ `san-pham/nhom-bia-ho-so.html`)
+- Sản phẩm: `san-pham/<mã>-<tên>.html` (ví dụ `san-pham/vp063-bi-ho-so-a4-trang.html`)
+
+Slug lấy từ mã (`VP063` → `vp063`) và tên đã bỏ dấu. Thẻ trên trang chủ và catalog trỏ tới các URL này; lightbox và thêm vào giỏ giữ nguyên.
+
+Sau khi Excel cập nhật `data/products.json`, `scripts/sync_products_from_excel.py` tự gọi generator. Nếu chỉ sửa JSON:
+
+```bash
+python3 scripts/generate_catalog_pages.py
+```
+
+Script ghi `san-pham/*.html`, `sitemap.xml`, `robots.txt`, `js/catalog-paths.js`, và xóa trang SKU cũ do chính nó sinh ra. Commit các file đó rồi merge `main` để GitHub Pages phát hành. Sitemap: https://vanphatcompany.vn/sitemap.xml. Các bước Semrush và Search Console: [docs/SEO-SEMRUSH.md](docs/SEO-SEMRUSH.md).
 
 ## Preview local
 
 **Cách 1 — Python (khuyến nghị, vì `fetch` JSON cần HTTP):**
 
 ```bash
-cd /workspace/vanphat-website
+cd /workspace
 python3 -m http.server 8080
 ```
 
