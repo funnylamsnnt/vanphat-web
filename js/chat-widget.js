@@ -131,7 +131,6 @@
   function mount(cfg, catalog) {
     const hotlineTel = cfg.hotlineTel || "0335652832";
     const hotline = cfg.hotline || "033 5652 832";
-    const orderUrl = cfg.orderUrl || (window.VanPhat && window.VanPhat.ORDER_URL) || "#";
     const welcome =
       cfg.welcome ||
       "Xin chào! Em là trợ lý AI Vạn Phát — tư vấn theo danh mục trên website.";
@@ -240,7 +239,7 @@
 
     const footer = el("div", { className: "vp-chat-footer" }, [
       el("a", { href: "tel:" + hotlineTel, text: "☎ " + hotline }),
-      el("a", { href: orderUrl, target: "_blank", rel: "noopener", text: "Đặt hàng online" }),
+      el("a", { href: "https://zalo.me/" + hotlineTel, target: "_blank", rel: "noopener", text: "Chat Zalo" }),
     ]);
 
     panel.appendChild(header);
@@ -312,9 +311,9 @@
               .slice(0, 5)
               .map((p) => "• " + p.ten + " (" + p.ma + ") — " + Number(p.gia).toLocaleString("vi-VN") + "₫")
               .join("\n") +
-            "\n\nChat AI đang kích hoạt backend. Anh/chị gọi " +
+            "\n\nChat AI đang kích hoạt backend. Anh/chị thêm vào giỏ, gọi " +
             hotline +
-            " hoặc dùng Đặt hàng online nếu cần NV chốt.";
+            " hoặc chat Zalo nếu cần NV chốt.";
         } else {
           fallback =
             "Em chưa khớp sản phẩm trong catalog web cho câu này. Anh/chị để lại SĐT bên dưới — em ghi bill để NV tư vấn thêm, hoặc gọi " +

@@ -216,7 +216,7 @@ def chrome_header(prefix: str) -> str:
   </header>"""
 
 
-def chrome_footer(prefix: str, order_url: str) -> str:
+def chrome_footer(prefix: str) -> str:
     p = prefix
     return f"""  <footer class="site-footer">
     <div class="container">
@@ -245,7 +245,6 @@ def chrome_footer(prefix: str, order_url: str) -> str:
           <a href="{ZALO_URL}" target="_blank" rel="noopener">Chat Zalo</a>
           <a href="mailto:{EMAIL}">✉ {esc(EMAIL)}</a>
           <p>{esc(BANK_LINE)}</p>
-          <a href="{esc(order_url)}" target="_blank" rel="noopener">Đặt hàng online</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -348,7 +347,7 @@ def card_html(product: dict, product_href: str, category_href: str) -> str:
       </article>"""
 
 
-def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body, order_url) -> str:
+def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body) -> str:
     prefix = "../"
     return f"""<!DOCTYPE html>
 <html lang="vi">
@@ -369,7 +368,7 @@ def layout(*, title, description, canonical, image, image_alt, og_type, json_ld,
 {body}
   </main>
 
-{chrome_footer(prefix, order_url)}
+{chrome_footer(prefix)}
 
 {scripts(prefix)}
 </body>
@@ -395,7 +394,7 @@ def ordered_groups(present: list[str]) -> list[str]:
     return ordered
 
 
-def build_category_page(nhom: str, products: list[dict], groups: list[str], files: dict, order_url: str) -> str:
+def build_category_page(nhom: str, products: list[dict], groups: list[str], files: dict) -> str:
     filename = files[nhom]
     canonical = f"{SITE}/san-pham/{filename}"
     blurb = GROUP_BLURB.get(
@@ -467,7 +466,6 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
 {cards}
         </div>
         <div class="text-center mt-2">
-          <a class="btn btn-primary" href="{esc(order_url)}" target="_blank" rel="noopener">Đặt hàng online</a>
           <a class="btn btn-zalo" href="{ZALO_URL}" target="_blank" rel="noopener">Chat Zalo</a>
           <a class="btn btn-outline-navy" href="tel:{HOTLINE_TEL}">Gọi {esc(HOTLINE_DISPLAY)}</a>
           <a class="btn btn-outline-navy" href="{esc(catalog_filter)}">Lọc nhóm này trong catalog</a>
@@ -485,11 +483,10 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
         og_type="website",
         json_ld=graph,
         body=body,
-        order_url=order_url,
     )
 
 
-def build_product_page(product: dict, groups: list[str], files: dict, related: list[dict], order_url: str) -> str:
+def build_product_page(product: dict, groups: list[str], files: dict, related: list[dict]) -> str:
     filename = product["_file"]
     nhom = product.get("nhom") or ""
     canonical = f"{SITE}/san-pham/{filename}"
@@ -599,7 +596,6 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
         og_type="product",
         json_ld=graph,
         body=body,
-        order_url=order_url,
     )
 
 
@@ -673,9 +669,6 @@ def main() -> None:
     products_path = Path(args.products)
     data = load_products(products_path)
     products = data["sanpham"]
-    order_url = data.get("orderUrl") or (
-        "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec"
-    )
 
     by_group: dict[str, list[dict]] = {}
     used_files: set[str] = set()
@@ -706,7 +699,7 @@ def main() -> None:
 
     for name in groups:
         expected.add(cat_files[name])
-        page = build_category_page(name, by_group[name], groups, cat_files, order_url)
+        page = build_category_page(name, by_group[name], groups, cat_files)
         if write_text(out_dir / cat_files[name], page):
             written += 1
 
@@ -716,7 +709,7 @@ def main() -> None:
         with_img = [p for p in same if p.get("anh")]
         pool = with_img or same
         related = pool[:4]
-        page = build_product_page(product, groups, cat_files, related, order_url)
+        page = build_product_page(product, groups, cat_files, related)
         if write_text(out_dir / product["_file"], page):
             written += 1
 

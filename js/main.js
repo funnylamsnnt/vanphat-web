@@ -1,12 +1,9 @@
 /* Vạn Phát — shared UI */
 (function () {
-  const ORDER_URL =
-    "https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec";
   const HOTLINE = "033 5652 832";
   const HOTLINE_TEL = "0335652832";
 
   window.VanPhat = {
-    ORDER_URL,
     HOTLINE,
     HOTLINE_TEL,
     formatPrice(n) {

@@ -151,9 +151,6 @@
             <button type="button" class="btn btn-outline-navy cart-btn-wa" data-cart-wa>
               Zalo / WhatsApp
             </button>
-            <a class="btn btn-outline-navy cart-btn-order" data-cart-order href="#" target="_blank" rel="noopener">
-              Hệ thống đặt hàng online
-            </a>
           </details>
         </div>
         <button type="button" class="btn btn-primary cart-btn-checkout" data-cart-show-checkout>
@@ -426,8 +423,6 @@
     const checkoutBtn = document.querySelector("[data-cart-show-checkout]");
     const checkoutPanel = document.querySelector("[data-cart-checkout]");
     const emptyHint = document.querySelector("[data-cart-empty-hint]");
-    const orderLink = document.querySelector("[data-cart-order]");
-
     if (emptyHint) emptyHint.hidden = hasItems;
     if (checkoutBtn) {
       checkoutBtn.hidden = !hasItems || (checkoutPanel && !checkoutPanel.hidden);
@@ -435,9 +430,6 @@
     if (checkoutPanel && !hasItems) {
       checkoutPanel.hidden = true;
       if (checkoutBtn) checkoutBtn.hidden = true;
-    }
-    if (orderLink && window.VanPhat && window.VanPhat.ORDER_URL) {
-      orderLink.href = window.VanPhat.ORDER_URL;
     }
   }
 
