@@ -72,7 +72,7 @@ Trang nhân viên: http://localhost:8080/nhan-vien.html
 - **Tên:** Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát
 - **Địa chỉ:** LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang
 - **Hotline:** 033 5652 832
-- **Đặt hàng online:** [Google Apps Script form](https://script.google.com/macros/s/AKfycbzdcOxIbVAivc2fSCSk1v8go0Wxg_vULF7MDnsmpOcROoWDZ5luBF6uD7Wh-omRkjJB/exec)
+- **Đặt hàng:** thêm vào giỏ trên web, rồi chốt đơn bằng email. Hotline và Zalo vẫn dùng để báo giá.
 
 ## Thiết kế
 
