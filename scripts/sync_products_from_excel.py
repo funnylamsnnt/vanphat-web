@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
-"""Export Danh Mục Vật Tư from Vạn Phát Excel → data/products.json"""
-import argparse, json, re, hashlib
+"""Export Danh Mục Vật Tư from Vạn Phát Excel → data/products.json.
+
+After a successful export this script regenerates indexable category/product
+HTML, sitemap.xml, and js/catalog-paths.js via generate_catalog_pages.py.
+Re-run that generator on its own if products.json was edited without Excel:
+
+    python3 scripts/generate_catalog_pages.py
+"""
+import argparse, json, re, hashlib, subprocess, sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
 
 # Default (legacy) layout: A nhóm, B mã, C tên, D ĐVT, E giá, F link ảnh, K tồn.
 DEFAULT_COLS = {"nhom": 0, "ma": 1, "ten": 2, "dvt": 3, "gia": 4, "anh": 5, "ton": 10}
@@ -134,13 +143,23 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
     with_img = sum(1 for p in products if p["anh"] and "placeholder" not in p["anh"].lower())
     return {"changed": changed, "count": len(products), "with_img": with_img, "groups": groups, "path": str(out_json)}
 
+def regenerate_catalog_pages(products_json: Path) -> None:
+    """Rebuild static SEO pages so new SKUs are crawlable after catalog sync."""
+    gen = Path(__file__).resolve().parent / "generate_catalog_pages.py"
+    if not gen.is_file():
+        raise SystemExit(f"Missing generator: {gen}")
+    subprocess.check_call([sys.executable, str(gen), "--products", str(products_json)])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("xlsx")
-    ap.add_argument("-o", "--out", default="/workspace/vanphat-website/data/products.json")
+    ap.add_argument("-o", "--out", default=str(ROOT / "data" / "products.json"))
     args = ap.parse_args()
-    stats = export(Path(args.xlsx), Path(args.out))
+    out = Path(args.out)
+    stats = export(Path(args.xlsx), out)
     print(json.dumps(stats, ensure_ascii=False))
+    regenerate_catalog_pages(out)
 
 if __name__ == "__main__":
     main()

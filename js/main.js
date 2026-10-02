@@ -55,12 +55,16 @@
   }
 
   function setActiveNav() {
-    const path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+    const path = location.pathname.toLowerCase();
+    const file = path.split("/").pop() || "index.html";
+    const onCatalog = file === "san-pham.html" || path.indexOf("/san-pham/") !== -1;
     document.querySelectorAll(".nav-links a").forEach((a) => {
       const href = (a.getAttribute("href") || "").toLowerCase();
-      if (href === path || (path === "" && href === "index.html")) {
-        a.classList.add("active");
-      }
+      const target = href.split("/").pop();
+      const home = target === "index.html" && (file === "index.html" || file === "");
+      const catalog = target === "san-pham.html" && onCatalog;
+      const exact = target && target === file && !onCatalog;
+      if (home || catalog || exact) a.classList.add("active");
     });
   }
 

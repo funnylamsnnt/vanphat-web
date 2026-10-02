@@ -375,7 +375,7 @@
     if (!list) return;
     if (!items.length) {
       list.innerHTML =
-        '<div class="cart-empty"><p>Chưa có sản phẩm nào.</p><a href="san-pham.html" class="btn btn-outline-navy btn-sm">Xem sản phẩm</a></div>';
+        '<div class="cart-empty"><p>Chưa có sản phẩm nào.</p><a href="/san-pham.html" class="btn btn-outline-navy btn-sm">Xem sản phẩm</a></div>';
       return;
     }
     list.innerHTML = items

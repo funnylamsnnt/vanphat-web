@@ -1,6 +1,6 @@
 /* Vạn Phát — product catalog & homepage featured */
 (function () {
-  const DATA_URL = "data/products.json";
+  const DATA_URL = "/data/products.json";
   let DATA = null;
 
   async function loadData() {
@@ -21,9 +21,21 @@
     return (data.nhom || []).map(groupName).filter(Boolean);
   }
 
+  function productHref(p) {
+    const map = (window.VanPhatPaths && window.VanPhatPaths.product) || {};
+    return (p && map[p.ma]) || "san-pham.html";
+  }
+
+  function categoryHref(name) {
+    const map = (window.VanPhatPaths && window.VanPhatPaths.category) || {};
+    if (name && map[name]) return map[name];
+    return "san-pham.html?nhom=" + encodeURIComponent(name || "");
+  }
+
   function cardHTML(p) {
     const img = p.anh ? p.anh : window.VanPhat.placeholderSvg();
     const price = window.VanPhat.formatPrice(p.gia);
+    const href = productHref(p);
     return `
       <article class="product-card"
         data-ma="${escapeAttr(p.ma)}"
@@ -34,12 +46,12 @@
         data-nhom="${escapeAttr(p.nhom)}">
         <div class="product-img" data-product-zoom role="button" tabindex="0"
              aria-label="Xem ảnh lớn: ${escapeAttr(p.ten)}" title="Xem ảnh lớn">
-          <img src="${escapeAttr(img)}" alt="${escapeAttr(p.ten)}" loading="lazy"
+          <img src="${escapeAttr(img)}" alt="${escapeAttr(p.ten)}" width="400" height="400" loading="lazy" decoding="async"
                onerror="VanPhat.onImgError(this)" />
         </div>
         <div class="product-body">
-          <div class="product-nhom">${escapeHtml(p.nhom)}</div>
-          <h3 class="product-name">${escapeHtml(p.ten)}</h3>
+          <div class="product-nhom"><a href="${escapeAttr(categoryHref(p.nhom))}">${escapeHtml(p.nhom)}</a></div>
+          <h3 class="product-name"><a href="${escapeAttr(href)}">${escapeHtml(p.ten)}</a></h3>
           <div class="product-meta-row">
             <span class="product-dvt">ĐVT: ${escapeHtml(p.dvt || "—")}</span>
             <span class="product-ma">${escapeHtml(p.ma || "")}</span>
