@@ -176,7 +176,7 @@ def head_tags(*, title: str, description: str, canonical: str, image: str, image
   <meta name="twitter:image" content="{esc(image)}" />"""
 
 
-def chrome_header(prefix: str, order_url: str) -> str:
+def chrome_header(prefix: str) -> str:
     p = prefix
     return f"""  <div class="topbar">
     <div class="container">
@@ -211,7 +211,6 @@ def chrome_header(prefix: str, order_url: str) -> str:
         </button>
         <a class="btn btn-zalo btn-sm" href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a>
         <a class="btn btn-outline-navy btn-sm" href="tel:{HOTLINE_TEL}">Gọi hotline</a>
-        <a class="btn btn-gold btn-sm" href="{esc(order_url)}" target="_blank" rel="noopener">Đặt hàng</a>
       </div>
     </div>
   </header>"""
@@ -364,7 +363,7 @@ def layout(*, title, description, canonical, image, image_alt, og_type, json_ld,
 {ld_script(json_ld)}
 </head>
 <body>
-{chrome_header(prefix, order_url)}
+{chrome_header(prefix)}
 
   <main>
 {body}
@@ -582,7 +581,6 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
               <button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>
             </div>
             <div class="product-detail-cta">
-              <a class="btn btn-gold" href="{esc(order_url)}" target="_blank" rel="noopener">Đặt hàng online</a>
               <a class="btn btn-zalo" href="{ZALO_URL}" target="_blank" rel="noopener">Chat Zalo</a>
               <a class="btn btn-outline-navy" href="tel:{HOTLINE_TEL}">Gọi {esc(HOTLINE_DISPLAY)}</a>
             </div>
