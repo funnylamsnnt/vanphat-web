@@ -114,7 +114,7 @@
     "download_bytes": 10216407,
     "download_method": "MCP download_file_content (Playwright uc download crashed on save)",
     "bridge_modifiedTime": "2026-10-03T01:16:54.154Z",
-    "chore_commit": null
+    "chore_commit": "e6f8f72d12a0e791ddb6f3cc1f04d6fa7fb3d6f2"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
