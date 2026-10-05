@@ -2,119 +2,61 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-03T00:19:33.334Z",
-  "previousModifiedTime": "2026-10-02T04:55:56.585Z",
+  "lastModifiedTime": "2026-10-05T07:18:34.658Z",
+  "previousModifiedTime": "2026-10-03T00:19:33.334Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-03T01:18:00Z",
+  "lastSyncAt": "2026-10-05T07:21:38Z",
   "lastSyncResult": {
     "changed": true,
     "count": 390,
-    "with_img": 294,
+    "with_img": 295,
     "added": [],
     "removed": [],
-    "price_chg": 0,
-    "name_chg": 0,
-    "ton_chg": 14,
-    "ton_chg_details": [
-      {
-        "ma": "VP088",
-        "ten": "Bìa lỗ 320gr (Mỏng - 100 cái/xấp)",
-        "old": 10,
-        "new": 20
-      },
-      {
-        "ma": "VP089",
-        "ten": "Bìa lỗ 380g (100 cái/xấp)",
-        "old": 10,
-        "new": 20
-      },
+    "price_chg": 1,
+    "price_chg_details": [
       {
         "ma": "VP108",
-        "ten": "Bìa trình ký nhựa đôi A4",
-        "old": 0,
-        "new": 20
-      },
-      {
-        "ma": "VP121",
-        "ten": "Bút bi TL-079",
-        "old": 360,
-        "new": 374
-      },
-      {
-        "ma": "VP131",
-        "ten": "Bút dạ quang FO-HL03",
-        "old": 0,
-        "new": 50
-      },
-      {
-        "ma": "VP206",
-        "ten": "Giấy A4 70 gsm IK plus",
-        "old": 459,
-        "new": 532
-      },
-      {
-        "ma": "VP231",
-        "ten": "Giấy dính mũi tên 5M 45502 (Pronoti)",
-        "old": 144,
-        "new": 384
-      },
-      {
-        "ma": "VP250",
-        "ten": "Gỡ kim Kwtrio 508B",
-        "old": 0,
-        "new": 24
-      },
-      {
-        "ma": "VP313",
-        "ten": "Máy tính văn phòng TL CAL-007",
-        "old": 0,
-        "new": 3
-      },
-      {
-        "ma": "VP314",
-        "ten": "Máy tính văn phòng TL CAL-008",
-        "old": 0,
-        "new": 3
-      },
-      {
-        "ma": "VP325",
-        "ten": "Note đủ màu (Bitex SN05)",
-        "old": 90,
-        "new": 630
-      },
-      {
-        "ma": "VP326",
-        "ten": "Note nhựa 5 màu (G Star)",
-        "old": 0,
-        "new": 240
-      },
-      {
-        "ma": "VP354",
-        "ten": "Pin 2A Panasonic",
-        "old": 120,
-        "new": 1120
-      },
-      {
-        "ma": "VP358",
-        "ten": "Pin 3A Panasonic",
-        "old": 600,
-        "new": 1100
+        "ten": "Bìa trình ký nhựa đôi A4 (VC 017)",
+        "old": 35000,
+        "new": 29000
       }
     ],
-    "img_url_chg": [],
-    "brief_deltas": "ton_chg 14: VP088 10→20; VP089 10→20; VP108 0→20; VP121 360→374; VP131 0→50; VP206 459→532; VP231 144→384; VP250 0→24; VP313 0→3; VP314 0→3; VP325 90→630; VP326 0→240; VP354 120→1120; VP358 600→1100",
+    "name_chg": 1,
+    "name_chg_details": [
+      {
+        "ma": "VP108",
+        "old": "Bìa trình ký nhựa đôi A4",
+        "new": "Bìa trình ký nhựa đôi A4 (VC 017)"
+      }
+    ],
+    "ton_chg": 1,
+    "ton_chg_details": [
+      {
+        "ma": "VP108",
+        "ten": "Bìa trình ký nhựa đôi A4 (VC 017)",
+        "old": 20,
+        "new": 0
+      }
+    ],
+    "img_url_chg": [
+      {
+        "ma": "VP108",
+        "old": "",
+        "new": "https://lh3.googleusercontent.com/d/1EfdV2R2zjgsr_xs3AKMSA8YZfVyv7W64"
+      }
+    ],
+    "brief_deltas": "VP108 Bìa trình ký nhựa đôi A4 → (VC 017): giá 35000→29000; tồn 20→0; thêm ảnh; SEO slug vp108-bia-trinh-ky-nhua-doi-a4.html → vp108-bia-trinh-ky-nhua-doi-a4-vc-017.html",
     "web_deployed": true,
-    "bridge_refreshed": true,
-    "bridge_note": "Browser Import→Upload→Thay thế bảng tính kept fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; Danh Mục Vật Tư 390 rows VP001–VP390 (+ Chính Sách Đối Tác); verified 0 diffs vs local; bridge modifiedTime 2026-10-03T01:16:54.154Z; Playwright local set_input_files",
-    "commit": "5eb6507090ff2fe4df202ad6d66c471f28a1fa0e",
-    "pages_run": "https://github.com/funnylamsnnt/vanphat-web/actions/runs/37085440536",
+    "bridge_refreshed": false,
+    "bridge_note": "pending browser Import→Replace (local /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx regenerated: 390 rows VP001–VP390 + Chính Sách Đối Tác; expected CSV /workspace/vanphat-sync/_bridge_expected.csv)",
+    "commit": "cdc78694a6ba7cd6512c40a9a935f903e9cceffa",
+    "pages_run": "https://github.com/funnylamsnnt/vanphat-web/actions/runs/37277205380",
     "pages_status": "success",
-    "download_bytes": 10216407,
-    "download_method": "MCP download_file_content (Playwright uc download crashed on save)",
-    "bridge_modifiedTime": "2026-10-03T01:16:54.154Z",
-    "chore_commit": "e6f8f72d12a0e791ddb6f3cc1f04d6fa7fb3d6f2"
+    "download_bytes": 10218417,
+    "download_method": "MCP download_file_content",
+    "source_note": "Requested target modifiedTime 2026-10-05T07:10:57.970Z (10218238 B) was superseded by a newer save at 2026-10-05T07:18:34.658Z (10218417 B) before download; synced the newer version (size matched metadata)."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
