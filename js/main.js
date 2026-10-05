@@ -33,6 +33,14 @@
       const wrap = img.closest(".product-img");
       if (wrap) wrap.classList.add("is-fallback");
     },
+    fold(s) {
+      return String(s ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "d")
+        .toLowerCase();
+    },
   };
 
   function initNav() {
@@ -54,7 +62,10 @@
   function setActiveNav() {
     const path = location.pathname.toLowerCase();
     const file = path.split("/").pop() || "index.html";
-    const onCatalog = file === "san-pham.html" || path.indexOf("/san-pham/") !== -1;
+    const onCatalog =
+      file === "san-pham.html" ||
+      path.indexOf("/san-pham/") !== -1 ||
+      path.indexOf("/linh-vuc/") !== -1;
     document.querySelectorAll(".nav-links a").forEach((a) => {
       const href = (a.getAttribute("href") || "").toLowerCase();
       const target = href.split("/").pop();

@@ -7,7 +7,8 @@ Site tĩnh (HTML/CSS/JS) cho **Công ty TNHH Tư vấn Đầu tư Thương mại
 ```
 vanphat-website/
 ├── index.html          # Trang chủ
-├── san-pham.html       # Catalog sản phẩm (lọc / tìm kiếm, JS)
+├── san-pham.html       # Catalog mọi lĩnh vực (lọc / tìm kiếm, JS)
+├── linh-vuc/           # Trang lĩnh vực L1 (sinh bởi script)
 ├── san-pham/           # Trang nhóm + trang SKU tĩnh (sinh bởi script)
 ├── photocopy.html      # Dịch vụ photocopy & in màu
 ├── lien-he.html        # Liên hệ
@@ -23,7 +24,8 @@ vanphat-website/
 ├── js/staff-order.js   # Đơn NV (localStorage riêng, formsubmit + GAS tuỳ chọn)
 ├── gas/StaffOrderInbox.gs  # Apps Script ghi Sheet đơn NV
 ├── scripts/generate_catalog_pages.py
-├── data/products.json  # ~390 sản phẩm (chỉ giá bán trên web)
+├── data/ia.json        # Cấu hình lĩnh vực → nhóm (không hardcode số lượng)
+├── data/products.json  # Catalog (giá bán) + linh_vuc[] nhúng khi sync Excel
 ├── docs/SEO-SEMRUSH.md
 └── README.md
 ```
@@ -32,7 +34,8 @@ vanphat-website/
 
 Catalog trên `san-pham.html` vẫn lọc bằng JavaScript. Google đọc thêm trang HTML tĩnh:
 
-- Nhóm: `san-pham/nhom-<slug>.html` (ví dụ `san-pham/nhom-bia-ho-so.html`)
+- Lĩnh vực: `linh-vuc/<slug>.html` (ví dụ `linh-vuc/vpp.html`, `linh-vuc/nuoc-banh.html`)
+- Nhóm (canonical): `san-pham/nhom-<slug>.html` (ví dụ `san-pham/nhom-giay.html`, `san-pham/nhom-nuoc-uong.html`)
 - Sản phẩm: `san-pham/<mã>-<tên>.html` (ví dụ `san-pham/vp063-bi-ho-so-a4-trang.html`)
 
 Slug lấy từ mã (`VP063` → `vp063`) và tên đã bỏ dấu. Thẻ trên trang chủ và catalog trỏ tới các URL này; lightbox và thêm vào giỏ giữ nguyên.
