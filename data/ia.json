@@ -1,0 +1,113 @@
+{
+  "linh_vuc": [
+    {
+      "id": "vpp",
+      "ten": "Văn phòng phẩm",
+      "tenNgan": "VPP",
+      "slug": "vpp",
+      "sort": 1,
+      "visible": true,
+      "browseMode": "group-images",
+      "moTa": "Giấy, bìa, bút mực, băng keo và dụng cụ văn phòng",
+      "nhomIds": ["giay", "bia-ho-so", "but-muc", "bang-keo", "dung-cu-vp"]
+    },
+    {
+      "id": "nuoc-banh",
+      "ten": "Nước uống & Bánh",
+      "tenNgan": "Nước & Bánh",
+      "slug": "nuoc-banh",
+      "sort": 2,
+      "visible": true,
+      "browseMode": "product-images",
+      "moTa": "Nước suối, nước ngọt và bánh cho văn phòng",
+      "emptyMessage": "Bánh đang cập nhật — liên hệ để đặt trước",
+      "nhomIds": ["nuoc-uong", "banh"]
+    },
+    {
+      "id": "dien-gia-dung",
+      "ten": "Điện gia dụng",
+      "tenNgan": "Điện",
+      "slug": "dien-gia-dung",
+      "sort": 3,
+      "visible": true,
+      "browseMode": "group-images",
+      "moTa": "Ổ cắm, dây điện và thiết bị điện văn phòng",
+      "nhomIds": ["dien"]
+    }
+  ],
+  "nhom": [
+    {
+      "id": "giay",
+      "STT": 1,
+      "TenNhom": "Giấy",
+      "slug": "giay",
+      "linhVucId": "vpp",
+      "visible": true,
+      "moTa": "Giấy in, giấy photo và sổ dùng cho văn phòng — gồm giấy A4, A5 và các loại sổ tại cửa hàng Mỹ Gia."
+    },
+    {
+      "id": "bia-ho-so",
+      "STT": 2,
+      "TenNhom": "Bìa Hồ Sơ",
+      "slug": "bia-ho-so",
+      "linhVucId": "vpp",
+      "visible": true,
+      "moTa": "Bìa hồ sơ, bìa còng, bìa lỗ và file đựng tài liệu cho cơ quan, cửa hàng ở Nam Nha Trang."
+    },
+    {
+      "id": "but-muc",
+      "STT": 3,
+      "TenNhom": "Bút & Mực",
+      "slug": "but-muc",
+      "linhVucId": "vpp",
+      "visible": true,
+      "moTa": "Bút bi, bút gel, mực và dạ quang — bổ sung văn phòng phẩm định kỳ."
+    },
+    {
+      "id": "bang-keo",
+      "STT": 4,
+      "TenNhom": "Băng Keo",
+      "slug": "bang-keo",
+      "linhVucId": "vpp",
+      "visible": true,
+      "moTa": "Băng keo trong, đục, simili và băng dính dùng hàng ngày."
+    },
+    {
+      "id": "dung-cu-vp",
+      "STT": 5,
+      "TenNhom": "Dụng cụ VP",
+      "slug": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "visible": true,
+      "moTa": "Kéo, bấm kim, kẹp giấy, máy tính và đồ dùng bàn làm việc."
+    },
+    {
+      "id": "dien",
+      "STT": 6,
+      "TenNhom": "Điện",
+      "slug": "dien",
+      "linhVucId": "dien-gia-dung",
+      "visible": true,
+      "moTa": "Ổ cắm, pin và thiết bị điện nhỏ phục vụ bàn làm việc."
+    },
+    {
+      "id": "nuoc-uong",
+      "STT": 7,
+      "TenNhom": "Nước uống",
+      "slug": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "moTa": "Nước suối, nước ngọt và đồ uống cho văn phòng tại Nam Nha Trang."
+    },
+    {
+      "id": "banh",
+      "STT": 8,
+      "TenNhom": "Bánh",
+      "slug": "banh",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "placeholder": true,
+      "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    }
+  ]
+}

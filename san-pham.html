@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Văn phòng phẩm Nha Trang | Catalog Vạn Phát</title>
-  <meta name="description" content="Catalog văn phòng phẩm tại Nam Nha Trang: giấy, bìa hồ sơ, bút mực, băng keo, dụng cụ VP. Lọc theo nhóm hoặc tìm theo tên, mã." />
+  <title>Catalog sản phẩm | Vạn Phát Nha Trang</title>
+  <meta name="description" content="Tìm văn phòng phẩm, nước uống và điện gia dụng tại Vạn Phát. Lọc theo lĩnh vực, nhóm, mã hoặc tên — có dấu hoặc không dấu." />
   <link rel="canonical" href="https://vanphatcompany.vn/san-pham.html" />
   <link rel="alternate" hreflang="vi" href="https://vanphatcompany.vn/san-pham.html" />
   <meta property="og:locale" content="vi_VN" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Vạn Phát" />
-  <meta property="og:title" content="Văn phòng phẩm Nha Trang | Catalog Vạn Phát" />
-  <meta property="og:description" content="Catalog văn phòng phẩm tại Nam Nha Trang: giấy, bìa hồ sơ, bút mực, băng keo, dụng cụ VP. Lọc theo nhóm hoặc tìm theo tên, mã." />
+  <meta property="og:title" content="Catalog sản phẩm | Vạn Phát Nha Trang" />
+  <meta property="og:description" content="Tìm văn phòng phẩm, nước uống và điện gia dụng tại Vạn Phát. Lọc theo lĩnh vực, nhóm, mã hoặc tên." />
   <meta property="og:url" content="https://vanphatcompany.vn/san-pham.html" />
   <meta property="og:image" content="https://vanphatcompany.vn/assets/logo.png" />
   <meta property="og:image:alt" content="Logo CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT" />
@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="assets/favicon.png?v=20260925" />
-  <link rel="stylesheet" href="css/styles.css?v=20261002" />
+  <link rel="stylesheet" href="css/styles.css?v=20261005" />
 </head>
 <body>
   <div class="topbar">
@@ -50,7 +50,7 @@
         <a href="lien-he.html">Liên hệ</a>
       </nav>
             <form class="nav-search" action="san-pham.html" method="get" role="search">
-        <input type="search" name="q" placeholder="Tìm sản phẩm…" aria-label="Tìm sản phẩm" autocomplete="off" />
+        <input type="search" name="q" placeholder="Tìm mã / tên…" aria-label="Tìm mã hoặc tên sản phẩm" autocomplete="off" />
         <button type="submit" aria-label="Tìm">⌕</button>
       </form>
       <div class="nav-cta">
@@ -66,13 +66,13 @@
   <main>
     <section class="page-hero">
       <div class="container">
-        <nav class="breadcrumb breadcrumb-light" aria-label="Breadcrumb">
+        <nav class="breadcrumb breadcrumb-light" id="catalog-crumb" aria-label="Breadcrumb">
           <a href="index.html">Trang chủ</a>
           <span aria-hidden="true">/</span>
           <span aria-current="page">Sản phẩm</span>
         </nav>
-        <h1>Catalog văn phòng phẩm Nha Trang</h1>
-        <p>Hơn 380 mặt hàng giấy, bìa hồ sơ, bút mực và dụng cụ VP — lọc theo nhóm, tìm theo tên hoặc mã. Mỗi nhóm cũng có trang riêng để xem và đặt hàng.</p>
+        <h1>Catalog sản phẩm Vạn Phát</h1>
+        <p>Tìm theo mã hoặc tên trên mọi lĩnh vực — văn phòng phẩm, nước uống &amp; bánh, điện gia dụng. Lọc theo lĩnh vực và nhóm.</p>
       </div>
     </section>
 
@@ -82,7 +82,7 @@
           <div class="search-wrap">
             <span class="s-icon" aria-hidden="true">🔍</span>
             <label class="sr-only" for="search-input">Tìm kiếm</label>
-            <input id="search-input" type="search" placeholder="Tìm theo tên, mã sản phẩm…" autocomplete="off" />
+            <input id="search-input" type="search" placeholder="Tìm mã / tên (có dấu hoặc không)…" autocomplete="off" />
           </div>
           <label class="sr-only" for="group-select">Nhóm hàng</label>
           <select id="group-select" class="filter-select">
@@ -90,15 +90,8 @@
           </select>
           <div id="result-count" class="result-count">Đang tải…</div>
         </div>
+        <div id="lv-row" class="chip-row lv-row" role="tablist" aria-label="Lĩnh vực"></div>
         <div id="chip-row" class="chip-row" role="group" aria-label="Lọc nhanh theo nhóm"></div>
-        <nav class="chip-row catalog-static-groups" aria-label="Trang nhóm hàng">
-          <a class="chip" href="san-pham/nhom-giay.html">Giấy</a>
-          <a class="chip" href="san-pham/nhom-bia-ho-so.html">Bìa Hồ Sơ</a>
-          <a class="chip" href="san-pham/nhom-but-muc.html">Bút &amp; Mực</a>
-          <a class="chip" href="san-pham/nhom-bang-keo.html">Băng Keo</a>
-          <a class="chip" href="san-pham/nhom-dung-cu-vp.html">Dụng cụ VP</a>
-          <a class="chip" href="san-pham/nhom-dien.html">Điện</a>
-        </nav>
       </div>
     </div>
 
@@ -153,7 +146,8 @@
 
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
-  <script src="js/catalog-paths.js?v=20261002"></script>
+  <script src="js/catalog-paths.js?v=20261005"></script>
+  <script src="js/ia.js?v=20261005"></script>
   <script src="js/products.js"></script>
   <script src="js/product-lightbox.js?v=20260927"></script>
   <script src="js/chat-widget.js?v=20261002"></script>
