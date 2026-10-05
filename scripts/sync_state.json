@@ -26,7 +26,8 @@
     "commit": "7a0688caf31d5c3fc56e614fdfeba1b6c6d334d0",
     "download_bytes": 10222536,
     "download_method": "Google Drive DownloadFile (MCP)",
-    "source_note": "Official Excel modifiedTime 2026-10-05T11:36:09.820Z (10222536 B); re-downloaded; refresh_live_bridge.py → Playwright CDP Import Replace; products.json not pushed (PR #7 already on main)."
+    "source_note": "Official Excel modifiedTime 2026-10-05T11:36:09.820Z (10222536 B); re-downloaded; refresh_live_bridge.py → Playwright CDP Import Replace; products.json not pushed (PR #7 already on main).",
+    "chore_commit": "f9d8ede575104b258da28febd86b45f68e16e471"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
