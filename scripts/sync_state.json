@@ -2,61 +2,31 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-05T07:18:34.658Z",
-  "previousModifiedTime": "2026-10-03T00:19:33.334Z",
+  "lastModifiedTime": "2026-10-05T11:36:09.820Z",
+  "previousModifiedTime": "2026-10-05T07:18:34.658Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-05T07:21:38Z",
+  "lastSyncAt": "2026-10-05T13:40:58Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 390,
-    "with_img": 295,
+    "count": 407,
+    "with_img": 311,
     "added": [],
     "removed": [],
-    "price_chg": 1,
-    "price_chg_details": [
-      {
-        "ma": "VP108",
-        "ten": "Bìa trình ký nhựa đôi A4 (VC 017)",
-        "old": 35000,
-        "new": 29000
-      }
-    ],
-    "name_chg": 1,
-    "name_chg_details": [
-      {
-        "ma": "VP108",
-        "old": "Bìa trình ký nhựa đôi A4",
-        "new": "Bìa trình ký nhựa đôi A4 (VC 017)"
-      }
-    ],
-    "ton_chg": 1,
-    "ton_chg_details": [
-      {
-        "ma": "VP108",
-        "ten": "Bìa trình ký nhựa đôi A4 (VC 017)",
-        "old": 20,
-        "new": 0
-      }
-    ],
-    "img_url_chg": [
-      {
-        "ma": "VP108",
-        "old": "",
-        "new": "https://lh3.googleusercontent.com/d/1EfdV2R2zjgsr_xs3AKMSA8YZfVyv7W64"
-      }
-    ],
-    "brief_deltas": "VP108 Bìa trình ký nhựa đôi A4 → (VC 017): giá 35000→29000; tồn 20→0; thêm ảnh; SEO slug vp108-bia-trinh-ky-nhua-doi-a4.html → vp108-bia-trinh-ky-nhua-doi-a4-vc-017.html",
+    "price_chg": 0,
+    "name_chg": 0,
+    "brief_deltas": "Bridge-only refresh after PR #7 (407 SKU + IA already on main): LIVE bridge Import→Replace to 407 rows; Nước uống VP330–VP407 present; VP108=29000; 9 blank prices as in Excel (incl. VP390)",
     "web_deployed": true,
+    "products_json_pushed": false,
     "bridge_refreshed": true,
-    "bridge_note": "Browser Import→Upload→Thay thế bảng tính kept fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; Danh Mục Vật Tư 390 rows VP001–VP390 (+ Chính Sách Đối Tác); verified VP108 (VC 017) 29000 via CSV export 2026-10-05 14:26 ICT; VP390 price blank in source",
-    "commit": "cdc78694a6ba7cd6512c40a9a935f903e9cceffa",
-    "pages_run": "https://github.com/funnylamsnnt/vanphat-web/actions/runs/37277205380",
-    "pages_status": "success",
-    "download_bytes": 10218417,
-    "download_method": "MCP download_file_content",
-    "source_note": "Requested target modifiedTime 2026-10-05T07:10:57.970Z (10218238 B) was superseded by a newer save at 2026-10-05T07:18:34.658Z (10218417 B) before download; synced the newer version (size matched metadata)."
+    "bridge_fileId": "15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
+    "bridge_modifiedTime": "2026-10-05T13:38:49.871Z",
+    "bridge_note": "Browser Import→Upload→Thay thế bảng tính kept fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; Danh Mục Vật Tư 407 rows VP001–VP407 (+ Chính Sách Đối Tác); verified 0 diffs vs local export; VP108=29000; VP330 Aquafina 5000; VP391 Trà bí đao 9000; VP407 Coca Cola 11000; Nước uống 25 SKUs; empty prices 9 (VP035,VP117,VP239,VP240,VP297,VP324,VP338,VP370,VP390)",
+    "commit": "7a0688caf31d5c3fc56e614fdfeba1b6c6d334d0",
+    "download_bytes": 10222536,
+    "download_method": "Google Drive DownloadFile (MCP)",
+    "source_note": "Official Excel modifiedTime 2026-10-05T11:36:09.820Z (10222536 B); re-downloaded; refresh_live_bridge.py → Playwright CDP Import Replace; products.json not pushed (PR #7 already on main)."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
