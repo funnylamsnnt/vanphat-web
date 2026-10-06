@@ -4747,8 +4747,8 @@
       "ma": "VP332",
       "ten": "Nước suối Lavie (350ml)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1ylH3W2RNryb_0nz9Bauw6Ni0r4NbzobV",
       "ton": 0
     },
     {
@@ -4759,8 +4759,8 @@
       "ma": "VP333",
       "ten": "Nước suối Lavie (500ml)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1fpz5d7436X8xpZexN_6GmBVhSJnt1zVN",
       "ton": 0
     },
     {
@@ -5014,8 +5014,80 @@
       "gia": 11000,
       "anh": "",
       "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP408",
+      "ten": "Nước ngọt Coca Cola lon 235ml",
+      "dvt": "Lon",
+      "gia": 9000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP409",
+      "ten": "Lipovitan mật ong 250ml",
+      "dvt": "Lon",
+      "gia": 10000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP410",
+      "ten": "Trà xanh C2 hương chanh 355ml",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP411",
+      "ten": "Trà xanh C2 hương chanh 455ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP412",
+      "ten": "Trà xanh C2 hương chanh tuyết bạc hà 455ml",
+      "dvt": "Chai",
+      "gia": 12000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP413",
+      "ten": "Trà xanh Không Độ vị chanh 455ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026_f84c.xlsx"
+  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
 }
