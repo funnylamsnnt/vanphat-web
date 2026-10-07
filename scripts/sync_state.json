@@ -2,8 +2,8 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-06T03:25:24.954Z",
-  "previousModifiedTime": "2026-10-06T00:08:19.675Z",
+  "lastModifiedTime": "2026-10-07T04:23:07.017Z",
+  "previousModifiedTime": "2026-10-06T03:25:24.954Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
@@ -57,10 +57,10 @@
     "download_method": "_download_master.py (headless Chrome)"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-06T07:25:00Z",
+  "lastCheckAt": "2026-10-07T07:20:00Z",
   "lastCheckResult": {
     "changed": false,
-    "note": "Source re-saved 2026-10-06T03:25:24.954Z (size 10223641→10225480) but every sheet's cell values identical to prior mirror; products.json 413 SKU 0 diffs (no web deploy); rebuilt bridge 0 diffs and LIVE bridge 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc export already matches (Danh Mục Vật Tư 413 SKU + Chính Sách Đối Tác, 0 diffs) so no Import→Replace",
+    "note": "Source re-saved 2026-10-07T04:23:07.017Z (size 10225466); only Đơn Đặt Hàng date cell (TODAY) changed 06→07/10/2026; Danh Mục Vật Tư + Chính Sách Đối Tác identical; products.json 413 SKU 0 diffs (no web deploy); rebuilt bridge matches LIVE bridge 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc export (413 SKU + Chính Sách Đối Tác, 0 diffs) so no Import→Replace",
     "download_method": "DownloadFile (Drive connector)"
   }
 }
