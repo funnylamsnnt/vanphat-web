@@ -2,36 +2,34 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-07T10:32:24.472Z",
-  "previousModifiedTime": "2026-10-07T04:23:07.017Z",
+  "lastModifiedTime": "2026-10-08T05:43:51.715Z",
+  "previousModifiedTime": "2026-10-07T10:32:24.472Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-06T01:24:00Z",
+  "lastSyncAt": "2026-10-08T07:16:10Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 413,
-    "with_img": 313,
+    "count": 414,
+    "with_img": 314,
     "added": [
-      "VP408",
-      "VP409",
-      "VP410",
-      "VP411",
-      "VP412",
-      "VP413"
+      "VP414"
     ],
     "removed": [],
-    "price_chg": 2,
+    "price_chg": 1,
     "name_chg": 0,
-    "brief_deltas": "+6 Nước uống VP408–VP413 (nuoc-banh, no images); VP332 Lavie 350ml 0→5000, VP333 Lavie 500ml 0→6000 (+ first images); lĩnh vực vpp 374 / nuoc-banh 31 / dien-gia-dung 8; no unmapped Nhóm",
+    "brief_deltas": "+VP414 Bảng Trắng Mica 80x120cm (Dụng cụ VP, 190000, có ảnh); VP218 Giấy A5 70 gsm IK plus 38000→36000; 42 SKU tồn kho đổi; Excel thêm cột N 'Nguồn tồn kho' (không ảnh hưởng web); lĩnh vực vpp 375 / nuoc-banh 31 / dien-gia-dung 8; no unmapped Nhóm; no slug changes",
     "web_deployed": true,
     "products_json_pushed": true,
-    "commit": "12ecdde53758a6137026048de2dfef967a108e5a",
-    "pages_run": 37398610416,
-    "bridge_refreshed": true,
+    "commit": "2f2c5472c69282c93c4c17c80bb3ab64fe21c165",
+    "pages_run": 37742162679,
+    "pages_status": "success",
+    "live_spot_check": "OK: homepage 3 lĩnh vực, nuoc-banh/nhom-nuoc-uong 200, VP414 page 190.000, VP218 36.000, products.json 414",
+    "bridge_refreshed": false,
+    "bridge_status": "pending_browser_replace",
     "bridge_fileId": "15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
-    "bridge_modifiedTime": "2026-10-06T01:23:25.512Z",
-    "bridge_note": "Browser Import→Upload→Thay thế bảng tính kept fileId; Danh Mục Vật Tư 413 rows VP001–VP413 (+ Chính Sách Đối Tác); spot-verified VP108=29000, VP332=5000, VP333=6000, VP408=9000, VP413=11000; tab gid now 1924128265",
+    "bridge_upload_file": "/workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx",
+    "bridge_note": "Rebuilt bridge 414 SKU vs LIVE export 413 SKU: 2 diffs (VP218 38000→36000; VP414 missing in LIVE); Chính Sách Đối Tác 0 diffs. Needs Import→Upload→Thay thế bảng tính (no connector can replace native sheet content keeping fileId).",
     "empty_prices": [
       "VP035",
       "VP117",
@@ -53,14 +51,14 @@
       "VP329",
       "VP382"
     ],
-    "download_bytes": 10223641,
+    "download_bytes": 11089856,
     "download_method": "_download_master.py (headless Chrome)"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-08T01:15:00Z",
+  "lastCheckAt": "2026-10-08T07:16:10Z",
   "lastCheckResult": {
-    "changed": false,
-    "note": "Source re-saved 2026-10-07T10:32:24.472Z (size 10223677); all sheet cell values identical to prior mirror, media unchanged; products.json 413 SKU 0 diffs (no web deploy); rebuilt bridge matches LIVE bridge 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc export (413 SKU + Chính Sách Đối Tác, 0 diffs) so no Import→Replace",
-    "download_method": "DownloadFile (Drive connector)"
+    "changed": true,
+    "note": "Source 2026-10-08T05:43:51.715Z (size 11089856): real catalog change (+VP414, VP218 price) + stock/Nguồn tồn kho column; deployed 414 SKU; LIVE bridge needs browser Import→Replace",
+    "download_method": "_download_master.py (headless Chrome, Drive Tải xuống)"
   }
 }
