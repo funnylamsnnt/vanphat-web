@@ -99,15 +99,51 @@ def load_ia() -> dict:
 DEFAULT_EXCLUDE_GROUPS = ["Không đưa lên web"]
 
 
-def exclude_group_folds(ia: dict) -> set:
-    """Folded names of Excel nhóm that must never be published on the website.
+def nhom_key(value: str) -> str:
+    """Trim, drop case/diacritics, and treat hyphens as spaces. Blank stays blank."""
+    s = clean(value).replace("\u00a0", " ").replace("\u200b", "").replace("\ufeff", "")
+    s = fold_name(s).replace("-", " ").replace("_", " ").replace("/", " ")
+    return re.sub(r"\s+", " ", s).strip(" .:-")
 
-    Configured in data/ia.json → "excludeGroups"; "Không đưa lên web" is always
-    included even if the config key is missing. Matching ignores case, accents
-    (incl. đ/Đ) and extra whitespace.
+
+def exclude_group_folds(ia: dict) -> set:
+    """Keys for Excel nhóm that must never be published.
+
+    data/ia.json excludeGroups, plus "Không đưa lên web" even if that key is
+    missing. Matching ignores case, accents (including đ/Đ), extra spaces and
+    hyphens, and allows a suffix such as "(nội bộ)".
     """
     names = list(DEFAULT_EXCLUDE_GROUPS) + list(ia.get("excludeGroups") or [])
-    return {fold_name(n) for n in names if clean(n)}
+    return {nhom_key(n) for n in names if nhom_key(n)}
+
+
+def is_excluded_nhom(raw_nhom: str, phrases: set) -> bool:
+    folded = nhom_key(raw_nhom)
+    if not folded:
+        return False
+    padded = f" {folded} "
+    for phrase in phrases:
+        if folded == phrase or folded.startswith(phrase + " ") or f" {phrase} " in padded:
+            return True
+    return False
+
+
+def assert_exclusion_rules() -> None:
+    phrases = {nhom_key("Không đưa lên web")}
+    for sample in (
+        "Không đưa lên web",
+        "  không đưa lên web ",
+        "KHÔNG ĐƯA LÊN WEB",
+        "Không đưa lên web (nội bộ)",
+        "Không-đưa-lên-web",
+    ):
+        if not is_excluded_nhom(sample, phrases):
+            raise SystemExit(f"exclusion missed {sample!r}")
+    for sample in ("Giấy", "Khác", "", "  "):
+        if is_excluded_nhom(sample, phrases):
+            raise SystemExit(f"exclusion false positive {sample!r}")
+    if nhom_key("  ") or nhom_key("Khác") == "":
+        raise SystemExit("blank nhóm must not be renamed before the exclusion check")
 
 
 def load_previous(out_json: Path) -> dict:
@@ -130,6 +166,7 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
     by_fold = {fold_name(n.get("TenNhom")): n for n in nhom_cfg if n.get("TenNhom")}
     lv_by_id = {lv.get("id"): lv for lv in ia["linh_vuc"] if lv.get("id")}
     excl_folds = exclude_group_folds(ia)
+    assert_exclusion_rules()
     hold_unmapped = ia.get("holdUnmappedGroups", True)
     excluded = {}  # raw nhóm -> [mã] never published
     held = {}  # unmapped nhóm -> [mã] kept off until mapped in ia.json
@@ -181,9 +218,14 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         ma = clean(cell("ma"))
         if not ma:
             continue
-        raw_nhom = clean(cell("nhom")) or "Khác"
-        if fold_name(raw_nhom) in excl_folds:
+        # Decide on the raw cell. Never rewrite a blank or an exclusion label to "Khác"
+        # first — that alias is why VP415–VP449 were reported as nhóm Khác.
+        raw_nhom = clean(cell("nhom"))
+        if is_excluded_nhom(raw_nhom, excl_folds):
             excluded.setdefault(raw_nhom, []).append(ma)
+            continue
+        if not nhom_key(raw_nhom):
+            held.setdefault("(trống)", []).append(ma)
             continue
         meta = by_fold.get(fold_name(raw_nhom))
         if hold_unmapped and (meta is None or not lv_by_id.get(meta.get("linhVucId") or "")):
@@ -232,7 +274,7 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
     for p in products:
         by[p["ma"]] = p
     products = list(by.values())
-    leaked = [p["ma"] for p in products if fold_name(p["nhom"]) in excl_folds]
+    leaked = [p["ma"] for p in products if is_excluded_nhom(p.get("nhom") or "", excl_folds)]
     if leaked:
         raise SystemExit(f"Excluded nhóm leaked into web catalog: {leaked}")
 

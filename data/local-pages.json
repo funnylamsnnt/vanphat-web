@@ -1,0 +1,258 @@
+[
+  {
+    "slug": "van-phong-pham-nha-trang",
+    "nav": "Văn phòng phẩm Nha Trang",
+    "h1": "Văn phòng phẩm Nha Trang",
+    "title": "Văn phòng phẩm Nha Trang | Vạn Phát",
+    "description": "Văn phòng phẩm tại Nha Trang — giấy, bìa, bút, băng keo và dụng cụ, giá niêm yết tại Vạn Phát, KĐT Mỹ Gia, Nam Nha Trang. Hotline 033 5652 832.",
+    "intro": [
+      "Vạn Phát bán văn phòng phẩm cho cơ quan, cửa hàng và hộ gia đình tại Nha Trang. Cửa hàng nằm ở LK 19-06 Đường số 20, KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang.",
+      "Dưới đây là một phần hàng đang có giá trên website: giấy in, bìa hồ sơ, bút mực, băng keo và dụng cụ bàn làm việc. Bấm vào tên sản phẩm để xem đơn vị tính và giá. Hàng chưa niêm yết hiện “Liên hệ”."
+    ],
+    "linhVucId": "vpp",
+    "limit": 8,
+    "links": [
+      {"href": "/linh-vuc/vpp.html", "label": "Tất cả văn phòng phẩm"},
+      {"href": "/san-pham/nhom-giay.html", "label": "Nhóm Giấy"},
+      {"href": "/san-pham/nhom-but-muc.html", "label": "Nhóm Bút & Mực"}
+    ],
+    "faq": [
+      {"q": "Mua văn phòng phẩm ở đâu tại Nam Nha Trang?", "a": "Cửa hàng Vạn Phát ở LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang. Gọi 033 5652 832 trước nếu cần được chỉ lối."},
+      {"q": "Giá trên web đã gồm thuế chưa?", "a": "Giá niêm yết trên từng sản phẩm là giá bán đang công bố. Sản phẩm ghi Liên hệ chưa có giá trên web — gọi hotline hoặc Zalo để hỏi."},
+      {"q": "Có thể chọn nhiều món một lúc không?", "a": "Có. Trên mỗi sản phẩm, chỉnh số lượng rồi bấm Thêm vào giỏ. Giỏ hàng dùng để chốt danh sách trước khi gọi hoặc chat Zalo."}
+    ]
+  },
+  {
+    "slug": "van-phong-pham-gia-si-nha-trang",
+    "nav": "Văn phòng phẩm cho cơ quan",
+    "h1": "Văn phòng phẩm giá niêm yết cho cơ quan tại Nha Trang",
+    "title": "Văn phòng phẩm cho cơ quan Nha Trang | Vạn Phát",
+    "description": "Bảng giá văn phòng phẩm niêm yết cho cơ quan, trường và cửa hàng tại Nha Trang. Vạn Phát, KĐT Mỹ Gia. Hotline 033 5652 832.",
+    "intro": [
+      "Cơ quan và cửa hàng ở Nha Trang có thể xem giá từng mã trên website rồi gửi danh sách qua giỏ hàng, điện thoại hoặc Zalo. Trang này không công bố một bậc giá sỉ riêng — giá đang bán là giá niêm yết trên từng sản phẩm.",
+      "Khi cần số lượng lớn, gọi 033 5652 832 và đọc mã sản phẩm (ví dụ VP204). Nhân viên đối chiếu tồn và giá tại thời điểm gọi, vì tồn kho thay đổi theo phiếu nhập xuất."
+    ],
+    "nhomAny": ["Giấy", "Bút & Mực", "Bìa Hồ Sơ"],
+    "limit": 8,
+    "links": [
+      {"href": "/linh-vuc/vpp.html", "label": "Lĩnh vực Văn phòng phẩm"},
+      {"href": "/san-pham.html", "label": "Tìm theo mã sản phẩm"},
+      {"href": "/dia-phuong/giay-a4-nha-trang.html", "label": "Giấy A4 Nha Trang"}
+    ],
+    "faq": [
+      {"q": "Website có bảng giá sỉ riêng không?", "a": "Không. Mỗi sản phẩm một giá niêm yết. Số lượng nhiều thì gọi hotline 033 5652 832 để được báo theo mã hàng lúc đặt."},
+      {"q": "Cơ quan lấy hóa đơn thế nào?", "a": "Trang này không mô tả thủ tục hóa đơn. Khi đặt, nói rõ tên đơn vị với hotline hoặc Zalo để nhân viên hướng dẫn theo chứng từ công ty đang dùng."},
+      {"q": "Đặt ở đâu cho tiện Nam Nha Trang?", "a": "Cửa hàng tại LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang. Có thể ghé hoặc gọi để được hướng dẫn nhận hàng."}
+    ]
+  },
+  {
+    "slug": "giay-a4-nha-trang",
+    "nav": "Giấy A4 Nha Trang",
+    "h1": "Giấy A4 Nha Trang",
+    "title": "Giấy A4 Nha Trang | Vạn Phát",
+    "description": "Giấy A4 các định lượng đang bán tại Vạn Phát, Nha Trang: Double A, IK Plus, Paper One và loại khác. Giá theo ram. Hotline 033 5652 832.",
+    "intro": [
+      "Giấy A4 là mặt hàng in và photo dùng mỗi ngày. Tại Vạn Phát, tên sản phẩm ghi khổ A4 và định lượng nếu có (ví dụ 70 gsm) cùng hãng in trên tên — Double A, Excel, IK Plus, Paper One.",
+      "Đơn vị tính thường là ram. Mở đúng trang sản phẩm để xem giá và tồn. Giấy không ghi A4 trên tên nằm ở nhóm Giấy, không liệt kê trên trang này."
+    ],
+    "nhom": "Giấy",
+    "nameIncludes": ["A4"],
+    "limit": 8,
+    "links": [
+      {"href": "/san-pham/nhom-giay.html", "label": "Toàn bộ nhóm Giấy"},
+      {"href": "/linh-vuc/vpp.html", "label": "Văn phòng phẩm"},
+      {"href": "/photocopy.html", "label": "Photocopy tại Mỹ Gia"}
+    ],
+    "faq": [
+      {"q": "Giấy A4 bán theo đơn vị nào?", "a": "Xem dòng ĐVT trên từng mã. Phần lớn giấy A4 trong danh mục tính theo ram."},
+      {"q": "70 gsm nghĩa là gì trên tên giấy?", "a": "Đó là định lượng ghi trong tên sản phẩm (gram trên mét vuông). Chỉ những mã có chữ gsm trên tên mới được hiểu là có định lượng đó."},
+      {"q": "Mua giấy A4 rồi in luôn được không?", "a": "Cửa hàng có dịch vụ photocopy. Xem trang Photocopy để biết khổ A5, A4, A3. Giấy bán lẻ vẫn đặt riêng trong danh mục."}
+    ]
+  },
+  {
+    "slug": "but-bi-thien-long-nha-trang",
+    "nav": "Bút bi Thiên Long Nha Trang",
+    "h1": "Bút bi Thiên Long tại Nha Trang",
+    "title": "Bút bi Thiên Long Nha Trang | Vạn Phát",
+    "description": "Bút bi và bút gel Thiên Long (TL) đang bán tại Vạn Phát, Nha Trang. Xem mã, màu và giá. Hotline 033 5652 832.",
+    "intro": [
+      "Thiên Long là hãng bút xuất hiện trong tên sản phẩm, kể cả khi tên chỉ ghi tắt TL. Trang này chỉ gồm mã thuộc nhóm Bút & Mực mà tên nhận ra hãng Thiên Long.",
+      "Màu (xanh, đen, đỏ) và ký hiệu ngòi chỉ được nêu khi chúng có trong tên. Không suy diễn size ngòi nếu tên không ghi."
+    ],
+    "nhom": "Bút & Mực",
+    "brand": "Thiên Long",
+    "limit": 8,
+    "links": [
+      {"href": "/san-pham/nhom-but-muc.html", "label": "Toàn bộ Bút & Mực"},
+      {"href": "/dia-phuong/muc-viet-nha-trang.html", "label": "Mực viết Nha Trang"},
+      {"href": "/linh-vuc/vpp.html", "label": "Văn phòng phẩm"}
+    ],
+    "faq": [
+      {"q": "TL trên tên bút có phải Thiên Long không?", "a": "Trong danh mục Vạn Phát, mã hiệu TL đứng riêng trong tên bút được hiểu là Thiên Long. Tên ghi đầy đủ Thiên Long cũng vậy."},
+      {"q": "Bút hết mực thì mua mực nào?", "a": "Chỉ mua mực khi tên mực phù hợp loại bút. Xem trang mực viết để thấy mực lông bảng, mực dấu và mực lông dầu đang có — không phải mã nào cũng đổ được vào bút bi."},
+      {"q": "Giá bút tính theo cây hay hộp?", "a": "Xem ĐVT của từng mã. Một số tên có ghi hộp hoặc số cây; đơn vị tính trên web là căn cứ để đặt."}
+    ]
+  },
+  {
+    "slug": "muc-viet-nha-trang",
+    "nav": "Mực viết Nha Trang",
+    "h1": "Mực viết, mực dấu và mực lông bảng tại Nha Trang",
+    "title": "Mực viết Nha Trang | Vạn Phát",
+    "description": "Mực bút lông, mực dấu và mực lông bảng đang bán tại Vạn Phát, Nha Trang. Giá theo lọ hoặc đơn vị ghi trên mã. Hotline 033 5652 832.",
+    "intro": [
+      "Trang này gom các mã có chữ “mực” trong tên và đang được đăng trên web. Gồm mực lông bảng Thiên Long, mực dấu Shini và mực lông dầu — mỗi loại một công dụng, không thay thế cho nhau.",
+      "Mực in máy (nếu có trong file nguồn nhưng nhóm Không đưa lên web) không xuất hiện ở đây. Chỉ đặt những mã còn trang sản phẩm."
+    ],
+    "nameIncludes": ["mực"],
+    "limit": 8,
+    "links": [
+      {"href": "/san-pham/nhom-but-muc.html", "label": "Nhóm Bút & Mực"},
+      {"href": "/dia-phuong/but-bi-thien-long-nha-trang.html", "label": "Bút bi Thiên Long"},
+      {"href": "/linh-vuc/vpp.html", "label": "Văn phòng phẩm"}
+    ],
+    "faq": [
+      {"q": "Mực lông bảng và mực dấu có dùng chung không?", "a": "Không. Tên sản phẩm đã tách mực lông bảng, mực dấu và mực lông dầu. Chọn đúng loại ghi trên tên."},
+      {"q": "Dung tích chai mực lấy ở đâu?", "a": "Chỉ khi tên có ghi ml, ví dụ 28 ml. Mã không ghi dung tích thì trang không bịa thêm số."},
+      {"q": "Mua mực ở cửa hàng nào?", "a": "Vạn Phát, LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang. Hotline 033 5652 832."}
+    ]
+  },
+  {
+    "slug": "nuoc-suoi-nha-trang",
+    "nav": "Nước suối Nha Trang",
+    "h1": "Nước suối cho văn phòng tại Nha Trang",
+    "title": "Nước suối Nha Trang | Vạn Phát",
+    "description": "Nước suối Lavie, Aquafina, Sanna, Vikoda theo chai đang bán tại Vạn Phát, Nam Nha Trang. Gọi 033 5652 832 để hỏi cách nhận hàng.",
+    "intro": [
+      "Văn phòng ở Nha Trang thường đặt nước suối theo thùng hoặc theo chai. Danh mục đang có Aquafina, Lavie, Sanna và Vikoda; dung tích chỉ hiện khi tên chai ghi ml.",
+      "Cửa hàng ở KĐT Mỹ Gia. Trang khu vực phục vụ nêu Nam Nha Trang, Vĩnh Thái và Mỹ Gia. Cách nhận hàng (ghé lấy hoặc nhờ giao) hỏi trực tiếp hotline — website không thêm khu vực giao ngoài những nơi đã ghi."
+    ],
+    "nhom": "Nước uống",
+    "nameIncludes": ["suối"],
+    "limit": 8,
+    "links": [
+      {"href": "/san-pham/nhom-nuoc-uong.html", "label": "Toàn bộ nước uống"},
+      {"href": "/linh-vuc/nuoc-banh.html", "label": "Nước uống & Bánh"},
+      {"href": "/khu-vuc.html", "label": "Khu vực phục vụ"}
+    ],
+    "faq": [
+      {"q": "Có những hãng nước suối nào?", "a": "Các mã đang đăng gồm Aquafina, Lavie, Sanna và Vikoda. Hãng khác chỉ có khi tên sản phẩm ghi rõ."},
+      {"q": "Chai 350 ml và 500 ml khác nhau thế nào?", "a": "Đó là dung tích ghi trong tên. Chọn đúng mã vì giá và đơn vị tính theo từng chai."},
+      {"q": "Có giao nước tới nơi khác ngoài cửa hàng không?", "a": "Hãy gọi 033 5652 832 để hỏi. Website chỉ khẳng định cửa hàng tại Mỹ Gia, Nam Nha Trang, không liệt kê thêm quận huyện."}
+    ]
+  },
+  {
+    "slug": "nuoc-uong-van-phong-khanh-hoa",
+    "nav": "Nước uống văn phòng Khánh Hòa",
+    "h1": "Nước uống văn phòng tại Khánh Hòa",
+    "title": "Nước uống văn phòng Khánh Hòa | Vạn Phát",
+    "description": "Nước suối, nước ngọt và trà đóng chai cho văn phòng, bán tại Vạn Phát, Nha Trang, Khánh Hòa. Hotline 033 5652 832.",
+    "intro": [
+      "Nhóm Nước uống của Vạn Phát gồm nước suối và nước ngọt, trà, nước tăng lực đang có trong danh mục. Địa chỉ cửa hàng thuộc Phường Nam Nha Trang, tỉnh Khánh Hòa.",
+      "Mỗi mã một giá và một đơn vị tính. Bánh văn phòng chưa có hàng trên web — nhóm Bánh vẫn để trống cho đến khi có sản phẩm."
+    ],
+    "nhom": "Nước uống",
+    "limit": 8,
+    "links": [
+      {"href": "/linh-vuc/nuoc-banh.html", "label": "Lĩnh vực Nước uống & Bánh"},
+      {"href": "/san-pham/nhom-nuoc-uong.html", "label": "Nhóm Nước uống"},
+      {"href": "/dia-phuong/nuoc-suoi-nha-trang.html", "label": "Nước suối"}
+    ],
+    "faq": [
+      {"q": "Văn phòng ở Khánh Hòa mua nước ở đâu?", "a": "Cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang, Khánh Hòa. Gọi hotline để được hướng dẫn nhận hàng."},
+      {"q": "Có bánh kèm nước không?", "a": "Nhóm Bánh trên web đang chưa có sản phẩm. Nước uống vẫn đặt được theo các mã đang đăng."},
+      {"q": "Giá chai đã gồm VAT chưa?", "a": "Giá niêm yết trên sản phẩm là giá đang công bố, gồm cách ghi VAT của bảng giá nguồn. Thắc mắc từng mã thì đọc trang sản phẩm hoặc gọi hotline."}
+    ]
+  },
+  {
+    "slug": "dien-gia-dung-nha-trang",
+    "nav": "Điện gia dụng Nha Trang",
+    "h1": "Ổ cắm và dây điện cho văn phòng tại Nha Trang",
+    "title": "Điện gia dụng Nha Trang | Vạn Phát",
+    "description": "Ổ cắm, dây điện và thiết bị điện nhỏ cho bàn làm việc tại Vạn Phát, Nha Trang. Xem mã và giá. Hotline 033 5652 832.",
+    "intro": [
+      "Lĩnh vực Điện gia dụng trên web của Vạn Phát là thiết bị điện dùng ở bàn làm việc: ổ cắm, ổ điện có dây, và dây cáp điện. Không phải danh mục điện máy gia đình rộng hơn tên từng mã.",
+      "Chiều dài dây và số lỗ chỉ tính khi tên sản phẩm ghi mét hoặc số lỗ. Đọc kỹ tên trước khi đặt vì các mã Lioa, KIP, ODN không thay thế cho nhau."
+    ],
+    "linhVucId": "dien-gia-dung",
+    "limit": 8,
+    "links": [
+      {"href": "/linh-vuc/dien-gia-dung.html", "label": "Lĩnh vực Điện gia dụng"},
+      {"href": "/san-pham/nhom-dien.html", "label": "Nhóm Điện"},
+      {"href": "/lien-he.html", "label": "Liên hệ cửa hàng"}
+    ],
+    "faq": [
+      {"q": "Ổ cắm trên web dùng cho việc gì?", "a": "Cho bàn làm việc và nhu cầu điện nhỏ trong văn phòng. Thông số chỉ lấy từ tên mã (số lỗ, chiều dài dây nếu có ghi)."},
+      {"q": "Có bán đồ điện gia dụng lớn không?", "a": "Chỉ những mã đang nằm trong nhóm Điện. Mã không có trang thì không bán trên web."},
+      {"q": "Cửa hàng ở đâu?", "a": "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang. Hotline 033 5652 832."}
+    ]
+  },
+  {
+    "slug": "van-phong-pham-co-quan-khanh-hoa",
+    "nav": "Văn phòng phẩm cơ quan Khánh Hòa",
+    "h1": "Cung cấp văn phòng phẩm cho cơ quan và trường học tại Khánh Hòa",
+    "title": "Văn phòng phẩm cơ quan Khánh Hòa | Vạn Phát",
+    "description": "Giấy, bìa, bút và dụng cụ cho cơ quan, trường học tại Khánh Hòa. Cửa hàng Vạn Phát ở Nam Nha Trang. Hotline 033 5652 832.",
+    "intro": [
+      "Cơ quan và trường học ở Khánh Hòa có thể lấy văn phòng phẩm tại Vạn Phát: giấy in, bìa hồ sơ, bút, băng keo, dụng cụ. Đặt theo mã để khỏi nhầm quy cách.",
+      "Website là bảng giá công khai, không phải hồ sơ thầu. Khi đơn vị cần danh sách nhiều dòng, thêm từng mã vào giỏ rồi gọi hotline để nhân viên đọc lại số lượng."
+    ],
+    "linhVucId": "vpp",
+    "limit": 8,
+    "links": [
+      {"href": "/linh-vuc/vpp.html", "label": "Văn phòng phẩm"},
+      {"href": "/san-pham/nhom-bia-ho-so.html", "label": "Bìa hồ sơ"},
+      {"href": "/dia-phuong/van-phong-pham-gia-si-nha-trang.html", "label": "Giá niêm yết cho cơ quan"}
+    ],
+    "faq": [
+      {"q": "Trường học đặt văn phòng phẩm bằng cách nào?", "a": "Chọn mã trên web, thêm vào giỏ, rồi gọi 033 5652 832 hoặc chat Zalo. Nói tên trường khi gọi để nhân viên ghi đúng đơn vị nhận."},
+      {"q": "Có giao theo hợp đồng khung không?", "a": "Trang này không công bố hợp đồng khung. Mọi thỏa thuận số lượng và chứng từ làm trực tiếp qua hotline."},
+      {"q": "Địa chỉ giao dịch ở tỉnh nào?", "a": "Cửa hàng tại Phường Nam Nha Trang, Khánh Hòa: LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái."}
+    ]
+  },
+  {
+    "slug": "bang-keo-nha-trang",
+    "nav": "Băng keo Nha Trang",
+    "h1": "Băng keo và băng dính tại Nha Trang",
+    "title": "Băng keo Nha Trang | Vạn Phát",
+    "description": "Băng keo trong, đục, simili, vải và băng keo 2 mặt tại Vạn Phát, Nha Trang. Giá theo cuộn hoặc cây. Hotline 033 5652 832.",
+    "intro": [
+      "Nhóm Băng keo gồm băng keo trong, đục, simili, vải, xốp và băng keo hai mặt. Khổ (mm) và độ dài chỉ đúng khi tên có ghi.",
+      "Băng dính điện, nếu được xếp nhóm Điện, nằm ở trang điện gia dụng chứ không trộn vào danh sách này."
+    ],
+    "nhom": "Băng Keo",
+    "limit": 8,
+    "links": [
+      {"href": "/san-pham/nhom-bang-keo.html", "label": "Toàn bộ nhóm Băng keo"},
+      {"href": "/linh-vuc/vpp.html", "label": "Văn phòng phẩm"},
+      {"href": "/dia-phuong/dien-gia-dung-nha-trang.html", "label": "Ổ cắm và dây điện"}
+    ],
+    "faq": [
+      {"q": "Băng keo bán theo cuộn hay theo cây?", "a": "Xem ĐVT trên mã. Một số tên ghi số cuộn trên cây; đơn vị tính của web là căn cứ đặt hàng."},
+      {"q": "Băng keo trong và simili khác nhau ra sao?", "a": "Tên đã phân loại. Simili là băng màu dùng gói hàng; băng trong dùng dán thùng, tem. Chọn đúng tên, đừng đổi loại khi nhận."},
+      {"q": "Mua ở đâu tại Nha Trang?", "a": "Vạn Phát, KĐT Mỹ Gia, Phường Nam Nha Trang. Hotline 033 5652 832."}
+    ]
+  },
+  {
+    "slug": "bia-ho-so-nha-trang",
+    "nav": "Bìa hồ sơ Nha Trang",
+    "h1": "Bìa hồ sơ và file tài liệu tại Nha Trang",
+    "title": "Bìa hồ sơ Nha Trang | Vạn Phát",
+    "description": "Bìa còng, bìa lỗ, file tài liệu cho cơ quan tại Vạn Phát, Nam Nha Trang. Xem khổ và giá từng mã. Hotline 033 5652 832.",
+    "intro": [
+      "Bìa hồ sơ giúp cơ quan ở Nha Trang đựng công văn và hồ sơ nhân sự. Danh mục có bìa còng, bìa lỗ, bìa nhựa và file — khổ A4 hoặc F4 chỉ khi tên ghi rõ.",
+      "Chọn theo độ dày (cm, f) nếu tên có ghi. Không có số trong tên thì không coi đó là độ dày."
+    ],
+    "nhom": "Bìa Hồ Sơ",
+    "limit": 8,
+    "links": [
+      {"href": "/san-pham/nhom-bia-ho-so.html", "label": "Toàn bộ Bìa hồ sơ"},
+      {"href": "/dia-phuong/giay-a4-nha-trang.html", "label": "Giấy A4"},
+      {"href": "/linh-vuc/vpp.html", "label": "Văn phòng phẩm"}
+    ],
+    "faq": [
+      {"q": "Bìa còng và bìa lỗ khác gì nhau?", "a": "Bìa còng kẹp được cả xấp giấy lẻ; bìa lỗ dùng với giấy đã đục lỗ. Tên sản phẩm chỉ loại nào thì đặt loại đó."},
+      {"q": "Khổ bìa có khớp giấy A4 không?", "a": "Khi tên ghi A4 thì bìa hoặc file đó theo khổ A4. Tên không ghi khổ thì hỏi hotline trước khi mua số lượng lớn."},
+      {"q": "Cơ quan lấy nhiều bìa một lần có được không?", "a": "Được. Tăng số lượng trên trang sản phẩm rồi thêm vào giỏ, sau đó gọi 033 5652 832 để chốt."}
+    ]
+  }
+]

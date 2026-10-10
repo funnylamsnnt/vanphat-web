@@ -46,6 +46,20 @@ ORG_ID = f"{SITE}/#organization"
 # An empty string omits the tag.
 GOOGLE_SITE_VERIFICATION = "lyjjIzdcmnmzSuzgiR2wFDZt0k5mxWQpp75Gn40XFFE"
 
+# Public profile URLs (Facebook page, Zalo OA, Google Maps place). Leave empty
+# until the owner supplies them — do not invent profiles.
+SAME_AS: list[str] = []
+# Measured coordinates and posted opening hours. The site has neither, so both
+# stay unset and are omitted from LocalBusiness JSON-LD.
+GEO = None
+OPENING_HOURS = None
+
+DESCRIPTIONS_PATH = ROOT / "data" / "descriptions.json"
+LOCAL_PAGES_PATH = ROOT / "data" / "local-pages.json"
+LOCAL_LINKS_START = "<!-- vp-local-links -->"
+LOCAL_LINKS_END = "<!-- /vp-local-links -->"
+_DESCRIPTION_BY_MA: dict[str, str] = {}
+
 # Product <title> aims at ~65 characters and may run to this hard cap so a full
 # product name is not chopped for two extra characters.
 TITLE_TARGET = 65
@@ -285,19 +299,14 @@ def product_seo_title(name: str, group: str) -> str:
 
 
 def product_seo_description(product: dict, group: str) -> str:
-    name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
-    group = re.sub(r"\s+", " ", str(group or "")).strip()
+    body = _DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product)
     amount = price_amount(product.get("gia"))
     if amount is None:
         price_bit = "Giá: Liên hệ."
     else:
         unit = product.get("dvt") or "đơn vị"
         price_bit = f"Giá {format_price(amount)}/{unit}."
-    return clip(
-        f"{name} — nhóm {group} tại Nha Trang, Khánh Hòa. "
-        f"Mã {product.get('ma')}. {price_bit} "
-        f"Mua tại Vạn Phát, KĐT Mỹ Gia, Nam Nha Trang. Hotline {HOTLINE_DISPLAY}."
-    )
+    return clip(f"{body} {price_bit} Hotline {HOTLINE_DISPLAY}.")
 
 
 def offer_node(product: dict, canonical: str) -> dict | None:
@@ -333,7 +342,7 @@ def ld_script(data) -> str:
 
 
 def organization_node() -> dict:
-    return {
+    node = {
         "@type": ["LocalBusiness", "Organization"],
         "@id": ORG_ID,
         "name": COMPANY,
@@ -353,6 +362,13 @@ def organization_node() -> dict:
         "areaServed": ["Nam Nha Trang", "KĐT Mỹ Gia", "Nha Trang"],
         "hasMap": MAPS_URL,
     }
+    if SAME_AS:
+        node["sameAs"] = list(SAME_AS)
+    if GEO:
+        node["geo"] = {"@type": "GeoCoordinates", **GEO}
+    if OPENING_HOURS:
+        node["openingHoursSpecification"] = OPENING_HOURS
+    return node
 
 
 def verification_tag() -> str:
@@ -459,7 +475,7 @@ def chrome_footer(prefix: str) -> str:
           <a href="{p}thu-ngo.html">Thư ngỏ</a>
           <a href="{p}khu-vuc.html">Khu vực phục vụ</a>
           <a href="{p}lien-he.html">Liên hệ</a>
-        </div>
+{local_link_block(p)}        </div>
         <div class="footer-col">
           <h4>Liên hệ</h4>
           <p class="footer-nap-name">{esc(COMPANY)}</p>
@@ -1006,6 +1022,7 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
               <span class="product-ma">Mã {esc(product.get('ma') or '')}</span>
             </div>
             <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>
+            <p class="product-detail-desc">{esc(_DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product))}</p>
             <p class="product-detail-note">{esc("Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng." if priced else "Giá chưa niêm yết — liên hệ hotline hoặc Zalo để báo giá. Có thể thêm vào giỏ để ghi nhận số lượng.")}</p>
             <div class="product-actions">
               <div class="qty-control">
@@ -1226,6 +1243,8 @@ def refresh_static_heads() -> list[str]:
         updated = upsert_verification(text)
         if rel in jsonld:
             updated = upsert_jsonld(updated, jsonld[rel])
+        prefix = "../" if "/" in rel else ""
+        updated = upsert_local_links(updated, prefix)
         if write_text(path, updated):
             touched.append(rel)
     return touched
@@ -1360,6 +1379,27 @@ def assert_generated_seo(products: list[dict]) -> None:
     token = str(GOOGLE_SITE_VERIFICATION or "").strip()
     if token and f'content="{token}"' not in home:
         raise SystemExit("homepage is missing google-site-verification")
+    local_dir = ROOT / "dia-phuong"
+    local_pages = list(local_dir.glob("*.html")) if local_dir.is_dir() else []
+    if len(local_pages) < 8:
+        raise SystemExit(f"expected at least 8 local landing pages, got {len(local_pages)}")
+    for page in local_pages:
+        text = page.read_text(encoding="utf-8")
+        if "FAQPage" not in text or "<h1>" not in text:
+            raise SystemExit(f"{page.name} is missing H1 or FAQPage")
+        if COMPANY not in text or ADDRESS not in text or HOTLINE_DISPLAY not in text:
+            raise SystemExit(f"{page.name} is missing the store NAP")
+        if "Cam Ranh" in text or "Diên Khánh" in text or "Ninh Hòa" in text:
+            raise SystemExit(f"{page.name} invented a delivery area")
+        if f"/dia-phuong/{page.name}" not in sitemap:
+            raise SystemExit(f"{page.name} missing from sitemap")
+    if "vp415" in sitemap or "vp449" in sitemap:
+        raise SystemExit("held SKUs leaked into the sitemap")
+    paper_desc = _DESCRIPTION_BY_MA.get("VP204") or ""
+    if "Double A" not in paper_desc or "A4" not in paper_desc or "70 gsm" not in paper_desc:
+        raise SystemExit(f"VP204 description dropped name facts: {paper_desc}")
+    if "80 gsm" in paper_desc:
+        raise SystemExit("VP204 description invented a spec")
     for rel in ("san-pham.html", "thu-ngo.html"):
         doc = _load_ld(ROOT / rel)
         types = [node.get("@type") for node in doc.get("@graph") or []]
@@ -1370,19 +1410,282 @@ def assert_generated_seo(products: list[dict]) -> None:
         json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', (ROOT / rel).read_text(encoding="utf-8")).group(1))
 
 
-def _fold_group(value) -> str:
+NHOM_USE = {
+    "Giấy": "Dùng để in, photo và lưu hồ sơ văn phòng.",
+    "Bìa Hồ Sơ": "Dùng để đựng và phân loại tài liệu.",
+    "Bút & Mực": "Dùng để viết hoặc châm mực cho đồ dùng văn phòng.",
+    "Băng Keo": "Dùng để dán thùng, tem và đồ văn phòng.",
+    "Dụng cụ VP": "Đồ dùng trên bàn làm việc.",
+    "Điện": "Thiết bị điện nhỏ cho bàn làm việc.",
+    "Nước uống": "Đồ uống cho văn phòng và khách.",
+    "Bánh": "Đồ ăn nhẹ cho văn phòng.",
+    "Khác": "Mặt hàng khác đang bán tại cửa hàng.",
+}
+QUY_CACH_RE = re.compile(
+    r"(?i)(?:khổ\s*)?(?:A[0-6]|F4)"
+    r"|\d+(?:[.,]\d+)?\s*(?:ml|mm|cm|gsm|kg)"
+    r"|\d+(?:[.,]\d+)?\s*m\b"
+    r"|\d+\s*(?:cái|cây|cuộn|ram|tờ|lá|hộp|viên|lỗ)(?:\s*/\s*(?:hộp|cây|ram|bộ))?"
+)
+
+
+def fold_text(value: str) -> str:
+    s = str(value or "").strip().lower().replace("đ", "d")
+    s = unicodedata.normalize("NFD", s)
+    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
+    return re.sub(r"\s+", " ", s)
+
+
+def compose_product_description(product: dict) -> str:
+    """Unique copy from the product name and nhóm. Specs are quoted from the name only."""
+    name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
+    group = re.sub(r"\s+", " ", str(product.get("nhom") or "")).strip() or "hàng hóa"
+    bits = []
+    for match in QUY_CACH_RE.finditer(name):
+        token = re.sub(r"\s+", " ", match.group(0)).strip()
+        if token and token not in bits:
+            bits.append(token)
+    parts = [f"{name} thuộc nhóm {group}."]
+    brand = derive_brand(name)
+    if brand:
+        parts.append(f"Hãng ghi trên tên: {brand}.")
+    if bits:
+        parts.append("Quy cách lấy từ tên: " + ", ".join(bits) + ".")
+    unit = re.sub(r"\s+", " ", str(product.get("dvt") or "")).strip()
+    if unit:
+        parts.append(f"Đơn vị tính: {unit}.")
+    parts.append(NHOM_USE.get(group, "Đang bán tại cửa hàng Vạn Phát."))
+    parts.append(
+        "Phù hợp cho văn phòng, cơ quan và cửa hàng tại Nha Trang, Khánh Hòa. "
+        "Liên hệ để giao hàng tại Nha Trang."
+    )
+    return " ".join(parts)
+
+
+def sync_descriptions(products: list[dict]) -> None:
+    global _DESCRIPTION_BY_MA
+    stored: dict[str, str] = {}
+    if DESCRIPTIONS_PATH.is_file():
+        loaded = json.loads(DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            stored = {str(k): v for k, v in loaded.items() if isinstance(v, str)}
+    changed = not DESCRIPTIONS_PATH.is_file()
+    for product in products:
+        ma = str(product.get("ma") or "")
+        if not ma:
+            continue
+        current = stored.get(ma, "")
+        if not current.strip():
+            stored[ma] = compose_product_description(product)
+            changed = True
+    ordered = {ma: stored[ma] for ma in sorted(stored) if stored[ma].strip()}
+    if changed or list(stored) != list(ordered):
+        DESCRIPTIONS_PATH.write_text(
+            json.dumps(ordered, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    _DESCRIPTION_BY_MA = ordered
+
+
+def load_local_pages() -> list[dict]:
+    if not LOCAL_PAGES_PATH.is_file():
+        return []
+    data = json.loads(LOCAL_PAGES_PATH.read_text(encoding="utf-8"))
+    return [page for page in data if isinstance(page, dict) and page.get("slug")]
+
+
+def local_link_block(prefix: str) -> str:
+    lines = [f"          {LOCAL_LINKS_START}"]
+    for page in load_local_pages():
+        label = str(page.get("nav") or page.get("h1") or page["slug"])
+        href = f"{prefix}dia-phuong/{page['slug']}.html"
+        lines.append(f'          <a href="{esc(href)}">{esc(label)}</a>')
+    lines.append(f"          {LOCAL_LINKS_END}")
+    return "\n".join(lines) + "\n"
+
+
+def upsert_local_links(text: str, prefix: str) -> str:
+    block = local_link_block(prefix).rstrip("\n")
+    pattern = re.compile(
+        re.escape(LOCAL_LINKS_START) + r".*?" + re.escape(LOCAL_LINKS_END),
+        re.S,
+    )
+    text = pattern.sub(block, text)
+    heading = text.find("<h4>Liên kết</h4>")
+    if heading < 0:
+        return text
+    nxt = text.find("<h4>", heading + 4)
+    window = text[heading: nxt if nxt > 0 else heading + 1200]
+    if LOCAL_LINKS_START in window:
+        return text
+    needle = f'href="{prefix}lien-he.html">Liên hệ</a>'
+    pos = text.find(needle, heading)
+    if pos < 0 or (nxt > 0 and pos > nxt):
+        return text
+    end = pos + len(needle)
+    return text[:end] + "\n" + block + text[end:]
+
+
+def select_local_products(products: list[dict], spec: dict) -> list[dict]:
+    nhom_any = set(spec.get("nhomAny") or [])
+    tokens = [fold_text(token) for token in (spec.get("nameIncludes") or []) if str(token).strip()]
+    matched = []
+    for product in products:
+        if spec.get("linhVucId") and product.get("linhVucId") != spec.get("linhVucId"):
+            continue
+        if spec.get("nhom") and product.get("nhom") != spec.get("nhom"):
+            continue
+        if nhom_any and product.get("nhom") not in nhom_any:
+            continue
+        folded = fold_text(product.get("ten") or "")
+        if any(token not in folded for token in tokens):
+            continue
+        if spec.get("brand") and derive_brand(str(product.get("ten") or "")) != spec.get("brand"):
+            continue
+        matched.append(product)
+    matched.sort(key=lambda product: (0 if product.get("anh") else 1, str(product.get("ma") or "")))
+    limit = int(spec.get("limit") or 8)
+    return matched[:limit]
+
+
+def build_local_page(spec: dict, picked: list[dict], total: int, ia: dict) -> str:
+    slug = spec["slug"]
+    canonical = f"{SITE}/dia-phuong/{slug}.html"
+    title = str(spec.get("title") or spec.get("h1") or slug)
+    description = str(spec.get("description") or "")
+    crumbs = [("Trang chủ", "../index.html"), (str(spec.get("h1") or title), None)]
+    crumbs_ld = [("Trang chủ", SITE + "/"), (str(spec.get("h1") or title), canonical)]
+    cards = "\n".join(
+        card_html(
+            product,
+            "../san-pham/" + product["_file"],
+            "../san-pham/" + category_filename(product.get("nhom") or ""),
+            badge_text(product, ia),
+        )
+        for product in picked
+    )
+    grid = f'<div class="product-grid">\n{cards}\n        </div>' if cards else ""
+    intro = "\n".join(f"        <p>{esc(para)}</p>" for para in (spec.get("intro") or []))
+    link_bits = []
+    for link in spec.get("links") or []:
+        href = str(link.get("href") or "").lstrip("/")
+        if not href:
+            continue
+        link_bits.append(f'<a href="../{esc(href)}">{esc(link.get("label") or href)}</a>')
+    faqs = spec.get("faq") or []
+    faq_html = "\n".join(
+        f"""        <details class="faq-item">
+          <summary>{esc(item.get("q") or "")}</summary>
+          <p>{esc(item.get("a") or "")}</p>
+        </details>"""
+        for item in faqs
+        if item.get("q") and item.get("a")
+    )
+    faq_ld = {
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": item.get("q"),
+                "acceptedAnswer": {"@type": "Answer", "text": item.get("a")},
+            }
+            for item in faqs
+            if item.get("q") and item.get("a")
+        ],
+    }
+    graph = {
+        "@context": "https://schema.org",
+        "@graph": [
+            organization_node(),
+            breadcrumb_ld(crumbs_ld),
+            {
+                "@type": "CollectionPage",
+                "name": spec.get("h1") or title,
+                "description": description,
+                "url": canonical,
+                "isPartOf": SITE + "/",
+            },
+            faq_ld,
+        ],
+    }
+    served = (
+        f"{COMPANY}. Địa chỉ: {ADDRESS}. Hotline {HOTLINE_DISPLAY}. "
+        "Khu vực đã ghi trên website: Nam Nha Trang, KĐT Mỹ Gia, Vĩnh Thái."
+    )
+    body = f"""    <section class="page-hero">
+      <div class="container">
+        {breadcrumb_html(crumbs).replace('breadcrumb-dark', 'breadcrumb-light')}
+        <h1>{esc(spec.get("h1") or title)}</h1>
+        <p>{esc(description)}</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+{intro}
+        <p>{esc(served)}</p>
+        <p>Đang hiển thị {len(picked)} / {total} sản phẩm khớp trang này. Giá lấy từ danh mục hiện tại.</p>
+        {grid}
+        <div class="local-links">{''.join(link_bits)}</div>
+        <h2>Câu hỏi thường gặp</h2>
+{faq_html}
+        {cta_row()}
+      </div>
+    </section>"""
+    rep = first_with_image(picked)
+    return layout(
+        title=title,
+        description=description,
+        canonical=canonical,
+        image=absolute_image(rep) if rep else OG_IMAGE,
+        image_alt=str(spec.get("h1") or "Vạn Phát"),
+        og_type="website",
+        json_ld=graph,
+        body=body,
+    )
+
+
+def write_local_pages(products: list[dict], ia: dict) -> list[str]:
+    directory = ROOT / "dia-phuong"
+    directory.mkdir(parents=True, exist_ok=True)
+    expected: set[str] = set()
+    urls: list[str] = []
+    for spec in load_local_pages():
+        matched_all = select_local_products(products, {**spec, "limit": 10000})
+        if not matched_all:
+            continue
+        limit = int(spec.get("limit") or 8)
+        picked = matched_all[:limit]
+        filename = f"{spec['slug']}.html"
+        expected.add(filename)
+        page = build_local_page(spec, picked, len(matched_all), ia)
+        write_text(directory / filename, page)
+        urls.append(f"/dia-phuong/{filename}")
+    purge_generated(directory, expected)
+    return urls
+
+
+def _nhom_key(value: str) -> str:
     s = re.sub(r"\s+", " ", str(value or "")).strip().lower().replace("đ", "d")
     s = unicodedata.normalize("NFD", s)
-    return "".join(ch for ch in s if unicodedata.category(ch) != "Mn").strip()
+    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
+    s = s.replace("-", " ").replace("_", " ").replace("/", " ")
+    return re.sub(r"\s+", " ", s).strip(" .:-")
 
 
-def excluded_group_folds() -> set:
-    """Defensive guard: never render SKUs whose nhóm is in ia.json excludeGroups."""
+def excluded_nhom_keys() -> set[str]:
     names = ["Không đưa lên web"]
     ia_path = ROOT / "data" / "ia.json"
     if ia_path.is_file():
         names += json.loads(ia_path.read_text(encoding="utf-8")).get("excludeGroups") or []
-    return {_fold_group(n) for n in names if str(n or "").strip()}
+    return {_nhom_key(n) for n in names if _nhom_key(n)}
+
+
+def nhom_is_excluded(value: str, phrases: set[str]) -> bool:
+    folded = _nhom_key(value)
+    if not folded:
+        return False
+    padded = f" {folded} "
+    return any(folded == phrase or folded.startswith(phrase + " ") or f" {phrase} " in padded for phrase in phrases)
 
 
 def main() -> None:
@@ -1394,14 +1697,15 @@ def main() -> None:
     products_path = Path(args.products)
     data = load_products(products_path)
     ia = build_ia(data)
-    excl = excluded_group_folds()
-    dropped = [p.get("ma") for p in data["sanpham"] if _fold_group(p.get("nhom")) in excl]
+    excl = excluded_nhom_keys()
+    dropped = [p.get("ma") for p in data["sanpham"] if nhom_is_excluded(str(p.get("nhom") or ""), excl)]
     if dropped:
         print("excludeGroups: not publishing", ", ".join(map(str, dropped)))
-    products = [p for p in data["sanpham"] if _fold_group(p.get("nhom")) not in excl]
+    products = [p for p in data["sanpham"] if not nhom_is_excluded(str(p.get("nhom") or ""), excl)]
     data["sanpham"] = products
     for product in products:
         annotate_product(product, ia)
+    sync_descriptions(products)
 
     by_group: dict[str, list[dict]] = {}
     used_files: set[str] = set()
@@ -1487,6 +1791,8 @@ def main() -> None:
             empty_groups.append(name)
     for product in products:
         urls.append((f"/san-pham/{product['_file']}", "weekly", "0.6"))
+    for path in write_local_pages(products, ia):
+        urls.append((path, "weekly", "0.75"))
     sitemap_changed = write_text(ROOT / "sitemap.xml", render_sitemap(urls, mtime))
     robots_changed = write_text(ROOT / "robots.txt", render_robots())
     static_touched = refresh_static_heads()

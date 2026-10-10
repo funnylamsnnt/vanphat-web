@@ -2502,6 +2502,10 @@ body.lightbox-open { overflow: hidden; }
   overflow: visible;
   min-height: 0;
 }
+.product-detail-desc {
+  margin: 0.8rem 0 0.35rem;
+  line-height: 1.55;
+}
 .product-detail-note {
   color: var(--text-muted);
   font-size: 0.9rem;
@@ -2551,6 +2555,9 @@ body.lightbox-open { overflow: hidden; }
 }
 .local-links a { color: var(--navy); font-weight: 700; }
 .local-links a:hover { text-decoration: underline; }
+.faq-item { border-top: 1px solid #e4ddd2; padding: 0.75rem 0; }
+.faq-item summary { cursor: pointer; font-weight: 700; }
+.faq-item p { margin: 0.45rem 0 0; }
 
 .vp-fab-zalo {
   background: #0068FF;
