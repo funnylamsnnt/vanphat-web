@@ -140,7 +140,8 @@
       product.ten || product.ma || "Sản phẩm";
     dialog.querySelector("[data-lb-ma]").textContent = product.ma || "—";
     dialog.querySelector("[data-lb-dvt]").textContent = product.dvt || "—";
-    dialog.querySelector("[data-lb-price]").textContent = formatPrice(product.gia);
+    dialog.querySelector("[data-lb-price]").textContent =
+      product.gia > 0 ? formatPrice(product.gia) : "Liên hệ";
 
     const qty = dialog.querySelector("[data-lb-qty]");
     if (qty) qty.value = "1";

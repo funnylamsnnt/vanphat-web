@@ -95,7 +95,7 @@
 
   function cardHTML(p, lvMap) {
     const img = p.anh ? p.anh : window.VanPhat.placeholderSvg();
-    const price = window.VanPhat.formatPrice(p.gia);
+    const price = Number(p.gia) > 0 ? window.VanPhat.formatPrice(p.gia) : "Liên hệ";
     const href = productHref(p);
     const badge = badgeLabel(p, lvMap);
     return `

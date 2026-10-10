@@ -41,6 +41,16 @@ BANK_LINE = "Agribank · STK 4703201014329"
 OG_IMAGE = f"{SITE}/assets/logo.png"
 ORG_ID = f"{SITE}/#organization"
 
+# Search Console HTML-tag token. Set this one value and rerun the generator to
+# insert the google-site-verification meta on the homepage and every other page.
+# An empty string omits the tag.
+GOOGLE_SITE_VERIFICATION = "lyjjIzdcmnmzSuzgiR2wFDZt0k5mxWQpp75Gn40XFFE"
+
+# Product <title> aims at ~65 characters and may run to this hard cap so a full
+# product name is not chopped for two extra characters.
+TITLE_TARGET = 65
+TITLE_MAX = 70
+
 MAPS_QUERY = quote(ADDRESS)
 MAPS_URL = f"https://www.google.com/maps/search/?api=1&query={MAPS_QUERY}"
 
@@ -114,12 +124,197 @@ def esc(value) -> str:
     return html.escape(str(value if value is not None else ""), quote=True)
 
 
-def format_price(value) -> str:
+def price_amount(value) -> int | None:
+    """Positive list price, or None when the sheet has 0/empty (contact for price)."""
     try:
         n = int(value)
     except (TypeError, ValueError):
-        n = 0
+        return None
+    if n <= 0:
+        return None
+    return n
+
+
+def format_price(value) -> str:
+    n = price_amount(value)
+    if n is None:
+        return "Liên hệ"
     return f"{n:,}".replace(",", ".") + " ₫"
+
+
+def availability_iri(product: dict) -> str | None:
+    """schema.org availability from catalog tồn (`ton`).
+
+    The sheet stores on-hand quantity. Above zero is InStock. Zero or negative
+    (nothing on hand, including oversold counts) is OutOfStock. A missing tồn
+    omits availability instead of claiming stock we cannot see.
+    """
+    if "ton" not in product or product.get("ton") is None:
+        return None
+    try:
+        n = int(product.get("ton"))
+    except (TypeError, ValueError):
+        return None
+    if n > 0:
+        return "https://schema.org/InStock"
+    return "https://schema.org/OutOfStock"
+
+
+def fold_brand(text: str) -> str:
+    s = str(text or "").lower().replace("đ", "d")
+    s = unicodedata.normalize("NFD", s)
+    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
+    s = re.sub(r"[^a-z0-9]+", " ", s).strip()
+    return f" {s} "
+
+
+# Manufacturer phrases that actually show up in product names. The longest
+# contained phrase wins, so "IK Plus" beats "Plus" and "Thiên Long" beats a
+# trailing PLUS line. Vạn Phát is the seller, never a product brand.
+BRAND_PHRASES: tuple[tuple[str, str], ...] = (
+    ("koh i noor", "Koh-I-Noor"),
+    ("flex office", "Flexoffice"),
+    ("flexoffice", "Flexoffice"),
+    ("coca cola", "Coca-Cola"),
+    ("paper one", "Paper One"),
+    ("thien long", "Thiên Long"),
+    ("double a", "Double A"),
+    ("king jim", "King Jim"),
+    ("khong do", "Không Độ"),
+    ("red bull", "Red Bull"),
+    ("nutriboost", "Nutriboost"),
+    ("aquafina", "Aquafina"),
+    ("lipovitan", "Lipovitan"),
+    ("energizer", "Energizer"),
+    ("panasonic", "Panasonic"),
+    ("paperline", "Paperline"),
+    ("smartkids", "Smartkids"),
+    ("wonderful", "Wonderful"),
+    ("hai tien", "Hải Tiến"),
+    ("tien phat", "Tiến Phát"),
+    ("thanh phat", "Thành Phát"),
+    ("viet duc", "Việt Đức"),
+    ("my clear", "My Clear"),
+    ("uni ball", "Uni-ball"),
+    ("kw trio", "KW-Trio"),
+    ("ik plus", "IK Plus"),
+    ("g star", "G-Star"),
+    ("7 up", "7 Up"),
+    ("elephant", "Elephant"),
+    ("unibal", "Uni-ball"),
+    ("kwtrio", "KW-Trio"),
+    ("gstar", "G-Star"),
+    ("redbull", "Red Bull"),
+    ("camellia", "Camellia"),
+    ("pronoti", "Pronoti"),
+    ("slecho", "Slecho"),
+    ("stacom", "Stacom"),
+    ("xukiva", "Xukiva"),
+    ("pentel", "Pentel"),
+    ("maxell", "Maxell"),
+    ("supreme", "Supreme"),
+    ("smartis", "Smartis"),
+    ("natural", "Natural"),
+    ("quality", "Quality"),
+    ("mirinda", "Mirinda"),
+    ("aquarius", "Aquarius"),
+    ("vikoda", "Vikoda"),
+    ("revive", "Revive"),
+    ("plastic", "Plastic"),
+    ("bitex", "Bitex"),
+    ("kanex", "Kanex"),
+    ("maped", "Maped"),
+    ("shini", "Shini"),
+    ("pulppy", "Pulppy"),
+    ("depai", "Depai"),
+    ("aimee", "Aimee"),
+    ("batos", "Batos"),
+    ("sanna", "Sanna"),
+    ("lavie", "Lavie"),
+    ("pepsi", "Pepsi"),
+    ("sting", "Sting"),
+    ("excel", "Excel"),
+    ("horse", "Horse"),
+    ("eagle", "Eagle"),
+    ("queen", "Queen"),
+    ("deli", "Deli"),
+    ("plus", "Plus"),
+    ("trio", "KW-Trio"),
+    ("vivo", "Vivo"),
+    ("lioa", "Lioa"),
+    ("acco", "Acco"),
+    ("sdi", "SDI"),
+    ("mic", "Mic"),
+    ("win", "Win"),
+    ("kip", "KIP"),
+    ("fo", "Flexoffice"),
+    ("tl", "Thiên Long"),
+    ("c2", "C2"),
+)
+
+
+def derive_brand(name: str) -> str | None:
+    folded = fold_brand(name)
+    best: tuple[int, int, str] | None = None
+    for phrase, label in BRAND_PHRASES:
+        idx = folded.find(f" {phrase} ")
+        if idx < 0:
+            continue
+        cand = (len(phrase), -idx, label)
+        if best is None or cand[:2] > best[:2]:
+            best = cand
+    if best is None or best[2] in {"Vạn Phát", "Van Phat"}:
+        return None
+    return best[2]
+
+
+def product_seo_title(name: str, group: str) -> str:
+    """Product name + nhóm + Nha Trang, kept near 65 characters."""
+    name = re.sub(r"\s+", " ", str(name or "Sản phẩm")).strip()
+    group = re.sub(r"\s+", " ", str(group or "")).strip()
+    local = "Nha Trang"
+    full = f"{name} | {group} {local}" if group else f"{name} | {local}"
+    if len(full) <= TITLE_MAX:
+        return full
+    suffix = f" | {group} {local}" if group else f" | {local}"
+    room = TITLE_TARGET - len(suffix)
+    if room < 12:
+        suffix = f" | {local}"
+        room = TITLE_TARGET - len(suffix)
+    return f"{clip(name, max(room, 12))}{suffix}"
+
+
+def product_seo_description(product: dict, group: str) -> str:
+    name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
+    group = re.sub(r"\s+", " ", str(group or "")).strip()
+    amount = price_amount(product.get("gia"))
+    if amount is None:
+        price_bit = "Giá: Liên hệ."
+    else:
+        unit = product.get("dvt") or "đơn vị"
+        price_bit = f"Giá {format_price(amount)}/{unit}."
+    return clip(
+        f"{name} — nhóm {group} tại Nha Trang, Khánh Hòa. "
+        f"Mã {product.get('ma')}. {price_bit} "
+        f"Mua tại Vạn Phát, KĐT Mỹ Gia, Nam Nha Trang. Hotline {HOTLINE_DISPLAY}."
+    )
+
+
+def offer_node(product: dict, canonical: str) -> dict | None:
+    amount = price_amount(product.get("gia"))
+    if amount is None:
+        return None
+    offer = {
+        "@type": "Offer",
+        "url": canonical,
+        "priceCurrency": "VND",
+        "price": str(amount),
+        "seller": {"@id": ORG_ID},
+    }
+    avail = availability_iri(product)
+    if avail:
+        offer["availability"] = avail
+    return offer
 
 
 def clip(text: str, limit: int = 158) -> str:
@@ -160,9 +355,32 @@ def organization_node() -> dict:
     }
 
 
-def head_tags(*, title: str, description: str, canonical: str, image: str, image_alt: str, og_type: str) -> str:
+def verification_tag() -> str:
+    token = str(GOOGLE_SITE_VERIFICATION or "").strip()
+    if not token:
+        return ""
+    return f'<meta name="google-site-verification" content="{esc(token)}" />'
+
+
+def head_tags(
+    *,
+    title: str,
+    description: str,
+    canonical: str,
+    image: str,
+    image_alt: str,
+    og_type: str,
+    robots: str | None = None,
+) -> str:
+    extra = []
+    verify = verification_tag()
+    if verify:
+        extra.append(f"  {verify}")
+    if robots:
+        extra.append(f'  <meta name="robots" content="{esc(robots)}" />')
+    extra_html = ("\n" + "\n".join(extra)) if extra else ""
     return f"""  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />{extra_html}
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}" />
   <link rel="canonical" href="{esc(canonical)}" />
@@ -266,7 +484,7 @@ def scripts(prefix: str) -> str:
   <script src="{p}js/cart.js"></script>
   <script src="{p}js/catalog-paths.js?v={CSS_V}"></script>
   <script src="{p}js/ia.js?v={CSS_V}"></script>
-  <script src="{p}js/product-lightbox.js?v=20260927"></script>
+  <script src="{p}js/product-lightbox.js?v=20261010"></script>
   <script src="{p}js/chat-widget.js?v={CSS_V}"></script>"""
 
 
@@ -430,13 +648,13 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
       </article>"""
 
 
-def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body) -> str:
+def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body, robots: str | None = None) -> str:
     prefix = "../"
     return f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
   <!-- {MARKER} -->
-{head_tags(title=title, description=description, canonical=canonical, image=image, image_alt=image_alt, og_type=og_type)}
+{head_tags(title=title, description=description, canonical=canonical, image=image, image_alt=image_alt, og_type=og_type, robots=robots)}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -584,6 +802,8 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
     </section>"""
     rep = first_with_image(products)
     image = absolute_image(rep) if rep else OG_IMAGE
+    # Empty nhóm stay browsable but stay out of the index until they have SKUs.
+    robots = None if products else "noindex, follow"
     return layout(
         title=title,
         description=description,
@@ -593,6 +813,7 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
         og_type="website",
         json_ld=graph,
         body=body,
+        robots=robots,
     )
 
 
@@ -707,13 +928,10 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
     canonical = f"{SITE}/san-pham/{filename}"
     cat_file = files.get(nhom, "")
     lv = ia["lv_by_id"].get(product.get("linhVucId") or "") or lv_for_nhom(nhom, ia)
+    priced = price_amount(product.get("gia")) is not None
     price = format_price(product.get("gia"))
-    description = clip(
-        f"{product.get('ten')} (mã {product.get('ma')}), nhóm {nhom}. "
-        f"Giá {price} / {product.get('dvt') or 'đơn vị'}. "
-        f"Vạn Phát tại Mỹ Gia, Nam Nha Trang. Hotline {HOTLINE_DISPLAY}."
-    )
-    title = f"{product.get('ten')} ({product.get('ma')}) | Vạn Phát"
+    description = product_seo_description(product, nhom)
+    title = product_seo_title(str(product.get("ten") or product.get("ma") or "Sản phẩm"), nhom)
     crumbs = [
         ("Trang chủ", "../index.html"),
         ("Sản phẩm", "../san-pham.html"),
@@ -730,13 +948,6 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
     crumbs.append((str(product.get("ten") or product.get("ma")), None))
     crumbs_ld.append((str(product.get("ten") or product.get("ma")), canonical))
     image = absolute_image(product)
-    offer = {
-        "@type": "Offer",
-        "url": canonical,
-        "priceCurrency": "VND",
-        "price": str(int(product.get("gia") or 0)),
-        "seller": {"@id": ORG_ID},
-    }
     product_ld = {
         "@type": "Product",
         "name": product.get("ten"),
@@ -744,9 +955,13 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
         "category": nhom,
         "description": description,
         "image": image,
-        "brand": {"@type": "Brand", "name": "Vạn Phát"},
-        "offers": offer,
     }
+    brand = derive_brand(str(product.get("ten") or ""))
+    if brand:
+        product_ld["brand"] = {"@type": "Brand", "name": brand}
+    offer = offer_node(product, canonical)
+    if offer:
+        product_ld["offers"] = offer
     graph = {
         "@context": "https://schema.org",
         "@graph": [organization_node(), breadcrumb_ld(crumbs_ld), product_ld],
@@ -791,7 +1006,7 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
               <span class="product-ma">Mã {esc(product.get('ma') or '')}</span>
             </div>
             <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>
-            <p class="product-detail-note">Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng.</p>
+            <p class="product-detail-note">{esc("Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng." if priced else "Giá chưa niêm yết — liên hệ hotline hoặc Zalo để báo giá. Có thể thêm vào giỏ để ghi nhận số lượng.")}</p>
             <div class="product-actions">
               <div class="qty-control">
                 <button type="button" class="qty-btn" data-qty-minus aria-label="Giảm số lượng">−</button>
@@ -908,8 +1123,256 @@ def purge_generated(directory: Path, expected: set[str]) -> int:
     return removed
 
 
+STATIC_HTML = (
+    "index.html",
+    "san-pham.html",
+    "thu-ngo.html",
+    "photocopy.html",
+    "lien-he.html",
+    "khu-vuc.html",
+    "nhan-vien.html",
+    "nhan-vien/index.html",
+)
+
+VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1" />'
+VERIFICATION_RE = re.compile(
+    r'[ \t]*<meta name="google-site-verification" content="[^"]*"\s*/>\n?'
+)
+JSONLD_START = "<!-- vp-jsonld -->"
+JSONLD_END = "<!-- /vp-jsonld -->"
+
+
+def catalog_page_ld() -> dict:
+    canonical = SITE + "/san-pham.html"
+    description = (
+        "Tìm văn phòng phẩm, nước uống và điện gia dụng tại Vạn Phát, Nha Trang, Khánh Hòa. "
+        "Lọc theo lĩnh vực, nhóm, mã hoặc tên."
+    )
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            organization_node(),
+            breadcrumb_ld([("Trang chủ", SITE + "/"), ("Sản phẩm", canonical)]),
+            {
+                "@type": "CollectionPage",
+                "@id": canonical + "#catalog",
+                "name": "Catalog sản phẩm | Vạn Phát Nha Trang",
+                "description": description,
+                "url": canonical,
+                "inLanguage": "vi",
+                "isPartOf": {"@id": SITE + "/#website"},
+                "about": "Văn phòng phẩm, nước uống và điện gia dụng",
+            },
+        ],
+    }
+
+
+def letter_page_ld() -> dict:
+    canonical = SITE + "/thu-ngo.html"
+    description = (
+        "Thư ngỏ giới thiệu năng lực cung cấp văn phòng phẩm của Vạn Phát tại Nha Trang, Khánh Hòa."
+    )
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            organization_node(),
+            breadcrumb_ld([("Trang chủ", SITE + "/"), ("Thư ngỏ", canonical)]),
+            {
+                "@type": "AboutPage",
+                "@id": canonical + "#letter",
+                "name": "Thư ngỏ | Vạn Phát",
+                "description": description,
+                "url": canonical,
+                "inLanguage": "vi",
+                "mainEntity": {"@id": ORG_ID},
+                "isPartOf": {"@id": SITE + "/#website"},
+            },
+        ],
+    }
+
+
+def upsert_verification(text: str) -> str:
+    text = VERIFICATION_RE.sub("", text)
+    tag = verification_tag()
+    if not tag:
+        return text
+    if VIEWPORT_META in text:
+        return text.replace(VIEWPORT_META, VIEWPORT_META + "\n  " + tag, 1)
+    return text.replace("<head>", "<head>\n  " + tag, 1)
+
+
+def upsert_jsonld(text: str, data: dict) -> str:
+    block = f"  {JSONLD_START}\n{ld_script(data)}\n  {JSONLD_END}\n"
+    pattern = re.compile(
+        r"[ \t]*" + re.escape(JSONLD_START) + r".*?" + re.escape(JSONLD_END) + r"\n?",
+        re.S,
+    )
+    if pattern.search(text):
+        return pattern.sub(block, text, count=1)
+    return text.replace("</head>", block + "</head>", 1)
+
+
+def refresh_static_heads() -> list[str]:
+    touched = []
+    jsonld = {
+        "san-pham.html": catalog_page_ld(),
+        "thu-ngo.html": letter_page_ld(),
+    }
+    for rel in STATIC_HTML:
+        path = ROOT / rel
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        updated = upsert_verification(text)
+        if rel in jsonld:
+            updated = upsert_jsonld(updated, jsonld[rel])
+        if write_text(path, updated):
+            touched.append(rel)
+    return touched
+
+
+def assert_seo_helpers() -> None:
+    samples = {
+        "Giấy A4 70 gsm Double A": "Double A",
+        "Nước suối Lavie (500ml)": "Lavie",
+        "Nước suối Aquafina (355ml)": "Aquafina",
+        "Bút bi Thiên Long Gel-072/PLUS": "Thiên Long",
+        "Bút bi TL-027 (Đen)": "Thiên Long",
+        "Kẹp giấy tròn 28mm (Double A)": "Double A",
+        "Băng keo trong 12mm": None,
+        "Gôm": None,
+        "Bìa còng 7 cm - Elephant": "Elephant",
+        "Ổ điện Lioa 3DNW 3.2.10 (3m)": "Lioa",
+        "Nẹp Acco nhựa UNI": "Acco",
+        "Kệ hồ sơ 2 tầng Mica": None,
+    }
+    for name, expected in samples.items():
+        got = derive_brand(name)
+        if got != expected:
+            raise SystemExit(f"brand mismatch: {name!r} -> {got!r}, expected {expected!r}")
+    if derive_brand("Vạn Phát văn phòng phẩm"):
+        raise SystemExit("company name must not be used as product brand")
+    title = product_seo_title("Gôm", "Dụng cụ VP")
+    if title != "Gôm | Dụng cụ VP Nha Trang":
+        raise SystemExit(f"title mismatch: {title!r}")
+    long = product_seo_title("Bút gel Uni-ball Vision Elite UB-200 ngòi 0.8mm", "Bút & Mực")
+    if "Nha Trang" not in long or "Bút & Mực" not in long:
+        raise SystemExit(f"long title dropped local/group: {long!r}")
+    if len(long) > TITLE_MAX:
+        raise SystemExit(f"title too long ({len(long)}): {long!r}")
+    if price_amount(0) is not None or price_amount("") is not None or price_amount(None) is not None:
+        raise SystemExit("zero/empty price should be omitted")
+    if price_amount(12000) != 12000:
+        raise SystemExit("price parse failed")
+    if format_price(0) != "Liên hệ" or format_price(15000) != "15.000 ₫":
+        raise SystemExit(f"price label mismatch: {format_price(0)!r} {format_price(15000)!r}")
+    if (
+        availability_iri({"ton": 3}) != "https://schema.org/InStock"
+        or availability_iri({"ton": 0}) != "https://schema.org/OutOfStock"
+        or availability_iri({"ton": -2}) != "https://schema.org/OutOfStock"
+        or availability_iri({}) is not None
+    ):
+        raise SystemExit("availability mismatch")
+    empty = upsert_verification('<head>\n  <meta name="viewport" content="width=device-width, initial-scale=1" />\n</head>\n')
+    if GOOGLE_SITE_VERIFICATION and f'content="{GOOGLE_SITE_VERIFICATION}"' not in empty:
+        raise SystemExit("verification tag was not inserted")
+    if empty.count("google-site-verification") != 1:
+        raise SystemExit("verification tag duplicated")
+
+
+def _product_node(doc: dict) -> dict:
+    for node in doc.get("@graph") or []:
+        if node.get("@type") == "Product":
+            return node
+    raise SystemExit("JSON-LD graph has no Product node")
+
+
+def _load_ld(path: Path) -> dict:
+    text = path.read_text(encoding="utf-8")
+    match = re.search(r'<script type="application/ld\+json">(.*?)</script>', text)
+    if not match:
+        raise SystemExit(f"missing JSON-LD: {path}")
+    return json.loads(match.group(1))
+
+
+def assert_generated_seo(products: list[dict]) -> None:
+    by_ma = {p["ma"]: p for p in products}
+    false_brand = '"brand":{"@type":"Brand","name":"Vạn Phát"}'
+    zero_price = '"price":"0"'
+    for html_path in (ROOT / "san-pham").glob("vp*.html"):
+        text = html_path.read_text(encoding="utf-8")
+        if false_brand in text or zero_price in text:
+            raise SystemExit(f"{html_path.name} still emits a false brand or zero price")
+        if "Nha Trang" not in text.split("</title>", 1)[0]:
+            raise SystemExit(f"{html_path.name} title is missing Nha Trang")
+    required_bits = ("data-product-zoom", "data-qty-minus", "data-qty-plus", "data-add-cart", "data-qty-input")
+    for ma in ("VP035", "VP332", "VP204"):
+        page = ROOT / "san-pham" / by_ma[ma]["_file"]
+        text = page.read_text(encoding="utf-8")
+        for bit in required_bits:
+            if bit not in text:
+                raise SystemExit(f"{ma} page lost lightbox/cart markup: {bit}")
+
+    zero = by_ma["VP035"]
+    zero_text = (ROOT / "san-pham" / zero["_file"]).read_text(encoding="utf-8")
+    zero_node = _product_node(_load_ld(ROOT / "san-pham" / zero["_file"]))
+    detail = zero_text.split('class="product-card product-detail"', 1)[1].split("</article>", 1)[0]
+    if "offers" in zero_node or "Liên hệ" not in detail or "0 ₫" in detail:
+        raise SystemExit("VP035 should omit offers and show Liên hệ")
+    if "Khánh Hòa" not in zero_text:
+        raise SystemExit("VP035 description missing Khánh Hòa")
+
+    lavie = _product_node(_load_ld(ROOT / "san-pham" / by_ma["VP332"]["_file"]))
+    if (lavie.get("brand") or {}).get("name") != "Lavie":
+        raise SystemExit(f"Lavie brand missing: {lavie.get('brand')}")
+    if (lavie.get("offers") or {}).get("seller", {}).get("@id") != ORG_ID:
+        raise SystemExit("Lavie offer is missing the company seller")
+
+    paper = by_ma["VP204"]
+    paper_node = _product_node(_load_ld(ROOT / "san-pham" / paper["_file"]))
+    if (paper_node.get("brand") or {}).get("name") != "Double A":
+        raise SystemExit(f"Double A brand missing: {paper_node.get('brand')}")
+    offer = paper_node.get("offers") or {}
+    if int(paper.get("ton") or 0) > 0 and offer.get("availability") != "https://schema.org/InStock":
+        raise SystemExit(f"in-stock availability missing on VP204: {offer.get('availability')}")
+    if "price" not in offer or offer.get("price") in {"0", "0.0"}:
+        raise SystemExit("priced SKU lost its offer price")
+
+    out_product = next(
+        p for p in products if price_amount(p.get("gia")) and int(p.get("ton") or 0) <= 0
+    )
+    out_node = _product_node(_load_ld(ROOT / "san-pham" / out_product["_file"]))
+    if (out_node.get("offers") or {}).get("availability") != "https://schema.org/OutOfStock":
+        raise SystemExit(f"{out_product['ma']} should be OutOfStock")
+
+    sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+    if "/san-pham/nhom-banh.html" in sitemap:
+        raise SystemExit("empty nhóm Bánh is still in the sitemap")
+    if "/san-pham/nhom-giay.html" not in sitemap or "<loc>https://vanphatcompany.vn/</loc>" not in sitemap:
+        raise SystemExit("sitemap dropped a page that should stay")
+    robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+    if f"Sitemap: {SITE}/sitemap.xml" not in robots:
+        raise SystemExit("robots.txt lost the sitemap line")
+    banh = (ROOT / "san-pham" / "nhom-banh.html").read_text(encoding="utf-8")
+    if 'name="robots" content="noindex, follow"' not in banh:
+        raise SystemExit("empty nhóm page should be noindex")
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    token = str(GOOGLE_SITE_VERIFICATION or "").strip()
+    if token and f'content="{token}"' not in home:
+        raise SystemExit("homepage is missing google-site-verification")
+    for rel in ("san-pham.html", "thu-ngo.html"):
+        doc = _load_ld(ROOT / rel)
+        types = [node.get("@type") for node in doc.get("@graph") or []]
+        if rel == "san-pham.html" and "CollectionPage" not in types:
+            raise SystemExit("san-pham.html JSON-LD is missing CollectionPage")
+        if rel == "thu-ngo.html" and "AboutPage" not in types:
+            raise SystemExit("thu-ngo.html JSON-LD is missing AboutPage")
+        json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', (ROOT / rel).read_text(encoding="utf-8")).group(1))
+
+
 def main() -> None:
     assert_slug_samples()
+    assert_seo_helpers()
     ap = argparse.ArgumentParser(description="Generate Vạn Phát lĩnh vực/category/product HTML, sitemap, and path map.")
     ap.add_argument("--products", default=str(ROOT / "data" / "products.json"))
     args = ap.parse_args()
@@ -996,12 +1459,17 @@ def main() -> None:
     urls = list(STATIC_PAGES)
     for lv in ia["linh_vuc"]:
         urls.append((f"/linh-vuc/{lv['slug']}.html", "weekly", "0.85"))
+    empty_groups = []
     for name in groups:
-        urls.append((f"/san-pham/{cat_files[name]}", "weekly", "0.8"))
+        if by_group.get(name):
+            urls.append((f"/san-pham/{cat_files[name]}", "weekly", "0.8"))
+        else:
+            empty_groups.append(name)
     for product in products:
         urls.append((f"/san-pham/{product['_file']}", "weekly", "0.6"))
     sitemap_changed = write_text(ROOT / "sitemap.xml", render_sitemap(urls, mtime))
     robots_changed = write_text(ROOT / "robots.txt", render_robots())
+    static_touched = refresh_static_heads()
 
     index = ROOT / "index.html"
     if index.exists():
@@ -1009,11 +1477,17 @@ def main() -> None:
         if 'id="linh-vuc-grid"' not in index_text:
             print("warning: index.html is missing #linh-vuc-grid")
 
+    assert_generated_seo(products)
+    title_lens = [
+        len(product_seo_title(str(p.get("ten") or ""), p.get("nhom") or "")) for p in products
+    ]
+    branded = sum(1 for p in products if derive_brand(str(p.get("ten") or "")))
     print(
         json.dumps(
             {
                 "products": len(products),
                 "groups": groups,
+                "empty_groups_omitted": empty_groups,
                 "linh_vuc": [lv.get("slug") for lv in ia["linh_vuc"]],
                 "html_written": written,
                 "html_removed": removed,
@@ -1021,6 +1495,11 @@ def main() -> None:
                 "sitemap": sitemap_changed,
                 "robots": robots_changed,
                 "sitemap_urls": len(urls),
+                "static_heads": static_touched,
+                "zero_price": sum(1 for p in products if price_amount(p.get("gia")) is None),
+                "branded": branded,
+                "title_max": max(title_lens) if title_lens else 0,
+                "titles_over_65": sum(1 for n in title_lens if n > TITLE_TARGET),
             },
             ensure_ascii=False,
         )
