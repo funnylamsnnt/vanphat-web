@@ -2,12 +2,12 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-10T05:23:29.942Z",
-  "previousModifiedTime": "2026-10-09T10:21:33.263Z",
+  "lastModifiedTime": "2026-10-10T13:49:56.599Z",
+  "previousModifiedTime": "2026-10-10T05:23:29.942Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-10T07:20:00Z",
+  "lastSyncAt": "2026-10-10T15:08:00Z",
   "lastSyncResult": {
     "changed": false,
     "source_count": 449,
@@ -15,7 +15,7 @@
     "with_img": 314,
     "added": [],
     "held_unmapped_nhom": {
-      "Khác": [
+      "(trống)": [
         "VP415",
         "VP416",
         "VP417",
@@ -57,14 +57,14 @@
     "price_chg": 0,
     "name_chg": 0,
     "stock_chg": 0,
-    "brief_deltas": "Source 449 (+VP449 Thước cuộn 7,5m nhóm Khác, giá 0 — held); web catalog unchanged, no deploy",
+    "brief_deltas": "Source 20:49 ICT: VP415–VP449 Nhóm trống (chưa phải 'Không đưa lên web'); VP449 giá 0→40.000 + ảnh (held, off web). Web catalog unchanged 414.",
     "web_deployed": false,
-    "commit": "4cd060a47a46e6f49a1a608ec881a48fc46bda88",
-    "pages_run": 38012169145,
+    "commit": "a2cd8fd57f7d4b7ae585970974c7131846f5a7de",
+    "pages_run": 38061278342,
     "pages_status": "success",
-    "live_spot_check": "products.json 416, VP449 page 200, nhom-nuoc-uong 200",
-    "bridge_refreshed": true,
-    "bridge_status": "verified_449_rows_2026-10-10T14:18+07",
+    "live_spot_check": "products.json 414, 0 SKU VP415–449, sitemap 441 loc, 0 VP415–449; linh-vuc x3 200",
+    "bridge_refreshed": false,
+    "bridge_status": "NOT refreshed 2026-10-10 22:07 — box browser signed out of Google (account chooser); bridge still 449 rows from 12:23 source, only diff VP449 giá/ảnh",
     "bridge_fileId": "15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
     "bridge_note": "Import→Replace via CDP 9225; Drive CSV export 449 VP rows, 0 missing/extra",
     "empty_prices": [],
@@ -85,15 +85,18 @@
       "VP338",
       "VP370",
       "VP382",
-      "VP390",
-      "VP449"
+      "VP390"
     ],
-    "download_method": "CDP 9225 browser download (_dl_cdp.py)"
+    "download_method": "Drive connector DownloadFile + CDP uc download (identical bytes)",
+    "excluded_nhom": {
+      "Không đưa lên web": []
+    },
+    "exclusion_config": "data/ia.json excludeGroups ['Không đưa lên web'] + holdUnmappedGroups"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-10T07:20:00Z",
+  "lastCheckAt": "2026-10-10T15:08:00Z",
   "lastCheckResult": {
     "changed": true,
-    "note": "web unchanged 414; bridge 449 verified"
+    "note": "web unchanged 414; exclusion rule live; bridge pending re-login"
   }
 }
