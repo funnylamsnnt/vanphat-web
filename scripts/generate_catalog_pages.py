@@ -1370,6 +1370,21 @@ def assert_generated_seo(products: list[dict]) -> None:
         json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', (ROOT / rel).read_text(encoding="utf-8")).group(1))
 
 
+def _fold_group(value) -> str:
+    s = re.sub(r"\s+", " ", str(value or "")).strip().lower().replace("đ", "d")
+    s = unicodedata.normalize("NFD", s)
+    return "".join(ch for ch in s if unicodedata.category(ch) != "Mn").strip()
+
+
+def excluded_group_folds() -> set:
+    """Defensive guard: never render SKUs whose nhóm is in ia.json excludeGroups."""
+    names = ["Không đưa lên web"]
+    ia_path = ROOT / "data" / "ia.json"
+    if ia_path.is_file():
+        names += json.loads(ia_path.read_text(encoding="utf-8")).get("excludeGroups") or []
+    return {_fold_group(n) for n in names if str(n or "").strip()}
+
+
 def main() -> None:
     assert_slug_samples()
     assert_seo_helpers()
@@ -1379,7 +1394,12 @@ def main() -> None:
     products_path = Path(args.products)
     data = load_products(products_path)
     ia = build_ia(data)
-    products = data["sanpham"]
+    excl = excluded_group_folds()
+    dropped = [p.get("ma") for p in data["sanpham"] if _fold_group(p.get("nhom")) in excl]
+    if dropped:
+        print("excludeGroups: not publishing", ", ".join(map(str, dropped)))
+    products = [p for p in data["sanpham"] if _fold_group(p.get("nhom")) not in excl]
+    data["sanpham"] = products
     for product in products:
         annotate_product(product, ia)
 

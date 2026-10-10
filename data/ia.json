@@ -1,4 +1,8 @@
 {
+  "excludeGroups": ["Không đưa lên web"],
+  "excludeGroupsNote": "Nhóm Hàng trong Excel nguồn khớp (không phân biệt hoa/thường, dấu, khoảng trắng) với một mục ở đây sẽ KHÔNG bao giờ lên web (products.json, trang SP, trang nhóm/lĩnh vực, tìm kiếm, sitemap). Form Đơn Đặt Hàng LIVE không áp dụng.",
+  "holdUnmappedGroups": true,
+  "holdUnmappedGroupsNote": "Nhóm chưa map vào lĩnh vực nào (vd. Khác / ô Nhóm trống) bị giữ ngoài web cho tới khi anh Hà chốt chỗ.",
   "linh_vuc": [
     {
       "id": "vpp",

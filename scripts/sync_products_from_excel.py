@@ -96,6 +96,20 @@ def load_ia() -> dict:
     return data
 
 
+DEFAULT_EXCLUDE_GROUPS = ["Không đưa lên web"]
+
+
+def exclude_group_folds(ia: dict) -> set:
+    """Folded names of Excel nhóm that must never be published on the website.
+
+    Configured in data/ia.json → "excludeGroups"; "Không đưa lên web" is always
+    included even if the config key is missing. Matching ignores case, accents
+    (incl. đ/Đ) and extra whitespace.
+    """
+    names = list(DEFAULT_EXCLUDE_GROUPS) + list(ia.get("excludeGroups") or [])
+    return {fold_name(n) for n in names if clean(n)}
+
+
 def load_previous(out_json: Path) -> dict:
     if not out_json.exists():
         return {}
@@ -115,6 +129,10 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
     nhom_cfg = [dict(n) for n in ia["nhom"]]
     by_fold = {fold_name(n.get("TenNhom")): n for n in nhom_cfg if n.get("TenNhom")}
     lv_by_id = {lv.get("id"): lv for lv in ia["linh_vuc"] if lv.get("id")}
+    excl_folds = exclude_group_folds(ia)
+    hold_unmapped = ia.get("holdUnmappedGroups", True)
+    excluded = {}  # raw nhóm -> [mã] never published
+    held = {}  # unmapped nhóm -> [mã] kept off until mapped in ia.json
 
     wb = load_workbook(xlsx_path, read_only=True, data_only=True)
 
@@ -164,7 +182,13 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         if not ma:
             continue
         raw_nhom = clean(cell("nhom")) or "Khác"
+        if fold_name(raw_nhom) in excl_folds:
+            excluded.setdefault(raw_nhom, []).append(ma)
+            continue
         meta = by_fold.get(fold_name(raw_nhom))
+        if hold_unmapped and (meta is None or not lv_by_id.get(meta.get("linhVucId") or "")):
+            held.setdefault(raw_nhom, []).append(ma)
+            continue
         if meta is None:
             meta = {
                 "id": slugify(raw_nhom) or "khac",
@@ -208,6 +232,9 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
     for p in products:
         by[p["ma"]] = p
     products = list(by.values())
+    leaked = [p["ma"] for p in products if fold_name(p["nhom"]) in excl_folds]
+    if leaked:
+        raise SystemExit(f"Excluded nhóm leaked into web catalog: {leaked}")
 
     stt_of = {n.get("TenNhom"): n.get("STT") or 999 for n in nhom_cfg}
 
@@ -264,6 +291,8 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         "groups": counts,
         "linhVuc": lv_counts,
         "unknownGroups": unknown_groups,
+        "excludedGroups": excluded,
+        "heldUnmappedGroups": held,
         "keptImages": sum(1 for p in products if p["anh"] and not (prev_by_ma.get(p["ma"]) or {}).get("anh") and p["ma"] not in prev_by_ma) ,
         "path": str(out_json),
     }
