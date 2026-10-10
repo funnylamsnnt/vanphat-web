@@ -2,21 +2,18 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-09T06:32:47.805Z",
-  "previousModifiedTime": "2026-10-08T05:43:51.715Z",
+  "lastModifiedTime": "2026-10-09T10:21:33.263Z",
+  "previousModifiedTime": "2026-10-09T06:32:47.805Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-09T07:25:00Z",
+  "lastSyncAt": "2026-10-10T01:13:00Z",
   "lastSyncResult": {
     "changed": true,
-    "source_count": 450,
-    "count": 416,
+    "source_count": 448,
+    "count": 414,
     "with_img": 314,
-    "added": [
-      "VP449",
-      "VP450"
-    ],
+    "added": [],
     "held_unmapped_nhom": {
       "Khác": [
         "VP415",
@@ -55,20 +52,23 @@
         "VP448"
       ]
     },
-    "removed": [],
+    "removed": [
+      "VP449",
+      "VP450"
+    ],
     "price_chg": 0,
     "name_chg": 0,
     "stock_chg": 6,
-    "brief_deltas": "Source 450 SKU; +VP449/VP450 Bút & Mực (giá 0); new Nhóm 'Khác' VP415–VP448 (34 SKU) NOT in ia.json → held off web pending anh Hà; 6 stock changes",
+    "brief_deltas": "Source 448; VP449/VP450 removed from source; 34 Khác still held; 6 stock",
     "web_deployed": true,
-    "commit": "bb667bdafe396c08dfd53e10c91b422318f86a33",
-    "pages_run": 37898280068,
+    "commit": "4cd060a47a46e6f49a1a608ec881a48fc46bda88",
+    "pages_run": 38012169145,
     "pages_status": "success",
     "live_spot_check": "products.json 416, VP449 page 200, nhom-nuoc-uong 200",
-    "bridge_refreshed": true,
-    "bridge_status": "replaced_verified",
+    "bridge_refreshed": false,
+    "bridge_status": "pending_browser_import_replace",
     "bridge_fileId": "15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
-    "bridge_note": "14:19 09/10 automated CDP Import→Replace (_bridge_import_now.py); CSV export gid 738319300 = 450 rows VP001–VP450 unique",
+    "bridge_note": "10/10 08:13: file prepared /workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx (448 rows); CDP browser not signed in to Google",
     "empty_prices": [],
     "zero_prices": [
       "VP035",
@@ -87,16 +87,14 @@
       "VP338",
       "VP370",
       "VP382",
-      "VP390",
-      "VP449",
-      "VP450"
+      "VP390"
     ],
     "download_method": "_download_master.py (headless Chrome)"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-09T07:25:00Z",
+  "lastCheckAt": "2026-10-10T01:13:00Z",
   "lastCheckResult": {
     "changed": true,
-    "note": "deployed 416/450; 34 'Khác' held"
+    "note": "deployed 414/448; bridge pending"
   }
 }
