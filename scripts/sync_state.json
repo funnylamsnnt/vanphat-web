@@ -2,20 +2,31 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-10T13:49:56.599Z",
-  "previousModifiedTime": "2026-10-10T05:23:29.942Z",
+  "lastModifiedTime": "2026-10-10T15:43:08.986Z",
+  "previousModifiedTime": "2026-10-10T13:49:56.599Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-10T15:08:00Z",
+  "lastSyncAt": "2026-10-10T15:48:00Z",
   "lastSyncResult": {
-    "changed": false,
-    "source_count": 449,
-    "count": 414,
-    "with_img": 314,
-    "added": [],
-    "held_unmapped_nhom": {
-      "(trống)": [
+    "changed": true,
+    "source_count": 450,
+    "count": 416,
+    "with_img": 316,
+    "source": "Drive new version uploaded by anh Hà 22:42 ICT after FB1DA4E5.tmp save error; renamed back; size 11561366; local mirror = desktop 21:58 copy (sha256 ef55a05e…); previous mirror backed up as PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx.bak_2049",
+    "added": [
+      "VP449",
+      "VP450"
+    ],
+    "removed": [],
+    "price_chg": 0,
+    "name_chg": 0,
+    "stock_chg": 1,
+    "stock_chg_list": [
+      "VP327"
+    ],
+    "excluded_nhom": {
+      "Không đưa lên web": [
         "VP415",
         "VP416",
         "VP417",
@@ -49,26 +60,15 @@
         "VP445",
         "VP446",
         "VP447",
-        "VP448",
-        "VP449"
+        "VP448"
       ]
     },
-    "removed": [],
-    "price_chg": 0,
-    "name_chg": 0,
-    "stock_chg": 0,
-    "brief_deltas": "Source 20:49 ICT: VP415–VP449 Nhóm trống (chưa phải 'Không đưa lên web'); VP449 giá 0→40.000 + ảnh (held, off web). Web catalog unchanged 414.",
-    "web_deployed": false,
-    "commit": "a2cd8fd57f7d4b7ae585970974c7131846f5a7de",
-    "pages_run": 38061278342,
-    "pages_status": "success",
-    "live_spot_check": "products.json 414, 0 SKU VP415–449, sitemap 441 loc, 0 VP415–449; linh-vuc x3 200",
-    "bridge_refreshed": false,
-    "bridge_status": "NOT refreshed 2026-10-10 22:07 — box browser signed out of Google (account chooser); bridge still 449 rows from 12:23 source, only diff VP449 giá/ảnh",
-    "bridge_fileId": "15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
-    "bridge_note": "Import→Replace via CDP 9225; Drive CSV export 449 VP rows, 0 missing/extra",
-    "empty_prices": [],
-    "zero_prices": [
+    "held_unmapped_nhom": {},
+    "reused_codes": {
+      "VP449": "Bút bi TL-08 → Thước cuộn 7,5m (12:23) → Thước cuộn 5m (Gx-141725) 30.000 nhóm Điện",
+      "VP450": "Bút gel GEL-068 → Thước cuộn 7,5m (Gx-141725) 40.000 nhóm Điện"
+    },
+    "zero_price": [
       "VP035",
       "VP117",
       "VP123",
@@ -87,16 +87,21 @@
       "VP382",
       "VP390"
     ],
-    "download_method": "Drive connector DownloadFile + CDP uc download (identical bytes)",
-    "excluded_nhom": {
-      "Không đưa lên web": []
-    },
-    "exclusion_config": "data/ia.json excludeGroups ['Không đưa lên web'] + holdUnmappedGroups"
+    "web_deployed": true,
+    "commit": "359f82402a695cdc1562c73eb15f5184f99b33b3",
+    "commit_followup": "e6b950ec2a2035106c6a274dc86910f472efe4fd",
+    "pages_run": 38064835578,
+    "pages_status": "success",
+    "live_spot_check": "products.json 416 (vpp 375, nuoc-banh 31, dien-gia-dung 10); 0 SKU VP415–448; 34 excluded SKU URLs 404; sitemap 443 loc, 0 VP415–448; linh-vuc x3 200; VP449 30.000, VP450 40.000 live",
+    "bridge_refreshed": false,
+    "bridge_status": "PENDING — local VP_DanhMuc_LIVE_BRIDGE.xlsx rebuilt 450 rows; live bridge 449 rows. No sanctioned connector can overwrite content of existing fileId 15i18…; box browser signed out of Google (must not sign in). Diff: +VP450 missing; VP449 live 'Thước cuộn 7,5m' giá trống/no image/nhóm trống vs new 'Thước cuộn 5m (Gx-141725)' 30000 + image + Điện; VP415–VP448 nhóm '' → 'Không đưa lên web'."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-10T15:08:00Z",
+  "lastCheckAt": "2026-10-10T15:48:00Z",
   "lastCheckResult": {
     "changed": true,
-    "note": "web unchanged 414; exclusion rule live; bridge pending re-login"
-  }
+    "note": "web 416 deployed; 34 excluded; bridge pending"
+  },
+  "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
+  "sourceTitleGuard": "scripts/source_title_guard.py; sync_products_from_excel.py --drive-title required, exit 3 on .tmp / wrong title"
 }
