@@ -1449,7 +1449,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1IsJcKlXujhZqJAaiXIdAvC3b1b0B0SUU",
-      "ton": 1360
+      "ton": 560
     },
     {
       "nhom": "Bút & Mực",
@@ -1461,7 +1461,7 @@
       "dvt": "Cây",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
-      "ton": 674
+      "ton": 374
     },
     {
       "nhom": "Bút & Mực",
@@ -1641,7 +1641,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
-      "ton": 160
+      "ton": 60
     },
     {
       "nhom": "Bút & Mực",
@@ -1713,7 +1713,7 @@
       "dvt": "Cây",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1jPvamqc_maSvhdhR4xA8kkh34SV-Tfi7",
-      "ton": 360
+      "ton": 160
     },
     {
       "nhom": "Bút & Mực",
@@ -1737,7 +1737,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
-      "ton": 600
+      "ton": 100
     },
     {
       "nhom": "Bút & Mực",
@@ -1905,7 +1905,7 @@
       "dvt": "Cây",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1uKutKE8xEsFxMGyjZMOgqZw57yfE41WZ",
-      "ton": 630
+      "ton": 100
     },
     {
       "nhom": "Bút & Mực",
@@ -1978,30 +1978,6 @@
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
       "ton": 36
-    },
-    {
-      "nhom": "Bút & Mực",
-      "nhomId": "but-muc",
-      "linhVucId": "vpp",
-      "linhVucTen": "Văn phòng phẩm",
-      "ma": "VP449",
-      "ten": "Bút bi TL-08 xanh (Hộp 20 cây)",
-      "dvt": "Cây",
-      "gia": 0,
-      "anh": "",
-      "ton": 600
-    },
-    {
-      "nhom": "Bút & Mực",
-      "nhomId": "but-muc",
-      "linhVucId": "vpp",
-      "linhVucTen": "Văn phòng phẩm",
-      "ma": "VP450",
-      "ten": "Bút gel GEL-068 xanh (Hộp 20 cây)",
-      "dvt": "Cây",
-      "gia": 0,
-      "anh": "",
-      "ton": 100
     },
     {
       "nhom": "Băng Keo",
