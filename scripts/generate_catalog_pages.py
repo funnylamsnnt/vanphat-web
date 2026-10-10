@@ -1393,8 +1393,16 @@ def assert_generated_seo(products: list[dict]) -> None:
             raise SystemExit(f"{page.name} invented a delivery area")
         if f"/dia-phuong/{page.name}" not in sitemap:
             raise SystemExit(f"{page.name} missing from sitemap")
-    if "vp415" in sitemap or "vp449" in sitemap:
-        raise SystemExit("held SKUs leaked into the sitemap")
+    # Data-driven: the sitemap's SKU pages must be exactly the published SKUs.
+    # (Excluded "Không đưa lên web" / held nhóm never reach products.json.)
+    published = {str(p.get("ma") or "").lower() for p in products}
+    in_sitemap = set(re.findall(r"/san-pham/(vp\d+)-", sitemap))
+    leaked = sorted(in_sitemap - published)
+    if leaked:
+        raise SystemExit(f"unpublished SKUs leaked into the sitemap: {leaked}")
+    missing = sorted(published - in_sitemap)
+    if missing:
+        raise SystemExit(f"published SKUs missing from the sitemap: {missing[:10]}")
     paper_desc = _DESCRIPTION_BY_MA.get("VP204") or ""
     if "Double A" not in paper_desc or "A4" not in paper_desc or "70 gsm" not in paper_desc:
         raise SystemExit(f"VP204 description dropped name facts: {paper_desc}")
@@ -1507,7 +1515,7 @@ def local_link_block(prefix: str) -> str:
 def upsert_local_links(text: str, prefix: str) -> str:
     block = local_link_block(prefix).rstrip("\n")
     pattern = re.compile(
-        re.escape(LOCAL_LINKS_START) + r".*?" + re.escape(LOCAL_LINKS_END),
+        r"[ \t]*" + re.escape(LOCAL_LINKS_START) + r".*?" + re.escape(LOCAL_LINKS_END),
         re.S,
     )
     text = pattern.sub(block, text)

@@ -4041,7 +4041,7 @@
       "dvt": "Xấp",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/11jOE3ZSBV70FmQzeXNKA42agyk_ilgIJ",
-      "ton": 0
+      "ton": 240
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4725,6 +4725,30 @@
       "dvt": "Chiếc",
       "gia": 155000,
       "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Điện",
+      "nhomId": "dien",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP449",
+      "ten": "Thước cuộn 5m (Gx-141725)",
+      "dvt": "Cuộn",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1HtCwNSG-0etQXnqQhaqxTQujjT0qdIAZ",
+      "ton": 0
+    },
+    {
+      "nhom": "Điện",
+      "nhomId": "dien",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP450",
+      "ten": "Thước cuộn 7,5m (Gx-141725)",
+      "dvt": "Cuộn",
+      "gia": 40000,
+      "anh": "https://lh3.googleusercontent.com/d/1-kXhQuBoDtivEcE_u8sMkO0-4LdkeUmK",
       "ton": 0
     },
     {

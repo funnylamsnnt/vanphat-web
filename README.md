@@ -40,6 +40,17 @@ Catalog trên `san-pham.html` vẫn lọc bằng JavaScript. Google đọc thêm
 
 Slug lấy từ mã (`VP063` → `vp063`) và tên đã bỏ dấu. Thẻ trên trang chủ và catalog trỏ tới các URL này; lightbox và thêm vào giỏ giữ nguyên.
 
+### Chốt an toàn tên file nguồn (từ 10/10/2026)
+
+Trước mỗi lượt sync, đọc metadata Drive của file nguồn `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` (connector Drive `get_file_metadata` → `title`) và truyền vào:
+
+```bash
+python3 scripts/sync_products_from_excel.py /workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx \
+  --drive-title "PHIEU BAO GIA VAN PHAT - 2026.xlsx"
+```
+
+Nếu tên kết thúc bằng `.tmp` (lỗi lưu Excel/Drive for desktop, như `FB1DA4E5.tmp` ngày 10/10/2026) hoặc khác `PHIEU BAO GIA VAN PHAT - 2026.xlsx` (đã chuẩn hóa hoa/thường, dấu, khoảng trắng, đuôi), script thoát mã **3** trước khi ghi gì: không deploy web, không refresh cầu nối LIVE, báo anh Hà. Logic nằm ở `scripts/source_title_guard.py`.
+
 Sau khi Excel cập nhật `data/products.json`, `scripts/sync_products_from_excel.py` tự gọi generator. Nếu chỉ sửa JSON:
 
 ```bash

@@ -11,7 +11,13 @@ Customer order-form / Apps Script links are not written.
 After a successful export this script regenerates indexable category, lĩnh vực,
 and product HTML plus sitemap.xml and js/catalog-paths.js.
 
-    python3 scripts/sync_products_from_excel.py path/to.xlsx
+    python3 scripts/sync_products_from_excel.py path/to.xlsx \
+        --drive-title "<title from Drive get_file_metadata of 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR>"
+
+SOURCE TITLE GUARD (10/10/2026): --drive-title is required. If the Drive title
+ends with .tmp or is not "PHIEU BAO GIA VAN PHAT - 2026.xlsx" (normalised), the
+script exits 3 before writing anything — do not deploy, do not refresh the LIVE
+bridge, notify anh Hà. See scripts/source_title_guard.py.
 """
 import argparse, json, re, hashlib, subprocess, sys, unicodedata
 from pathlib import Path
@@ -352,7 +358,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("xlsx")
     ap.add_argument("-o", "--out", default=str(ROOT / "data" / "products.json"))
+    ap.add_argument("--drive-title", required=True,
+                    help="Current Drive title of source fileId 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR")
     args = ap.parse_args()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from source_title_guard import check_title, ABORT_EXIT
+    ok, why = check_title(args.drive_title)
+    if not ok:
+        print(json.dumps({"aborted": True, "reason": why, "notify": "anh Hà"}, ensure_ascii=False))
+        sys.exit(ABORT_EXIT)
     out = Path(args.out)
     stats = export(Path(args.xlsx), out)
     print(json.dumps(stats, ensure_ascii=False))
