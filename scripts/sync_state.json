@@ -2,29 +2,28 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-10T15:43:08.986Z",
-  "previousModifiedTime": "2026-10-10T13:49:56.599Z",
+  "lastModifiedTime": "2026-10-10T16:11:05.480Z",
+  "previousModifiedTime": "2026-10-10T15:43:08.986Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-10T15:48:00Z",
+  "lastSyncAt": "2026-10-11T01:22:00Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 450,
     "count": 416,
     "with_img": 316,
-    "source": "Drive new version uploaded by anh Hà 22:42 ICT after FB1DA4E5.tmp save error; renamed back; size 11561366; local mirror = desktop 21:58 copy (sha256 ef55a05e…); previous mirror backed up as PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx.bak_2049",
-    "added": [
-      "VP449",
-      "VP450"
-    ],
+    "source": "Drive size 7800587 (was 11561366): zip valid, 450 rows unchanged; drop = embedded media 21→3 (~4.5MB→0.8MB). Old mirror backed up .bak_2243",
+    "added": [],
     "removed": [],
-    "price_chg": 0,
+    "price_chg": 1,
+    "price_chg_list": {
+      "VP449": [
+        30000,
+        35000
+      ]
+    },
     "name_chg": 0,
-    "stock_chg": 1,
-    "stock_chg_list": [
-      "VP327"
-    ],
     "excluded_nhom": {
       "Không đưa lên web": [
         "VP415",
@@ -63,44 +62,19 @@
         "VP448"
       ]
     },
-    "held_unmapped_nhom": {},
-    "reused_codes": {
-      "VP449": "Bút bi TL-08 → Thước cuộn 7,5m (12:23) → Thước cuộn 5m (Gx-141725) 30.000 nhóm Điện",
-      "VP450": "Bút gel GEL-068 → Thước cuộn 7,5m (Gx-141725) 40.000 nhóm Điện"
-    },
-    "zero_price": [
-      "VP035",
-      "VP117",
-      "VP123",
-      "VP139",
-      "VP238",
-      "VP239",
-      "VP240",
-      "VP241",
-      "VP242",
-      "VP297",
-      "VP324",
-      "VP328",
-      "VP329",
-      "VP338",
-      "VP370",
-      "VP382",
-      "VP390"
-    ],
     "web_deployed": true,
-    "commit": "359f82402a695cdc1562c73eb15f5184f99b33b3",
-    "commit_followup": "e6b950ec2a2035106c6a274dc86910f472efe4fd",
-    "pages_run": 38064835578,
+    "commit": "6e0651279b7fdef3c4b80b7e63914a2d74d25768",
+    "pages_run": 38101508138,
     "pages_status": "success",
-    "live_spot_check": "products.json 416 (vpp 375, nuoc-banh 31, dien-gia-dung 10); 0 SKU VP415–448; 34 excluded SKU URLs 404; sitemap 443 loc, 0 VP415–448; linh-vuc x3 200; VP449 30.000, VP450 40.000 live",
+    "live_spot_check": "products.json 416; VP449 35000 live; VP415 404; /, nuoc-banh 200",
     "bridge_refreshed": false,
-    "bridge_status": "PENDING — local VP_DanhMuc_LIVE_BRIDGE.xlsx rebuilt 450 rows; live bridge 449 rows. No sanctioned connector can overwrite content of existing fileId 15i18…; box browser signed out of Google (must not sign in). Diff: +VP450 missing; VP449 live 'Thước cuộn 7,5m' giá trống/no image/nhóm trống vs new 'Thước cuộn 5m (Gx-141725)' 30000 + image + Điện; VP415–VP448 nhóm '' → 'Không đưa lên web'."
+    "bridge_status": "PENDING — local bridge rebuilt 450 rows; no sanctioned connector can overwrite fileId 15i18…. Diff vs live (449 rows): +VP450; VP449 → Thước cuộn 5m 35000+image+Điện; VP415–VP448 nhóm → 'Không đưa lên web'."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-10T15:48:00Z",
+  "lastCheckAt": "2026-10-11T01:22:00Z",
   "lastCheckResult": {
     "changed": true,
-    "note": "web 416 deployed; 34 excluded; bridge pending"
+    "note": "VP449 price 35000 deployed; bridge pending"
   },
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "scripts/source_title_guard.py; sync_products_from_excel.py --drive-title required, exit 3 on .tmp / wrong title"
