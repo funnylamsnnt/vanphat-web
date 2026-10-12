@@ -311,14 +311,18 @@
               .slice(0, 5)
               .map((p) => "• " + p.ten + " (" + p.ma + ") — " + Number(p.gia).toLocaleString("vi-VN") + "₫")
               .join("\n") +
-            "\n\nChat AI đang kích hoạt backend. Anh/chị thêm vào giỏ, gọi " +
+            "\n\nEm chưa nối được AI. Anh/chị thêm vào giỏ, gọi hotline " +
             hotline +
-            " hoặc chat Zalo nếu cần NV chốt.";
+            " hoặc Chat Zalo https://zalo.me/" +
+            hotlineTel +
+            " để được tư vấn nhé.";
         } else {
           fallback =
-            "Em chưa khớp sản phẩm trong catalog web cho câu này. Anh/chị để lại SĐT bên dưới — em ghi bill để NV tư vấn thêm, hoặc gọi " +
+            "Em chưa khớp sản phẩm trong catalog web cho câu này. Anh/chị để lại SĐT bên dưới, gọi hotline " +
             hotline +
-            ".";
+            " hoặc Chat Zalo https://zalo.me/" +
+            hotlineTel +
+            " để được tư vấn nhé.";
           showLeadForm({ nhu_cau: msg });
         }
         addBubble("bot", fallback);
@@ -339,6 +343,7 @@
         message: msg,
         history: history.slice(0, -1),
         catalogContext: catalogContext,
+        sessionId: chatSessionId(),
       })
         .then((data) => {
           typing.remove();
@@ -346,7 +351,11 @@
             data && data.ok && data.reply
               ? data.reply
               : (data && data.error) ||
-                "Em chưa trả lời được. Anh/chị gọi " + hotline + " giúp em nhé.";
+                "Em chưa trả lời được lúc này. Anh/chị gọi hotline " +
+                  hotline +
+                  " hoặc Chat Zalo https://zalo.me/" +
+                  hotlineTel +
+                  " để được tư vấn nhé.";
           const parsed = stripLeadMarkers(replyText);
           addBubble("bot", parsed.clean || replyText);
           history.push({ role: "model", text: parsed.clean || replyText });
@@ -357,7 +366,12 @@
         })
         .catch(() => {
           typing.remove();
-          const err = "Mất kết nối chat. Anh/chị gọi " + hotline + " giúp em.";
+          const err =
+            "Mất kết nối chat. Anh/chị gọi hotline " +
+            hotline +
+            " hoặc Chat Zalo https://zalo.me/" +
+            hotlineTel +
+            " để được tư vấn nhé.";
           addBubble("bot", err);
           history.push({ role: "model", text: err });
         })
@@ -426,6 +440,20 @@
       e.preventDefault();
       sendMessage(input.value);
     });
+
+    function chatSessionId() {
+      try {
+        const key = "vp-chat-session";
+        let id = sessionStorage.getItem(key);
+        if (!id) {
+          id = "s" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+          sessionStorage.setItem(key, id);
+        }
+        return id;
+      } catch (e) {
+        return "";
+      }
+    }
 
     quick.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-q]");
