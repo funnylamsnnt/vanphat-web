@@ -1,0 +1,28 @@
+---
+description: Mọi ảnh sản phẩm phía khách mở lightbox có số lượng, thêm giỏ, và đóng được.
+alwaysApply: true
+---
+
+# Lightbox ảnh sản phẩm
+
+Bắt buộc trên mọi bề mặt khách thấy thẻ sản phẩm: trang chủ, `san-pham.html`, lĩnh vực, nhóm, trang SKU, trang địa phương. Ảnh placeholder cũng vậy.
+
+Click ảnh thì mở lightbox với đủ:
+
+1. Ảnh lớn
+2. Tên, mã, đơn vị tính, giá
+3. Số lượng (giảm, ô nhập, tăng)
+4. Nút Thêm vào giỏ, cùng giỏ với nút trên thẻ
+5. Nút đóng góc trên bên phải. Đóng được bằng nút đó, phím Escape, và click lớp phủ
+
+Không gỡ số lượng và nút Thêm vào giỏ trên chính thẻ.
+
+Móc trong code:
+
+- Thẻ sinh bằng JS: `js/products.js`, hàm `cardHTML`, ảnh có `data-product-zoom`
+- Thẻ HTML tĩnh: `scripts/generate_catalog_pages.py`, hàm `card_html`, cùng attribute
+- Hành vi: `js/product-lightbox.js` (X là `data-lb-close`, Escape, click overlay, `data-lb-qty`, `data-lb-add`)
+
+Sổ đơn nhân viên (`js/staff-order.js`, nút «Thêm vào đơn») không phải lightbox giỏ khách. Đừng gắn lightbox khách vào sổ đó trừ khi anh giao. `scripts/check_rules.py` kiểm tra thẻ khách và hai hàm sinh thẻ, không kiểm template sổ nhân viên.
+
+Sau khi sửa thẻ hoặc CSS ảnh, chạy `python3 scripts/check_rules.py`.

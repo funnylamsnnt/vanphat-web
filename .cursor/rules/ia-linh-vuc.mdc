@@ -1,0 +1,30 @@
+---
+description: Ba lĩnh vực L1 đến L3 do data/ia.json điều khiển; nhóm mới thì tự xếp và ghi trong PR.
+alwaysApply: true
+---
+
+# Lĩnh vực L1 → L2 → L3
+
+Khách chọn lĩnh vực, rồi nhóm, rồi sản phẩm. Ô tìm trên header tìm xuyên mọi lĩnh vực (bỏ dấu), kết quả có badge lĩnh vực và nhóm. Cây lĩnh vực nằm ở `data/ia.json`, không hardcode số lượng trong HTML.
+
+Ba lĩnh vực đang phát hành:
+
+- Văn phòng phẩm, slug `vpp`, `browseMode` `group-images`. Nhóm: Giấy, Bìa Hồ Sơ, Bút & Mực, Băng Keo, Dụng cụ VP.
+- Nước uống & Bánh, slug `nuoc-banh`, `browseMode` `product-images`. Nhóm: Nước uống, Bánh. Nhóm chưa có SKU vẫn hiện, với lời «sắp có», không ẩn cả lĩnh vực.
+- Điện gia dụng, slug `dien-gia-dung`, `browseMode` `group-images`. Nhóm: Điện.
+
+`group-images` là tile ảnh nhóm. `product-images` là lưới ảnh từng sản phẩm. Nước uống phải ở `nuoc-banh`, không rơi về Văn phòng phẩm.
+
+Trang: `linh-vuc/<slug>.html`, `san-pham/nhom-<slug>.html`, trang SKU, sitemap.
+
+## Nhóm mới
+
+Anh Hà cập nhật ngày 10/10/2026. Quy tắc này thay câu «hỏi anh trước rồi mới thêm» trong skill cũ.
+
+Nhóm có tên nghiệp vụ chưa có trong `ia.json`: chọn lĩnh vực khớp nhất trong ba lĩnh vực trên, thêm vào `data/ia.json` (`nhom` và `nhomIds` của lĩnh vực đó), rồi phát hành. Không nhét mặc định vào Dụng cụ VP. Không mở lĩnh vực thứ tư. Trong PR ghi tên nhóm trong Excel, lĩnh vực và nhóm L2 đã đặt, và vì sao đặt chỗ đó.
+
+Ô Nhóm trống, hoặc nhãn không chỉ một loại hàng như `Khác`, không có lĩnh vực khớp. Giữ các mã đó ngoài web và nêu trong PR. Không bịa tên nhóm.
+
+`holdUnmappedGroups` trong `ia.json` đang bật, nên sync sẽ giữ mọi nhóm chưa map. Muốn phát hành nhóm mới thì phải ghi map vào `ia.json` trước khi chạy sync hoặc `scripts/generate_catalog_pages.py`.
+
+Không đổi slug cũ. Nếu buộc đổi slug, thêm redirect và nói trong PR.

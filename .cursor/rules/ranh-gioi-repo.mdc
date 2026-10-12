@@ -1,0 +1,18 @@
+---
+description: Không đụng CNAME, không commit bí mật, không thêm lại Đặt hàng online, mọi sửa đi bằng PR.
+alwaysApply: true
+---
+
+# Ranh giới repo
+
+Repo này public và đang là site GitHub Pages. Chỉ commit thứ được phép hiện trên web hoặc thứ agent cần để sửa web.
+
+Không ghi đè `CNAME`. Nội dung đúng là `vanphatcompany.vn`.
+
+Không commit bí mật: API key, token, mật khẩu, email cá nhân, tài khoản đăng nhập, fileId cầu nối LIVE, fileId sheet đơn nội bộ, số tài khoản, link hệ thống văn bản hành chính. FileId nguồn catalog công khai `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` được ghi vì đó là nguồn anh đã khóa. Không commit file Excel nguồn, file danh mục xuất cho khách, hay cache ảnh.
+
+Không thêm lại lời kêu gọi «Đặt hàng online» và không gắn lại form Apps Script đặt hàng đã gỡ (PR #5 và #6). Giữ giỏ hàng (`js/cart.js`), nút Zalo, và hotline đang có trên site.
+
+Mọi thay đổi, kể cả tài liệu agent và script kiểm tra, đi trên nhánh `cursor/<mô-tả>-720b`, push nhánh đó, mở một pull request. Không push thẳng `main`. Không merge. Anh Hà duyệt rồi mới vào Pages.
+
+`python3 scripts/check_rules.py` phải xanh trước khi coi PR đụng catalog hoặc thẻ sản phẩm là xong. Workflow kiểm tra trên pull request không thay workflow phát hành Pages.
