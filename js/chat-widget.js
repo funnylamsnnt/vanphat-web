@@ -423,12 +423,27 @@
       '<span class="vp-chat-sku-price">' +
       escapeHtml(price) +
       "</span></span></span></button>" +
+      '<div class="vp-chat-sku-actions">' +
+      '<div class="vp-chat-qty" role="group" aria-label="Số lượng ' +
+      escapeAttr(name) +
+      '">' +
+      '<button type="button" class="vp-chat-qty-btn" data-vp-qty="minus" aria-label="Giảm số lượng">−</button>' +
+      '<input type="number" class="vp-chat-qty-input" data-vp-qty-input value="1" min="1" max="999" inputmode="numeric" aria-label="Số lượng" />' +
+      '<button type="button" class="vp-chat-qty-btn" data-vp-qty="plus" aria-label="Tăng số lượng">+</button>' +
+      "</div>" +
       '<button type="button" class="vp-chat-sku-add" data-vp-add="' +
       escapeAttr(product.ma) +
       '" aria-label="' +
       escapeAttr("Thêm " + name + " vào giỏ") +
-      '">Thêm vào giỏ</button></article>'
+      '">Thêm vào giỏ</button></div></article>'
     );
+  }
+
+  function clampChatQty(value) {
+    const n = Math.round(Number(value));
+    if (!n || n < 1) return 1;
+    if (n > 999) return 999;
+    return n;
   }
 
   function isPriceOnlyLine(line) {
@@ -867,11 +882,26 @@
     }
 
     messages.addEventListener("click", (e) => {
+      const qtyBtn = e.target.closest("[data-vp-qty]");
+      if (qtyBtn) {
+        e.preventDefault();
+        const card = qtyBtn.closest(".vp-chat-sku");
+        const input = card && card.querySelector("[data-vp-qty-input]");
+        if (!input) return;
+        const current = clampChatQty(input.value);
+        const next = qtyBtn.getAttribute("data-vp-qty") === "plus" ? Math.min(999, current + 1) : Math.max(1, current - 1);
+        input.value = String(next);
+        return;
+      }
       const addBtn = e.target.closest("[data-vp-add]");
       if (addBtn) {
         e.preventDefault();
+        const card = addBtn.closest(".vp-chat-sku");
+        const input = card && card.querySelector("[data-vp-qty-input]");
+        const qty = clampChatQty(input && input.value);
+        if (input) input.value = String(qty);
         const product = catalogIndex.byMa.get(String(addBtn.getAttribute("data-vp-add") || "").toUpperCase());
-        if (product && window.VanPhatCart && window.VanPhatCart.add) window.VanPhatCart.add(product, 1);
+        if (product && window.VanPhatCart && window.VanPhatCart.add) window.VanPhatCart.add(product, qty);
         return;
       }
       const btn = e.target.closest("[data-vp-ma]");
@@ -880,6 +910,12 @@
       if (!product || !window.VanPhatLightbox || !window.VanPhatLightbox.openProduct) return;
       e.preventDefault();
       window.VanPhatLightbox.openProduct(product, btn);
+    });
+
+    messages.addEventListener("change", (e) => {
+      const input = e.target.closest("[data-vp-qty-input]");
+      if (!input) return;
+      input.value = String(clampChatQty(input.value));
     });
 
     function setOpen(open) {
