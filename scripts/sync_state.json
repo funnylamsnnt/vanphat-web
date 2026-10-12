@@ -79,14 +79,14 @@
     "pages_run": 38217489331,
     "pages_status": "success",
     "live_spot_check": "products.json 427; VP456 60000 live; VP461 page 200; VP415 404; old VP077 slug 404 / new slug 200; /, nuoc-banh 200",
-    "bridge_refreshed": false,
-    "bridge_status": "PENDING_PARENT — local bridge /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx (and _UPLOAD_BRIDGE.xlsx) rebuilt 461 rows; needs browser Import→Replace into 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc. Diff vs previous (455): +VP456–VP461.",
+    "bridge_refreshed": true,
+    "bridge_status": "Import->Replace done 2026-10-12 14:33 ICT, 461 rows verified, 0 diffs vs local (VP001–VP461; +VP456–VP461)",
     "zero_price_count": 17,
     "unknown_groups": [],
     "keptImages": 6
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-12T07:25:02Z",
+  "lastCheckAt": "2026-10-12T07:38:43Z",
   "lastCheckResult": "changed",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
