@@ -93,8 +93,19 @@
       .toLowerCase();
   }
 
+  function pictureHTML(url, alt) {
+    const src = url || window.VanPhat.placeholderSvg();
+    const webp = window.VanPhat.driveImage(src, 480, true);
+    const jpeg = window.VanPhat.driveImage(src, 480, false);
+    const shown = webp || jpeg;
+    const onerror =
+      webp && webp !== jpeg
+        ? "if(!this.dataset.fb){this.dataset.fb='1';this.src='" + jpeg.replace(/'/g, "") + "'}else{VanPhat.onImgError(this)}"
+        : "VanPhat.onImgError(this)";
+    return `<img src="${escapeAttr(shown)}" alt="${escapeAttr(alt)}" width="400" height="400" loading="lazy" decoding="async" onerror="${escapeAttr(onerror)}" />`;
+  }
+
   function cardHTML(p, lvMap) {
-    const img = p.anh ? p.anh : window.VanPhat.placeholderSvg();
     const price = Number(p.gia) > 0 ? window.VanPhat.formatPrice(p.gia) : "Liên hệ";
     const href = productHref(p);
     const badge = badgeLabel(p, lvMap);
@@ -109,8 +120,7 @@
         data-linh-vuc-id="${escapeAttr(p.linhVucId || "")}">
         <div class="product-img" data-product-zoom role="button" tabindex="0"
              aria-label="Xem ảnh lớn: ${escapeAttr(p.ten)}" title="Xem ảnh lớn">
-          <img src="${escapeAttr(img)}" alt="${escapeAttr(p.ten)}" width="400" height="400" loading="lazy" decoding="async"
-               onerror="VanPhat.onImgError(this)" />
+          ${pictureHTML(p.anh, p.ten)}
         </div>
         <div class="product-body">
           <div class="product-badge"><a href="${escapeAttr(categoryHref(p.nhom))}">${escapeHtml(badge)}</a></div>

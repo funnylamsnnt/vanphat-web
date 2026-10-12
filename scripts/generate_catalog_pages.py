@@ -27,8 +27,9 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "20261005"
+CSS_V = "20261012"
 LOGO_NAV_V = "20260925"
+JS_V = "20261012"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"
 ADDRESS = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang"
@@ -38,7 +39,10 @@ HOTLINE_E164 = "+84335652832"
 EMAIL = "congtytnhhvanphat999@gmail.com"
 ZALO_URL = "https://zalo.me/0335652832"
 BANK_LINE = "Agribank · STK 4703201014329"
-OG_IMAGE = f"{SITE}/assets/logo.png"
+OG_IMAGE = f"{SITE}/assets/og.jpg"
+# Maps embed search string requested for the contact iframe. NAP streetAddress
+# stays ADDRESS (includes Vĩnh Thái); this query is only the map lookup.
+MAPS_EMBED_QUERY = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Nam Nha Trang, Khánh Hòa"
 ORG_ID = f"{SITE}/#organization"
 
 # Search Console HTML-tag token. Set this one value and rerun the generator to
@@ -67,6 +71,15 @@ TITLE_MAX = 70
 
 MAPS_QUERY = quote(ADDRESS)
 MAPS_URL = f"https://www.google.com/maps/search/?api=1&query={MAPS_QUERY}"
+MAPS_EMBED_SRC = (
+    "https://maps.google.com/maps?q="
+    + quote(MAPS_EMBED_QUERY)
+    + "&hl=vi&z=16&output=embed"
+)
+FONT_CSS = "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=optional"
+_DRIVE_IMAGE = re.compile(r"^(https://lh3\.googleusercontent\.com/d/[A-Za-z0-9_-]+)")
+CARD_IMAGE_W = 480
+HERO_IMAGE_W = 800
 
 # Fallback blurbs when a nhóm has no moTa in config.
 GROUP_BLURB = {
@@ -494,14 +507,32 @@ def chrome_footer(prefix: str) -> str:
   </footer>"""
 
 
+def font_links() -> str:
+    # Non-blocking. display=optional so a late font does not repaint text LCP.
+    return f"""  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="{FONT_CSS}" />
+  <link rel="stylesheet" href="{FONT_CSS}" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="{FONT_CSS}" /></noscript>"""
+
+
+def reach_html() -> str:
+    return f"""<!-- vp-reach -->
+  <nav class="vp-reach" aria-label="Liên hệ nhanh">
+    <a class="vp-reach-call" href="tel:{HOTLINE_TEL}">☎ Gọi {esc(HOTLINE_DISPLAY)}</a>
+    <a class="vp-reach-zalo" href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a>
+  </nav>
+<!-- /vp-reach -->"""
+
+
 def scripts(prefix: str) -> str:
     p = prefix
-    return f"""  <script src="{p}js/main.js"></script>
-  <script src="{p}js/cart.js"></script>
-  <script src="{p}js/catalog-paths.js?v={CSS_V}"></script>
-  <script src="{p}js/ia.js?v={CSS_V}"></script>
-  <script src="{p}js/product-lightbox.js?v=20261010"></script>
-  <script src="{p}js/chat-widget.js?v={CSS_V}"></script>"""
+    return f"""  <script defer src="{p}js/main.js"></script>
+  <script defer src="{p}js/cart.js"></script>
+  <script defer src="{p}js/catalog-paths.js?v={CSS_V}"></script>
+  <script defer src="{p}js/ia.js?v={CSS_V}"></script>
+  <script defer src="{p}js/product-lightbox.js?v={JS_V}"></script>
+  <script defer src="{p}js/chat-widget.js?v={CSS_V}"></script>"""
 
 
 def breadcrumb_html(items: list[tuple[str, str | None]]) -> str:
@@ -537,11 +568,72 @@ def image_src(product: dict | None) -> str:
     return src or PLACEHOLDER_SVG
 
 
+def sized_drive_image(url: str, width: int, webp: bool) -> str:
+    """Resize Drive-hosted photos at request time. `-rw` asks for WebP; the
+    unsuffixed `=wN` URL is the JPEG fallback. Other hosts are unchanged.
+    """
+    raw = str(url or "").strip()
+    match = _DRIVE_IMAGE.match(raw)
+    if not match:
+        return raw
+    suffix = f"=w{int(width)}" + ("-rw" if webp else "")
+    return match.group(1) + suffix
+
+
+def product_picture(
+    src: str,
+    alt: str,
+    width: int,
+    height: int,
+    *,
+    loading: str,
+    fetchpriority: str | None = None,
+) -> str:
+    """One request: WebP `=wN-rw` in src, JPEG `=wN` only if that fails."""
+    request_w = HERO_IMAGE_W if loading == "eager" else CARD_IMAGE_W
+    webp = sized_drive_image(src, request_w, True)
+    fallback = sized_drive_image(src, request_w, False) or src
+    priority = f' fetchpriority="{fetchpriority}"' if fetchpriority else ""
+    shown = webp or fallback
+    if webp and webp != fallback:
+        handler = (
+            "if(!this.dataset.fb){this.dataset.fb='1';this.src='"
+            + esc(fallback)
+            + "'}else{VanPhat.onImgError(this)}"
+        )
+    else:
+        handler = "VanPhat.onImgError(this)"
+    return (
+        f'<img src="{esc(shown)}" alt="{esc(alt)}" width="{width}" height="{height}" '
+        f'loading="{loading}" decoding="async"{priority} onerror="{handler}" />'
+    )
+
+
 def absolute_image(product: dict | None) -> str:
     src = str((product or {}).get("anh") or "").strip()
     if src.startswith("http://") or src.startswith("https://"):
-        return src
+        sized = sized_drive_image(src, 1200, False)
+        return sized or src
     return OG_IMAGE
+
+
+def ensure_og_image() -> None:
+    """Compress the brand logo into assets/og.jpg so social tags are not the 900KB PNG."""
+    logo = ROOT / "assets" / "logo.png"
+    dest = ROOT / "assets" / "og.jpg"
+    if not logo.is_file():
+        return
+    if dest.is_file() and dest.stat().st_mtime >= logo.stat().st_mtime and dest.stat().st_size < 200_000:
+        return
+    try:
+        from PIL import Image
+    except ImportError:
+        print("warning: Pillow missing; assets/og.jpg was not regenerated")
+        return
+    image = Image.open(logo).convert("RGB")
+    image.thumbnail((1200, 1200))
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    image.save(dest, "JPEG", quality=82, optimize=True)
 
 
 def first_with_image(products: list[dict]) -> dict | None:
@@ -641,8 +733,7 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
         data-linh-vuc-id="{esc(product.get('linhVucId') or '')}">
         <div class="product-img" data-product-zoom role="button" tabindex="0"
              aria-label="Xem ảnh lớn: {esc(product.get('ten'))}" title="Xem ảnh lớn">
-          <img src="{esc(src)}" alt="{esc(product.get('ten'))}" width="400" height="400" loading="lazy" decoding="async"
-               onerror="VanPhat.onImgError(this)" />
+          {product_picture(src, str(product.get('ten') or ''), 400, 400, loading="lazy")}
         </div>
         <div class="product-body">
           <div class="product-badge"><a href="{esc(category_href)}">{esc(badge)}</a></div>
@@ -664,16 +755,15 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
       </article>"""
 
 
-def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body, robots: str | None = None) -> str:
+def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body, robots: str | None = None, preload_image: str | None = None) -> str:
     prefix = "../"
     return f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
   <!-- {MARKER} -->
 {head_tags(title=title, description=description, canonical=canonical, image=image, image_alt=image_alt, og_type=og_type, robots=robots)}
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+{font_links()}
+  {f'<link rel="preload" as="image" href="{esc(preload_image)}" fetchpriority="high" />' if preload_image else ""}
   <link rel="icon" type="image/png" href="{prefix}assets/favicon.png?v={LOGO_NAV_V}" />
   <link rel="stylesheet" href="{prefix}css/styles.css?v={CSS_V}" />
 {ld_script(json_ld)}
@@ -687,6 +777,7 @@ def layout(*, title, description, canonical, image, image_alt, og_type, json_ld,
 
 {chrome_footer(prefix)}
 
+{reach_html()}
 {scripts(prefix)}
 </body>
 </html>
@@ -1010,9 +1101,7 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
           data-linh-vuc-id="{esc(product.get('linhVucId') or '')}">
           <div class="product-img product-detail-media" data-product-zoom role="button" tabindex="0"
                aria-label="Xem ảnh lớn: {esc(product.get('ten'))}" title="Xem ảnh lớn">
-            <img src="{esc(src)}" alt="{esc(product.get('ten'))}" width="800" height="800"
-                 loading="eager" fetchpriority="high" decoding="async"
-                 onerror="VanPhat.onImgError(this)" />
+            {product_picture(src, str(product.get('ten') or ''), 800, 800, loading="eager", fetchpriority="high")}
           </div>
           <div class="product-body product-detail-info">
             <div class="product-badge"><a href="{esc(cat_file)}">{esc(badge)}</a></div>
@@ -1042,6 +1131,7 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
         {related_html}
       </div>
     </section>"""
+    hero_src = image_src(product)
     return layout(
         title=title,
         description=description,
@@ -1051,6 +1141,7 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
         og_type="product",
         json_ld=graph,
         body=body,
+        preload_image=sized_drive_image(hero_src, HERO_IMAGE_W, True) or hero_src,
     )
 
 
@@ -1229,6 +1320,68 @@ def upsert_jsonld(text: str, data: dict) -> str:
     return text.replace("</head>", block + "</head>", 1)
 
 
+FONT_BLOCK_OLD = (
+    '  <link rel="preconnect" href="https://fonts.googleapis.com" />\n'
+    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n'
+    f'  <link href="{FONT_CSS}" rel="stylesheet" />'
+)
+REACH_RE = re.compile(r"[ \t]*<!-- vp-reach -->.*?<!-- /vp-reach -->\n?", re.S)
+FOOTER_BLURB_OLD = "văn phòng phẩm và photocopy tại KĐT Mỹ Gia, Phường Nam Nha Trang."
+FOOTER_BLURB_NEW = "văn phòng phẩm, nước uống và điện gia dụng tại KĐT Mỹ Gia, Phường Nam Nha Trang."
+
+
+def defer_external_scripts(text: str) -> str:
+    def repl(match: re.Match) -> str:
+        tag = match.group(0)
+        if re.search(r"\b(?:defer|async)\b", tag):
+            return tag
+        return tag.replace("<script ", "<script defer ", 1)
+
+    return re.sub(r"<script\s+src=\"[^\"]+\"></script>", repl, text)
+
+
+def upsert_reach(text: str) -> str:
+    block = reach_html() + "\n"
+    if REACH_RE.search(text):
+        return REACH_RE.sub(block, text, count=1)
+    if "</body>" not in text:
+        return text
+    return text.replace("</body>", block + "</body>", 1)
+
+
+def strip_google_fonts(text: str) -> str:
+    patterns = (
+        r"[ \t]*<link rel=\"preconnect\" href=\"https://fonts\.(?:googleapis|gstatic)\.com\"[^>]*>\n",
+        r"[ \t]*<link rel=\"preload\" as=\"style\" href=\"https://fonts\.googleapis\.com[^\"]*\"[^>]*>\n",
+        r"[ \t]*<link rel=\"stylesheet\" href=\"https://fonts\.googleapis\.com[^\"]*\"[^>]*>\n",
+        r"[ \t]*<link href=\"https://fonts\.googleapis\.com[^\"]*\" rel=\"stylesheet\"[^>]*>\n",
+        r"[ \t]*<noscript><link rel=\"stylesheet\" href=\"https://fonts\.googleapis\.com[^<]*</noscript>\n",
+    )
+    for pattern in patterns:
+        text = re.sub(pattern, "", text)
+    return text
+
+
+def refresh_static_chrome(text: str) -> str:
+    updated = strip_google_fonts(text)
+    if "fonts.googleapis.com" not in updated and 'rel="stylesheet" href="' in updated:
+        updated = updated.replace(
+            '  <link rel="stylesheet" href="',
+            font_links() + '\n  <link rel="stylesheet" href="',
+            1,
+        )
+    updated = re.sub(r"styles\.css\?v=\d+", f"styles.css?v={CSS_V}", updated)
+    updated = re.sub(r"ia\.js\?v=\d+", f"ia.js?v={CSS_V}", updated)
+    updated = re.sub(r"products\.js\?v=\d+", f"products.js?v={JS_V}", updated)
+    updated = re.sub(r"product-lightbox\.js\?v=\d+", f"product-lightbox.js?v={JS_V}", updated)
+    updated = re.sub(r"chat-widget\.js\?v=\d+", f"chat-widget.js?v={CSS_V}", updated)
+    updated = updated.replace(f"{SITE}/assets/logo.png", OG_IMAGE)
+    updated = updated.replace(FOOTER_BLURB_OLD, FOOTER_BLURB_NEW)
+    updated = defer_external_scripts(updated)
+    updated = upsert_reach(updated)
+    return updated
+
+
 def refresh_static_heads() -> list[str]:
     touched = []
     jsonld = {
@@ -1245,6 +1398,9 @@ def refresh_static_heads() -> list[str]:
             updated = upsert_jsonld(updated, jsonld[rel])
         prefix = "../" if "/" in rel else ""
         updated = upsert_local_links(updated, prefix)
+        updated = refresh_static_chrome(updated)
+        if 'http-equiv="refresh"' in updated:
+            updated = REACH_RE.sub("", updated)
         if write_text(path, updated):
             touched.append(rel)
     return touched
@@ -1297,6 +1453,17 @@ def assert_seo_helpers() -> None:
         raise SystemExit("verification tag was not inserted")
     if empty.count("google-site-verification") != 1:
         raise SystemExit("verification tag duplicated")
+    webp = sized_drive_image("https://lh3.googleusercontent.com/d/abcFILE=w200", 480, True)
+    jpeg = sized_drive_image("https://lh3.googleusercontent.com/d/abcFILE=w200", 480, False)
+    if webp != "https://lh3.googleusercontent.com/d/abcFILE=w480-rw" or jpeg != "https://lh3.googleusercontent.com/d/abcFILE=w480":
+        raise SystemExit(f"drive image sizing mismatch: {webp} {jpeg}")
+    if sized_drive_image("https://example.com/a.jpg", 480, True) != "https://example.com/a.jpg":
+        raise SystemExit("non-drive images must stay unchanged")
+    sample = product_picture("https://lh3.googleusercontent.com/d/abcFILE", "Tên", 400, 400, loading="lazy")
+    if "<picture" in sample or "=w480-rw" not in sample or "dataset.fb" not in sample or "=w480" not in sample:
+        raise SystemExit(f"image markup mismatch: {sample}")
+    if 'loading="lazy"' not in sample or 'width="400"' not in sample:
+        raise SystemExit("picture missing lazy/size")
 
 
 def _product_node(doc: dict) -> dict:
@@ -1699,6 +1866,7 @@ def nhom_is_excluded(value: str, phrases: set[str]) -> bool:
 def main() -> None:
     assert_slug_samples()
     assert_seo_helpers()
+    ensure_og_image()
     ap = argparse.ArgumentParser(description="Generate Vạn Phát lĩnh vực/category/product HTML, sitemap, and path map.")
     ap.add_argument("--products", default=str(ROOT / "data" / "products.json"))
     args = ap.parse_args()

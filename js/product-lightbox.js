@@ -51,7 +51,7 @@
       <button type="button" class="product-lightbox-close" data-lb-close aria-label="Đóng">×</button>
       <div class="product-lightbox-scroll">
         <div class="product-lightbox-media">
-          <img data-lb-img alt="" />
+          <img data-lb-img alt="" width="960" height="960" />
         </div>
         <div class="product-lightbox-body">
           <div class="product-nhom" data-lb-nhom></div>
@@ -126,12 +126,24 @@
 
     const img = dialog.querySelector("[data-lb-img]");
     img.alt = product.ten || "Sản phẩm";
+    const original = product.anh || imageSrc(card, product);
+    const webp = window.VanPhat.driveImage(original, 960, true);
+    const jpeg = window.VanPhat.driveImage(original, 960, false);
     img.onerror = function () {
+      if (webp && jpeg && this.getAttribute("src") === webp && jpeg !== webp) {
+        this.onerror = function () {
+          this.onerror = null;
+          const fallback = placeholder();
+          if (fallback) this.src = fallback;
+        };
+        this.src = jpeg;
+        return;
+      }
       this.onerror = null;
       const fallback = placeholder();
       if (fallback) this.src = fallback;
     };
-    img.src = imageSrc(card, product);
+    img.src = webp || jpeg || imageSrc(card, product);
 
     const nhom = dialog.querySelector("[data-lb-nhom]");
     nhom.textContent = product.nhom || "";

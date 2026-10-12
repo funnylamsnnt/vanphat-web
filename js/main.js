@@ -41,6 +41,11 @@
         .replace(/Đ/g, "d")
         .toLowerCase();
     },
+    driveImage(url, width, webp) {
+      const match = String(url || "").match(/^(https:\/\/lh3\.googleusercontent\.com\/d\/[A-Za-z0-9_-]+)/);
+      if (!match) return String(url || "");
+      return match[1] + "=w" + width + (webp ? "-rw" : "");
+    },
   };
 
   function initNav() {

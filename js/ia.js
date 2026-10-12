@@ -156,10 +156,13 @@
         const mediaClass =
           photos.length <= 1 ? "is-single" : lv.browseMode === "product-images" ? "is-duo" : "";
         const imgs = photos
-          .map(
-            (src) =>
-              `<img src="${esc(src)}" alt="" width="320" height="220" loading="lazy" decoding="async" />`
-          )
+          .map((src) => {
+            const webp = window.VanPhat && window.VanPhat.driveImage ? window.VanPhat.driveImage(src, 480, true) : src;
+            const jpeg = window.VanPhat && window.VanPhat.driveImage ? window.VanPhat.driveImage(src, 480, false) : src;
+            const onerror =
+              "if(!this.dataset.fb){this.dataset.fb='1';this.src=this.dataset.jpeg}else if(window.VanPhat){VanPhat.onImgError(this)}";
+            return `<img src="${esc(webp)}" data-jpeg="${esc(jpeg)}" alt="" width="320" height="220" loading="lazy" decoding="async" onerror="${onerror}" />`;
+          })
           .join("");
         const sub = tileSubtitle(lv, groups, counts);
         return `<a class="lv-tile" href="${esc(linhHref(lv))}">

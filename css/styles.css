@@ -457,6 +457,13 @@ display: none; /* hide old VP mark */
   overflow: hidden;
   position: relative;
 }
+.product-img picture {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
 .product-img img {
   width: 100%;
   height: 100%;
@@ -1822,6 +1829,7 @@ body.staff-pin-locked #staff-main { visibility: hidden; }
   .staff-layout,
   .staff-pin-gate,
   .vp-chat-dock,
+  .vp-reach,
   #cart-toast,
   .nav-cta {
     display: none !important;
@@ -2560,12 +2568,87 @@ body.lightbox-open { overflow: hidden; }
 .faq-item p { margin: 0.45rem 0 0; }
 
 .vp-fab-zalo {
-  background: #0068FF;
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
+  display: none;
 }
+
+/* Gọi + Zalo: sticky bar on small screens, floating buttons on desktop. */
+.vp-reach {
+  position: fixed;
+  z-index: 90;
+  display: flex;
+}
+.vp-reach a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-weight: 800;
+  text-decoration: none;
+  min-height: 48px;
+}
+.vp-reach-call { background: var(--navy); color: #fff; }
+.vp-reach-zalo { background: #0068FF; color: #fff; }
+@media (max-width: 860px) {
+  .vp-reach {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -8px 24px rgba(15, 42, 66, 0.12);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .vp-reach a {
+    flex: 1;
+    border-radius: 0;
+    padding: 0.85rem 0.5rem;
+  }
+  body { padding-bottom: calc(52px + env(safe-area-inset-bottom)); }
+  .vp-chat-dock { bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+  .cart-toast { bottom: calc(4.75rem + env(safe-area-inset-bottom)); }
+}
+@media (min-width: 861px) {
+  .vp-reach {
+    left: 1rem;
+    bottom: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+  }
+  .vp-reach a {
+    border-radius: 999px;
+    padding: 0.7rem 1.05rem;
+    box-shadow: 0 8px 24px rgba(15, 40, 70, 0.28);
+  }
+}
+
+.quote-form {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.quote-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--navy);
+}
+.quote-form input,
+.quote-form textarea {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  font-weight: 500;
+  color: var(--text);
+  background: #fff;
+}
+.quote-form textarea { min-height: 96px; resize: vertical; }
+.quote-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.quote-status { font-size: 0.875rem; color: var(--text-muted); min-height: 1.2em; }
 
 /* ===== Lĩnh vực tiles, mega menu, search suggest ===== */
 .nav { position: relative; }
