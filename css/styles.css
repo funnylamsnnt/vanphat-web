@@ -2952,9 +2952,9 @@ body.lightbox-open { overflow: hidden; }
 }
 .scroll-top {
   position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 85;
+  right: calc(1rem + 8px);
+  bottom: calc(1rem + 72px);
+  z-index: 9980;
   width: 44px;
   height: 44px;
   border: 0;
@@ -2968,7 +2968,7 @@ body.lightbox-open { overflow: hidden; }
 }
 .scroll-top[hidden] { display: none; }
 @media (max-width: 860px) {
-  .scroll-top { bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+  .scroll-top { bottom: calc(4.25rem + 72px + env(safe-area-inset-bottom)); }
 }
 .lv-row { margin-top: 0.35rem; }
 @media (max-width: 860px) {
