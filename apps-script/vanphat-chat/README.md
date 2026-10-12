@@ -30,3 +30,13 @@
    - Xóa `GEMINI_API_KEY` nếu còn.
 3. Deploy Web app: Execute as Me, Anyone. Bản deploy mới thì khung chat mới gọi Grok.
 4. URL `/exec` giữ trong `data/chat-config.json` → `apiUrl` nếu đường dẫn không đổi. Đổi deployment thì cập nhật URL đó.
+
+## Dán lại khi sửa định dạng câu trả lời
+
+Widget trên web tự render markdown và tự bắt mã trong `data/products.json`. Thẻ `[[SP: ...]]` chỉ giúp khớp đúng mã model muốn gắn lên trang.
+
+1. Script Property `SYSTEM_PROMPT`: xóa giá trị cũ, dán **nguyên văn** file `content/chat-system-prompt.md`. Property có hiệu lực ngay, không cần bản deploy mới.
+2. Project Apps Script: dán lại toàn bộ `apps-script/vanphat-chat/Code.gs` (câu mặc định khi `SYSTEM_PROMPT` để trống có thêm thẻ `[[SP]]`).
+3. Deploy → Manage deployments → bút chì trên Web app hiện tại → Version: **New** → Deploy. Giữ deployment cũ để URL `/exec` không đổi.
+
+Không dán khóa `XAI_API_KEY` vào repo. Không cần redeploy chỉ để hết dấu `**` trên web: phần đó nằm ở `js/chat-widget.js`.

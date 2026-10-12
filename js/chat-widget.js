@@ -128,7 +128,408 @@
     return { clean, lead };
   }
 
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(s) {
+    return escapeHtml(s).replace(/'/g, "&#39;");
+  }
+
+  function escapeRegExp(s) {
+    return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function safeUrl(url) {
+    const raw = String(url || "").trim();
+    if (!raw) return "";
+    if (/^mailto:/i.test(raw)) {
+      return /^mailto:[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(raw) ? raw : "";
+    }
+    if (/^tel:/i.test(raw)) {
+      const digits = raw.replace(/^tel:/i, "").replace(/[^\d+]/g, "");
+      return /^\+?\d{8,15}$/.test(digits) ? "tel:" + digits : "";
+    }
+    if (/^https?:\/\//i.test(raw)) {
+      try {
+        const parsed = new URL(raw);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
+        return parsed.href;
+      } catch (e) {
+        return "";
+      }
+    }
+    if (raw.charAt(0) === "/" && raw.charAt(1) !== "/") return raw;
+    return "";
+  }
+
+  function buildCatalogIndex(catalog) {
+    const byMa = new Map();
+    const names = [];
+    const items = (catalog && catalog.sanpham) || [];
+    items.forEach((p) => {
+      const ma = String((p && p.ma) || "").trim().toUpperCase();
+      if (!ma || !p) return;
+      byMa.set(ma, p);
+      const ten = String(p.ten || "").trim();
+      if (ten.length >= 6) names.push({ lower: ten.toLowerCase(), ma: ma, len: ten.length });
+    });
+    names.sort((a, b) => b.len - a.len);
+    const codes = Array.from(byMa.keys()).sort((a, b) => b.length - a.length);
+    const codeRe = codes.length
+      ? new RegExp("(?<![A-Za-z0-9])(" + codes.map(escapeRegExp).join("|") + ")(?![A-Za-z0-9])", "i")
+      : null;
+    return { byMa: byMa, names: names, codeRe: codeRe };
+  }
+
+  function extractSp(text) {
+    const tagged = [];
+    const clean = String(text || "").replace(/\[\[SP:\s*([^\]]*)\]\]/gi, (_, body) => {
+      String(body || "")
+        .split(/[,;|]+/)
+        .forEach((part) => {
+          const code = part.trim().toUpperCase();
+          if (code) tagged.push(code);
+        });
+      return "";
+    });
+    return { clean: clean, tagged: tagged };
+  }
+
+  function parseBotReply(text, index) {
+    const sp = extractSp(text);
+    const leadParsed = stripLeadMarkers(sp.clean);
+    const ordered = [];
+    const seen = new Set();
+    function push(code) {
+      const ma = String(code || "").trim().toUpperCase();
+      if (!ma || seen.has(ma) || !index.byMa.has(ma)) return;
+      seen.add(ma);
+      ordered.push(index.byMa.get(ma));
+    }
+    sp.tagged.forEach(push);
+    if (index.codeRe) {
+      const re = new RegExp(index.codeRe.source, "gi");
+      let match;
+      while ((match = re.exec(leadParsed.clean))) push(match[1]);
+    }
+    const clean = leadParsed.clean.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    return { clean: clean, lead: leadParsed.lead, products: ordered.slice(0, 12) };
+  }
+
+  function priceLabel(raw) {
+    const match = String(raw || "").match(/(\d{1,3}(?:\.\d{3})+)/);
+    return (match ? match[1] : String(raw || "")) + "đ";
+  }
+
+  function decoratePlain(text, index) {
+    if (!text) return "";
+    const chosen = [];
+    function overlaps(start, end) {
+      return chosen.some((item) => start < item.end && end > item.start);
+    }
+    if (index.codeRe) {
+      const re = new RegExp(index.codeRe.source, "gi");
+      let match;
+      while ((match = re.exec(text))) {
+        const ma = match[1].toUpperCase();
+        if (!index.byMa.has(ma)) continue;
+        const start = match.index;
+        const end = start + match[0].length;
+        if (!overlaps(start, end)) chosen.push({ start: start, end: end, type: "code", ma: ma });
+      }
+    }
+    const priceRe = /(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi;
+    let priceMatch;
+    while ((priceMatch = priceRe.exec(text))) {
+      const start = priceMatch.index;
+      const end = start + priceMatch[0].length;
+      if (!overlaps(start, end)) chosen.push({ start: start, end: end, type: "price", label: priceMatch[0] });
+    }
+    const lower = text.toLowerCase();
+    index.names.forEach((item) => {
+      let from = 0;
+      while (from < lower.length) {
+        const at = lower.indexOf(item.lower, from);
+        if (at < 0) break;
+        const end = at + item.lower.length;
+        if (!overlaps(at, end)) chosen.push({ start: at, end: end, type: "name", ma: item.ma });
+        from = end;
+      }
+    });
+    chosen.sort((a, b) => a.start - b.start);
+    let html = "";
+    let cursor = 0;
+    chosen.forEach((item) => {
+      if (item.start < cursor) return;
+      html += escapeHtml(text.slice(cursor, item.start));
+      if (item.type === "price") {
+        html += '<span class="vp-md-price">' + escapeHtml(priceLabel(item.label)) + "</span>";
+      } else {
+        const product = index.byMa.get(item.ma);
+        const label = item.type === "code" ? product.ma : text.slice(item.start, item.end);
+        const cls = item.type === "code" ? "vp-md-code" : "vp-md-name";
+        html +=
+          '<button type="button" class="' +
+          cls +
+          '" data-vp-ma="' +
+          escapeAttr(product.ma) +
+          '" aria-label="Xem ' +
+          escapeAttr(product.ten || product.ma) +
+          '">' +
+          escapeHtml(label) +
+          "</button>";
+      }
+      cursor = item.end;
+    });
+    html += escapeHtml(text.slice(cursor));
+    return html;
+  }
+
+  function renderInline(text, index) {
+    const re = /\[([^\]]+)\]\(((?:https?:\/\/|mailto:|tel:|\/)[^)\s]+)\)|\*\*([^*]+)\*\*|__([^_]+)__|(https?:\/\/[^\s<]+)/g;
+    let html = "";
+    let last = 0;
+    let match;
+    while ((match = re.exec(text))) {
+      html += decoratePlain(text.slice(last, match.index), index);
+      if (match[1] != null) {
+        const href = safeUrl(match[2]);
+        if (href) {
+          const external = /^https?:/i.test(href);
+          html +=
+            '<a class="vp-md-link" href="' +
+            escapeAttr(href) +
+            '"' +
+            (external ? ' target="_blank" rel="noopener noreferrer"' : "") +
+            ">" +
+            decoratePlain(match[1], index) +
+            "</a>";
+        } else {
+          html += escapeHtml(match[0]);
+        }
+      } else if (match[5] != null) {
+        let href = match[5];
+        let tail = "";
+        const cut = href.match(/^(.*?)([),.;:!?]+)$/);
+        if (cut) {
+          href = cut[1];
+          tail = cut[2];
+        }
+        const safe = safeUrl(href);
+        if (safe) {
+          html +=
+            '<a class="vp-md-link" href="' +
+            escapeAttr(safe) +
+            '" target="_blank" rel="noopener noreferrer">' +
+            escapeHtml(href) +
+            "</a>" +
+            escapeHtml(tail);
+        } else {
+          html += escapeHtml(match[5]);
+        }
+      } else {
+        const inner = match[3] != null ? match[3] : match[4];
+        html += '<strong class="vp-md-strong">' + decoratePlain(inner, index) + "</strong>";
+      }
+      last = match.index + match[0].length;
+    }
+    html += decoratePlain(text.slice(last), index);
+    return html;
+  }
+
+  function renderBotHtml(text, index) {
+    const src = String(text || "").replace(/\r\n/g, "\n").trim();
+    if (!src) return "";
+    const lines = src.split("\n");
+    const blocks = [];
+    let list = null;
+    let para = [];
+    function flushPara() {
+      if (!para.length) return;
+      blocks.push('<p class="vp-md-p">' + para.join("<br>") + "</p>");
+      para = [];
+    }
+    function flushList() {
+      if (!list) return;
+      const tag = list.ordered ? "ol" : "ul";
+      blocks.push('<' + tag + ' class="vp-md-list">' + list.items.join("") + "</" + tag + ">");
+      list = null;
+    }
+    lines.forEach((line) => {
+      const item = line.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/);
+      if (item && line.trim()) {
+        const ordered = /^\s*\d+[.)]\s+/.test(line);
+        flushPara();
+        if (!list || list.ordered !== ordered) {
+          flushList();
+          list = { ordered: ordered, items: [] };
+        }
+        list.items.push("<li>" + renderInline(item[1], index) + "</li>");
+        return;
+      }
+      if (!line.trim()) {
+        flushPara();
+        flushList();
+        return;
+      }
+      flushList();
+      para.push(renderInline(line.trim(), index));
+    });
+    flushPara();
+    flushList();
+    return blocks.join("");
+  }
+
+  function pagePrefix() {
+    return /\/(linh-vuc|san-pham|dia-phuong)\//.test(location.pathname) ? "../" : "";
+  }
+
+  function syncCardHTML(p) {
+    const prefix = pagePrefix();
+    const price = Number(p.gia) > 0 && window.VanPhat ? window.VanPhat.formatPrice(p.gia) : "Liên hệ";
+    const pathMap = (window.VanPhatPaths && window.VanPhatPaths.product) || {};
+    const href = prefix + (pathMap[p.ma] || "san-pham.html?q=" + encodeURIComponent(p.ma || ""));
+    const catMap = (window.VanPhatPaths && window.VanPhatPaths.category) || {};
+    const cat = catMap[p.nhom]
+      ? prefix + catMap[p.nhom]
+      : prefix + "san-pham.html?nhom=" + encodeURIComponent(p.nhom || "");
+    const badge = [p.linhVucTen, p.nhom].filter(Boolean).join(" · ");
+    const src = p.anh || (window.VanPhat ? window.VanPhat.placeholderSvg() : "");
+    const webp = window.VanPhat && window.VanPhat.driveImage ? window.VanPhat.driveImage(src, 480, true) : src;
+    const jpeg = window.VanPhat && window.VanPhat.driveImage ? window.VanPhat.driveImage(src, 480, false) : src;
+    const shown = webp || jpeg;
+    const onerror =
+      webp && jpeg && webp !== jpeg
+        ? "if(!this.dataset.fb){this.dataset.fb='1';this.src='" + String(jpeg).replace(/'/g, "") + "'}else{VanPhat.onImgError(this)}"
+        : "VanPhat.onImgError(this)";
+    return (
+      '<article class="product-card vp-chat-hit" data-ma="' +
+      escapeAttr(p.ma) +
+      '" data-ten="' +
+      escapeAttr(p.ten) +
+      '" data-gia="' +
+      escapeAttr(p.gia) +
+      '" data-dvt="' +
+      escapeAttr(p.dvt) +
+      '" data-anh="' +
+      escapeAttr(p.anh || "") +
+      '" data-nhom="' +
+      escapeAttr(p.nhom) +
+      '">' +
+      '<div class="product-img" data-product-zoom role="button" tabindex="0" aria-label="Xem ảnh lớn: ' +
+      escapeAttr(p.ten) +
+      '" title="Xem ảnh lớn">' +
+      '<img src="' +
+      escapeAttr(shown) +
+      '" alt="' +
+      escapeAttr(p.ten) +
+      '" width="400" height="400" loading="lazy" decoding="async" onerror="' +
+      escapeAttr(onerror) +
+      '" />' +
+      "</div>" +
+      '<div class="product-body">' +
+      '<div class="product-badge"><a href="' +
+      escapeAttr(cat) +
+      '">' +
+      escapeHtml(badge) +
+      "</a></div>" +
+      '<h3 class="product-name"><a href="' +
+      escapeAttr(href) +
+      '">' +
+      escapeHtml(p.ten) +
+      "</a></h3>" +
+      '<div class="product-meta-row"><span class="product-dvt">ĐVT: ' +
+      escapeHtml(p.dvt || "—") +
+      '</span><span class="product-ma">' +
+      escapeHtml(p.ma || "") +
+      "</span></div>" +
+      '<div class="product-price"><span class="price-label">Giá</span> ' +
+      price +
+      "</div>" +
+      '<div class="product-actions">' +
+      '<div class="qty-control">' +
+      '<button type="button" class="qty-btn" data-qty-minus aria-label="Giảm số lượng">−</button>' +
+      '<input type="number" class="qty-input" value="1" min="1" max="999" data-qty-input aria-label="Số lượng" />' +
+      '<button type="button" class="qty-btn" data-qty-plus aria-label="Tăng số lượng">+</button>' +
+      "</div>" +
+      '<button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>' +
+      "</div></div></article>"
+    );
+  }
+
+  function scrollPageTo(node) {
+    if (!node || !node.scrollIntoView) return;
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function highlightExisting(products) {
+    const set = new Set(products.map((p) => String(p.ma || "").toUpperCase()));
+    document.querySelectorAll(".product-card").forEach((card) => {
+      const ma = (card.getAttribute("data-ma") || "").toUpperCase();
+      if (set.has(ma)) card.classList.add("vp-chat-hit");
+    });
+  }
+
+  function renderSyncPanel(products) {
+    let section = document.getElementById("vp-chat-sync");
+    if (!section) {
+      section = document.createElement("section");
+      section.id = "vp-chat-sync";
+      section.className = "vp-chat-sync";
+      section.setAttribute("aria-labelledby", "vp-chat-sync-title");
+      const main = document.querySelector("main") || document.body;
+      const hero = main.querySelector(".hero, .page-hero");
+      if (hero && hero.parentNode === main) hero.insertAdjacentElement("afterend", section);
+      else main.insertBefore(section, main.firstChild);
+    }
+    const prefix = pagePrefix();
+    const query = products.map((p) => p.ma).join(" ");
+    section.innerHTML =
+      '<div class="container">' +
+      '<div class="section-header">' +
+      '<span class="eyebrow">Từ cuộc trò chuyện</span>' +
+      '<h2 id="vp-chat-sync-title">Sản phẩm vừa trao đổi</h2>' +
+      "<p>Các mã trong câu trả lời đang hiện trên trang này. Bấm ảnh để xem lớn, chỉnh số lượng rồi thêm vào giỏ. Khung chat vẫn mở.</p>" +
+      "</div>" +
+      '<div class="product-grid">' +
+      products.map(syncCardHTML).join("") +
+      "</div>" +
+      '<div class="vp-chat-sync-more"><a class="btn btn-outline-navy btn-sm" href="' +
+      escapeAttr(prefix + "san-pham.html?q=" + encodeURIComponent(query)) +
+      '">Xem các mã này trong catalog</a></div>' +
+      "</div>";
+    section.classList.remove("is-hot");
+    void section.offsetWidth;
+    section.classList.add("is-hot");
+    return section;
+  }
+
+  function syncPage(products) {
+    if (!products || !products.length) return;
+    const codes = products.map((p) => p.ma);
+    const onCatalog = document.getElementById("product-grid") && document.getElementById("search-input");
+    if (onCatalog) {
+      window.VanPhatCatalog = window.VanPhatCatalog || {};
+      if (typeof window.VanPhatCatalog.showCodes === "function") {
+        window.VanPhatCatalog.showCodes(codes);
+      } else {
+        window.VanPhatCatalog._pendingCodes = codes;
+      }
+      scrollPageTo(document.getElementById("product-grid"));
+      return;
+    }
+    const section = renderSyncPanel(products);
+    highlightExisting(products);
+    scrollPageTo(section);
+  }
+
   function mount(cfg, catalog) {
+    const catalogIndex = buildCatalogIndex(catalog);
     const hotlineTel = cfg.hotlineTel || "0335652832";
     const hotline = cfg.hotline || "033 5652 832";
     const welcome =
@@ -253,14 +654,37 @@
     document.body.appendChild(wrap);
 
     function addBubble(role, text) {
-      const b = el("div", {
-        className: "vp-bubble vp-bubble-" + (role === "user" ? "user" : "bot"),
-        text: text,
-      });
+      const b = document.createElement("div");
+      if (role === "user") {
+        b.className = "vp-bubble vp-bubble-user";
+        b.textContent = text;
+        messages.appendChild(b);
+        messages.scrollTop = messages.scrollHeight;
+        return null;
+      }
+      const parsed = parseBotReply(text, catalogIndex);
+      const shown =
+        parsed.clean ||
+        (parsed.products.length
+          ? "Em gắn các mã này lên trang để anh/chị xem và thêm vào giỏ."
+          : String(text || ""));
+      parsed.shown = shown;
+      b.className = "vp-bubble vp-bubble-bot vp-bubble-rich";
+      b.innerHTML = renderBotHtml(shown, catalogIndex);
       messages.appendChild(b);
       messages.scrollTop = messages.scrollHeight;
-      return b;
+      if (parsed.products.length) syncPage(parsed.products);
+      return parsed;
     }
+
+    messages.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-vp-ma]");
+      if (!btn) return;
+      const product = catalogIndex.byMa.get(String(btn.getAttribute("data-vp-ma") || "").toUpperCase());
+      if (!product || !window.VanPhatLightbox || !window.VanPhatLightbox.openProduct) return;
+      e.preventDefault();
+      window.VanPhatLightbox.openProduct(product, btn);
+    });
 
     function setOpen(open) {
       if (open) {
@@ -325,8 +749,8 @@
             " để được tư vấn nhé.";
           showLeadForm({ nhu_cau: msg });
         }
-        addBubble("bot", fallback);
-        history.push({ role: "model", text: fallback });
+        const localReply = addBubble("bot", fallback);
+        history.push({ role: "model", text: (localReply && localReply.shown) || fallback });
         sendBtn.disabled = false;
         return;
       }
@@ -356,12 +780,11 @@
                   " hoặc Chat Zalo https://zalo.me/" +
                   hotlineTel +
                   " để được tư vấn nhé.";
-          const parsed = stripLeadMarkers(replyText);
-          addBubble("bot", parsed.clean || replyText);
-          history.push({ role: "model", text: parsed.clean || replyText });
+          const parsed = addBubble("bot", replyText);
+          history.push({ role: "model", text: (parsed && parsed.shown) || "" });
           if (history.length > 16) history.splice(0, history.length - 16);
-          if (parsed.lead || (data && data.needLead)) {
-            showLeadForm(parsed.lead || { nhu_cau: msg });
+          if ((parsed && parsed.lead) || (data && data.needLead)) {
+            showLeadForm((parsed && parsed.lead) || { nhu_cau: msg });
           }
         })
         .catch(() => {
@@ -461,6 +884,12 @@
       sendMessage(btn.getAttribute("data-q"));
     });
   }
+
+  window.VanPhatChatFormat = {
+    buildCatalogIndex: buildCatalogIndex,
+    parseBotReply: parseBotReply,
+    renderBotHtml: renderBotHtml,
+  };
 
   document.addEventListener("DOMContentLoaded", () => {
     loadJson(CONFIG_URL).then((cfg) => {
