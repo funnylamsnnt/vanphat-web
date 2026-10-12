@@ -1,4 +1,4 @@
-/* Vạn Phát — AI Gemini chat (catalog-grounded, no Zalo) */
+/* Vạn Phát — chat tư vấn theo catalog. Não trả lời là Grok qua Apps Script. */
 (function () {
   const CONFIG_URL = "/data/chat-config.json?v=20261002";
 
@@ -104,7 +104,7 @@
     return items
       .map(
         (p) =>
-          `- [${p.ma}] ${p.ten} | nhóm: ${p.nhom} | ĐVT: ${p.dvt} | giá web: ${p.gia} | tồn: ${p.ton}`
+          `- [${p.ma}] ${p.ten} | nhóm: ${p.nhom} | ĐVT: ${p.dvt} | giá web: ${p.gia}`
       )
       .join("\n");
   }
