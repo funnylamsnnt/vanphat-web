@@ -27,9 +27,9 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "20261012"
+CSS_V = "2026101218"
 LOGO_NAV_V = "20260925"
-JS_V = "20261012"
+JS_V = "2026101218"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"
 ADDRESS = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang"
@@ -527,7 +527,7 @@ def reach_html() -> str:
 
 def scripts(prefix: str) -> str:
     p = prefix
-    return f"""  <script defer src="{p}js/main.js"></script>
+    return f"""  <script defer src="{p}js/main.js?v={CSS_V}"></script>
   <script defer src="{p}js/cart.js"></script>
   <script defer src="{p}js/catalog-paths.js?v={CSS_V}"></script>
   <script defer src="{p}js/ia.js?v={CSS_V}"></script>
@@ -1371,6 +1371,7 @@ def refresh_static_chrome(text: str) -> str:
             1,
         )
     updated = re.sub(r"styles\.css\?v=\d+", f"styles.css?v={CSS_V}", updated)
+    updated = re.sub(r"main\.js(?:\?v=\d+)?(?=\")", f"main.js?v={CSS_V}", updated)
     updated = re.sub(r"ia\.js\?v=\d+", f"ia.js?v={CSS_V}", updated)
     updated = re.sub(r"products\.js\?v=\d+", f"products.js?v={JS_V}", updated)
     updated = re.sub(r"product-lightbox\.js\?v=\d+", f"product-lightbox.js?v={JS_V}", updated)

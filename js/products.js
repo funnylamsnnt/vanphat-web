@@ -192,10 +192,17 @@
 
     const searchInput = document.getElementById("search-input");
     const groupSelect = document.getElementById("group-select");
+    const sortSelect = document.getElementById("sort-select");
     const chipRow = document.getElementById("chip-row");
     const lvRow = document.getElementById("lv-row");
+    const activeFilters = document.getElementById("active-filters");
     const countEl = document.getElementById("result-count");
     const crumb = document.getElementById("catalog-crumb");
+    const SORTS = {
+      "price-asc": "Giá thấp đến cao",
+      "price-desc": "Giá cao đến thấp",
+      name: "Tên A → Z",
+    };
 
     let data = null;
     let all = [];
@@ -203,29 +210,107 @@
     let currentGroup = "";
     let currentLv = "";
     let currentQuery = "";
+    let currentSort = "";
 
     const params = new URLSearchParams(location.search);
     if (params.get("nhom")) currentGroup = params.get("nhom");
     if (params.get("lv")) currentLv = params.get("lv");
     if (params.get("q")) currentQuery = params.get("q");
+    if (params.get("sort") && SORTS[params.get("sort")]) currentSort = params.get("sort");
 
     function currentGroups() {
       return groupsForLv(data, currentLv);
+    }
+
+    function countInGroup(name) {
+      let count = 0;
+      all.forEach((p) => {
+        if (currentLv && p.linhVucId !== currentLv) return;
+        if (p.nhom !== name) return;
+        if (currentQuery && !matchesQuery(p, currentQuery)) return;
+        count += 1;
+      });
+      return count;
+    }
+
+    function applySort(list) {
+      const items = list.slice();
+      const byName = (a, b) => String(a.ten || "").localeCompare(String(b.ten || ""), "vi");
+      if (currentSort === "name") {
+        items.sort(byName);
+        return items;
+      }
+      if (currentSort === "price-asc" || currentSort === "price-desc") {
+        const dir = currentSort === "price-asc" ? 1 : -1;
+        items.sort((a, b) => {
+          const pa = Number(a.gia) > 0 ? Number(a.gia) : null;
+          const pb = Number(b.gia) > 0 ? Number(b.gia) : null;
+          if (pa == null && pb == null) return byName(a, b);
+          if (pa == null) return 1;
+          if (pb == null) return -1;
+          if (pa !== pb) return (pa - pb) * dir;
+          return byName(a, b);
+        });
+        return items;
+      }
+      if (currentQuery) {
+        items.sort(
+          (a, b) => rank(b, currentQuery) - rank(a, currentQuery) || String(a.ma).localeCompare(String(b.ma))
+        );
+      }
+      return items;
     }
 
     function filtered() {
       let list = all;
       if (currentLv) list = list.filter((p) => p.linhVucId === currentLv);
       if (currentGroup) list = list.filter((p) => p.nhom === currentGroup);
-      if (currentQuery) {
-        list = list.filter((p) => matchesQuery(p, currentQuery));
-        list = list.slice().sort((a, b) => rank(b, currentQuery) - rank(a, currentQuery));
+      if (currentQuery) list = list.filter((p) => matchesQuery(p, currentQuery));
+      return applySort(list);
+    }
+
+    function updateChipCounts() {
+      if (!chipRow) return;
+      chipRow.querySelectorAll(".chip").forEach((chip) => {
+        const name = chip.dataset.nhom || "";
+        if (!name) return;
+        const group = currentGroups().find((item) => groupName(item) === name);
+        const count = countInGroup(name);
+        const suffix = group && group.placeholder && !count ? " (sắp có)" : count ? ` (${count})` : "";
+        chip.textContent = name + suffix;
+      });
+    }
+
+    function renderActive() {
+      if (!activeFilters || !data) return;
+      const chips = [];
+      if (currentQuery) chips.push({ key: "q", label: "Từ khóa: " + currentQuery });
+      if (currentLv) {
+        const lv = visibleLinhVuc(data).find((item) => item.id === currentLv);
+        chips.push({ key: "lv", label: lv ? lv.ten : currentLv });
       }
-      return list;
+      if (currentGroup) chips.push({ key: "nhom", label: currentGroup });
+      if (currentSort) chips.push({ key: "sort", label: SORTS[currentSort] });
+      if (!chips.length) {
+        activeFilters.hidden = true;
+        activeFilters.innerHTML = "";
+        return;
+      }
+      activeFilters.hidden = false;
+      activeFilters.innerHTML =
+        chips
+          .map(
+            (chip) =>
+              `<button type="button" class="chip active" data-clear="${escapeAttr(chip.key)}" aria-label="Bỏ ${escapeAttr(chip.label)}">${escapeHtml(chip.label)} <span aria-hidden="true">×</span></button>`
+          )
+          .join("") +
+        '<button type="button" class="chip" data-clear="all">Xóa lọc</button>';
     }
 
     function render() {
       const list = filtered();
+      renderActive();
+      updateChipCounts();
       if (countEl) {
         const q = currentQuery ? ` cho “${escapeHtml(currentQuery)}”` : "";
         countEl.innerHTML = `<strong>${list.length}</strong> / ${all.length} sản phẩm${q}`;
@@ -250,6 +335,8 @@
       else url.searchParams.delete("nhom");
       if (currentQuery) url.searchParams.set("q", currentQuery);
       else url.searchParams.delete("q");
+      if (currentSort) url.searchParams.set("sort", currentSort);
+      else url.searchParams.delete("sort");
       history.replaceState(null, "", url);
     }
 
@@ -286,12 +373,14 @@
         groupSelect.innerHTML = opts;
         groupSelect.value = names.indexOf(currentGroup) >= 0 ? currentGroup : "";
       }
+      if (sortSelect) sortSelect.value = currentSort;
       if (chipRow) {
         const chips = ['<button type="button" class="chip" data-nhom="">Tất cả</button>']
           .concat(
             groups.map((n) => {
               const name = groupName(n);
-              const suffix = n.placeholder ? " (sắp có)" : "";
+              const count = countInGroup(name);
+              const suffix = n.placeholder && !count ? " (sắp có)" : count ? ` (${count})` : "";
               return `<button type="button" class="chip" data-nhom="${escapeAttr(name)}">${escapeHtml(name + suffix)}</button>`;
             })
           )
@@ -328,6 +417,27 @@
       writeUrl();
     }
 
+    function setSort(value) {
+      currentSort = SORTS[value] ? value : "";
+      syncUI();
+      render();
+      writeUrl();
+    }
+
+    function clearFilter(key) {
+      if (key === "all" || key === "q") currentQuery = "";
+      if (key === "all" || key === "lv") currentLv = "";
+      if (key === "all" || key === "nhom") currentGroup = "";
+      if (key === "all" || key === "sort") currentSort = "";
+      if ((key === "all" || key === "lv") && currentGroup) {
+        const names = new Set(currentGroups().map(groupName));
+        if (!names.has(currentGroup)) currentGroup = "";
+      }
+      syncUI();
+      render();
+      writeUrl();
+    }
+
     try {
       data = await loadData();
       all = data.sanpham || [];
@@ -355,6 +465,16 @@
       if (groupSelect) {
         groupSelect.addEventListener("change", () => setGroup(groupSelect.value));
       }
+      if (sortSelect) {
+        sortSelect.addEventListener("change", () => setSort(sortSelect.value));
+      }
+      if (activeFilters) {
+        activeFilters.addEventListener("click", (e) => {
+          const btn = e.target.closest("[data-clear]");
+          if (!btn) return;
+          clearFilter(btn.dataset.clear || "");
+        });
+      }
       if (chipRow) {
         chipRow.addEventListener("click", (e) => {
           const btn = e.target.closest(".chip");
@@ -372,6 +492,11 @@
             syncCrumb();
             writeUrl();
           }, 180);
+        });
+        searchInput.addEventListener("change", () => {
+          if (window.VanPhatData && window.VanPhatData.saveRecentSearch) {
+            window.VanPhatData.saveRecentSearch(searchInput.value);
+          }
         });
       }
 
