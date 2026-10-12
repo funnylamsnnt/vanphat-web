@@ -200,6 +200,46 @@
     return { clean: clean, tagged: tagged };
   }
 
+  function mentionsIn(text, index) {
+    const found = [];
+    const occupied = [];
+    function overlaps(start, end) {
+      return occupied.some((range) => start < range.end && end > range.start);
+    }
+    function take(start, end, ma) {
+      if (overlaps(start, end)) return;
+      const product = index.byMa.get(String(ma || "").toUpperCase());
+      if (!product) return;
+      occupied.push({ start: start, end: end });
+      found.push({ start: start, product: product });
+    }
+    if (index && index.codeRe && text) {
+      const re = new RegExp(index.codeRe.source, "gi");
+      let match;
+      while ((match = re.exec(text))) take(match.index, match.index + match[0].length, match[1]);
+    }
+    const lower = String(text || "").toLowerCase();
+    (index && index.names ? index.names : []).forEach((item) => {
+      let from = 0;
+      while (from < lower.length) {
+        const at = lower.indexOf(item.lower, from);
+        if (at < 0) break;
+        take(at, at + item.lower.length, item.ma);
+        from = at + item.lower.length;
+      }
+    });
+    found.sort((a, b) => a.start - b.start);
+    const seen = new Set();
+    const products = [];
+    found.forEach((item) => {
+      const ma = String(item.product.ma || "").toUpperCase();
+      if (!ma || seen.has(ma)) return;
+      seen.add(ma);
+      products.push(item.product);
+    });
+    return products;
+  }
+
   function parseBotReply(text, index) {
     const sp = extractSp(text);
     const leadParsed = stripLeadMarkers(sp.clean);
@@ -212,11 +252,7 @@
       ordered.push(index.byMa.get(ma));
     }
     sp.tagged.forEach(push);
-    if (index.codeRe) {
-      const re = new RegExp(index.codeRe.source, "gi");
-      let match;
-      while ((match = re.exec(leadParsed.clean))) push(match[1]);
-    }
+    mentionsIn(leadParsed.clean, index).forEach((product) => push(product.ma));
     const clean = leadParsed.clean.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
     return { clean: clean, lead: leadParsed.lead, products: ordered.slice(0, 12) };
   }
@@ -226,66 +262,17 @@
     return (match ? match[1] : String(raw || "")) + "đ";
   }
 
-  function decoratePlain(text, index) {
+  function decoratePlain(text) {
     if (!text) return "";
-    const chosen = [];
-    function overlaps(start, end) {
-      return chosen.some((item) => start < item.end && end > item.start);
-    }
-    if (index.codeRe) {
-      const re = new RegExp(index.codeRe.source, "gi");
-      let match;
-      while ((match = re.exec(text))) {
-        const ma = match[1].toUpperCase();
-        if (!index.byMa.has(ma)) continue;
-        const start = match.index;
-        const end = start + match[0].length;
-        if (!overlaps(start, end)) chosen.push({ start: start, end: end, type: "code", ma: ma });
-      }
-    }
     const priceRe = /(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi;
-    let priceMatch;
-    while ((priceMatch = priceRe.exec(text))) {
-      const start = priceMatch.index;
-      const end = start + priceMatch[0].length;
-      if (!overlaps(start, end)) chosen.push({ start: start, end: end, type: "price", label: priceMatch[0] });
-    }
-    const lower = text.toLowerCase();
-    index.names.forEach((item) => {
-      let from = 0;
-      while (from < lower.length) {
-        const at = lower.indexOf(item.lower, from);
-        if (at < 0) break;
-        const end = at + item.lower.length;
-        if (!overlaps(at, end)) chosen.push({ start: at, end: end, type: "name", ma: item.ma });
-        from = end;
-      }
-    });
-    chosen.sort((a, b) => a.start - b.start);
     let html = "";
     let cursor = 0;
-    chosen.forEach((item) => {
-      if (item.start < cursor) return;
-      html += escapeHtml(text.slice(cursor, item.start));
-      if (item.type === "price") {
-        html += '<span class="vp-md-price">' + escapeHtml(priceLabel(item.label)) + "</span>";
-      } else {
-        const product = index.byMa.get(item.ma);
-        const label = item.type === "code" ? product.ma : text.slice(item.start, item.end);
-        const cls = item.type === "code" ? "vp-md-code" : "vp-md-name";
-        html +=
-          '<button type="button" class="' +
-          cls +
-          '" data-vp-ma="' +
-          escapeAttr(product.ma) +
-          '" aria-label="Xem ' +
-          escapeAttr(product.ten || product.ma) +
-          '">' +
-          escapeHtml(label) +
-          "</button>";
-      }
-      cursor = item.end;
-    });
+    let priceMatch;
+    while ((priceMatch = priceRe.exec(text))) {
+      html += escapeHtml(text.slice(cursor, priceMatch.index));
+      html += '<span class="vp-md-price">' + escapeHtml(priceLabel(priceMatch[0])) + "</span>";
+      cursor = priceMatch.index + priceMatch[0].length;
+    }
     html += escapeHtml(text.slice(cursor));
     return html;
   }
@@ -342,7 +329,7 @@
     return html;
   }
 
-  function renderBotHtml(text, index) {
+  function renderProse(text, index) {
     const src = String(text || "").replace(/\r\n/g, "\n").trim();
     if (!src) return "";
     const lines = src.split("\n");
@@ -383,6 +370,183 @@
     flushPara();
     flushList();
     return blocks.join("");
+  }
+
+  function chatPriceLabel(product) {
+    const amount = Number(product && product.gia);
+    if (!(amount > 0)) return "Liên hệ";
+    const money = amount.toLocaleString("vi-VN") + "đ";
+    const unit = String((product && product.dvt) || "").trim().toLowerCase();
+    return unit ? money + "/" + unit : money;
+  }
+
+  function productThumb(product) {
+    const raw = (product && product.anh) || "";
+    const placeholder = window.VanPhat && window.VanPhat.placeholderSvg ? window.VanPhat.placeholderSvg() : "";
+    const drive = window.VanPhat && window.VanPhat.driveImage;
+    const source = raw || placeholder;
+    const webp = drive ? drive(source, 160, true) : source;
+    const jpeg = drive ? drive(source, 160, false) : source;
+    return { shown: webp || jpeg || placeholder, jpeg: jpeg || placeholder };
+  }
+
+  function skuCardHtml(product) {
+    const price = chatPriceLabel(product);
+    const thumb = productThumb(product);
+    const onerror =
+      thumb.jpeg && thumb.shown !== thumb.jpeg
+        ? "if(!this.dataset.fb){this.dataset.fb='1';this.src='" +
+          String(thumb.jpeg).replace(/'/g, "") +
+          "'}else if(window.VanPhat){VanPhat.onImgError(this)}"
+        : "if(window.VanPhat){VanPhat.onImgError(this)}";
+    const name = product.ten || product.ma || "Sản phẩm";
+    return (
+      '<article class="vp-chat-sku">' +
+      '<button type="button" class="vp-chat-sku-open" data-vp-ma="' +
+      escapeAttr(product.ma) +
+      '" aria-label="' +
+      escapeAttr("Xem " + name + ", mã " + (product.ma || "") + ", giá " + price) +
+      '">' +
+      '<img src="' +
+      escapeAttr(thumb.shown) +
+      '" alt="" width="64" height="64" loading="lazy" decoding="async" onerror="' +
+      escapeAttr(onerror) +
+      '" />' +
+      '<span class="vp-chat-sku-copy">' +
+      '<span class="vp-chat-sku-name">' +
+      escapeHtml(name) +
+      "</span>" +
+      '<span class="vp-chat-sku-meta">' +
+      '<span class="vp-chat-sku-code">' +
+      escapeHtml(product.ma || "") +
+      "</span>" +
+      '<span class="vp-chat-sku-price">' +
+      escapeHtml(price) +
+      "</span></span></span></button>" +
+      '<button type="button" class="vp-chat-sku-add" data-vp-add="' +
+      escapeAttr(product.ma) +
+      '" aria-label="' +
+      escapeAttr("Thêm " + name + " vào giỏ") +
+      '">Thêm vào giỏ</button></article>'
+    );
+  }
+
+  function isPriceOnlyLine(line) {
+    if (!/\d/.test(line || "")) return false;
+    let rest = String(line).replace(/(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi, " ");
+    rest = rest.replace(/\/[^\s,;:]{1,16}/g, " ");
+    rest = rest.replace(/[0-9\s\-–—:.,;•*|/()[\]₫đĐd]+/g, " ");
+    return !/[A-Za-zÀ-ỹ]/.test(rest);
+  }
+
+  function isSkuLine(line, products) {
+    if (!products || !products.length) return false;
+    let rest = String(line || "");
+    products.forEach((product) => {
+      rest = rest.replace(new RegExp(escapeRegExp(product.ma), "ig"), " ");
+      if (product.ten) rest = rest.replace(new RegExp(escapeRegExp(product.ten), "ig"), " ");
+      const unit = String(product.dvt || "").trim();
+      if (unit) rest = rest.replace(new RegExp("\\/?\\s*" + escapeRegExp(unit), "ig"), " ");
+    });
+    rest = rest.replace(/(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi, " ");
+    rest = rest.replace(/\/[^\s,;:]{1,16}/g, " ");
+    rest = rest.replace(/\b(mã|ma|giá|gia|đvt|dvt)\b/gi, " ");
+    rest = rest.replace(/[0-9\s\-–—:.,;•*|/()[\]₫đĐd]+/g, " ");
+    return !/[A-Za-zÀ-ỹ]/.test(rest);
+  }
+
+  function blocksToHtml(blocks) {
+    let html = "";
+    let i = 0;
+    while (i < blocks.length) {
+      if (blocks[i].type === "html") {
+        html += '<div class="vp-bubble vp-bubble-bot vp-bubble-rich">' + blocks[i].html + "</div>";
+        i += 1;
+        continue;
+      }
+      let cards = "";
+      while (i < blocks.length && blocks[i].type === "sku") {
+        cards += skuCardHtml(blocks[i].product);
+        i += 1;
+      }
+      if (cards) html += '<div class="vp-chat-skus">' + cards + "</div>";
+    }
+    if (!html) return "";
+    return '<div class="vp-turn vp-turn-bot">' + html + "</div>";
+  }
+
+  function composeTurn(clean, products, index) {
+    const allowed = new Map();
+    (products || []).forEach((product) => {
+      const ma = String((product && product.ma) || "").toUpperCase();
+      if (ma) allowed.set(ma, product);
+    });
+    const lines = String(clean || "").replace(/\r\n/g, "\n").split("\n");
+    const blocks = [];
+    const emitted = new Set();
+    let prose = [];
+    let lastWasSku = false;
+
+    function emit(product) {
+      const ma = String((product && product.ma) || "").toUpperCase();
+      if (!ma || emitted.has(ma)) return;
+      if (allowed.size && !allowed.has(ma)) return;
+      emitted.add(ma);
+      blocks.push({ type: "sku", product: allowed.get(ma) || product });
+    }
+
+    function flushProse() {
+      const text = prose.join("\n");
+      prose = [];
+      if (!text.trim()) return;
+      text.split(/\n{2,}/).forEach((para) => {
+        if (!para.trim()) return;
+        const html = renderProse(para, index);
+        if (html) blocks.push({ type: "html", html: html });
+        mentionsIn(para, index).forEach(emit);
+      });
+    }
+
+    lines.forEach((line) => {
+      if (!String(line).trim()) {
+        prose.push(line);
+        return;
+      }
+      if (lastWasSku && isPriceOnlyLine(line)) return;
+      const found = mentionsIn(line, index);
+      if (found.length && isSkuLine(line, found)) {
+        flushProse();
+        found.forEach(emit);
+        lastWasSku = true;
+        return;
+      }
+      lastWasSku = false;
+      prose.push(line);
+    });
+    flushProse();
+
+    const pending = [];
+    allowed.forEach((product, ma) => {
+      if (!emitted.has(ma)) pending.push(product);
+    });
+    if (pending.length) {
+      const nodes = pending.map((product) => ({ type: "sku", product: product }));
+      const firstHtml = blocks.findIndex((block) => block.type === "html");
+      if (firstHtml === -1) blocks.push.apply(blocks, nodes);
+      else blocks.splice(firstHtml + 1, 0, ...nodes);
+    }
+    return blocksToHtml(blocks);
+  }
+
+  function renderBotHtml(text, index, products) {
+    let clean = String(text || "");
+    let list = products;
+    if (!list) {
+      const parsed = parseBotReply(clean, index);
+      clean = parsed.clean;
+      list = parsed.products;
+    }
+    return composeTurn(clean, list, index);
   }
 
   function pagePrefix() {
@@ -557,7 +721,8 @@
       "aria-expanded": "false",
       title: "Chat AI tư vấn",
     });
-    fabChat.innerHTML = "💬";
+    fabChat.innerHTML =
+      '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M5 5.5A3.5 3.5 0 0 1 8.5 2h7A3.5 3.5 0 0 1 19 5.5v6A3.5 3.5 0 0 1 15.5 15H12l-3.6 3.2c-.7.6-1.8.1-1.8-.8V15H8.5A3.5 3.5 0 0 1 5 11.5v-6z"/></svg>';
 
     const panel = el("div", {
       className: "vp-chat-panel",
@@ -567,7 +732,13 @@
     });
 
     const header = el("div", { className: "vp-chat-header" }, [
-      el("div", { className: "vp-chat-title", text: "AI tư vấn Vạn Phát" }),
+      el("div", { className: "vp-chat-brand" }, [
+        el("span", { className: "vp-chat-avatar", "aria-hidden": "true", text: "VP" }),
+        el("div", { className: "vp-chat-heading" }, [
+          el("div", { className: "vp-chat-title", text: "AI tư vấn Vạn Phát" }),
+          el("div", { className: "vp-chat-sub", text: "Giá theo website" }),
+        ]),
+      ]),
       el("button", {
         className: "vp-chat-close",
         type: "button",
@@ -653,13 +824,17 @@
     const wrap = el("div", { className: "vp-chat-dock" }, [panel, fabZalo, fabChat]);
     document.body.appendChild(wrap);
 
+    function scrollMessages() {
+      messages.scrollTop = messages.scrollHeight;
+    }
+
     function addBubble(role, text) {
-      const b = document.createElement("div");
       if (role === "user") {
+        const b = document.createElement("div");
         b.className = "vp-bubble vp-bubble-user";
         b.textContent = text;
         messages.appendChild(b);
-        messages.scrollTop = messages.scrollHeight;
+        scrollMessages();
         return null;
       }
       const parsed = parseBotReply(text, catalogIndex);
@@ -669,15 +844,36 @@
           ? "Em gắn các mã này lên trang để anh/chị xem và thêm vào giỏ."
           : String(text || ""));
       parsed.shown = shown;
-      b.className = "vp-bubble vp-bubble-bot vp-bubble-rich";
-      b.innerHTML = renderBotHtml(shown, catalogIndex);
-      messages.appendChild(b);
-      messages.scrollTop = messages.scrollHeight;
+      const html = renderBotHtml(shown, catalogIndex, parsed.products);
+      const holder = document.createElement("div");
+      holder.innerHTML = html;
+      const node = holder.firstElementChild;
+      if (node) messages.appendChild(node);
+      else {
+        const fallback = document.createElement("div");
+        fallback.className = "vp-bubble vp-bubble-bot vp-bubble-rich";
+        fallback.textContent = shown;
+        messages.appendChild(fallback);
+      }
+      const root = node || messages.lastElementChild;
+      if (root) {
+        root.querySelectorAll("img").forEach((img) => {
+          img.addEventListener("load", scrollMessages, { once: true });
+        });
+      }
+      scrollMessages();
       if (parsed.products.length) syncPage(parsed.products);
       return parsed;
     }
 
     messages.addEventListener("click", (e) => {
+      const addBtn = e.target.closest("[data-vp-add]");
+      if (addBtn) {
+        e.preventDefault();
+        const product = catalogIndex.byMa.get(String(addBtn.getAttribute("data-vp-add") || "").toUpperCase());
+        if (product && window.VanPhatCart && window.VanPhatCart.add) window.VanPhatCart.add(product, 1);
+        return;
+      }
       const btn = e.target.closest("[data-vp-ma]");
       if (!btn) return;
       const product = catalogIndex.byMa.get(String(btn.getAttribute("data-vp-ma") || "").toUpperCase());
@@ -687,13 +883,16 @@
     });
 
     function setOpen(open) {
+      document.body.classList.toggle("vp-chat-open", !!open);
       if (open) {
         panel.removeAttribute("hidden");
+        panel.setAttribute("aria-modal", "true");
         fabChat.setAttribute("aria-expanded", "true");
         fabChat.classList.add("is-open");
         input.focus();
       } else {
         panel.setAttribute("hidden", "true");
+        panel.setAttribute("aria-modal", "false");
         fabChat.setAttribute("aria-expanded", "false");
         fabChat.classList.remove("is-open");
       }
@@ -712,6 +911,11 @@
 
     fabChat.addEventListener("click", () => setOpen(panel.hasAttribute("hidden")));
     header.querySelector(".vp-chat-close").addEventListener("click", () => setOpen(false));
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || panel.hasAttribute("hidden")) return;
+      if (document.body.classList.contains("lightbox-open")) return;
+      setOpen(false);
+    });
 
     addBubble("bot", welcome);
 
@@ -757,8 +961,10 @@
 
       const typing = el("div", {
         className: "vp-bubble vp-bubble-bot vp-typing",
-        text: "Đang tra catalog…",
+        role: "status",
       });
+      typing.innerHTML =
+        '<span class="vp-typing-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="vp-typing-label">Đang tra catalog…</span>';
       messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
 
