@@ -18,7 +18,7 @@ Nguồn duy nhất (anh Hà khóa 27/09/2026):
 
 Không dùng catalog Drive khác, kể cả file tên `VanPhat_Web_Catalog_SOURCE.xlsx`. Không ghi fileId nguồn cũ vào repo.
 
-Lịch 8:09 và 14:09 (Asia/Bangkok), bản Excel trên máy trợ lý, và refresh cầu nối LIVE thuộc trợ lý ngoài. Cursor không tự chạy lịch đó. Khi anh giao cho Cursor sync hoặc sửa script, làm trong repo này, bằng nhánh và PR.
+Lịch 8:09 và 14:09 (Asia/Bangkok), bản Excel trên máy trợ lý, và refresh cầu nối LIVE thuộc trợ lý ngoài. Cursor không tự chạy lịch đó. Cả trợ lý ngoài và Cursor, khi có đổi, chỉ mở PR. Không push `main`. Khi anh nói `sync giá`, hoặc giao sync, làm trong repo này.
 
 Trong repo này:
 
@@ -35,7 +35,7 @@ Nhóm khớp `Không đưa lên web` (bỏ dấu, hoa thường, khoảng trắn
 
 ## Lĩnh vực
 
-Giữ cây `data/ia.json`. Nhóm có tên mới, chưa map: thêm vào lĩnh vực khớp nhất rồi mới chạy script, để `holdUnmappedGroups` không nuốt mã. Báo trong PR. Chi tiết ở skill `web-ia-linh-vuc` và rule `ia-linh-vuc`. Nước uống phải ở `nuoc-banh`.
+Giữ cây `data/ia.json`. `autoPlaceNewGroups` đang bật: script tự xếp nhóm có tên mới vào một trong ba lĩnh vực, ghi vào `ia.json`, và phát hành. Không nhét vào Dụng cụ VP. Ô trống và nhãn `Khác` ở ngoài web, có tên trong PR. Nước uống phải ở `nuoc-banh`. Chi tiết cách chấm ở `classify_new_nhom` trong script, và ở skill `web-ia-linh-vuc`.
 
 ## Các bước khi anh giao sync
 
@@ -55,8 +55,8 @@ Thiếu `--drive-title` hoặc title sai thì script thoát 3, chưa ghi gì.
 
 1. So `modifiedTime` của nguồn với `scripts/sync_state.json`. Không đổi thì dừng, không báo rỗng.
 2. Đọc sheet `Danh Mục Vật Tư`. Đối chiếu thêm, xóa, đổi tên, giá, ảnh, tồn.
-3. Loại nhóm cấm. Nhóm tên mới thì map vào `ia.json` trước. Script tự gọi generator: `products.json`, trang lĩnh vực, nhóm, SKU, sitemap, `js/catalog-paths.js`.
-4. Mở PR, không push `main`. Trong PR ghi mã thêm hoặc gỡ, giá đổi, slug đổi, nhóm mới đã xếp vào đâu, giá trống hoặc bằng 0. Không tự sửa file nguồn trên Drive.
+3. Loại nhóm cấm. Nhóm tên mới do script xếp và ghi vào `ia.json`. Script tự gọi generator: `products.json`, trang lĩnh vực, nhóm, SKU, sitemap, `js/catalog-paths.js`.
+4. Mở PR, không push `main`. Điền mẫu `.github/PULL_REQUEST_TEMPLATE.md` từ JSON script in ra (`added`, `removed`, `priceChanges`, `slugChanges`, `zeroPrice`, `autoPlacedGroups`, `heldUnmappedGroups`, `excludedGroups`). Không tự sửa file nguồn trên Drive.
 5. Nhờ trợ lý ngoài refresh cầu nối sau khi web đúng, hoặc chỉ làm nếu anh giao riêng từng lần. Vẫn không ghi fileId vào commit.
 6. Cập nhật `scripts/sync_state.json` trong cùng PR khi lượt này do Cursor chạy. Chạy `python3 scripts/check_rules.py`.
 

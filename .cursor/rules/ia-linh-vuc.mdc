@@ -25,6 +25,6 @@ Nhóm có tên nghiệp vụ chưa có trong `ia.json`: chọn lĩnh vực khớ
 
 Ô Nhóm trống, hoặc nhãn không chỉ một loại hàng như `Khác`, không có lĩnh vực khớp. Giữ các mã đó ngoài web và nêu trong PR. Không bịa tên nhóm.
 
-`holdUnmappedGroups` trong `ia.json` đang bật, nên sync sẽ giữ mọi nhóm chưa map. Muốn phát hành nhóm mới thì phải ghi map vào `ia.json` trước khi chạy sync hoặc `scripts/generate_catalog_pages.py`.
+`scripts/sync_products_from_excel.py` tự làm việc xếp này khi `autoPlaceNewGroups` bật (mặc định): ghi nhóm mới vào `data/ia.json`, gắn `nhomIds` của đúng lĩnh vực, rồi phát hành. Không nhét vào Dụng cụ VP. Ô trống và nhãn `Khác` vẫn ở ngoài web. Tắt `autoPlaceNewGroups` thì nhóm tên mới bị giữ, và PR phải nói rõ.
 
 Không đổi slug cũ. Nếu buộc đổi slug, thêm redirect và nói trong PR.
