@@ -113,10 +113,8 @@
     return placeholder();
   }
 
-  function open(card, trigger) {
-    if (!card) return;
-    const product = productFromCard(card);
-    if (!product.ma && !product.ten) return;
+  function showProduct(product, src, trigger) {
+    if (!product || (!product.ma && !product.ten)) return;
     ensureModal();
 
     const dialog = document.getElementById("product-lightbox");
@@ -126,9 +124,10 @@
 
     const img = dialog.querySelector("[data-lb-img]");
     img.alt = product.ten || "Sản phẩm";
-    const original = product.anh || imageSrc(card, product);
-    const webp = window.VanPhat.driveImage(original, 960, true);
-    const jpeg = window.VanPhat.driveImage(original, 960, false);
+    const original = product.anh || src || "";
+    const drive = window.VanPhat && window.VanPhat.driveImage;
+    const webp = drive ? drive(original, 960, true) : original;
+    const jpeg = drive ? drive(original, 960, false) : original;
     img.onerror = function () {
       if (webp && jpeg && this.getAttribute("src") === webp && jpeg !== webp) {
         this.onerror = function () {
@@ -143,7 +142,7 @@
       const fallback = placeholder();
       if (fallback) this.src = fallback;
     };
-    img.src = webp || jpeg || imageSrc(card, product);
+    img.src = webp || jpeg || src || placeholder();
 
     const nhom = dialog.querySelector("[data-lb-nhom]");
     nhom.textContent = product.nhom || "";
@@ -166,6 +165,28 @@
 
     const closeBtn = dialog.querySelector("[data-lb-close]");
     if (closeBtn) closeBtn.focus();
+  }
+
+  function open(card, trigger) {
+    if (!card) return;
+    const product = productFromCard(card);
+    showProduct(product, imageSrc(card, product), trigger);
+  }
+
+  function openProduct(raw, trigger) {
+    if (!raw) return;
+    showProduct(
+      {
+        ma: raw.ma || "",
+        ten: raw.ten || "",
+        gia: Number(raw.gia) || 0,
+        dvt: raw.dvt || "",
+        anh: raw.anh || "",
+        nhom: raw.nhom || "",
+      },
+      raw.anh || placeholder(),
+      trigger
+    );
   }
 
   function close() {
@@ -251,6 +272,8 @@
     e.stopPropagation();
     open(card, zoom);
   }
+
+  window.VanPhatLightbox = { openProduct: openProduct };
 
   document.addEventListener("click", onClick, true);
   document.addEventListener("keydown", onKeydown, true);

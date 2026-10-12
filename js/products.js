@@ -211,6 +211,7 @@
     let currentLv = "";
     let currentQuery = "";
     let currentSort = "";
+    let codeFilter = null;
 
     const params = new URLSearchParams(location.search);
     if (params.get("nhom")) currentGroup = params.get("nhom");
@@ -261,7 +262,29 @@
       return items;
     }
 
+    function knownCodeList(codes) {
+      const seen = new Set();
+      const list = [];
+      (codes || []).forEach((code) => {
+        const ma = String(code || "").trim().toUpperCase();
+        if (!ma || seen.has(ma)) return;
+        if (!all.some((p) => String(p.ma || "").toUpperCase() === ma)) return;
+        seen.add(ma);
+        list.push(ma);
+      });
+      return list;
+    }
+
     function filtered() {
+      if (codeFilter && codeFilter.length) {
+        const order = new Map(codeFilter.map((ma, i) => [ma, i]));
+        return all
+          .filter((p) => order.has(String(p.ma || "").toUpperCase()))
+          .sort(
+            (a, b) =>
+              order.get(String(a.ma).toUpperCase()) - order.get(String(b.ma).toUpperCase())
+          );
+      }
       let list = all;
       if (currentLv) list = list.filter((p) => p.linhVucId === currentLv);
       if (currentGroup) list = list.filter((p) => p.nhom === currentGroup);
@@ -325,6 +348,12 @@
         return;
       }
       grid.innerHTML = list.map((p) => cardHTML(p, lvMap)).join("");
+      if (codeFilter && codeFilter.length) {
+        const set = new Set(codeFilter);
+        grid.querySelectorAll(".product-card").forEach((card) => {
+          if (set.has((card.getAttribute("data-ma") || "").toUpperCase())) card.classList.add("vp-chat-hit");
+        });
+      }
     }
 
     function writeUrl() {
@@ -424,8 +453,23 @@
       writeUrl();
     }
 
+    function applyChatCodes(codes) {
+      const list = knownCodeList(codes);
+      if (!list.length) return;
+      codeFilter = list;
+      currentLv = "";
+      currentGroup = "";
+      currentQuery = list.join(" ");
+      syncUI();
+      render();
+      writeUrl();
+    }
+
     function clearFilter(key) {
-      if (key === "all" || key === "q") currentQuery = "";
+      if (key === "all" || key === "q") {
+        currentQuery = "";
+        codeFilter = null;
+      }
       if (key === "all" || key === "lv") currentLv = "";
       if (key === "all" || key === "nhom") currentGroup = "";
       if (key === "all" || key === "sort") currentSort = "";
@@ -487,6 +531,7 @@
         searchInput.addEventListener("input", () => {
           clearTimeout(t);
           t = setTimeout(() => {
+            codeFilter = null;
             currentQuery = searchInput.value;
             render();
             syncCrumb();
@@ -498,6 +543,17 @@
             window.VanPhatData.saveRecentSearch(searchInput.value);
           }
         });
+      }
+
+      const queryParts = String(currentQuery || "").trim().split(/[\s,]+/).filter(Boolean);
+      const fromQuery = knownCodeList(queryParts);
+      if (queryParts.length > 1 && fromQuery.length === queryParts.length) codeFilter = fromQuery;
+
+      window.VanPhatCatalog = window.VanPhatCatalog || {};
+      window.VanPhatCatalog.showCodes = applyChatCodes;
+      if (window.VanPhatCatalog._pendingCodes) {
+        applyChatCodes(window.VanPhatCatalog._pendingCodes);
+        window.VanPhatCatalog._pendingCodes = null;
       }
 
       syncUI();

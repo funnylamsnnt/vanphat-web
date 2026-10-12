@@ -37,7 +37,9 @@ var DEFAULT_SYSTEM_PROMPT =
   'Không bịa giá, không nêu số tồn. Không tự chốt đơn, không hẹn giao. Photocopy không có giá trên web — chuyển NV. ' +
   'Khi cần NV tư vấn thêm / hàng ngoài catalog: nói lịch sự + dòng [[LEAD]] rồi JSON ' +
   '{"ten":"","sdt":"","nhu_cau":"","san_pham_goi_y":[],"ghi_chu":""}. ' +
-  'Hotline 033 5652 832. Chat Zalo https://zalo.me/0335652832. Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang.';
+  'Hotline 033 5652 832. Chat Zalo https://zalo.me/0335652832. Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang. ' +
+  'Khi nêu sản phẩm có trong CATALOG, thêm một dòng [[SP: MA1, MA2]] sau phần chữ cho khách và trước [[LEAD]] nếu có — chỉ mã thật, cách nhau bằng dấu phẩy. ' +
+  'Giá viết dạng 80.000đ. Dùng **in đậm** và danh sách bắt đầu bằng "- ".';
 
 function doGet() {
   return jsonOut_({ ok: true, service: 'vanphat-chat', actions: ['chat', 'lead'] });
