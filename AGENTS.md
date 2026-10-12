@@ -69,6 +69,7 @@ Anh hoặc trợ lý ngoài nói một cụm là đúng việc, không cần nh�
 | `soạn văn bản` | Nháp hành chính, tách khỏi web |
 | `sắp drive` | Đúng miền, hành chính riêng, bán hàng riêng |
 | `đối soát sổ` | Tồn, hóa đơn, lãi trên workbook, không đưa giá vốn lên web |
+| `học sàn` | So sánh UX sàn lớn với web, sửa phần trung thực còn thiếu, mở PR |
 
 ## Quy tắc cứng
 
@@ -99,6 +100,7 @@ Mọi câu trả lời chat, mô tả PR và báo cáo cuối gửi anh kết th
 | `.cursor/skills/soan-vb-hanh-chinh/` | Tờ trình, công văn, báo cáo, thông báo |
 | `.cursor/skills/drive-theo-nghiep-vu/` | Tìm hoặc sắp file Drive theo từng miền việc |
 | `.cursor/skills/ban-hang-kho-loi-nhuan/` | Sổ bán hàng, tồn, hóa đơn, lãi trong workbook |
+| `.cursor/skills/hoc-san-ux/` | So sánh sàn thương mại với web và chỉnh UX catalog |
 
 ## Kiểm tra trước khi xong PR đụng web
 

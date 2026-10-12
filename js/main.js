@@ -64,6 +64,93 @@
     });
   }
 
+  const VIEWED_KEY = "vp-recent-viewed";
+
+  function readViewed() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(VIEWED_KEY) || "[]");
+      if (!Array.isArray(raw)) return [];
+      return raw.filter((item) => item && item.ma && item.ten && item.href).slice(0, 8);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeViewed(items) {
+    try {
+      localStorage.setItem(VIEWED_KEY, JSON.stringify(items.slice(0, 8)));
+    } catch (e) {
+      /* bộ nhớ riêng tư có thể chặn ghi */
+    }
+  }
+
+  function rememberView() {
+    const article = document.querySelector("article.product-detail[data-ma]");
+    if (!article) return;
+    const ma = article.dataset.ma || "";
+    const ten = article.dataset.ten || "";
+    if (!ma || !ten) return;
+    const item = {
+      ma,
+      ten,
+      gia: article.dataset.gia || "",
+      anh: article.dataset.anh || "",
+      nhom: article.dataset.nhom || "",
+      href: location.pathname + location.search,
+    };
+    writeViewed([item].concat(readViewed().filter((row) => row.ma !== ma)));
+  }
+
+  function escText(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderViewed() {
+    const footer = document.querySelector(".site-footer");
+    if (!footer || document.querySelector(".recent-strip")) return;
+    const current = document.querySelector("article.product-detail[data-ma]");
+    const currentMa = current ? current.dataset.ma : "";
+    const items = readViewed().filter((item) => item.ma !== currentMa);
+    if (!items.length) return;
+    const section = document.createElement("section");
+    section.className = "recent-strip";
+    section.setAttribute("aria-label", "Đã xem gần đây");
+    const cards = items
+      .map((item) => {
+        const amount = Number(item.gia);
+        const price = amount > 0 ? window.VanPhat.formatPrice(amount) : "Liên hệ";
+        const src = window.VanPhat.driveImage(item.anh, 240, true) || window.VanPhat.placeholderSvg();
+        return `<a class="recent-card" href="${escText(item.href)}">
+          <img src="${escText(src)}" alt="" width="148" height="110" loading="lazy" />
+          <span class="recent-name">${escText(item.ten)}</span>
+          <span class="recent-price">${escText(price)}</span>
+        </a>`;
+      })
+      .join("");
+    section.innerHTML = `<div class="container"><h2>Đã xem gần đây</h2><div class="recent-row">${cards}</div></div>`;
+    footer.parentNode.insertBefore(section, footer);
+  }
+
+  function initScrollTop() {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "scroll-top";
+    button.hidden = true;
+    button.setAttribute("aria-label", "Lên đầu trang");
+    button.textContent = "↑";
+    document.body.appendChild(button);
+    const onScroll = () => {
+      button.hidden = window.scrollY < 480;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    button.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    onScroll();
+  }
+
   function setActiveNav() {
     const path = location.pathname.toLowerCase();
     const file = path.split("/").pop() || "index.html";
@@ -84,5 +171,8 @@
   document.addEventListener("DOMContentLoaded", () => {
     initNav();
     setActiveNav();
+    rememberView();
+    renderViewed();
+    initScrollTop();
   });
 })();

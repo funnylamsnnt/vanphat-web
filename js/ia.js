@@ -271,6 +271,44 @@
     return 0;
   }
 
+  const RECENT_KEY = "vp-recent-search";
+
+  function readRecent() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+      if (!Array.isArray(raw)) return [];
+      return raw.filter((item) => typeof item === "string" && item.trim()).slice(0, 6);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveRecent(query) {
+    const text = String(query || "").trim();
+    if (fold(text).length < 2) return;
+    const next = [text].concat(readRecent().filter((item) => fold(item) !== fold(text))).slice(0, 6);
+    try {
+      localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+    } catch (e) {
+      /* bộ nhớ riêng tư có thể chặn ghi */
+    }
+  }
+  window.VanPhatData.saveRecentSearch = saveRecent;
+
+  function suggestThumb(product) {
+    const drive = window.VanPhat && window.VanPhat.driveImage;
+    const placeholder = window.VanPhat && window.VanPhat.placeholderSvg ? window.VanPhat.placeholderSvg() : "";
+    const src = drive ? drive(product.anh, 96, true) : product.anh || "";
+    return `<img class="sg-thumb" src="${esc(src || placeholder)}" alt="" width="48" height="48" loading="lazy" />`;
+  }
+
+  function suggestPrice(product) {
+    const amount = Number(product.gia);
+    if (!(amount > 0)) return "Liên hệ";
+    if (window.VanPhat && window.VanPhat.formatPrice) return window.VanPhat.formatPrice(amount);
+    return String(amount);
+  }
+
   function renderSuggest(data) {
     const forms = document.querySelectorAll("form.nav-search");
     if (!forms.length) return;
@@ -279,29 +317,74 @@
       lvById[lv.id] = lv;
     });
     const products = data.sanpham || [];
-    forms.forEach((form) => {
+    forms.forEach((form, index) => {
       const input = form.querySelector('input[type="search"], input[name="q"]');
       if (!input || form.dataset.suggestBound) return;
       form.dataset.suggestBound = "1";
       form.classList.add("has-suggest");
       const box = document.createElement("div");
       box.className = "search-suggest";
+      box.id = "search-suggest-" + index;
       box.hidden = true;
       box.setAttribute("role", "listbox");
       form.appendChild(box);
+      input.setAttribute("aria-autocomplete", "list");
+      input.setAttribute("aria-controls", box.id);
+      input.setAttribute("aria-expanded", "false");
 
       const params = new URLSearchParams(location.search);
       if (params.get("q") && !input.value) input.value = params.get("q");
 
       let timer = 0;
+      let active = -1;
+
+      function options() {
+        return Array.from(box.querySelectorAll('[role="option"]'));
+      }
       function hide() {
         box.hidden = true;
         box.innerHTML = "";
+        active = -1;
+        input.setAttribute("aria-expanded", "false");
+        input.removeAttribute("aria-activedescendant");
+      }
+      function markActive(next) {
+        const rows = options();
+        rows.forEach((row) => row.classList.remove("is-active"));
+        if (!rows.length || next < 0) {
+          active = -1;
+          input.removeAttribute("aria-activedescendant");
+          return;
+        }
+        active = next >= rows.length ? 0 : next;
+        const row = rows[active];
+        row.id = row.id || box.id + "-opt-" + active;
+        row.classList.add("is-active");
+        input.setAttribute("aria-activedescendant", row.id);
+        row.scrollIntoView({ block: "nearest" });
+      }
+      function showRecent() {
+        const recent = readRecent();
+        if (!recent.length) {
+          hide();
+          return;
+        }
+        active = -1;
+        box.innerHTML =
+          '<div class="sg-label"><span>Tìm gần đây</span><button type="button" class="sg-clear" data-clear-recent>Xóa</button></div>' +
+          recent
+            .map((query) => {
+              const href = prefix() + "san-pham.html?q=" + encodeURIComponent(query);
+              return `<a role="option" class="sg-recent" data-recent="${esc(query)}" href="${esc(href)}">${esc(query)}</a>`;
+            })
+            .join("");
+        box.hidden = false;
+        input.setAttribute("aria-expanded", "true");
       }
       function show(query) {
         const q = query.trim();
         if (fold(q).length < 2) {
-          hide();
+          showRecent();
           return;
         }
         const qFold = fold(q);
@@ -310,35 +393,93 @@
           .filter((row) => row.s > 0)
           .sort((a, b) => b.s - a.s || String(a.p.ma).localeCompare(String(b.p.ma)))
           .slice(0, 8);
-        const allHref =
-          prefix() + "san-pham.html?q=" + encodeURIComponent(q);
+        const allHref = prefix() + "san-pham.html?q=" + encodeURIComponent(q);
         const rows = hits
           .map((row) => {
             const p = row.p;
-            return `<a role="option" href="${esc(productHref(p))}">
-              <strong>${esc(p.ten)}</strong>
-              <span class="sg-meta">${esc(p.ma)} · ${esc(badge(p, lvById))}</span>
+            return `<a role="option" class="sg-row" href="${esc(productHref(p))}">
+              ${suggestThumb(p)}
+              <span class="sg-copy">
+                <strong>${esc(p.ten)}</strong>
+                <span class="sg-meta">${esc(p.ma)} · ${esc(badge(p, lvById))}</span>
+              </span>
+              <span class="sg-price">${esc(suggestPrice(p))}</span>
             </a>`;
           })
           .join("");
         const empty = hits.length
           ? ""
           : `<p class="sg-empty">Không thấy “${esc(q)}”? Gọi <a href="tel:${HOTLINE_TEL}">033 5652 832</a> hoặc <a href="${ZALO}" target="_blank" rel="noopener">chat Zalo</a>.</p>`;
+        active = -1;
         box.innerHTML =
           rows +
           empty +
-          `<a class="sg-all" href="${esc(allHref)}">Xem tất cả kết quả</a>`;
+          `<a role="option" class="sg-all" href="${esc(allHref)}">Xem tất cả kết quả</a>`;
         box.hidden = false;
+        input.setAttribute("aria-expanded", "true");
+      }
+      function openActive(row) {
+        if (!row) return;
+        if (row.dataset.clearRecent != null) {
+          try {
+            localStorage.removeItem(RECENT_KEY);
+          } catch (e) {
+            /* bỏ qua */
+          }
+          hide();
+          return;
+        }
+        if (row.dataset.recent) saveRecent(row.dataset.recent);
+        else if (row.classList.contains("sg-all")) saveRecent(input.value);
+        const href = row.getAttribute("href");
+        if (href) location.href = href;
       }
       input.addEventListener("input", () => {
         clearTimeout(timer);
         timer = setTimeout(() => show(input.value), 140);
       });
-      input.addEventListener("focus", () => {
-        if (fold(input.value).length >= 2) show(input.value);
-      });
+      input.addEventListener("focus", () => show(input.value));
+      input.addEventListener("change", () => saveRecent(input.value));
       input.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") hide();
+        if (e.key === "Escape") {
+          hide();
+          return;
+        }
+        if (box.hidden && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+          show(input.value);
+        }
+        if (box.hidden) return;
+        const rows = options();
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          markActive(active + 1);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          markActive(active <= 0 ? rows.length - 1 : active - 1);
+        } else if (e.key === "Enter" && active >= 0 && rows[active]) {
+          e.preventDefault();
+          openActive(rows[active]);
+        }
+      });
+      form.addEventListener("submit", () => {
+        if (active >= 0) return;
+        saveRecent(input.value);
+      });
+      box.addEventListener("click", (e) => {
+        const clear = e.target.closest("[data-clear-recent]");
+        if (clear) {
+          e.preventDefault();
+          try {
+            localStorage.removeItem(RECENT_KEY);
+          } catch (err) {
+            /* bỏ qua */
+          }
+          hide();
+          return;
+        }
+        const recent = e.target.closest("[data-recent]");
+        if (recent) saveRecent(recent.dataset.recent);
+        if (e.target.closest(".sg-all")) saveRecent(input.value);
       });
       document.addEventListener("click", (e) => {
         if (!form.contains(e.target)) hide();
