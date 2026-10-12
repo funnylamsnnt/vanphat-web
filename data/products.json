@@ -893,7 +893,7 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP077",
-      "ten": "Bìa còng King Jim A4 9cm",
+      "ten": "Bìa còng King Jim A4 9cm (2697GSV)",
       "dvt": "Cái",
       "gia": 75000,
       "anh": "https://lh3.googleusercontent.com/d/1-hb2i30GhMwo_e-hY7xZj1wO3kVqJUCL",
@@ -3857,11 +3857,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP306",
-      "ten": "Lau bảng Deli 7837",
+      "ten": "Lau bảng Deli (có nam châm 7837)",
       "dvt": "Cái",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/1pit6J4yGE3lYAhOwQz1YhD3lDHGYlfNR",
-      "ton": 18
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4629,6 +4629,78 @@
       "dvt": "Cái",
       "gia": 190000,
       "anh": "https://lh3.googleusercontent.com/d/13azeRNvs8jJMD91TqQ4AjJaMpx2gDC7_",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP456",
+      "ten": "Giấy ép plastic A5 80mic (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 60000,
+      "anh": "https://lh3.googleusercontent.com/d/1rvH-adXTrcKFycwnGTgN8bNuiKfFrHQi",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP457",
+      "ten": "Giấy ép plastic A4 80mic (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 125000,
+      "anh": "https://lh3.googleusercontent.com/d/1nybnDrXtSbbajpB33g6JNrYzTypvXCR6",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP458",
+      "ten": "Giấy ép plastic A3 80mic (100 tờ/xấp)",
+      "dvt": "Xấp",
+      "gia": 250000,
+      "anh": "https://lh3.googleusercontent.com/d/1kB7bBHw2L4olJANZwuZZNRvnFw3NHRae",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP459",
+      "ten": "Ép plastic 150mic - Bằng Lái",
+      "dvt": "Xấp",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1oDHMtPC5DH9pY2Y8bfbe0-nnS6l3XHfz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP460",
+      "ten": "Gôm tẩy xóa chì Thiên Long E-06",
+      "dvt": "Cái",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1bKs3cqz_Eh5G1xfwZIycmrErd4L-RELM",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP461",
+      "ten": "Note giấy 4 màu Pronoti",
+      "dvt": "Xấp",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1fs5FN2_KCHJ-j81Ruy7UAvofcFM0rUBQ",
       "ton": 0
     },
     {
