@@ -290,7 +290,97 @@ display: none; /* hide old VP mark */
   font-size: 1.0625rem;
   color: rgba(255,255,255,0.82);
   max-width: 34rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.1rem;
+}
+.hero .hero-search.nav-search {
+  max-width: none;
+  width: 100%;
+  margin: 0 0 0.85rem;
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.35rem 0.35rem 0.35rem 1rem;
+}
+.hero .hero-search.nav-search input {
+  font-size: 1rem;
+  padding: 0.7rem 0.35rem;
+}
+.hero .hero-search.nav-search button {
+  width: auto;
+  min-width: 4.5rem;
+  height: auto;
+  border-radius: 10px;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+.hero .hero-search .search-suggest { width: 100%; }
+.hero-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1.35rem;
+}
+.hero-quick a {
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.hero-quick a:hover { background: rgba(255,255,255,0.18); }
+.cat-rail {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+.cat-rail .container {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+.cat-rail a {
+  flex: none;
+  color: var(--navy);
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.cat-rail a:hover,
+.cat-rail a[aria-current="page"] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.product-grid .product-img[data-product-zoom]::after {
+  content: "Xem ảnh";
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  z-index: 1;
+  background: rgba(31, 78, 120, 0.92);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0.32rem 0.5rem;
+  border-radius: 999px;
+  pointer-events: none;
 }
 .hero-actions {
   display: flex;
