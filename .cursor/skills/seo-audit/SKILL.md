@@ -12,9 +12,16 @@ Site: https://vanphatcompany.vn. Làm trên nhánh, mở PR, không push `main`.
 
 Giữ meta `google-site-verification` đang có trên trang chủ. Không ghi đè `CNAME`. Không thêm «Đặt hàng online». Mã nhóm `Không đưa lên web` không được lọt vào sitemap hay trang index.
 
-Sau khi sửa catalog, chạy `python3 scripts/generate_catalog_pages.py` nếu chỉ đổi JSON, hoặc sync script nếu đổi từ Excel, rồi `python3 scripts/check_rules.py`.
+Sau khi sửa catalog, chạy `python3 scripts/generate_catalog_pages.py` nếu chỉ đổi JSON, hoặc sync script nếu đổi từ Excel, rồi:
 
-Việc Search Console và Semrush sau khi anh merge nằm ở `docs/SEO-SEMRUSH.md`. Không nhét tài khoản Semrush vào repo.
+```bash
+python3 scripts/check_rules.py
+python3 scripts/check_seo.py
+```
+
+`scripts/check_seo.py` là lượt SEO kỹ thuật: robots, sitemap, canonical, title, description, Open Graph, Twitter, hreflang, schema Organization trên trang chủ, schema Product trên trang SKU, alt, link nội bộ, và HTML quá 500 KB. Workflow `.github/workflows/seo-audit.yml` chạy lệnh này trên mọi PR và một lượt nữa khi push lên `main`. Lượt trên `main` đỏ thì mở PR sửa, không sửa thẳng `main`. Workflow không deploy Pages.
+
+Search Console và Semrush làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.md`. Không nhét tài khoản Semrush vào repo. Codeword để gọi việc này là `rà seo`.
 
 ## Hạng mục
 

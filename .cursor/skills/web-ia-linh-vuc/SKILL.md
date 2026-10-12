@@ -30,8 +30,8 @@ Trang sinh ra: `linh-vuc/<slug>.html`, `san-pham/nhom-<slug>.html`, trang SKU, c
 
 Anh Hà cập nhật ngày 10/10/2026: không hỏi trước cho một nhóm Excel đã có tên.
 
-1. Nhóm có tên nghiệp vụ chưa nằm trong `ia.json`: chọn một trong ba L1 khớp nhất với loại hàng. Thêm mục `nhom` (id, slug, `TenNhom` đúng chữ trong Excel, `linhVucId`) và thêm id đó vào `nhomIds` của L1. Không nhét mặc định vào Dụng cụ VP. Không tạo L1 thứ tư.
-2. Vì `holdUnmappedGroups` đang bật, map phải có trong `ia.json` trước khi chạy `scripts/sync_products_from_excel.py` hoặc `scripts/generate_catalog_pages.py`. Nếu không, script giữ mã ngoài web.
+1. Nhóm có tên nghiệp vụ chưa nằm trong `ia.json`: script sync (`autoPlaceNewGroups`) chọn một trong ba L1 khớp nhất, thêm mục `nhom` và id vào `nhomIds`, rồi phát hành. Sửa tay thì làm cùng việc đó. Không nhét mặc định vào Dụng cụ VP. Không tạo L1 thứ tư. Nước rửa và tên không phải đồ uống không bị kéo sang Nước uống chỉ vì có chữ «nước».
+2. Ô trống và nhãn `Khác` vẫn ở ngoài web. Tắt `autoPlaceNewGroups` thì nhóm tên mới cũng bị giữ, và PR phải nói rõ.
 3. Sinh lại trang nhóm, lĩnh vực, sitemap. Giữ slug cũ. Đổi slug chỉ khi anh bắt buộc, và phải có redirect.
 4. PR ghi: tên nhóm trong Excel, L1 và L2 đã đặt, một câu vì sao. Ô Nhóm trống hoặc nhãn `Khác` thì không tự xếp; giữ ngoài web và nêu trong PR.
 5. Nước uống không được rơi về `vpp`.

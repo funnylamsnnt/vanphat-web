@@ -134,6 +134,178 @@ def is_excluded_nhom(raw_nhom: str, phrases: set) -> bool:
     return False
 
 
+# Ô trống và nhãn «Khác» không có lĩnh vực khớp. Nhóm có tên thì tự xếp.
+DRINK_TOKENS = frozenset({
+    "tra", "sua", "banh", "snack", "soda", "cafe", "coffee",
+    "sting", "pepsi", "coca", "mirinda", "aquafina", "lavie", "dasani",
+})
+DRINK_PHRASES = (
+    "nuoc suoi", "nuoc ngot", "nuoc uong", "nuoc tang luc", "nuoc khoang",
+    "nuoc tinh khiet", "do uong", "ca phe", "do an", "banh keo",
+)
+DIEN_PHRASES = (
+    "o cam", "day dien", "thiet bi dien", "dien gia dung", "o dien",
+    "phich cam", "cong tac", "bong den", "may lanh", "quat dien",
+    "noi com", "noi chien",
+)
+
+
+def is_hold_label(raw_nhom: str) -> bool:
+    """Blank nhóm and the junk label Khác stay off the web."""
+    key = nhom_key(raw_nhom)
+    if not key:
+        return True
+    return key == "khac" or key.startswith("khac ") or key.startswith("khac(")
+
+
+def classify_new_nhom(raw_nhom: str) -> tuple[str | None, str]:
+    """Pick one of the three lĩnh vực, or None when the nhóm must stay off the web.
+
+    A new L2 is created under the chosen L1. Nothing is dumped into Dụng cụ VP.
+    """
+    if is_hold_label(raw_nhom):
+        if not nhom_key(raw_nhom):
+            return None, "ô Nhóm trống"
+        return None, "nhãn Khác, không có lĩnh vực khớp"
+    folded = fold_name(raw_nhom)
+    tokens = set(re.findall(r"[a-z0-9]+", folded))
+    drink = 0
+    if tokens & DRINK_TOKENS:
+        drink += 2
+    for phrase in DRINK_PHRASES:
+        if phrase in folded:
+            drink += 3
+    dien = 0
+    if "dien" in tokens:
+        dien += 3
+    for phrase in DIEN_PHRASES:
+        if phrase in folded:
+            dien += 3
+    if drink > dien and drink > 0:
+        return "nuoc-banh", "tên khớp nước uống hoặc bánh"
+    if dien > drink and dien > 0:
+        return "dien-gia-dung", "tên khớp điện gia dụng"
+    if drink > 0 and drink == dien:
+        return "vpp", "khớp cả nước uống và điện, tạm xếp Văn phòng phẩm để anh chuyển nếu cần"
+    return "vpp", "không khớp Nước uống hay Điện, xếp Văn phòng phẩm bằng nhóm L2 mới"
+
+
+def _unique_slug(base: str, nhom_cfg: list) -> str:
+    used = set()
+    for item in nhom_cfg:
+        used.add(item.get("id") or "")
+        used.add(item.get("slug") or "")
+    candidate = base or "nhom"
+    if candidate not in used:
+        return candidate
+    number = 2
+    while f"{candidate}-{number}" in used:
+        number += 1
+    return f"{candidate}-{number}"
+
+
+def ensure_group(raw_nhom: str, ia: dict, nhom_cfg: list, by_fold: dict, lv_by_id: dict, placed: dict) -> dict:
+    """Map a named nhóm onto a lĩnh vực, persist it on the in-memory ia, and publish it."""
+    key = fold_name(raw_nhom)
+    current = by_fold.get(key)
+    if current and lv_by_id.get(current.get("linhVucId") or ""):
+        return current
+    lv_id, reason = classify_new_nhom(raw_nhom)
+    if not lv_id:
+        raise SystemExit(f"Nhóm {raw_nhom!r} phải giữ ngoài web, không gọi ensure_group")
+    lv = lv_by_id.get(lv_id)
+    if not lv:
+        raise SystemExit(f"Thiếu lĩnh vực {lv_id} trong data/ia.json")
+    if current:
+        meta = current
+        meta["linhVucId"] = lv_id
+        meta["autoPlaced"] = True
+        for original in ia.get("nhom") or []:
+            if fold_name(original.get("TenNhom") or "") == key:
+                original["linhVucId"] = lv_id
+                original["autoPlaced"] = True
+    else:
+        slug = _unique_slug(slugify(raw_nhom) or "nhom", nhom_cfg)
+        meta = {
+            "id": slug,
+            "STT": 1000 + len(placed),
+            "TenNhom": raw_nhom,
+            "slug": slug,
+            "linhVucId": lv_id,
+            "visible": True,
+            "moTa": f"Nhóm {raw_nhom}, tự xếp vào {lv.get('ten') or lv_id}.",
+            "autoPlaced": True,
+        }
+        nhom_cfg.append(meta)
+        ia.setdefault("nhom", []).append(meta)
+        by_fold[key] = meta
+    sid = meta.get("id") or meta.get("slug")
+    ids = lv.setdefault("nhomIds", [])
+    if sid and sid not in ids:
+        ids.append(sid)
+    placed.setdefault(
+        meta.get("TenNhom") or raw_nhom,
+        {
+            "linhVucId": lv_id,
+            "linhVucTen": lv.get("ten") or "",
+            "lyDo": reason,
+            "ma": [],
+        },
+    )
+    return meta
+
+
+def assert_placement_rules() -> None:
+    expect = {
+        "": None,
+        "   ": None,
+        "Khác": None,
+        "  khác (nội bộ) ": None,
+        "Trà đóng chai": "nuoc-banh",
+        "Bánh quy": "nuoc-banh",
+        "Ổ cắm thông minh": "dien-gia-dung",
+        "Dây điện": "dien-gia-dung",
+        "Bìa nhựa": "vpp",
+        "Nước rửa kính": "vpp",
+    }
+    for raw, lv_id in expect.items():
+        got, _reason = classify_new_nhom(raw)
+        if got != lv_id:
+            raise SystemExit(f"placement {raw!r} -> {got}, expected {lv_id}")
+    if not is_hold_label("Khác") or not is_hold_label(""):
+        raise SystemExit("ô trống và Khác phải được giữ")
+    if is_hold_label("Bìa nhựa"):
+        raise SystemExit("Bìa nhựa không phải nhãn giữ")
+    ia = {
+        "autoPlaceNewGroups": True,
+        "linh_vuc": [
+            {"id": "vpp", "ten": "Văn phòng phẩm", "nhomIds": ["dung-cu-vp"]},
+            {"id": "nuoc-banh", "ten": "Nước uống & Bánh", "nhomIds": ["nuoc-uong"]},
+            {"id": "dien-gia-dung", "ten": "Điện gia dụng", "nhomIds": ["dien"]},
+        ],
+        "nhom": [{
+            "id": "dung-cu-vp",
+            "TenNhom": "Dụng cụ VP",
+            "slug": "dung-cu-vp",
+            "linhVucId": "vpp",
+        }],
+    }
+    nhom_cfg = [dict(item) for item in ia["nhom"]]
+    by_fold = {fold_name(item["TenNhom"]): item for item in nhom_cfg}
+    lv_by_id = {item["id"]: item for item in ia["linh_vuc"]}
+    placed: dict = {}
+    meta = ensure_group("Trà đào", ia, nhom_cfg, by_fold, lv_by_id, placed)
+    if meta["linhVucId"] != "nuoc-banh" or meta["id"] == "dung-cu-vp":
+        raise SystemExit(f"Trà đào bị xếp sai: {meta}")
+    if meta["id"] not in lv_by_id["nuoc-banh"]["nhomIds"]:
+        raise SystemExit("nhomIds của Nước uống chưa nhận nhóm mới")
+    if meta["id"] in lv_by_id["vpp"]["nhomIds"]:
+        raise SystemExit("không nhét nhóm nước vào Văn phòng phẩm")
+    again = ensure_group("Trà đào", ia, nhom_cfg, by_fold, lv_by_id, placed)
+    if again is not meta and again.get("id") != meta.get("id"):
+        raise SystemExit("gọi lại ensure_group không được tạo nhóm thứ hai")
+
+
 def assert_exclusion_rules() -> None:
     phrases = {nhom_key("Không đưa lên web")}
     for sample in (
@@ -173,9 +345,11 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
     lv_by_id = {lv.get("id"): lv for lv in ia["linh_vuc"] if lv.get("id")}
     excl_folds = exclude_group_folds(ia)
     assert_exclusion_rules()
-    hold_unmapped = ia.get("holdUnmappedGroups", True)
+    assert_placement_rules()
+    auto_place = ia.get("autoPlaceNewGroups", True)
     excluded = {}  # raw nhóm -> [mã] never published
-    held = {}  # unmapped nhóm -> [mã] kept off until mapped in ia.json
+    held = {}  # ô trống / Khác, hoặc nhóm tên khi autoPlaceNewGroups tắt
+    placed = {}  # TenNhom -> {linhVucId, linhVucTen, lyDo, ma}
 
     wb = load_workbook(xlsx_path, read_only=True, data_only=True)
 
@@ -212,7 +386,6 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         raise SystemExit(f"Missing sheet: {sheet}. Have: {wb.sheetnames}")
 
     products = []
-    unknown_groups = []
     ws = wb[sheet]
     rows = ws.iter_rows(values_only=True)
     header = next(rows, None) or ()
@@ -230,25 +403,17 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         if is_excluded_nhom(raw_nhom, excl_folds):
             excluded.setdefault(raw_nhom, []).append(ma)
             continue
-        if not nhom_key(raw_nhom):
-            held.setdefault("(trống)", []).append(ma)
+        if is_hold_label(raw_nhom):
+            held.setdefault(raw_nhom or "(trống)", []).append(ma)
             continue
         meta = by_fold.get(fold_name(raw_nhom))
-        if hold_unmapped and (meta is None or not lv_by_id.get(meta.get("linhVucId") or "")):
-            held.setdefault(raw_nhom, []).append(ma)
-            continue
-        if meta is None:
-            meta = {
-                "id": slugify(raw_nhom) or "khac",
-                "STT": 1000 + len(unknown_groups),
-                "TenNhom": raw_nhom,
-                "slug": slugify(raw_nhom) or "khac",
-                "linhVucId": "",
-                "visible": True,
-            }
-            by_fold[fold_name(raw_nhom)] = meta
-            nhom_cfg.append(meta)
-            unknown_groups.append(raw_nhom)
+        if meta is None or not lv_by_id.get(meta.get("linhVucId") or ""):
+            if not auto_place:
+                held.setdefault(raw_nhom, []).append(ma)
+                continue
+            meta = ensure_group(raw_nhom, ia, nhom_cfg, by_fold, lv_by_id, placed)
+        if meta.get("TenNhom") in placed and ma not in placed[meta["TenNhom"]]["ma"]:
+            placed[meta["TenNhom"]]["ma"].append(ma)
         lv_id = meta.get("linhVucId") or ""
         lv = lv_by_id.get(lv_id) or {}
         ten = clean(cell("ten"))
@@ -292,7 +457,25 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
 
     products.sort(key=key)
     nhom_cfg.sort(key=lambda n: (n.get("STT") or 999, n.get("TenNhom") or ""))
+    if placed:
+        ia["nhom"] = sorted(ia.get("nhom") or [], key=lambda n: (n.get("STT") or 999, n.get("TenNhom") or ""))
+        IA_PATH.write_text(json.dumps(ia, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     linh_vuc = sorted(ia["linh_vuc"], key=lambda lv: (lv.get("sort") or 0, lv.get("ten") or ""))
+    added = [p["ma"] for p in products if p["ma"] not in prev_by_ma]
+    removed = [ma for ma in prev_by_ma if ma not in by]
+    price_changes = []
+    slug_changes = []
+    zero_price = []
+    for product in products:
+        if not product.get("gia"):
+            zero_price.append(product["ma"])
+        old = prev_by_ma.get(product["ma"])
+        if not old:
+            continue
+        if old.get("gia") != product.get("gia"):
+            price_changes.append({"ma": product["ma"], "old": old.get("gia"), "new": product.get("gia")})
+        if slugify(str(old.get("ten") or "")) != slugify(str(product.get("ten") or "")):
+            slug_changes.append({"ma": product["ma"], "old": old.get("ten"), "new": product.get("ten")})
 
     # Never emit a customer order-form URL. Ordering stays cart + hotline/Zalo.
     out = {
@@ -338,7 +521,15 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         "with_img": with_img,
         "groups": counts,
         "linhVuc": lv_counts,
-        "unknownGroups": unknown_groups,
+        "added": added,
+        "removed": removed,
+        "priceChanges": price_changes,
+        "slugChanges": slug_changes,
+        "zeroPrice": zero_price,
+        "unknownGroups": sorted(placed),
+        "autoPlacedGroups": [
+            {"ten": name, **info} for name, info in sorted(placed.items())
+        ],
         "excludedGroups": excluded,
         "heldUnmappedGroups": held,
         "keptImages": sum(1 for p in products if p["anh"] and not (prev_by_ma.get(p["ma"]) or {}).get("anh") and p["ma"] not in prev_by_ma) ,
@@ -372,6 +563,8 @@ def main():
     print(json.dumps(stats, ensure_ascii=False))
     regenerate_catalog_pages(out)
 
+
+assert_placement_rules()
 
 if __name__ == "__main__":
     main()
