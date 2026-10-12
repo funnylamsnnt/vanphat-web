@@ -168,9 +168,41 @@
     });
   }
 
+  function initCategoryRail() {
+    if (document.querySelector(".cat-rail")) return;
+    const header = document.querySelector(".site-header");
+    if (!header) return;
+    const prefix = /\/san-pham\/|\/linh-vuc\/|\/dia-phuong\/|\/nhan-vien\//.test(location.pathname) ? "../" : "";
+    const groups = [
+      ["Giấy", "san-pham/nhom-giay.html"],
+      ["Bìa hồ sơ", "san-pham/nhom-bia-ho-so.html"],
+      ["Bút &amp; mực", "san-pham/nhom-but-muc.html"],
+      ["Băng keo", "san-pham/nhom-bang-keo.html"],
+      ["Dụng cụ VP", "san-pham/nhom-dung-cu-vp.html"],
+      ["Nước uống", "san-pham/nhom-nuoc-uong.html"],
+      ["Bánh", "san-pham/nhom-banh.html"],
+      ["Điện", "san-pham/nhom-dien.html"],
+    ];
+    const rail = document.createElement("nav");
+    rail.className = "cat-rail";
+    rail.setAttribute("aria-label", "Nhóm hàng");
+    const path = location.pathname;
+    rail.innerHTML =
+      '<div class="container">' +
+      groups
+        .map(([label, href]) => {
+          const current = path.endsWith("/" + href) || path.endsWith(href) ? ' aria-current="page"' : "";
+          return `<a href="${prefix}${href}"${current}>${label}</a>`;
+        })
+        .join("") +
+      "</div>";
+    header.insertAdjacentElement("afterend", rail);
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initNav();
     setActiveNav();
+    initCategoryRail();
     rememberView();
     renderViewed();
     initScrollTop();
