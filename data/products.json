@@ -4977,7 +4977,7 @@
       "dvt": "Chai",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1H8Utbj7hEPQzxEbTuySLmaBOIpHhLSTw",
-      "ton": 0
+      "ton": 12
     },
     {
       "nhom": "Nước uống",
@@ -5048,7 +5048,7 @@
       "ten": "Nước ngọt Coca Cola lon 320ml",
       "dvt": "Lon",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1CgkSN2czVDmKf_9uhIHiYeuBNOmMFcxN",
       "ton": 0
     },
     {
@@ -5060,7 +5060,7 @@
       "ten": "Nước ngọt Coca Cola lon 235ml",
       "dvt": "Lon",
       "gia": 9000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1V4W5DqJcisoHhY-38WL0HvdCF7V46UFe",
       "ton": 0
     },
     {
@@ -5072,7 +5072,7 @@
       "ten": "Lipovitan mật ong 250ml",
       "dvt": "Lon",
       "gia": 10000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1QekQ-DpLM2hYM_S_itViepElY5uLxJE8",
       "ton": 0
     },
     {
@@ -5084,7 +5084,7 @@
       "ten": "Trà xanh C2 hương chanh 355ml",
       "dvt": "Chai",
       "gia": 9000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/12opdbNNqjf2NJwZHSVLJHZ_RM4dokboy",
       "ton": 0
     },
     {
@@ -5096,7 +5096,7 @@
       "ten": "Trà xanh C2 hương chanh 455ml",
       "dvt": "Chai",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1PBzh3h2Oh3aVu_1KDa_ZFew8VbkMj8_m",
       "ton": 0
     },
     {
@@ -5108,7 +5108,7 @@
       "ten": "Trà xanh C2 hương chanh tuyết bạc hà 455ml",
       "dvt": "Chai",
       "gia": 12000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1sxJJSiTUwcK8OiR89b7OsDdoHS-iffyJ",
       "ton": 0
     },
     {
@@ -5120,7 +5120,67 @@
       "ten": "Trà xanh Không Độ vị chanh 455ml",
       "dvt": "Chai",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/18JHNDNIIs2-CvxJC1K4bHFMoXgnyXX1H",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP451",
+      "ten": "Nước ngọt 7 Up vị chanh Lon 320ml",
+      "dvt": "Lon",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1_64NZ6WOEGwKIQ5x9zodPj2Ptnv5Kvxz",
+      "ton": 6
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP452",
+      "ten": "Trà bí đao Wonderfarm Lon 310ml",
+      "dvt": "Lon",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1dJx3NCSPVCegR0HqyatY2u6IK7-1lQba",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP453",
+      "ten": "Trà bí đao Wonderfarm Chai 280ml",
+      "dvt": "Chai",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1btRxHv_CSrKRr-F9tpeZ67wm76ROSYR8",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP454",
+      "ten": "Aquafina Soda Lon 320ml",
+      "dvt": "Lon",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1dGAJd4pSIzCIBsfFT9b9ONVZLEZGBZdU",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP455",
+      "ten": "Nước tinh khiết Dasani Chai 510ml",
+      "dvt": "Chai",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1DhO7yVFiyGTFdinZsn-TvTID1UXdEJ8E",
       "ton": 0
     }
   ],
