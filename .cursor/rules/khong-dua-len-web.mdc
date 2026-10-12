@@ -1,0 +1,24 @@
+---
+description: Mã thuộc nhóm Không đưa lên web không được xuất hiện trên site; mã đã đăng thì gỡ.
+alwaysApply: true
+---
+
+# Không đưa lên web
+
+Anh Hà chốt ngày 10/10/2026. Mã có cột Nhóm khớp `Không đưa lên web` không được phát hành. Khớp không phân biệt hoa thường, dấu (kể cả đ/Đ), khoảng trắng thừa hay gạch nối, và vẫn khớp khi có hậu tố như `(nội bộ)`.
+
+Cụm này nằm ở `data/ia.json` → `excludeGroups`. Script sync còn luôn loại cụm này dù key đó bị xóa. Không được gỡ chốt đó để «lỡ» đăng mã.
+
+Không được xuất hiện ở:
+
+- `data/products.json` (kể cả tìm kiếm, vì `san-pham.html` đọc file này)
+- trang SKU `san-pham/<slug>.html`
+- trang nhóm và trang lĩnh vực
+- `js/catalog-paths.js`
+- `sitemap.xml`
+
+Mã đang có trên web mà nguồn gán sang nhóm này: xóa khỏi catalog, xóa trang SKU, sinh lại sitemap và path map trong cùng lượt, ghi danh sách mã đã gỡ trong PR.
+
+Quy tắc này chỉ áp cho web. Cầu nối LIVE Đơn Đặt Hàng vẫn giữ đủ mọi mã. Việc refresh cầu nối thuộc trợ lý ngoài. Không ghi fileId cầu nối hay sheet đơn vào repo.
+
+Trước khi xong PR đụng catalog hoặc trang sinh tự động, chạy `python3 scripts/check_rules.py`.
