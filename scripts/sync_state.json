@@ -89,7 +89,7 @@
     "pages_status": "success",
     "live_spot_check": "products.json 427; VP197 159000, VP457 118000, VP458 236000, VP460 4500, VP461 15000, VP108 29000; VP415 absent + /san-pham/vp415.html 404; /, /linh-vuc/nuoc-banh.html, /san-pham.html 200",
     "bridge_refreshed": true,
-    "bridge_status": "local rebuilt 461 rows at /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx; live export vs local = 5 price diffs (VP197/457/458/460/461) -> NEED computerUse Import→Replace on Sheet 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; fileId must not change",
+    "bridge_status": "verified 2026-10-13 14:20 ICT: Import→Replace spreadsheet on 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc (Replace current sheet disabled for multi-sheet xlsx); 461 data rows + header; VP197=159000 VP457=118000 VP458=236000 VP460=4500 VP461=15000; Chính Sách Đối Tác intact; 0 leftover diffs",
     "bridge_rows_verified": "local 461 == source_count; live still old prices pending Import→Replace",
     "zero_price_count": 17,
     "unknown_groups": [],
@@ -98,7 +98,7 @@
     "keptImages": 0
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-13T07:16:31Z",
+  "lastCheckAt": "2026-10-13T07:20:10Z",
   "lastCheckResult": "changed_full_sync",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
