@@ -30,6 +30,7 @@ MARKER = "vp-generated-catalog"
 CSS_V = "2026101308"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101304"
+CHAT_V = "2026101309"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"
 ADDRESS = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang"
@@ -532,7 +533,7 @@ def scripts(prefix: str) -> str:
   <script defer src="{p}js/catalog-paths.js?v={CSS_V}"></script>
   <script defer src="{p}js/ia.js?v={CSS_V}"></script>
   <script defer src="{p}js/product-lightbox.js?v={JS_V}"></script>
-  <script defer src="{p}js/chat-widget.js?v={CSS_V}"></script>"""
+  <script defer src="{p}js/chat-widget.js?v={CHAT_V}"></script>"""
 
 
 def breadcrumb_html(items: list[tuple[str, str | None]]) -> str:
@@ -1375,7 +1376,7 @@ def refresh_static_chrome(text: str) -> str:
     updated = re.sub(r"ia\.js\?v=\d+", f"ia.js?v={CSS_V}", updated)
     updated = re.sub(r"products\.js\?v=\d+", f"products.js?v={JS_V}", updated)
     updated = re.sub(r"product-lightbox\.js\?v=\d+", f"product-lightbox.js?v={JS_V}", updated)
-    updated = re.sub(r"chat-widget\.js\?v=\d+", f"chat-widget.js?v={CSS_V}", updated)
+    updated = re.sub(r"chat-widget\.js\?v=\d+", f"chat-widget.js?v={CHAT_V}", updated)
     updated = updated.replace(f"{SITE}/assets/logo.png", OG_IMAGE)
     updated = updated.replace(FOOTER_BLURB_OLD, FOOTER_BLURB_NEW)
     updated = defer_external_scripts(updated)

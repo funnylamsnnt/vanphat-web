@@ -4,6 +4,6 @@
   "hotlineTel": "0335652832",
   "productsUrl": "/data/products.json",
   "welcome": "Xin chào! Em là trợ lý AI của Vạn Phát. Em tư vấn theo danh mục trên website — anh/chị hỏi sản phẩm hoặc photocopy giúp em nhé.",
-  "primaryModel": "grok-4.7",
-  "fallbackModel": "grok-4"
+  "primaryModel": "grok-4.20-0309-non-reasoning",
+  "fallbackModel": "grok-4-1-fast-non-reasoning"
 }
