@@ -198,6 +198,19 @@
     const activeFilters = document.getElementById("active-filters");
     const countEl = document.getElementById("result-count");
     const crumb = document.getElementById("catalog-crumb");
+    const navForm = document.querySelector("header form.nav-search");
+    const navInput = navForm ? navForm.querySelector('input[type="search"], input[name="q"]') : null;
+    const filterOpen = document.getElementById("filter-open");
+    const filterSheet = document.getElementById("filter-sheet");
+    const filterBody = document.getElementById("filter-sheet-body");
+    const groupLabel = document.querySelector('label[for="group-select"]');
+    const sortLabel = document.querySelector('label[for="sort-select"]');
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+    const filterSlots = [
+      { node: groupLabel, parent: groupLabel && groupLabel.parentNode, before: countEl },
+      { node: sortLabel, parent: sortLabel && sortLabel.parentNode, before: countEl },
+      { node: chipRow, parent: chipRow && chipRow.parentNode, before: activeFilters },
+    ];
     const SORTS = {
       "price-asc": "Giá thấp đến cao",
       "price-desc": "Giá cao đến thấp",
@@ -336,7 +349,15 @@
       updateChipCounts();
       if (countEl) {
         const q = currentQuery ? ` cho “${escapeHtml(currentQuery)}”` : "";
-        countEl.innerHTML = `<strong>${list.length}</strong> / ${all.length} sản phẩm${q}`;
+        if (mobileQuery.matches) {
+          countEl.innerHTML = `<strong>${list.length}</strong>/${all.length}`;
+        } else {
+          countEl.innerHTML = `<strong>${list.length}</strong> / ${all.length} sản phẩm${q}`;
+        }
+        countEl.setAttribute(
+          "aria-label",
+          `${list.length} trên ${all.length} sản phẩm${currentQuery ? ` cho ${currentQuery}` : ""}`
+        );
       }
       if (!list.length) {
         const q = currentQuery ? escapeHtml(currentQuery) : "sản phẩm này";
@@ -391,8 +412,84 @@
       crumb.innerHTML = parts.join("");
     }
 
+    function sheetIsOpen() {
+      return !!(filterSheet && !filterSheet.hidden);
+    }
+
+    function restoreFilterSlots() {
+      filterSlots.forEach((slot) => {
+        if (!slot.node || !slot.parent) return;
+        if (slot.before && slot.before.parentNode === slot.parent) slot.parent.insertBefore(slot.node, slot.before);
+        else slot.parent.appendChild(slot.node);
+      });
+    }
+
+    function updateFilterButton() {
+      if (!filterOpen) return;
+      const n = (currentGroup ? 1 : 0) + (currentSort ? 1 : 0);
+      filterOpen.classList.toggle("is-on", n > 0);
+      filterOpen.setAttribute("aria-expanded", sheetIsOpen() ? "true" : "false");
+      filterOpen.setAttribute("aria-label", n ? `Lọc, ${n} mục đang bật` : "Lọc nhóm và sắp xếp");
+      filterOpen.replaceChildren(document.createTextNode("Lọc"));
+      if (n) {
+        const badge = document.createElement("span");
+        badge.className = "filter-open-count";
+        badge.textContent = String(n);
+        filterOpen.append(" ", badge);
+      }
+    }
+
+    function suggestBox() {
+      return document.querySelector("header form.nav-search .search-suggest, .search-suggest.catalog-suggest-floating");
+    }
+
+    function placeSuggest() {
+      const box = suggestBox();
+      if (!box || !navForm) return;
+      const catalogMobile = document.body.classList.contains("page-catalog") && mobileQuery.matches;
+      if (catalogMobile) {
+        box.classList.add("catalog-suggest-floating");
+        if (box.parentElement !== document.body) document.body.appendChild(box);
+        syncCatalogStack();
+      } else if (box.classList.contains("catalog-suggest-floating")) {
+        box.classList.remove("catalog-suggest-floating");
+        navForm.appendChild(box);
+      }
+    }
+
+    function syncCatalogStack() {
+      const bar = document.querySelector(".toolbar");
+      if (!bar) return;
+      const bottom = Math.ceil(bar.getBoundingClientRect().bottom);
+      if (bottom > 0) document.documentElement.style.setProperty("--catalog-stack-b", bottom + "px");
+    }
+
+    function openFilterSheet() {
+      if (!filterSheet || !filterBody || !mobileQuery.matches) return;
+      const box = suggestBox();
+      if (box) box.hidden = true;
+      filterSlots.forEach((slot) => {
+        if (slot.node) filterBody.appendChild(slot.node);
+      });
+      filterSheet.hidden = false;
+      document.body.classList.add("filter-sheet-open");
+      updateFilterButton();
+      const closeBtn = filterSheet.querySelector(".filter-sheet-close");
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeFilterSheet() {
+      if (!sheetIsOpen()) return;
+      restoreFilterSlots();
+      filterSheet.hidden = true;
+      document.body.classList.remove("filter-sheet-open");
+      updateFilterButton();
+      if (filterOpen) filterOpen.focus();
+    }
+
     function syncUI() {
       if (searchInput) searchInput.value = currentQuery;
+      if (navInput && document.activeElement !== navInput) navInput.value = currentQuery;
       const groups = currentGroups();
       const names = groups.map(groupName);
       if (groupSelect) {
@@ -427,6 +524,7 @@
           }
         });
       }
+      updateFilterButton();
       syncCrumb();
     }
 
@@ -526,24 +624,68 @@
           setGroup(btn.dataset.nhom || "");
         });
       }
+      let queryTimer;
+      function commitQuery(value) {
+        codeFilter = null;
+        currentQuery = value;
+        if (searchInput && document.activeElement !== searchInput) searchInput.value = value;
+        if (navInput && document.activeElement !== navInput) navInput.value = value;
+        render();
+        syncCrumb();
+        writeUrl();
+      }
+      function scheduleQuery(value) {
+        clearTimeout(queryTimer);
+        queryTimer = setTimeout(() => commitQuery(value), 180);
+      }
       if (searchInput) {
-        let t;
-        searchInput.addEventListener("input", () => {
-          clearTimeout(t);
-          t = setTimeout(() => {
-            codeFilter = null;
-            currentQuery = searchInput.value;
-            render();
-            syncCrumb();
-            writeUrl();
-          }, 180);
-        });
+        searchInput.addEventListener("input", () => scheduleQuery(searchInput.value));
         searchInput.addEventListener("change", () => {
           if (window.VanPhatData && window.VanPhatData.saveRecentSearch) {
             window.VanPhatData.saveRecentSearch(searchInput.value);
           }
         });
       }
+      if (navInput) {
+        navInput.addEventListener("input", () => scheduleQuery(navInput.value));
+      }
+      if (navForm) {
+        navForm.addEventListener("submit", (event) => {
+          if (!document.getElementById("product-grid")) return;
+          event.preventDefault();
+          clearTimeout(queryTimer);
+          commitQuery(navInput ? navInput.value : currentQuery);
+          if (window.VanPhatData && window.VanPhatData.saveRecentSearch && navInput) {
+            window.VanPhatData.saveRecentSearch(navInput.value);
+          }
+        });
+      }
+      if (filterOpen && filterSheet) {
+        filterOpen.addEventListener("click", () => {
+          if (sheetIsOpen()) closeFilterSheet();
+          else openFilterSheet();
+        });
+        filterSheet.addEventListener("click", (event) => {
+          if (event.target.closest("[data-filter-close]")) closeFilterSheet();
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && sheetIsOpen()) {
+            event.preventDefault();
+            closeFilterSheet();
+          }
+        });
+        window.addEventListener("resize", () => {
+          if (sheetIsOpen() && !mobileQuery.matches) closeFilterSheet();
+          placeSuggest();
+        });
+      }
+      if (navForm) {
+        const suggestWatch = new MutationObserver(() => placeSuggest());
+        suggestWatch.observe(navForm, { childList: true });
+        placeSuggest();
+      }
+      window.addEventListener("scroll", syncCatalogStack, { passive: true });
+      syncCatalogStack();
 
       const queryParts = String(currentQuery || "").trim().split(/[\s,]+/).filter(Boolean);
       const fromQuery = knownCodeList(queryParts);
