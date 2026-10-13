@@ -2,39 +2,48 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-12T06:05:54.409Z",
-  "previousModifiedTime": "2026-10-12T01:07:45.290Z",
+  "lastModifiedTime": "2026-10-13T06:59:04.381Z",
+  "previousModifiedTime": "2026-10-12T16:04:12.025Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-12T07:25:02Z",
+  "lastSyncAt": "2026-10-13T07:16:31Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 461,
     "count": 427,
     "with_img": 334,
-    "added": [
-      "VP456",
-      "VP457",
-      "VP458",
-      "VP459",
-      "VP460",
-      "VP461"
-    ],
+    "added": [],
     "removed": [],
-    "price_chg": 0,
-    "name_chg": [
+    "price_chg": [
       {
-        "ma": "VP077",
-        "old": "Bìa còng King Jim A4 9cm",
-        "new": "Bìa còng King Jim A4 9cm (2697GSV)"
+        "ma": "VP197",
+        "old": 136000,
+        "new": 159000
       },
       {
-        "ma": "VP306",
-        "old": "Lau bảng Deli 7837",
-        "new": "Lau bảng Deli (có nam châm 7837)"
+        "ma": "VP457",
+        "old": 125000,
+        "new": 118000
+      },
+      {
+        "ma": "VP458",
+        "old": 250000,
+        "new": 236000
+      },
+      {
+        "ma": "VP460",
+        "old": 4000,
+        "new": 4500
+      },
+      {
+        "ma": "VP461",
+        "old": 13000,
+        "new": 15000
       }
     ],
+    "name_chg": [],
+    "slugChanges": [],
     "image_added": [],
     "excluded_nhom": {
       "Không đưa lên web": [
@@ -75,19 +84,22 @@
       ]
     },
     "web_deployed": true,
-    "commit": "e9a789b2dccc4261cdbd00baff65c3b4a75e1782",
-    "pages_run": 38217489331,
+    "commit": "a49e8039f6b87e7d61a9931020a0495f8cea7471",
+    "pages_run": 38361524744,
     "pages_status": "success",
-    "live_spot_check": "products.json 427; VP456 60000 live; VP461 page 200; VP415 404; old VP077 slug 404 / new slug 200; /, nuoc-banh 200",
+    "live_spot_check": "products.json 427; VP197 159000, VP457 118000, VP458 236000, VP460 4500, VP461 15000, VP108 29000; VP415 absent + /san-pham/vp415.html 404; /, /linh-vuc/nuoc-banh.html, /san-pham.html 200",
     "bridge_refreshed": true,
-    "bridge_status": "Import->Replace done 2026-10-12 14:33 ICT, 461 rows verified, 0 diffs vs local (VP001–VP461; +VP456–VP461)",
+    "bridge_status": "local rebuilt 461 rows at /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx; live export vs local = 5 price diffs (VP197/457/458/460/461) -> NEED computerUse Import→Replace on Sheet 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc; fileId must not change",
+    "bridge_rows_verified": "local 461 == source_count; live still old prices pending Import→Replace",
     "zero_price_count": 17,
     "unknown_groups": [],
-    "keptImages": 6
+    "autoPlacedGroups": [],
+    "heldUnmappedGroups": {},
+    "keptImages": 0
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-12T07:38:43Z",
-  "lastCheckResult": "changed",
+  "lastCheckAt": "2026-10-13T07:16:31Z",
+  "lastCheckResult": "changed_full_sync",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
