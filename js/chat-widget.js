@@ -423,12 +423,43 @@
       '<span class="vp-chat-sku-price">' +
       escapeHtml(price) +
       "</span></span></span></button>" +
+      '<div class="vp-chat-sku-actions">' +
+      '<div class="vp-chat-qty" role="group" aria-label="Số lượng">' +
+      '<button type="button" class="vp-chat-qty-btn" data-vp-qty-minus aria-label="Giảm số lượng">−</button>' +
+      '<input type="number" class="vp-chat-qty-input" data-vp-qty value="1" min="1" max="999" step="1" inputmode="numeric" autocomplete="off" aria-label="Số lượng" />' +
+      '<button type="button" class="vp-chat-qty-btn" data-vp-qty-plus aria-label="Tăng số lượng">+</button>' +
+      "</div>" +
       '<button type="button" class="vp-chat-sku-add" data-vp-add="' +
       escapeAttr(product.ma) +
+      '" data-vp-add-label="Thêm vào giỏ" data-vp-add-aria="' +
+      escapeAttr("Thêm " + name + " vào giỏ") +
       '" aria-label="' +
       escapeAttr("Thêm " + name + " vào giỏ") +
-      '">Thêm vào giỏ</button></article>'
+      '">Thêm vào giỏ</button></div></article>'
     );
+  }
+
+  function clampChatQty(input) {
+    if (!input) return 1;
+    let n = Math.round(Number(input.value));
+    if (!Number.isFinite(n) || n < 1) n = 1;
+    if (n > 999) n = 999;
+    input.value = String(n);
+    return n;
+  }
+
+  function flashChatAdded(btn) {
+    const label = btn.getAttribute("data-vp-add-label") || "Thêm vào giỏ";
+    btn.textContent = "Đã thêm ✓";
+    btn.classList.add("is-added");
+    btn.setAttribute("aria-label", "Đã thêm vào giỏ");
+    window.clearTimeout(btn._vpAddedTimer);
+    btn._vpAddedTimer = window.setTimeout(() => {
+      if (!btn.isConnected) return;
+      btn.textContent = label;
+      btn.classList.remove("is-added");
+      btn.setAttribute("aria-label", btn.getAttribute("data-vp-add-aria") || label);
+    }, 1600);
   }
 
   function isPriceOnlyLine(line) {
@@ -867,11 +898,36 @@
     }
 
     messages.addEventListener("click", (e) => {
+      const qtyBtn = e.target.closest("[data-vp-qty-minus], [data-vp-qty-plus]");
+      if (qtyBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = qtyBtn.closest(".vp-chat-sku");
+        const input = card && card.querySelector("[data-vp-qty]");
+        if (!input) return;
+        const current = clampChatQty(input);
+        const next = qtyBtn.hasAttribute("data-vp-qty-minus")
+          ? Math.max(1, current - 1)
+          : Math.min(999, current + 1);
+        input.value = String(next);
+        return;
+      }
+      if (e.target.closest(".vp-chat-qty")) {
+        e.stopPropagation();
+        return;
+      }
       const addBtn = e.target.closest("[data-vp-add]");
       if (addBtn) {
         e.preventDefault();
+        e.stopPropagation();
         const product = catalogIndex.byMa.get(String(addBtn.getAttribute("data-vp-add") || "").toUpperCase());
-        if (product && window.VanPhatCart && window.VanPhatCart.add) window.VanPhatCart.add(product, 1);
+        const card = addBtn.closest(".vp-chat-sku");
+        const input = card && card.querySelector("[data-vp-qty]");
+        const qty = clampChatQty(input);
+        if (product && window.VanPhatCart && window.VanPhatCart.add) {
+          window.VanPhatCart.add(product, qty);
+          flashChatAdded(addBtn);
+        }
         return;
       }
       const btn = e.target.closest("[data-vp-ma]");
@@ -881,6 +937,28 @@
       e.preventDefault();
       window.VanPhatLightbox.openProduct(product, btn);
     });
+
+    messages.addEventListener("change", (e) => {
+      const input = e.target && e.target.closest ? e.target.closest("[data-vp-qty]") : null;
+      if (input) clampChatQty(input);
+    });
+
+    messages.addEventListener("keydown", (e) => {
+      const input = e.target && e.target.closest ? e.target.closest("[data-vp-qty]") : null;
+      if (!input) return;
+      if (e.key === "." || e.key === "," || e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+        e.preventDefault();
+      }
+    });
+
+    messages.addEventListener(
+      "wheel",
+      (e) => {
+        const input = e.target && e.target.closest ? e.target.closest("[data-vp-qty]") : null;
+        if (input && document.activeElement === input) input.blur();
+      },
+      { passive: true }
+    );
 
     function setOpen(open) {
       document.body.classList.toggle("vp-chat-open", !!open);
