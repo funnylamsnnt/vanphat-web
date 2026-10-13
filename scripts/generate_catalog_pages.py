@@ -312,6 +312,27 @@ def product_seo_title(name: str, group: str) -> str:
     return f"{clip(name, max(room, 12))}{suffix}"
 
 
+def group_seo_title(nhom: str) -> str:
+    """Nhóm page title with local signal, under TITLE_MAX."""
+    nhom = re.sub(r"\s+", " ", str(nhom or "Nhóm")).strip()
+    full = f"{nhom} Nha Trang | Vạn Phát"
+    if len(full) <= TITLE_MAX:
+        return full
+    short = f"{nhom} | Vạn Phát"
+    if len(short) <= TITLE_MAX:
+        return short
+    return clip(short, TITLE_MAX)
+
+
+def linh_vuc_seo_title(ten: str) -> str:
+    ten = re.sub(r"\s+", " ", str(ten or "Lĩnh vực")).strip()
+    full = f"{ten} Nha Trang | Vạn Phát"
+    if len(full) <= TITLE_MAX:
+        return full
+    short = f"{ten} | Vạn Phát"
+    return short if len(short) <= TITLE_MAX else clip(short, TITLE_MAX)
+
+
 def product_seo_description(product: dict, group: str) -> str:
     body = _DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product)
     amount = price_amount(product.get("gia"))
@@ -827,9 +848,9 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
         f"Sản phẩm nhóm {nhom} tại cửa hàng Vạn Phát, KĐT Mỹ Gia, Nam Nha Trang.",
     )
     description = clip(
-        f"{nhom} — {blurb} {len(products)} mặt hàng, giá niêm yết. Hotline {HOTLINE_DISPLAY}."
+        f"{nhom} tại Nha Trang, Khánh Hòa — {blurb} {len(products)} mặt hàng, giá niêm yết. Hotline {HOTLINE_DISPLAY}."
     )
-    title = f"{nhom} | Vạn Phát"
+    title = group_seo_title(nhom)
     lv_href = f"../linh-vuc/{lv['slug']}.html" if lv else "../san-pham.html"
     lv_name = lv.get("ten") if lv else "Sản phẩm"
     crumbs = [
@@ -864,9 +885,11 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
             breadcrumb_ld(crumbs_ld),
             {
                 "@type": "CollectionPage",
+                "@id": canonical + "#collection",
                 "name": title,
                 "description": description,
                 "url": canonical,
+                "inLanguage": "vi",
                 "isPartOf": SITE + "/san-pham.html",
                 "about": nhom,
                 "mainEntity": item_list,
@@ -934,9 +957,10 @@ def build_linh_vuc_page(lv: dict, ia: dict, by_group: dict, cat_files: dict) -> 
     for name in names:
         products.extend(by_group.get(name) or [])
     description = clip(
-        f"{lv.get('ten')} — {lv.get('moTa') or ''} {len(products)} sản phẩm tại Vạn Phát, Nam Nha Trang. Hotline {HOTLINE_DISPLAY}."
+        f"{lv.get('ten')} tại Nha Trang, Khánh Hòa — {lv.get('moTa') or ''} "
+        f"{len(products)} sản phẩm tại Vạn Phát, Nam Nha Trang. Hotline {HOTLINE_DISPLAY}."
     )
-    title = f"{lv.get('ten')} | Vạn Phát"
+    title = linh_vuc_seo_title(str(lv.get("ten") or slug))
     crumbs = [
         ("Trang chủ", "../index.html"),
         ("Sản phẩm", "../san-pham.html"),
@@ -989,6 +1013,20 @@ def build_linh_vuc_page(lv: dict, ia: dict, by_group: dict, cat_files: dict) -> 
           </a>"""
             )
         inner = f'<div class="lv-group-grid">{"".join(tiles)}</div>'
+    group_list = {
+        "@type": "ItemList",
+        "numberOfItems": len(groups),
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": i + 1,
+                "url": f"{SITE}/san-pham/{cat_files[meta['TenNhom']]}",
+                "name": meta.get("TenNhom"),
+            }
+            for i, meta in enumerate(groups)
+            if meta.get("TenNhom") in cat_files
+        ],
+    }
     graph = {
         "@context": "https://schema.org",
         "@graph": [
@@ -996,11 +1034,14 @@ def build_linh_vuc_page(lv: dict, ia: dict, by_group: dict, cat_files: dict) -> 
             breadcrumb_ld(crumbs_ld),
             {
                 "@type": "CollectionPage",
+                "@id": canonical + "#collection",
                 "name": title,
                 "description": description,
                 "url": canonical,
+                "inLanguage": "vi",
                 "isPartOf": SITE + "/",
                 "about": lv.get("ten"),
+                "mainEntity": group_list,
             },
         ],
     }
@@ -1058,8 +1099,10 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
     image = absolute_image(product)
     product_ld = {
         "@type": "Product",
+        "@id": canonical + "#product",
         "name": product.get("ten"),
         "sku": product.get("ma"),
+        "url": canonical,
         "category": nhom,
         "description": description,
         "image": image,
@@ -1249,31 +1292,139 @@ VERIFICATION_RE = re.compile(
 )
 JSONLD_START = "<!-- vp-jsonld -->"
 JSONLD_END = "<!-- /vp-jsonld -->"
+CATALOG_DIR_START = "<!-- vp-catalog-dir -->"
+CATALOG_DIR_END = "<!-- /vp-catalog-dir -->"
 
 
-def catalog_page_ld() -> dict:
+def catalog_page_ld(ia: dict | None = None, cat_files: dict | None = None) -> dict:
     canonical = SITE + "/san-pham.html"
     description = (
         "Tìm văn phòng phẩm, nước uống và điện gia dụng tại Vạn Phát, Nha Trang, Khánh Hòa. "
         "Lọc theo lĩnh vực, nhóm, mã hoặc tên."
     )
+    collection: dict = {
+        "@type": "CollectionPage",
+        "@id": canonical + "#catalog",
+        "name": "Catalog sản phẩm | Vạn Phát Nha Trang",
+        "description": description,
+        "url": canonical,
+        "inLanguage": "vi",
+        "isPartOf": {"@id": SITE + "/#website"},
+        "about": "Văn phòng phẩm, nước uống và điện gia dụng",
+    }
+    if ia and cat_files:
+        items = []
+        position = 1
+        for lv in ia.get("linh_vuc") or []:
+            slug = lv.get("slug")
+            if not slug:
+                continue
+            items.append(
+                {
+                    "@type": "ListItem",
+                    "position": position,
+                    "url": f"{SITE}/linh-vuc/{slug}.html",
+                    "name": lv.get("ten") or slug,
+                }
+            )
+            position += 1
+        for meta in ia.get("nhom") or []:
+            name = meta.get("TenNhom")
+            if not name or name not in cat_files:
+                continue
+            items.append(
+                {
+                    "@type": "ListItem",
+                    "position": position,
+                    "url": f"{SITE}/san-pham/{cat_files[name]}",
+                    "name": name,
+                }
+            )
+            position += 1
+        if items:
+            collection["mainEntity"] = {
+                "@type": "ItemList",
+                "numberOfItems": len(items),
+                "itemListElement": items,
+            }
     return {
         "@context": "https://schema.org",
         "@graph": [
             organization_node(),
             breadcrumb_ld([("Trang chủ", SITE + "/"), ("Sản phẩm", canonical)]),
-            {
-                "@type": "CollectionPage",
-                "@id": canonical + "#catalog",
-                "name": "Catalog sản phẩm | Vạn Phát Nha Trang",
-                "description": description,
-                "url": canonical,
-                "inLanguage": "vi",
-                "isPartOf": {"@id": SITE + "/#website"},
-                "about": "Văn phòng phẩm, nước uống và điện gia dụng",
-            },
+            collection,
         ],
     }
+
+
+def catalog_dir_html(ia: dict, cat_files: dict, by_group: dict) -> str:
+    """Static crawl directory for san-pham.html when JS is off or ignored."""
+    lv_links = []
+    for lv in ia.get("linh_vuc") or []:
+        slug = lv.get("slug")
+        if not slug:
+            continue
+        lv_links.append(
+            f'<li><a href="linh-vuc/{esc(slug)}.html">{esc(lv.get("ten") or slug)}</a></li>'
+        )
+    group_links_html = []
+    for meta in ia.get("nhom") or []:
+        name = meta.get("TenNhom")
+        if not name or name not in cat_files:
+            continue
+        count = len(by_group.get(name) or [])
+        label = f"{name} ({count} sản phẩm)" if count else f"{name} (sắp có)"
+        group_links_html.append(
+            f'<li><a href="san-pham/{esc(cat_files[name])}">{esc(label)}</a></li>'
+        )
+    body = f"""  {CATALOG_DIR_START}
+        <noscript class="catalog-crawl-dir">
+          <h2>Duyệt catalog không cần JavaScript</h2>
+          <p>Mỗi nhóm và từng sản phẩm có trang HTML tĩnh riêng. Chọn lĩnh vực hoặc nhóm bên dưới.</p>
+          <h3>Lĩnh vực</h3>
+          <ul>{''.join(lv_links)}</ul>
+          <h3>Nhóm hàng</h3>
+          <ul>{''.join(group_links_html)}</ul>
+        </noscript>
+  {CATALOG_DIR_END}"""
+    return body
+
+
+def upsert_catalog_dir(text: str, block: str) -> str:
+    pattern = re.compile(
+        r"[ \t]*" + re.escape(CATALOG_DIR_START) + r".*?" + re.escape(CATALOG_DIR_END) + r"\n?",
+        re.S,
+    )
+    if pattern.search(text):
+        return pattern.sub(block.rstrip() + "\n", text, count=1)
+    # Prefer the CTA row that follows #product-grid on san-pham.html so nested
+    # loading markup inside the grid does not steal the insert point.
+    anchor = '        <div class="text-center mt-2">\n          <a class="btn btn-zalo"'
+    if anchor in text:
+        return text.replace(anchor, block.rstrip() + "\n" + anchor, 1)
+    marker = 'id="product-grid"'
+    idx = text.find(marker)
+    if idx < 0:
+        return text
+    open_div = text.rfind("<div", 0, idx)
+    if open_div < 0:
+        return text
+    depth = 0
+    i = open_div
+    while i < len(text):
+        next_open = text.find("<div", i)
+        next_close = text.find("</div>", i)
+        if next_close < 0:
+            return text
+        if next_open != -1 and next_open < next_close:
+            depth += 1
+            i = next_open + 4
+            continue
+        depth -= 1
+        i = next_close + len("</div>")
+        if depth == 0:
+            return text[:i] + "\n" + block.rstrip() + "\n" + text[i:]
+    return text
 
 
 def letter_page_ld() -> dict:
@@ -1384,12 +1535,19 @@ def refresh_static_chrome(text: str) -> str:
     return updated
 
 
-def refresh_static_heads() -> list[str]:
+def refresh_static_heads(
+    ia: dict | None = None,
+    cat_files: dict | None = None,
+    by_group: dict | None = None,
+) -> list[str]:
     touched = []
     jsonld = {
-        "san-pham.html": catalog_page_ld(),
+        "san-pham.html": catalog_page_ld(ia, cat_files),
         "thu-ngo.html": letter_page_ld(),
     }
+    dir_block = ""
+    if ia and cat_files is not None and by_group is not None:
+        dir_block = catalog_dir_html(ia, cat_files, by_group)
     for rel in STATIC_HTML:
         path = ROOT / rel
         if not path.is_file():
@@ -1398,6 +1556,8 @@ def refresh_static_heads() -> list[str]:
         updated = upsert_verification(text)
         if rel in jsonld:
             updated = upsert_jsonld(updated, jsonld[rel])
+        if rel == "san-pham.html" and dir_block:
+            updated = upsert_catalog_dir(updated, dir_block)
         prefix = "../" if "/" in rel else ""
         updated = upsert_local_links(updated, prefix)
         updated = refresh_static_chrome(updated)
@@ -1437,6 +1597,10 @@ def assert_seo_helpers() -> None:
         raise SystemExit(f"long title dropped local/group: {long!r}")
     if len(long) > TITLE_MAX:
         raise SystemExit(f"title too long ({len(long)}): {long!r}")
+    if group_seo_title("Giấy") != "Giấy Nha Trang | Vạn Phát":
+        raise SystemExit(f"group title mismatch: {group_seo_title('Giấy')!r}")
+    if "Nha Trang" not in linh_vuc_seo_title("Văn phòng phẩm"):
+        raise SystemExit("linh vực title missing Nha Trang")
     if price_amount(0) is not None or price_amount("") is not None or price_amount(None) is not None:
         raise SystemExit("zero/empty price should be omitted")
     if price_amount(12000) != 12000:
@@ -1515,6 +1679,9 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit(f"Lavie brand missing: {lavie.get('brand')}")
     if (lavie.get("offers") or {}).get("seller", {}).get("@id") != ORG_ID:
         raise SystemExit("Lavie offer is missing the company seller")
+    lavie_url = f"{SITE}/san-pham/{by_ma['VP332']['_file']}"
+    if lavie.get("url") != lavie_url or lavie.get("@id") != lavie_url + "#product":
+        raise SystemExit(f"Lavie Product.url/@id missing: {lavie.get('url')} {lavie.get('@id')}")
 
     paper = by_ma["VP204"]
     paper_node = _product_node(_load_ld(ROOT / "san-pham" / paper["_file"]))
@@ -1525,6 +1692,8 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit(f"in-stock availability missing on VP204: {offer.get('availability')}")
     if "price" not in offer or offer.get("price") in {"0", "0.0"}:
         raise SystemExit("priced SKU lost its offer price")
+    if paper_node.get("url") != f"{SITE}/san-pham/{paper['_file']}":
+        raise SystemExit("VP204 Product.url missing")
 
     out_product = next(
         p for p in products if price_amount(p.get("gia")) and int(p.get("ton") or 0) <= 0
@@ -1585,6 +1754,33 @@ def assert_generated_seo(products: list[dict]) -> None:
         if rel == "thu-ngo.html" and "AboutPage" not in types:
             raise SystemExit("thu-ngo.html JSON-LD is missing AboutPage")
         json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', (ROOT / rel).read_text(encoding="utf-8")).group(1))
+    catalog_html = (ROOT / "san-pham.html").read_text(encoding="utf-8")
+    if CATALOG_DIR_START not in catalog_html or "nhom-giay.html" not in catalog_html:
+        raise SystemExit("san-pham.html is missing the crawlable catalog directory")
+    if "<noscript" not in catalog_html or "linh-vuc/vpp.html" not in catalog_html:
+        raise SystemExit("san-pham.html noscript directory lost lĩnh vực links")
+    catalog_doc = _load_ld(ROOT / "san-pham.html")
+    catalog_collection = next(
+        (n for n in catalog_doc.get("@graph") or [] if n.get("@type") == "CollectionPage"),
+        None,
+    )
+    if not catalog_collection or (catalog_collection.get("mainEntity") or {}).get("@type") != "ItemList":
+        raise SystemExit("san-pham.html CollectionPage is missing ItemList mainEntity")
+    giay = (ROOT / "san-pham" / "nhom-giay.html").read_text(encoding="utf-8")
+    if "Giấy Nha Trang" not in giay.split("</title>", 1)[0]:
+        raise SystemExit("nhóm Giấy title is missing local Nha Trang signal")
+    giay_doc = _load_ld(ROOT / "san-pham" / "nhom-giay.html")
+    if not any(
+        n.get("@type") == "CollectionPage" and (n.get("mainEntity") or {}).get("@type") == "ItemList"
+        for n in giay_doc.get("@graph") or []
+    ):
+        raise SystemExit("nhóm Giấy page lost CollectionPage ItemList")
+    vpp_doc = _load_ld(ROOT / "linh-vuc" / "vpp.html")
+    if not any(
+        n.get("@type") == "CollectionPage" and (n.get("mainEntity") or {}).get("@type") == "ItemList"
+        for n in vpp_doc.get("@graph") or []
+    ):
+        raise SystemExit("linh-vuc/vpp.html lost group ItemList")
 
 
 NHOM_USE = {
@@ -1973,7 +2169,7 @@ def main() -> None:
         urls.append((path, "weekly", "0.75"))
     sitemap_changed = write_text(ROOT / "sitemap.xml", render_sitemap(urls, mtime))
     robots_changed = write_text(ROOT / "robots.txt", render_robots())
-    static_touched = refresh_static_heads()
+    static_touched = refresh_static_heads(ia, cat_files, by_group)
 
     index = ROOT / "index.html"
     if index.exists():

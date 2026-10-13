@@ -155,8 +155,22 @@ def check_pages(errors: list[str]) -> int:
             errors.append(f"{rel}: thiếu hreflang vi")
         if rel == "index.html" and "Organization" not in text and "LocalBusiness" not in text:
             errors.append("index.html thiếu schema Organization hoặc LocalBusiness")
-        if rel.startswith("san-pham/vp") and rel.endswith(".html") and not re.search(r'"@type"\s*:\s*"Product"', text):
-            errors.append(f"{rel}: trang SKU thiếu schema Product")
+        if rel.startswith("san-pham/vp") and rel.endswith(".html"):
+            if not re.search(r'"@type"\s*:\s*"Product"', text):
+                errors.append(f"{rel}: trang SKU thiếu schema Product")
+            elif not re.search(r'"url"\s*:\s*"https://vanphatcompany\.vn/san-pham/', text):
+                errors.append(f"{rel}: schema Product thiếu url tuyệt đối")
+        if rel.startswith("san-pham/nhom-") and rel.endswith(".html"):
+            if "CollectionPage" not in text or "ItemList" not in text:
+                errors.append(f"{rel}: trang nhóm thiếu CollectionPage/ItemList")
+        if rel.startswith("linh-vuc/") and rel.endswith(".html"):
+            if "CollectionPage" not in text or "ItemList" not in text:
+                errors.append(f"{rel}: trang lĩnh vực thiếu CollectionPage/ItemList")
+        if rel == "san-pham.html":
+            if "vp-catalog-dir" not in text or "<noscript" not in text:
+                errors.append("san-pham.html thiếu thư mục catalog tĩnh (noscript)")
+            if "ItemList" not in text:
+                errors.append("san-pham.html thiếu ItemList trong JSON-LD")
         for ref in ATTR_RE.findall(text):
             target = resolve_ref(path, ref)
             if target is None:
