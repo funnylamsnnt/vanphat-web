@@ -482,7 +482,7 @@
         if (e.target.closest(".sg-all")) saveRecent(input.value);
       });
       document.addEventListener("click", (e) => {
-        if (!form.contains(e.target)) hide();
+        if (!form.contains(e.target) && !box.contains(e.target)) hide();
       });
     });
   }
