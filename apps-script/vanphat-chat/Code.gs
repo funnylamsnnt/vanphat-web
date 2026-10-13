@@ -1,21 +1,29 @@
 /**
  * Vạn Phát — chat tư vấn theo catalog, gọi Grok (xAI) + ghi bill.
  *
- * grok-4.7: POST https://api.x.ai/v1/responses, reasoning.effort = low.
- *   Tài liệu xAI: model này có reasoning, mặc định high, chỉnh effort trên Responses API.
- * grok-4: POST https://api.x.ai/v1/chat/completions.
- *   Bảng reasoning.effort không liệt kê grok-4, nên model dự phòng ở cổng Chat Completions.
+ * Mặc định (Script Property cùng tên sẽ đè, nếu đã set):
+ *   PRIMARY_MODEL  grok-4.20-0309-non-reasoning → POST /v1/chat/completions
+ *   FALLBACK_MODEL grok-4-1-fast-non-reasoning → POST /v1/chat/completions
+ * Chỉ model suy luận (ví dụ grok-4.7) đi POST /v1/responses, reasoning.effort = low.
+ * Dự phòng đúng một lần, chỉ khi HTTP 4xx/5xx hoặc lỗi mạng. Không gọi grok-4.
+ * Non-reasoning: max_tokens khoảng 450.
  *
  * Script Properties:
  *   XAI_API_KEY      — bắt buộc. Khóa xAI, không ghi vào repo.
  *   SYSTEM_PROMPT    — tuỳ chọn (nên dán từ content/chat-system-prompt.md)
- *   PRIMARY_MODEL    — mặc định grok-4.7
- *   FALLBACK_MODEL   — mặc định grok-4
+ *   PRIMARY_MODEL    — mặc định grok-4.20-0309-non-reasoning
+ *   FALLBACK_MODEL   — mặc định grok-4-1-fast-non-reasoning
  *   DAILY_CAP        — tuỳ chọn, mặc định 2000 tin/ngày (giờ Bangkok) cho cả site
  *   LEAD_SHEET_ID    — tuỳ chọn: ID Google Sheet; nếu trống sẽ tạo sheet "Vạn Phát Chat Bills"
  *
  * Web App của Apps Script không nhận IP khách. Giới hạn phiên dùng sessionId do trình duyệt gửi.
+ * doGet là ping rẻ. keepWarm() chỉ chạm CacheService; installKeepWarmTrigger_ gắn lịch 5 phút.
  */
+
+var PRIMARY_MODEL_DEFAULT = 'grok-4.20-0309-non-reasoning';
+var FALLBACK_MODEL_DEFAULT = 'grok-4-1-fast-non-reasoning';
+var NON_REASONING_MAX_TOKENS = 450;
+var REASONING_MAX_OUTPUT_TOKENS = 700;
 
 var HOTLINE_TEXT = '033 5652 832';
 var ZALO_URL = 'https://zalo.me/0335652832';
@@ -42,7 +50,23 @@ var DEFAULT_SYSTEM_PROMPT =
   'Giá viết dạng 80.000đ. Dùng **in đậm** và danh sách bắt đầu bằng "- ".';
 
 function doGet() {
-  return jsonOut_({ ok: true, service: 'vanphat-chat', actions: ['chat', 'lead'] });
+  // Ping rẻ: không đọc Sheet, không gọi xAI, không giữ lock.
+  return jsonOut_({ ok: true, ping: true, service: 'vanphat-chat', actions: ['chat', 'lead'] });
+}
+
+function keepWarm() {
+  var cache = CacheService.getScriptCache();
+  cache.put('vp-chat-warm', '1', 300);
+}
+
+function installKeepWarmTrigger_() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'keepWarm') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger('keepWarm').timeBased().everyMinutes(5).create();
 }
 
 function doPost(e) {
@@ -67,7 +91,7 @@ function handleChat_(body) {
   if (!message) return jsonOut_({ ok: false, error: 'Thiếu message' });
   if (message.length > 2000) return jsonOut_({ ok: false, error: 'Tin nhắn quá dài' });
 
-  var history = Array.isArray(body.history) ? body.history.slice(-8) : [];
+  var history = Array.isArray(body.history) ? body.history.slice(-6) : [];
   var catalogContext = String(body.catalogContext || '').slice(0, 6000);
   var limited = reserveChatSlot_(body.sessionId);
   if (!limited.ok) {
@@ -146,8 +170,8 @@ function callGrokWithFallback_(message, history, catalogContext) {
   if (!apiKey) return { text: HELP_TEXT, model: '' };
 
   var systemPrompt = props.getProperty('SYSTEM_PROMPT') || DEFAULT_SYSTEM_PROMPT;
-  var primary = props.getProperty('PRIMARY_MODEL') || 'grok-4.7';
-  var fallback = props.getProperty('FALLBACK_MODEL') || 'grok-4';
+  var primary = String(props.getProperty('PRIMARY_MODEL') || PRIMARY_MODEL_DEFAULT).trim();
+  var fallback = fallbackModel_(props.getProperty('FALLBACK_MODEL'), primary);
   var userPayload =
     'CATALOG (chỉ dùng dữ liệu này cho mã, tên, đơn vị và giá. Không nêu số tồn):\n' +
     catalogContext +
@@ -160,6 +184,9 @@ function callGrokWithFallback_(message, history, catalogContext) {
       model: primary
     };
   } catch (err1) {
+    if (!fallback || !isClearGrokFailure_(err1)) {
+      return { text: HELP_TEXT, model: '' };
+    }
     try {
       return {
         text: generateContent_(apiKey, fallback, systemPrompt, userPayload, history),
@@ -171,10 +198,29 @@ function callGrokWithFallback_(message, history, catalogContext) {
   }
 }
 
+function fallbackModel_(configured, primary) {
+  var name = String(configured || '').trim() || FALLBACK_MODEL_DEFAULT;
+  // Đúng id grok-4 (không hậu tố) là model chậm. Không đưa vào chuỗi dự phòng.
+  if (name === 'grok-4') name = FALLBACK_MODEL_DEFAULT;
+  if (!name || name === primary) return '';
+  return name;
+}
+
+function isClearGrokFailure_(err) {
+  var msg = String((err && err.message) || err || '');
+  if (msg.indexOf('Grok network') === 0) return true;
+  var http = msg.match(/^Grok HTTP (\d+)/);
+  if (!http) return false;
+  var code = parseInt(http[1], 10);
+  return code >= 400 && code <= 599;
+}
+
 function usesResponsesApi_(model) {
-  // grok-4.5 trở đi có reasoning.effort trên /v1/responses.
-  // grok-4 (không có phần phụ) ở /v1/chat/completions.
-  return /^grok-4\.(5|6|7|20)/.test(String(model || ''));
+  var name = String(model || '');
+  if (/non-reasoning/i.test(name)) return false;
+  // grok-4.7 (và grok-4.5 / grok-4.6) suy luận trên /v1/responses.
+  // grok-4.20-...-non-reasoning đã loại ở trên, không đi cổng này.
+  return /^grok-4\.(?:5|6|7)(?:$|[^0-9])/.test(name);
 }
 
 function chatMessages_(systemPrompt, message, history) {
@@ -199,7 +245,7 @@ function generateResponses_(apiKey, model, systemPrompt, message, history) {
     model: model,
     input: chatMessages_(systemPrompt, message, history),
     reasoning: { effort: 'low' },
-    max_output_tokens: 700,
+    max_output_tokens: REASONING_MAX_OUTPUT_TOKENS,
     store: false,
     stream: false
   };
@@ -214,7 +260,7 @@ function generateChatCompletions_(apiKey, model, systemPrompt, message, history)
     model: model,
     messages: chatMessages_(systemPrompt, message, history),
     temperature: 0.3,
-    max_tokens: 700,
+    max_tokens: NON_REASONING_MAX_TOKENS,
     stream: false
   };
   var data = postXai_('https://api.x.ai/v1/chat/completions', apiKey, payload);
@@ -229,16 +275,25 @@ function generateChatCompletions_(apiKey, model, systemPrompt, message, history)
 }
 
 function postXai_(url, apiKey, payload) {
-  var res = UrlFetchApp.fetch(url, {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { Authorization: 'Bearer ' + apiKey },
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  });
+  var res;
+  try {
+    res = UrlFetchApp.fetch(url, {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + apiKey },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+  } catch (err) {
+    throw new Error('Grok network');
+  }
   var code = res.getResponseCode();
   if (code < 200 || code >= 300) throw new Error('Grok HTTP ' + code);
-  return JSON.parse(res.getContentText() || '{}');
+  try {
+    return JSON.parse(res.getContentText() || '{}');
+  } catch (err) {
+    throw new Error('Grok bad JSON');
+  }
 }
 
 function textFromResponses_(data) {
@@ -325,8 +380,8 @@ function setChatSecrets_(apiKey, systemPrompt) {
   var props = PropertiesService.getScriptProperties();
   var map = {
     XAI_API_KEY: apiKey,
-    PRIMARY_MODEL: 'grok-4.7',
-    FALLBACK_MODEL: 'grok-4'
+    PRIMARY_MODEL: PRIMARY_MODEL_DEFAULT,
+    FALLBACK_MODEL: FALLBACK_MODEL_DEFAULT
   };
   if (!props.getProperty('DAILY_CAP')) map.DAILY_CAP = '2000';
   if (systemPrompt) map.SYSTEM_PROMPT = systemPrompt;

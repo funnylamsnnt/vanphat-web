@@ -54,14 +54,16 @@
     });
   }
 
-  function postGas(apiUrl, payload) {
-    return fetch(apiUrl, {
+  function postGas(apiUrl, payload, signal) {
+    const opts = {
       method: "POST",
       redirect: "follow",
       credentials: "omit",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
-    }).then((res) => parseGasResponse(res));
+    };
+    if (signal) opts.signal = signal;
+    return fetch(apiUrl, opts).then((res) => parseGasResponse(res));
   }
 
 
@@ -734,6 +736,10 @@
 
     const history = [];
     let pendingLead = null;
+    let sending = false;
+    const CHAT_TIMEOUT_MS = 25000;
+    const CHAT_SLOW_MS = 5000;
+    const HISTORY_LIMIT = 6;
 
     const fabZalo = el("a", {
       className: "vp-fab vp-fab-zalo",
@@ -997,12 +1003,32 @@
 
     addBubble("bot", welcome);
 
+    function apologyText() {
+      const zalo = "https://zalo.me/" + String(hotlineTel || "0335652832").replace(/\s+/g, "");
+      return (
+        "Em xin lỗi, em chưa soạn kịp câu trả lời. Anh/chị gọi hotline " +
+        hotline +
+        " hoặc [Chat Zalo](" +
+        zalo +
+        ") để được tư vấn nhé."
+      );
+    }
+
+    function unlockComposer() {
+      sending = false;
+      input.disabled = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
     function sendMessage(text) {
       const msg = String(text || "").trim();
-      if (!msg) return;
+      if (!msg || sending) return;
       addBubble("user", msg);
       history.push({ role: "user", text: msg });
       input.value = "";
+      sending = true;
+      input.disabled = true;
       sendBtn.disabled = true;
 
       const matches = searchCatalog(catalog, msg, 8);
@@ -1033,7 +1059,7 @@
         }
         const localReply = addBubble("bot", fallback);
         history.push({ role: "model", text: (localReply && localReply.shown) || fallback });
-        sendBtn.disabled = false;
+        unlockComposer();
         return;
       }
 
@@ -1046,24 +1072,34 @@
       messages.appendChild(typing);
       messages.scrollTop = messages.scrollHeight;
 
-      postGas(apiUrl, {
-        action: "chat",
-        message: msg,
-        history: history.slice(0, -1),
-        catalogContext: catalogContext,
-        sessionId: chatSessionId(),
-      })
+      const controller = typeof AbortController === "function" ? new AbortController() : null;
+      const slowTimer = window.setTimeout(() => {
+        const label = typing.querySelector(".vp-typing-label");
+        if (label && label.isConnected) label.textContent = "Đang soạn trả lời…";
+      }, CHAT_SLOW_MS);
+      let abortTimer = 0;
+      const timeout = new Promise((_, reject) => {
+        abortTimer = window.setTimeout(() => {
+          if (controller) controller.abort();
+          reject(new Error("timeout"));
+        }, CHAT_TIMEOUT_MS);
+      });
+      const request = postGas(
+        apiUrl,
+        {
+          action: "chat",
+          message: msg,
+          history: history.slice(0, -1).slice(-HISTORY_LIMIT),
+          catalogContext: catalogContext,
+          sessionId: chatSessionId(),
+        },
+        controller ? controller.signal : undefined
+      );
+
+      Promise.race([request, timeout])
         .then((data) => {
           typing.remove();
-          const replyText =
-            data && data.ok && data.reply
-              ? data.reply
-              : (data && data.error) ||
-                "Em chưa trả lời được lúc này. Anh/chị gọi hotline " +
-                  hotline +
-                  " hoặc Chat Zalo https://zalo.me/" +
-                  hotlineTel +
-                  " để được tư vấn nhé.";
+          const replyText = data && data.ok && data.reply ? data.reply : apologyText();
           const parsed = addBubble("bot", replyText);
           history.push({ role: "model", text: (parsed && parsed.shown) || "" });
           if (history.length > 16) history.splice(0, history.length - 16);
@@ -1073,18 +1109,14 @@
         })
         .catch(() => {
           typing.remove();
-          const err =
-            "Mất kết nối chat. Anh/chị gọi hotline " +
-            hotline +
-            " hoặc Chat Zalo https://zalo.me/" +
-            hotlineTel +
-            " để được tư vấn nhé.";
-          addBubble("bot", err);
-          history.push({ role: "model", text: err });
+          const err = apologyText();
+          const parsed = addBubble("bot", err);
+          history.push({ role: "model", text: (parsed && parsed.shown) || err });
         })
         .finally(() => {
-          sendBtn.disabled = false;
-          input.focus();
+          window.clearTimeout(slowTimer);
+          window.clearTimeout(abortTimer);
+          unlockComposer();
         });
     }
 
