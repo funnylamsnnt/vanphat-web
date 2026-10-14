@@ -2,23 +2,27 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-13T07:44:12.744Z",
-  "previousModifiedTime": "2026-10-13T06:59:04.381Z",
+  "lastModifiedTime": "2026-10-14T03:17:35.455Z",
+  "previousModifiedTime": "2026-10-13T07:44:12.744Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-14T01:14:32Z",
+  "lastSyncAt": "2026-10-14T07:13:21Z",
   "lastSyncResult": {
-    "changed": false,
-    "source_count": 461,
-    "count": 427,
-    "with_img": 334,
-    "added": [],
+    "changed": true,
+    "source_count": 462,
+    "count": 428,
+    "with_img": 335,
+    "added": [
+      "VP462"
+    ],
     "removed": [],
     "price_chg": [],
     "name_chg": [],
     "slugChanges": [],
-    "image_added": [],
+    "image_added": [
+      "VP462"
+    ],
     "excluded_nhom": {
       "Không đưa lên web": [
         "VP415",
@@ -57,20 +61,20 @@
         "VP448"
       ]
     },
-    "web_deployed": false,
-    "commit": "241ef1d905b547cea12a8d6c3ad4d0f21a3ebfb7",
-    "pages_run": 38494677011,
-    "pages_status": "success (chore sync_state only; products.json unchanged)",
-    "live_spot_check": "products.json 427 HTTP200; VP197 159000, VP457 118000, VP458 236000, VP460 4500, VP461 15000, VP108 29000; VP415 absent + /san-pham/vp415.html 404; /, /linh-vuc/nuoc-banh.html, /san-pham.html 200",
-    "bridge_refreshed": true,
-    "bridge_status": "local rebuilt 2026-10-14 08:14 ICT: /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx and _UPLOAD_BRIDGE.xlsx (461 data rows + header; sheets Danh Mục Vật Tư + Chính Sách Đối Tác). Drive MCP update_file cannot replace spreadsheet content — browser Import→Replace still needed on fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
-    "bridge_rows_verified": "local 461 == source_count; live bridge Import→Replace pending",
+    "web_deployed": true,
+    "commit": "pending (this commit)",
+    "pages_run": null,
+    "pages_status": "pending",
+    "live_spot_check": "pending",
+    "bridge_refreshed": false,
+    "bridge_status": "local rebuilt 2026-10-14 14:12 ICT: /workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx (= VP_DanhMuc_LIVE_BRIDGE.xlsx) 462 data rows + header (sheets Danh Mục Vật Tư + Chính Sách Đối Tác); delta vs previous bridge: +VP462 only. Live bridge fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc browser Import→Replace pending (parent).",
+    "bridge_rows_verified": "local 462 == source_count; live Import→Replace pending",
     "bridge_upload_path": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "zero_price_count": 17,
     "unknown_groups": [],
     "autoPlacedGroups": [],
     "heldUnmappedGroups": {},
-    "keptImages": 0,
+    "keptImages": 1,
     "zeroPrice": [
       "VP238",
       "VP239",
@@ -92,7 +96,7 @@
     ],
     "groups": {
       "Giấy": 49,
-      "Bìa Hồ Sơ": 50,
+      "Bìa Hồ Sơ": 51,
       "Bút & Mực": 55,
       "Băng Keo": 34,
       "Dụng cụ VP": 193,
@@ -100,14 +104,29 @@
       "Nước uống": 36
     },
     "linhVuc": {
-      "vpp": 381,
+      "vpp": 382,
       "dien-gia-dung": 10,
       "nuoc-banh": 36
-    }
+    },
+    "added_detail": [
+      {
+        "ma": "VP462",
+        "ten": "Cặp tài liệu A4 nhựa (Deli 5558)",
+        "nhom": "Bìa Hồ Sơ",
+        "linhVuc": "vpp",
+        "dvt": "Cái",
+        "gia": 78000,
+        "ton": 15,
+        "slug": "san-pham/vp462-cap-tai-lieu-a4-nhua-deli-5558.html"
+      }
+    ],
+    "html_written": 439,
+    "sitemap_urls": 455,
+    "note_assets": "CSS/JS cache-bust ?v=2026101401 rewritten across pages (from PR #24 generator constants)"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-14T01:16:00Z",
-  "lastCheckResult": "changed_full_sync_no_web_delta",
+  "lastCheckAt": "2026-10-14T07:13:21Z",
+  "lastCheckResult": "changed_full_sync_web_deployed_+VP462_bridge_local_ready",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }

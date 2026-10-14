@@ -1320,6 +1320,18 @@
       "ton": 5
     },
     {
+      "nhom": "Bìa Hồ Sơ",
+      "nhomId": "bia-ho-so",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP462",
+      "ten": "Cặp tài liệu A4 nhựa (Deli 5558)",
+      "dvt": "Cái",
+      "gia": 78000,
+      "anh": "https://lh3.googleusercontent.com/d/1O2OtsRG2JhJpdKAtoWtkCzhzUr474oSh",
+      "ton": 15
+    },
+    {
       "nhom": "Bút & Mực",
       "nhomId": "but-muc",
       "linhVucId": "vpp",
