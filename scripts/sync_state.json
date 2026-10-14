@@ -58,9 +58,9 @@
       ]
     },
     "web_deployed": false,
-    "commit": null,
-    "pages_run": null,
-    "pages_status": "n/a — products.json unchanged vs deployed (427 SKU)",
+    "commit": "241ef1d905b547cea12a8d6c3ad4d0f21a3ebfb7",
+    "pages_run": 38494677011,
+    "pages_status": "success (chore sync_state only; products.json unchanged)",
     "live_spot_check": "products.json 427 HTTP200; VP197 159000, VP457 118000, VP458 236000, VP460 4500, VP461 15000, VP108 29000; VP415 absent + /san-pham/vp415.html 404; /, /linh-vuc/nuoc-banh.html, /san-pham.html 200",
     "bridge_refreshed": true,
     "bridge_status": "local rebuilt 2026-10-14 08:14 ICT: /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx and _UPLOAD_BRIDGE.xlsx (461 data rows + header; sheets Danh Mục Vật Tư + Chính Sách Đối Tác). Drive MCP update_file cannot replace spreadsheet content — browser Import→Replace still needed on fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
@@ -106,7 +106,7 @@
     }
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-14T01:14:32Z",
+  "lastCheckAt": "2026-10-14T01:16:00Z",
   "lastCheckResult": "changed_full_sync_no_web_delta",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
