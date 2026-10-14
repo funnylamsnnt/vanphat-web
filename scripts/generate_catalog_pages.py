@@ -344,6 +344,30 @@ def product_seo_description(product: dict, group: str) -> str:
     return clip(f"{body} {price_bit} Hotline {HOTLINE_DISPLAY}.")
 
 
+# Merchant listings (Search Console 14/10/2026): Google khuyến nghị offers có
+# shippingDetails và hasMerchantReturnPolicy. Giá trị mặc định cho người bán B2B
+# văn phòng phẩm tại Nha Trang; anh Hà chỉnh ở đây nếu chính sách khác.
+SHIPPING_DETAILS = {
+    "@type": "OfferShippingDetails",
+    "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "VN", "addressRegion": "Khánh Hòa"},
+    "shippingRate": {"@type": "MonetaryAmount", "value": "0", "currency": "VND"},
+    "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY"},
+        "transitTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 2, "unitCode": "DAY"},
+    },
+}
+
+RETURN_POLICY = {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "VN",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 7,
+    "returnMethod": "https://schema.org/ReturnInStore",
+    "returnFees": "https://schema.org/FreeReturn",
+}
+
+
 def offer_node(product: dict, canonical: str) -> dict | None:
     amount = price_amount(product.get("gia"))
     if amount is None:
@@ -358,6 +382,8 @@ def offer_node(product: dict, canonical: str) -> dict | None:
     avail = availability_iri(product)
     if avail:
         offer["availability"] = avail
+    offer["shippingDetails"] = SHIPPING_DETAILS
+    offer["hasMerchantReturnPolicy"] = RETURN_POLICY
     return offer
 
 
