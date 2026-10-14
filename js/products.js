@@ -207,9 +207,9 @@
     const sortLabel = document.querySelector('label[for="sort-select"]');
     const mobileQuery = window.matchMedia("(max-width: 768px)");
     const filterSlots = [
-      { node: groupLabel, parent: groupLabel && groupLabel.parentNode, before: countEl },
-      { node: sortLabel, parent: sortLabel && sortLabel.parentNode, before: countEl },
-      { node: chipRow, parent: chipRow && chipRow.parentNode, before: activeFilters },
+      { node: chipRow, parent: chipRow && chipRow.parentNode, before: groupLabel },
+      { node: groupLabel, parent: groupLabel && groupLabel.parentNode, before: null },
+      { node: sortLabel, parent: sortLabel && sortLabel.parentNode, before: null },
     ];
     const SORTS = {
       "price-asc": "Giá thấp đến cao",
@@ -236,15 +236,26 @@
       return groupsForLv(data, currentLv);
     }
 
-    function countInGroup(name) {
+    function countMatching(lvId, group) {
       let count = 0;
       all.forEach((p) => {
-        if (currentLv && p.linhVucId !== currentLv) return;
-        if (p.nhom !== name) return;
+        if (lvId && p.linhVucId !== lvId) return;
+        if (group && p.nhom !== group) return;
         if (currentQuery && !matchesQuery(p, currentQuery)) return;
         count += 1;
       });
       return count;
+    }
+
+    function countInGroup(name) {
+      return countMatching(currentLv, name);
+    }
+
+    function chipFace(name, countText) {
+      const count = countText
+        ? `<span class="chip-count">${escapeHtml(countText)}</span>`
+        : "";
+      return `<span class="chip-name">${escapeHtml(name)}</span>${count}`;
     }
 
     function applySort(list) {
@@ -305,15 +316,42 @@
       return applySort(list);
     }
 
+    function paintChip(chip, name, countText) {
+      const nameEl = chip.querySelector(".chip-name");
+      const countElChip = chip.querySelector(".chip-count");
+      if (!nameEl) {
+        chip.innerHTML = chipFace(name, countText);
+        return;
+      }
+      nameEl.textContent = name;
+      if (countText) {
+        if (countElChip) countElChip.textContent = countText;
+        else nameEl.insertAdjacentHTML("afterend", `<span class="chip-count">${escapeHtml(countText)}</span>`);
+      } else if (countElChip) countElChip.remove();
+    }
+
     function updateChipCounts() {
       if (!chipRow) return;
       chipRow.querySelectorAll(".chip").forEach((chip) => {
         const name = chip.dataset.nhom || "";
-        if (!name) return;
+        if (!name) {
+          paintChip(chip, "Tất cả", String(countMatching(currentLv, "")));
+          return;
+        }
         const group = currentGroups().find((item) => groupName(item) === name);
         const count = countInGroup(name);
-        const suffix = group && group.placeholder && !count ? " (sắp có)" : count ? ` (${count})` : "";
-        chip.textContent = name + suffix;
+        const countText = group && group.placeholder && !count ? "sắp có" : String(count);
+        paintChip(chip, name, countText);
+      });
+    }
+
+    function updateLvCounts() {
+      if (!lvRow) return;
+      lvRow.querySelectorAll("[data-lv]").forEach((chip) => {
+        const id = chip.getAttribute("data-lv") || "";
+        const lv = id ? visibleLinhVuc(data).find((item) => item.id === id) : null;
+        const name = lv ? lv.tenNgan || lv.ten : "Tất cả";
+        paintChip(chip, name, String(countMatching(id, "")));
       });
     }
 
@@ -347,12 +385,15 @@
       const list = filtered();
       renderActive();
       updateChipCounts();
+      updateLvCounts();
       if (countEl) {
         const q = currentQuery ? ` cho “${escapeHtml(currentQuery)}”` : "";
         if (mobileQuery.matches) {
           countEl.innerHTML = `<strong>${list.length}</strong>/${all.length}`;
+        } else if (currentQuery) {
+          countEl.innerHTML = `<strong>${list.length}</strong> kết quả cho “${escapeHtml(currentQuery)}”`;
         } else {
-          countEl.innerHTML = `<strong>${list.length}</strong> / ${all.length} sản phẩm${q}`;
+          countEl.innerHTML = `<strong>${list.length}</strong> sản phẩm`;
         }
         countEl.setAttribute(
           "aria-label",
@@ -484,6 +525,7 @@
       filterSheet.hidden = true;
       document.body.classList.remove("filter-sheet-open");
       updateFilterButton();
+      placeCatalogChrome();
       if (filterOpen) filterOpen.focus();
     }
 
@@ -501,13 +543,15 @@
       }
       if (sortSelect) sortSelect.value = currentSort;
       if (chipRow) {
-        const chips = ['<button type="button" class="chip" data-nhom="">Tất cả</button>']
+        const chips = [
+          `<button type="button" class="chip" data-nhom="">${chipFace("Tất cả", String(countMatching(currentLv, "")))}</button>`,
+        ]
           .concat(
             groups.map((n) => {
               const name = groupName(n);
               const count = countInGroup(name);
-              const suffix = n.placeholder && !count ? " (sắp có)" : count ? ` (${count})` : "";
-              return `<button type="button" class="chip" data-nhom="${escapeAttr(name)}">${escapeHtml(name + suffix)}</button>`;
+              const countText = n.placeholder && !count ? "sắp có" : String(count);
+              return `<button type="button" class="chip" data-nhom="${escapeAttr(name)}">${chipFace(name, countText)}</button>`;
             })
           )
           .join("");
@@ -588,12 +632,14 @@
       if (currentLv && !knownLv.has(currentLv)) currentLv = "";
 
       if (lvRow) {
-        const chips = ['<button type="button" class="chip" data-lv="" role="tab">Tất cả</button>']
+        const chips = [
+          `<button type="button" class="chip" data-lv="" role="tab">${chipFace("Tất cả", String(countMatching("", "")))}</button>`,
+        ]
           .concat(
-            visibleLinhVuc(data).map(
-              (lv) =>
-                `<button type="button" class="chip" role="tab" data-lv="${escapeAttr(lv.id)}" title="${escapeAttr(lv.ten)}">${escapeHtml(lv.tenNgan || lv.ten)}</button>`
-            )
+            visibleLinhVuc(data).map((lv) => {
+              const name = lv.tenNgan || lv.ten;
+              return `<button type="button" class="chip" role="tab" data-lv="${escapeAttr(lv.id)}" title="${escapeAttr(lv.ten)}">${chipFace(name, String(countMatching(lv.id, "")))}</button>`;
+            })
           )
           .join("");
         lvRow.innerHTML = chips;
@@ -676,6 +722,7 @@
         });
         window.addEventListener("resize", () => {
           if (sheetIsOpen() && !mobileQuery.matches) closeFilterSheet();
+          placeCatalogChrome();
           placeSuggest();
         });
       }
@@ -704,6 +751,42 @@
       grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>Lỗi tải dữ liệu</h3><p>${escapeHtml(e.message)}</p></div>`;
     }
   }
+
+  function fitCatalogSide() {
+    const side = document.querySelector("body.page-catalog .catalog-side");
+    if (!side) return;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      side.style.maxHeight = "";
+      return;
+    }
+    const top = side.getBoundingClientRect().top;
+    const avail = Math.max(160, Math.floor(window.innerHeight - Math.max(top, 0) - 12));
+    side.style.maxHeight = avail + "px";
+  }
+
+  function placeCatalogChrome() {
+    if (!document.body || !document.body.classList.contains("page-catalog")) return;
+    const row = document.getElementById("lv-row");
+    const box = document.querySelector(".toolbar > .container");
+    const inner = document.querySelector(".toolbar-inner");
+    const lvHome = document.getElementById("side-lv-home");
+    if (!row || !box || !lvHome) return;
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+    if (mobile) {
+      if (row.parentElement !== box) box.insertBefore(row, inner || null);
+    } else if (row.parentElement !== lvHome) {
+      lvHome.appendChild(row);
+    }
+    fitCatalogSide();
+  }
+
+  if (!window.__vpSideFit) {
+    window.__vpSideFit = true;
+    window.addEventListener("scroll", fitCatalogSide, { passive: true });
+    window.addEventListener("resize", fitCatalogSide);
+  }
+
+  placeCatalogChrome();
 
   document.addEventListener("DOMContentLoaded", () => {
     initFeatured();
