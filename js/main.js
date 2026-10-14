@@ -178,6 +178,8 @@
 
   function initCategoryRail() {
     if (document.querySelector(".cat-rail")) return;
+    if (document.body.classList.contains("page-catalog")) return;
+    if (document.querySelector(".catalog-group-links")) return;
     const header = document.querySelector(".site-header");
     if (!header) return;
     const prefix = /\/san-pham\/|\/linh-vuc\/|\/dia-phuong\/|\/nhan-vien\//.test(location.pathname) ? "../" : "";
@@ -207,10 +209,266 @@
     header.insertAdjacentElement("afterend", rail);
   }
 
+  const CHIP_KEY = "vp-chip-rail-collapsed";
+  const rails = [];
+  let chipCollapsed = false;
+  let chipScrollHidden = false;
+  let chipLockUntil = 0;
+  let chipLastY = 0;
+
+  function readChipCollapsed() {
+    try {
+      return localStorage.getItem(CHIP_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function writeChipCollapsed(value) {
+    try {
+      localStorage.setItem(CHIP_KEY, value ? "1" : "0");
+    } catch (e) {
+      /* bộ nhớ riêng tư có thể chặn ghi */
+    }
+  }
+
+  function chipIcon(dir) {
+    const paths = {
+      left: "M10 3L5 8l5 5",
+      right: "M6 3l5 5-5 5",
+      up: "M3 10l5-5 5 5",
+      down: "M3 6l5 5 5-5",
+    };
+    return (
+      '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">' +
+      '<path d="' +
+      paths[dir] +
+      '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    );
+  }
+
+  function chipButton(className, label) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.setAttribute("aria-label", label);
+    return button;
+  }
+
+  function smoothScroll() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+
+  function updateChipEdges(rail, scroller) {
+    const max = scroller.scrollWidth - scroller.clientWidth;
+    const overflow = max > 6;
+    rail.classList.toggle("is-overflow", overflow);
+    rail.classList.toggle("is-fade-left", overflow && scroller.scrollLeft > 6);
+    rail.classList.toggle("is-fade-right", overflow && scroller.scrollLeft < max - 6);
+    const prev = rail.querySelector(".chip-rail-prev");
+    const next = rail.querySelector(".chip-rail-next");
+    if (prev) prev.disabled = !overflow || scroller.scrollLeft <= 6;
+    if (next) next.disabled = !overflow || scroller.scrollLeft >= max - 6;
+  }
+
+  function revealChip(scroller) {
+    const active = scroller.querySelector(".chip.active, .active, [aria-current='page']");
+    if (!active) return;
+    const box = scroller.getBoundingClientRect();
+    const item = active.getBoundingClientRect();
+    if (item.left >= box.left + 4 && item.right <= box.right - 4) return;
+    const delta = item.left - box.left - (box.width - item.width) / 2;
+    scroller.scrollLeft += delta;
+  }
+
+  function bindChipScroller(rail, scroller) {
+    scroller.addEventListener(
+      "scroll",
+      () => updateChipEdges(rail, scroller),
+      { passive: true }
+    );
+    rails.push({ rail, scroller });
+    requestAnimationFrame(() => {
+      revealChip(scroller);
+      updateChipEdges(rail, scroller);
+    });
+  }
+
+  function scrollChip(scroller, dir) {
+    scroller.scrollBy({ left: dir * Math.max(140, scroller.clientWidth * 0.72), behavior: smoothScroll() });
+  }
+
+  function applyChipRails() {
+    rails.forEach(({ rail }) => {
+      const sticky = rail.dataset.sticky === "1";
+      rail.classList.toggle("is-collapsed", chipCollapsed);
+      rail.classList.toggle("is-scroll-hidden", !chipCollapsed && sticky && chipScrollHidden);
+      const toggle = rail.querySelector(".chip-rail-toggle");
+      if (!toggle || toggle.classList.contains("chip-rail-toggle-lv")) return;
+      toggle.setAttribute("aria-expanded", chipCollapsed ? "false" : "true");
+      toggle.setAttribute("aria-label", chipCollapsed ? "Hiện nhóm hàng" : "Ẩn nhóm hàng");
+      toggle.innerHTML = chipIcon(chipCollapsed ? "down" : "up");
+    });
+    document.body.classList.toggle("vp-chips-collapsed", chipCollapsed);
+    document.body.classList.toggle("vp-chips-scrollhide", !chipCollapsed && chipScrollHidden);
+    const lvToggle = document.querySelector(".chip-rail-toggle-lv");
+    if (lvToggle) {
+      const show = chipCollapsed || !chipScrollHidden;
+      lvToggle.hidden = !show;
+      lvToggle.setAttribute("aria-expanded", chipCollapsed ? "false" : "true");
+      lvToggle.setAttribute("aria-label", chipCollapsed ? "Hiện nhóm hàng" : "Ẩn nhóm hàng");
+      lvToggle.innerHTML = chipIcon(chipCollapsed ? "down" : "up");
+    }
+    rails.forEach(({ rail, scroller }) => updateChipEdges(rail, scroller));
+    updateLvEdges();
+  }
+
+  function toggleChipCollapsed() {
+    chipCollapsed = !chipCollapsed;
+    writeChipCollapsed(chipCollapsed);
+    applyChipRails();
+  }
+
+  function enhanceChipRow(row, sticky) {
+    if (!row || row.closest(".chip-rail") || row.closest(".catalog-side") || row.closest(".filter-sheet")) return;
+    if (row.id === "chip-row" || row.id === "lv-row" || row.id === "staff-chip-row" || row.id === "active-filters") return;
+    const rail = document.createElement("div");
+    rail.className = "chip-rail";
+    if (sticky) rail.dataset.sticky = "1";
+    const prev = chipButton("chip-rail-arrow chip-rail-prev", "Xem nhóm phía trước");
+    const next = chipButton("chip-rail-arrow chip-rail-next", "Xem nhóm phía sau");
+    const toggle = chipButton("chip-rail-toggle", "Ẩn nhóm hàng");
+    prev.innerHTML = chipIcon("left");
+    next.innerHTML = chipIcon("right");
+    toggle.innerHTML = chipIcon("up");
+    toggle.setAttribute("aria-expanded", "true");
+    const scroller = document.createElement("div");
+    scroller.className = "chip-rail-scroll";
+    row.parentNode.insertBefore(rail, row);
+    scroller.appendChild(row);
+    rail.append(prev, scroller, next, toggle);
+    row.classList.add("chip-rail-row");
+    prev.addEventListener("click", () => scrollChip(scroller, -1));
+    next.addEventListener("click", () => scrollChip(scroller, 1));
+    toggle.addEventListener("click", toggleChipCollapsed);
+    bindChipScroller(rail, scroller);
+  }
+
+  function enhanceCatRail(nav) {
+    if (!nav || nav.classList.contains("chip-rail")) return;
+    const track = nav.querySelector(".container");
+    if (!track) return;
+    nav.classList.add("chip-rail");
+    nav.dataset.sticky = "1";
+    const prev = chipButton("chip-rail-arrow chip-rail-prev", "Xem nhóm phía trước");
+    const next = chipButton("chip-rail-arrow chip-rail-next", "Xem nhóm phía sau");
+    const toggle = chipButton("chip-rail-toggle", "Ẩn nhóm hàng");
+    prev.innerHTML = chipIcon("left");
+    next.innerHTML = chipIcon("right");
+    toggle.innerHTML = chipIcon("up");
+    toggle.setAttribute("aria-expanded", "true");
+    const scroller = document.createElement("div");
+    scroller.className = "chip-rail-scroll";
+    track.parentNode.insertBefore(scroller, track);
+    scroller.appendChild(track);
+    nav.insertBefore(prev, scroller);
+    scroller.insertAdjacentElement("afterend", next);
+    next.insertAdjacentElement("afterend", toggle);
+    track.classList.add("chip-rail-row");
+    prev.addEventListener("click", () => scrollChip(scroller, -1));
+    next.addEventListener("click", () => scrollChip(scroller, 1));
+    toggle.addEventListener("click", toggleChipCollapsed);
+    bindChipScroller(nav, scroller);
+  }
+
+  function updateLvEdges() {
+    const lv = document.getElementById("lv-row");
+    if (!lv) return;
+    const inToolbar = !!lv.closest(".toolbar");
+    lv.classList.toggle("chip-scroll-row", inToolbar);
+    if (!inToolbar) {
+      lv.classList.remove("is-fade-left", "is-fade-right");
+      return;
+    }
+    const max = lv.scrollWidth - lv.clientWidth;
+    const overflow = max > 6;
+    lv.classList.toggle("is-fade-left", overflow && lv.scrollLeft > 6);
+    lv.classList.toggle("is-fade-right", overflow && lv.scrollLeft < max - 6);
+  }
+
+  function initCatalogLvRail() {
+    if (!document.body.classList.contains("page-catalog")) return;
+    const box = document.querySelector(".toolbar > .container");
+    const lv = document.getElementById("lv-row");
+    if (!box || !lv || box.querySelector(".chip-rail-toggle-lv")) return;
+    const toggle = chipButton("chip-rail-toggle chip-rail-toggle-lv", "Ẩn nhóm hàng");
+    toggle.innerHTML = chipIcon("up");
+    toggle.setAttribute("aria-expanded", "true");
+    box.appendChild(toggle);
+    toggle.addEventListener("click", toggleChipCollapsed);
+    lv.addEventListener("scroll", updateLvEdges, { passive: true });
+    window.addEventListener("resize", updateLvEdges);
+    const watch = new MutationObserver((records) => {
+      if (!records.some((rec) => rec.target !== lv)) return;
+      revealChip(lv);
+      updateLvEdges();
+    });
+    watch.observe(lv, { subtree: true, childList: true, attributes: true, attributeFilter: ["class"] });
+    updateLvEdges();
+    revealChip(lv);
+  }
+
+  function initChipRails() {
+    if (/nhan-vien/.test(location.pathname)) return;
+    chipCollapsed = readChipCollapsed();
+    document.querySelectorAll(".toolbar .chip-row.catalog-group-links").forEach((row) => {
+      enhanceChipRow(row, true);
+    });
+    document.querySelectorAll("main .catalog-section > .container > .chip-row").forEach((row) => {
+      enhanceChipRow(row, false);
+    });
+    document.querySelectorAll(".hero-quick").forEach((row) => {
+      enhanceChipRow(row, false);
+    });
+    document.querySelectorAll(".cat-rail").forEach((nav) => enhanceCatRail(nav));
+    initCatalogLvRail();
+    applyChipRails();
+    chipLastY = window.scrollY || 0;
+    window.addEventListener(
+      "scroll",
+      () => {
+        const y = window.scrollY || 0;
+        if (Date.now() < chipLockUntil) {
+          chipLastY = y;
+          return;
+        }
+        const delta = y - chipLastY;
+        chipLastY = y;
+        let next = chipScrollHidden;
+        if (y < 48) next = false;
+        else if (delta > 12) next = true;
+        else if (delta < -12) next = false;
+        if (next === chipScrollHidden) return;
+        chipScrollHidden = next;
+        chipLockUntil = Date.now() + 180;
+        applyChipRails();
+        chipLastY = window.scrollY || 0;
+      },
+      { passive: true }
+    );
+    window.addEventListener("resize", () => {
+      setTimeout(() => {
+        rails.forEach(({ rail, scroller }) => updateChipEdges(rail, scroller));
+        updateLvEdges();
+      }, 0);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initNav();
     setActiveNav();
     initCategoryRail();
+    initChipRails();
     rememberView();
     renderViewed();
     initScrollTop();
