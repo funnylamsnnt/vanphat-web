@@ -3926,3 +3926,198 @@ body.filter-sheet-open { overflow: hidden; }
     scroll-margin-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 }
+
+/* Hàng chip nhóm: một dòng cuộn. Sidebar lọc catalog (PR #24) không nằm trong khối này. */
+.toolbar:has(.catalog-group-links) {
+  padding: 0.22rem 0;
+}
+.toolbar .catalog-group-links,
+.hero-quick,
+.catalog-section > .container > .chip-row {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-top: 0;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.toolbar .catalog-group-links::-webkit-scrollbar,
+.hero-quick::-webkit-scrollbar,
+.catalog-section > .container > .chip-row::-webkit-scrollbar { display: none; }
+.toolbar .catalog-group-links > .chip,
+.hero-quick > a,
+.catalog-section > .container > .chip-row > .chip {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  white-space: nowrap;
+}
+.chip-rail {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  min-width: 0;
+  width: 100%;
+}
+.chip-rail-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 10px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.chip-rail-scroll::-webkit-scrollbar { display: none; }
+.chip-rail-scroll > .chip-rail-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  margin: 0;
+  width: max-content;
+  max-width: none;
+  overflow: visible;
+}
+.chip-rail-scroll .chip,
+.chip-rail-scroll a {
+  scroll-snap-align: start;
+}
+.chip-rail.is-fade-right .chip-rail-scroll {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 1.75rem), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 1.75rem), transparent);
+}
+.chip-rail.is-fade-left .chip-rail-scroll {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.75rem);
+  mask-image: linear-gradient(90deg, transparent, #000 1.75rem);
+}
+.chip-rail.is-fade-left.is-fade-right .chip-rail-scroll {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent);
+}
+.chip-rail-arrow,
+.chip-rail-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+  padding: 0;
+}
+.chip-rail-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.chip-rail-arrow:focus-visible,
+.chip-rail-toggle:focus-visible {
+  outline: 2px solid var(--gold-dark);
+  outline-offset: 2px;
+}
+.chip-rail.is-collapsed .chip-rail-scroll,
+.chip-rail.is-collapsed .chip-rail-arrow { display: none; }
+.chip-rail.is-collapsed { justify-content: flex-end; }
+.chip-rail.is-scroll-hidden { display: none; }
+.toolbar:not(:has(.toolbar-inner)):has(.chip-rail.is-scroll-hidden) {
+  display: none;
+}
+.cat-rail.chip-rail {
+  position: sticky;
+  top: var(--header-h, var(--nav-h));
+  z-index: 55;
+  background: #fff;
+  padding: 0.2rem 0.55rem;
+  gap: 0.28rem;
+}
+.cat-rail.chip-rail .container {
+  width: max-content;
+  max-width: none;
+  margin: 0;
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+  overflow: visible;
+}
+.hero .chip-rail { margin-bottom: 1.15rem; max-width: 100%; }
+.hero .chip-rail .hero-quick { margin-bottom: 0; }
+.hero .chip-rail-arrow,
+.hero .chip-rail-toggle {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-color: rgba(255,255,255,0.4);
+}
+.chip-rail-toggle-lv { display: none; }
+@media (max-width: 768px) {
+  .chip-rail-arrow { display: none !important; }
+  .chip-rail .chip,
+  .toolbar .catalog-group-links > .chip {
+    padding: 0.26rem 0.66rem;
+    font-size: 0.75rem;
+  }
+  body:has(.catalog-group-links) .topbar { display: none; }
+  body:has(.catalog-group-links) .page-hero { padding: 0.4rem 0 0.28rem; }
+  body:has(.catalog-group-links) .page-hero p { display: none; }
+  body:has(.catalog-group-links) .page-hero h1 {
+    font-size: 1.02rem;
+    line-height: 1.2;
+    margin: 0;
+  }
+  body:has(.catalog-group-links) .page-hero .breadcrumb {
+    margin-bottom: 0.1rem;
+    font-size: 0.7rem;
+  }
+  body:has(.catalog-group-links) .site-header .nav {
+    padding: 0.15rem 0 0.02rem;
+    gap: 0.3rem;
+  }
+  body:has(.catalog-group-links) .logo-img { width: 34px; height: 34px; }
+  body:has(.catalog-group-links) .logo-text { font-size: 0.92rem; }
+  body:has(.catalog-group-links) .nav-toggle { width: 38px; height: 38px; }
+  body:has(.catalog-group-links) .nav-search {
+    margin: 0 0 0.08rem;
+    padding: 0.02rem 0.06rem 0.02rem 0.65rem;
+  }
+  body:has(.catalog-group-links) .nav-search input {
+    font-size: 16px;
+    padding: 0.22rem 0;
+  }
+  body:has(.catalog-group-links) .nav-search button { width: 30px; height: 30px; }
+  body.page-catalog #lv-row.chip-scroll-row {
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+  body.page-catalog #lv-row .chip { scroll-snap-align: start; }
+  body.page-catalog #lv-row.is-fade-right {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 1.4rem), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 1.4rem), transparent);
+  }
+  body.page-catalog #lv-row.is-fade-left {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.4rem);
+    mask-image: linear-gradient(90deg, transparent, #000 1.4rem);
+  }
+  body.page-catalog #lv-row.is-fade-left.is-fade-right {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.4rem, #000 calc(100% - 1.4rem), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 1.4rem, #000 calc(100% - 1.4rem), transparent);
+  }
+  body.page-catalog.vp-chips-collapsed #lv-row,
+  body.page-catalog.vp-chips-scrollhide #lv-row { display: none !important; }
+  body.page-catalog.vp-chips-collapsed .toolbar > .container::after,
+  body.page-catalog.vp-chips-scrollhide .toolbar > .container::after { display: none; }
+  body.page-catalog .chip-rail-toggle-lv {
+    display: inline-flex;
+    order: 2;
+    margin: 0 0 0.2rem;
+  }
+  body.page-catalog .filter-open { order: 3; }
+  body.page-catalog.vp-chips-scrollhide .chip-rail-toggle-lv { display: none !important; }
+  body.page-catalog.vp-chips-collapsed .chip-rail-toggle-lv { display: inline-flex !important; }
+}
+@media (min-width: 769px) {
+  body.page-catalog .catalog-side .chip-row {
+    overflow: visible;
+  }
+}
