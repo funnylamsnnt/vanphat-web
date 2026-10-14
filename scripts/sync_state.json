@@ -62,10 +62,10 @@
       ]
     },
     "web_deployed": true,
-    "commit": "pending (this commit)",
-    "pages_run": null,
-    "pages_status": "pending",
-    "live_spot_check": "pending",
+    "commit": "58e10a06530b334b9a9a90a84127d71a69f244f5",
+    "pages_run": 38526934557,
+    "pages_status": "success",
+    "live_spot_check": "products.json 428 HTTP200; VP462 78000 Bìa Hồ Sơ + /san-pham/vp462-cap-tai-lieu-a4-nhua-deli-5558.html 200 (price 78000) + in sitemap; VP197 159000, VP457 118000, VP461 15000, VP108 29000, VP001 36000; VP415/VP448 absent + /san-pham/vp415.html 404, 0 excluded codes in sitemap; /, /san-pham.html, /linh-vuc/nuoc-banh.html, /linh-vuc/vpp.html, /san-pham/nhom-bia-ho-so.html 200; Pages cname vanphatcompany.vn",
     "bridge_refreshed": false,
     "bridge_status": "local rebuilt 2026-10-14 14:12 ICT: /workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx (= VP_DanhMuc_LIVE_BRIDGE.xlsx) 462 data rows + header (sheets Danh Mục Vật Tư + Chính Sách Đối Tác); delta vs previous bridge: +VP462 only. Live bridge fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc browser Import→Replace pending (parent).",
     "bridge_rows_verified": "local 462 == source_count; live Import→Replace pending",
@@ -122,10 +122,11 @@
     ],
     "html_written": 439,
     "sitemap_urls": 455,
-    "note_assets": "CSS/JS cache-bust ?v=2026101401 rewritten across pages (from PR #24 generator constants)"
+    "note_assets": "CSS/JS cache-bust ?v=2026101401 rewritten across pages (from PR #24 generator constants)",
+    "seo_audit_run": 38526934622
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-14T07:13:21Z",
+  "lastCheckAt": "2026-10-14T07:14:56Z",
   "lastCheckResult": "changed_full_sync_web_deployed_+VP462_bridge_local_ready",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
