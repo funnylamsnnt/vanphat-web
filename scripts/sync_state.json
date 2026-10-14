@@ -2,46 +2,20 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-13T06:59:04.381Z",
-  "previousModifiedTime": "2026-10-12T16:04:12.025Z",
+  "lastModifiedTime": "2026-10-13T07:44:12.744Z",
+  "previousModifiedTime": "2026-10-13T06:59:04.381Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-13T07:16:31Z",
+  "lastSyncAt": "2026-10-14T01:14:32Z",
   "lastSyncResult": {
-    "changed": true,
+    "changed": false,
     "source_count": 461,
     "count": 427,
     "with_img": 334,
     "added": [],
     "removed": [],
-    "price_chg": [
-      {
-        "ma": "VP197",
-        "old": 136000,
-        "new": 159000
-      },
-      {
-        "ma": "VP457",
-        "old": 125000,
-        "new": 118000
-      },
-      {
-        "ma": "VP458",
-        "old": 250000,
-        "new": 236000
-      },
-      {
-        "ma": "VP460",
-        "old": 4000,
-        "new": 4500
-      },
-      {
-        "ma": "VP461",
-        "old": 13000,
-        "new": 15000
-      }
-    ],
+    "price_chg": [],
     "name_chg": [],
     "slugChanges": [],
     "image_added": [],
@@ -83,23 +57,57 @@
         "VP448"
       ]
     },
-    "web_deployed": true,
-    "commit": "a49e8039f6b87e7d61a9931020a0495f8cea7471",
-    "pages_run": 38361524744,
-    "pages_status": "success",
-    "live_spot_check": "products.json 427; VP197 159000, VP457 118000, VP458 236000, VP460 4500, VP461 15000, VP108 29000; VP415 absent + /san-pham/vp415.html 404; /, /linh-vuc/nuoc-banh.html, /san-pham.html 200",
+    "web_deployed": false,
+    "commit": null,
+    "pages_run": null,
+    "pages_status": "n/a — products.json unchanged vs deployed (427 SKU)",
+    "live_spot_check": "products.json 427 HTTP200; VP197 159000, VP457 118000, VP458 236000, VP460 4500, VP461 15000, VP108 29000; VP415 absent + /san-pham/vp415.html 404; /, /linh-vuc/nuoc-banh.html, /san-pham.html 200",
     "bridge_refreshed": true,
-    "bridge_status": "verified 2026-10-13 14:20 ICT: Import→Replace spreadsheet on 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc (Replace current sheet disabled for multi-sheet xlsx); 461 data rows + header; VP197=159000 VP457=118000 VP458=236000 VP460=4500 VP461=15000; Chính Sách Đối Tác intact; 0 leftover diffs",
-    "bridge_rows_verified": "local 461 == source_count; live still old prices pending Import→Replace",
+    "bridge_status": "local rebuilt 2026-10-14 08:14 ICT: /workspace/vanphat-sync/VP_DanhMuc_LIVE_BRIDGE.xlsx and _UPLOAD_BRIDGE.xlsx (461 data rows + header; sheets Danh Mục Vật Tư + Chính Sách Đối Tác). Drive MCP update_file cannot replace spreadsheet content — browser Import→Replace still needed on fileId 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc",
+    "bridge_rows_verified": "local 461 == source_count; live bridge Import→Replace pending",
+    "bridge_upload_path": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "zero_price_count": 17,
     "unknown_groups": [],
     "autoPlacedGroups": [],
     "heldUnmappedGroups": {},
-    "keptImages": 0
+    "keptImages": 0,
+    "zeroPrice": [
+      "VP238",
+      "VP239",
+      "VP240",
+      "VP241",
+      "VP242",
+      "VP297",
+      "VP117",
+      "VP123",
+      "VP139",
+      "VP035",
+      "VP324",
+      "VP328",
+      "VP329",
+      "VP370",
+      "VP382",
+      "VP390",
+      "VP338"
+    ],
+    "groups": {
+      "Giấy": 49,
+      "Bìa Hồ Sơ": 50,
+      "Bút & Mực": 55,
+      "Băng Keo": 34,
+      "Dụng cụ VP": 193,
+      "Điện": 10,
+      "Nước uống": 36
+    },
+    "linhVuc": {
+      "vpp": 381,
+      "dien-gia-dung": 10,
+      "nuoc-banh": 36
+    }
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-13T07:20:10Z",
-  "lastCheckResult": "changed_full_sync",
+  "lastCheckAt": "2026-10-14T01:14:32Z",
+  "lastCheckResult": "changed_full_sync_no_web_delta",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
