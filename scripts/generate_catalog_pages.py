@@ -89,6 +89,25 @@ MAPS_EMBED_SRC = (
     + quote(MAPS_QUERY)
     + "&hl=vi&z=17&output=embed"
 )
+# Nearest default coverage at the pin is still July 2022 (pano qvRwpu1sxedXavKoyWOukQ).
+# The May 2025 capture is a separate panorama about 26 m away, on Đường số 20.
+# Heading 57 looks from that camera toward the shop pin. Do not drop the pano id
+# or the contact page falls back to the 2022 imagery.
+STREETVIEW_PANO = "hIKV2skn_zfm0ffCb2NuFg"
+STREETVIEW_HEADING = "57"
+STREETVIEW_PITCH = "10"
+STREETVIEW_PANO_LAT = "12.237663890642256"
+STREETVIEW_PANO_LNG = "109.1661799492981"
+STREETVIEW_URL = (
+    "https://www.google.com/maps/@?api=1&map_action=pano"
+    f"&pano={STREETVIEW_PANO}&heading={STREETVIEW_HEADING}"
+    f"&pitch={STREETVIEW_PITCH}&fov=80"
+)
+STREETVIEW_EMBED_SRC = (
+    "https://www.google.com/maps/embed?pb=!1m0!3m2!1svi!2svn!6m8!1m7!1s"
+    f"{STREETVIEW_PANO}!2m2!1d{STREETVIEW_PANO_LAT}!2d{STREETVIEW_PANO_LNG}"
+    f"!3f{STREETVIEW_HEADING}!4f{STREETVIEW_PITCH}!5f0.8&hl=vi"
+)
 FONT_CSS = "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=optional"
 _DRIVE_IMAGE = re.compile(r"^(https://lh3\.googleusercontent\.com/d/[A-Za-z0-9_-]+)")
 CARD_IMAGE_W = 480
@@ -1776,6 +1795,14 @@ def assert_generated_seo(products: list[dict]) -> None:
     home = (ROOT / "index.html").read_text(encoding="utf-8")
     if HERO_LEAD not in home:
         raise SystemExit("homepage hero lead drifted from the pinned sentence")
+    contact = (ROOT / "lien-he.html").read_text(encoding="utf-8")
+    if (
+        STREETVIEW_EMBED_SRC.replace("&", "&amp;") not in contact
+        or STREETVIEW_URL.replace("&", "&amp;") not in contact
+    ):
+        raise SystemExit("contact page lost the May 2025 Street View panorama")
+    if "output=embed" not in contact or MAPS_DIR_URL.replace("&", "&amp;") not in contact:
+        raise SystemExit("contact page lost the map or the directions link")
     token = str(GOOGLE_SITE_VERIFICATION or "").strip()
     if token and f'content="{token}"' not in home:
         raise SystemExit("homepage is missing google-site-verification")
