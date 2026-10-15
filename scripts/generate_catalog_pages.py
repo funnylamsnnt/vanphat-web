@@ -50,6 +50,8 @@ STOREFRONT_ALT = (
     " — văn phòng phẩm, nước uống, điện gia dụng và photocopy"
 )
 STOREFRONT_IMAGE = f"{SITE}/assets/{STOREFRONT_STEM}.jpg"
+# Same file as schema image. Query only busts sitemap/HTML caches after the sign text edit.
+STOREFRONT_CACHE = "2026101517"
 # Pin measured for the published Mỹ Gia address. Do not swap in another street line.
 GEO_LAT = "12.237790072249387"
 GEO_LNG = "109.16637827055754"
@@ -1200,8 +1202,8 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
 
 
 SITEMAP_IMAGES = {
-    "/": [{"loc": STOREFRONT_IMAGE, "title": "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"}],
-    "/lien-he.html": [{"loc": STOREFRONT_IMAGE, "title": "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"}],
+    "/": [{"loc": f"{STOREFRONT_IMAGE}?v={STOREFRONT_CACHE}", "title": "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"}],
+    "/lien-he.html": [{"loc": f"{STOREFRONT_IMAGE}?v={STOREFRONT_CACHE}", "title": "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"}],
 }
 
 
@@ -1729,7 +1731,7 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("empty nhóm Bánh is still in the sitemap")
     if "/san-pham/nhom-giay.html" not in sitemap or "<loc>https://vanphatcompany.vn/</loc>" not in sitemap:
         raise SystemExit("sitemap dropped a page that should stay")
-    if f"<image:loc>{STOREFRONT_IMAGE}</image:loc>" not in sitemap:
+    if f"<image:loc>{STOREFRONT_IMAGE}?v={STOREFRONT_CACHE}</image:loc>" not in sitemap:
         raise SystemExit("sitemap is missing the storefront image")
     if GEO_LAT not in (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8"):
         raise SystemExit("LocalBusiness is missing the Mỹ Gia pin")
