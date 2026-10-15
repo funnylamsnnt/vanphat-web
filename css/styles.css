@@ -890,6 +890,7 @@ display: none; /* hide old VP mark */
   display: grid;
   gap: 1.5rem;
 }
+.contact-grid > * { min-width: 0; }
 @media (min-width: 800px) {
   .contact-grid { grid-template-columns: 1.1fr 0.9fr; }
 }
@@ -932,6 +933,7 @@ display: none; /* hide old VP mark */
   font-weight: 600;
   color: var(--navy);
   font-size: 1rem;
+  overflow-wrap: anywhere;
 }
 .contact-row a:hover { color: var(--gold-dark); }
 .contact-actions {
@@ -3012,12 +3014,66 @@ body.lightbox-open { overflow: hidden; }
   background: #d9e2ea;
 }
 .map-caption {
-  padding: 0.9rem 1rem 1rem;
+  padding: 0.9rem 1rem 0.35rem;
   color: rgba(255,255,255,0.88);
   font-size: 0.875rem;
   line-height: 1.55;
 }
 .map-caption a { color: var(--gold-light); font-weight: 700; }
+.map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 1rem;
+}
+.contact-place {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+.storefront-block {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.storefront-block picture { display: block; min-width: 0; max-width: 100%; }
+.storefront-block img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+@media (min-width: 560px) and (max-width: 799px) {
+  .storefront-block img {
+    max-height: 560px;
+    object-fit: contain;
+    object-position: center;
+    background: var(--cream);
+  }
+}
+.storefront-block figcaption {
+  padding: 0.85rem 1rem 1rem;
+  color: var(--navy);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.footer-storefront {
+  display: block;
+  max-width: 220px;
+  margin: 0 0 0.9rem;
+}
+.footer-storefront img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
 
 .local-links {
   display: flex;
