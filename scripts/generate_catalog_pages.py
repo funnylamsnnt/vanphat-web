@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101402"
+CSS_V = "2026101501"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101401"
 CHAT_V = "2026101309"
@@ -41,9 +41,18 @@ EMAIL = "congtytnhhvanphat999@gmail.com"
 ZALO_URL = "https://zalo.me/0335652832"
 BANK_LINE = "Agribank · STK 4703201014329"
 OG_IMAGE = f"{SITE}/assets/og.jpg"
-# Maps embed search string requested for the contact iframe. NAP streetAddress
-# stays ADDRESS (includes Vĩnh Thái); this query is only the map lookup.
-MAPS_EMBED_QUERY = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Nam Nha Trang, Khánh Hòa"
+# Real storefront photo (portrait, long edge 1200). Logo stays assets/og.jpg.
+STOREFRONT_STEM = "mat-tien-van-phat-van-phong-pham-my-gia-nha-trang"
+STOREFRONT_W = 801
+STOREFRONT_H = 1200
+STOREFRONT_ALT = (
+    "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"
+    " — văn phòng phẩm, nước uống, điện gia dụng và photocopy"
+)
+STOREFRONT_IMAGE = f"{SITE}/assets/{STOREFRONT_STEM}.jpg"
+# Pin measured for the published Mỹ Gia address. Do not swap in another street line.
+GEO_LAT = "12.237790072249387"
+GEO_LNG = "109.16637827055754"
 ORG_ID = f"{SITE}/#organization"
 
 # Search Console HTML-tag token. Set this one value and rerun the generator to
@@ -54,9 +63,9 @@ GOOGLE_SITE_VERIFICATION = "lyjjIzdcmnmzSuzgiR2wFDZt0k5mxWQpp75Gn40XFFE"
 # Public profile URLs (Facebook page, Zalo OA, Google Maps place). Leave empty
 # until the owner supplies them — do not invent profiles.
 SAME_AS: list[str] = []
-# Measured coordinates and posted opening hours. The site has neither, so both
-# stay unset and are omitted from LocalBusiness JSON-LD.
-GEO = None
+# Pin confirmed 15/10/2026 for the published address (KĐT Mỹ Gia). The site has
+# no posted opening hours, so OPENING_HOURS stays unset and is omitted.
+GEO = {"latitude": GEO_LAT, "longitude": GEO_LNG}
 OPENING_HOURS = None
 
 DESCRIPTIONS_PATH = ROOT / "data" / "descriptions.json"
@@ -70,12 +79,13 @@ _DESCRIPTION_BY_MA: dict[str, str] = {}
 TITLE_TARGET = 65
 TITLE_MAX = 70
 
-MAPS_QUERY = quote(ADDRESS)
+MAPS_QUERY = f"{GEO_LAT},{GEO_LNG}"
 MAPS_URL = f"https://www.google.com/maps/search/?api=1&query={MAPS_QUERY}"
+MAPS_DIR_URL = f"https://www.google.com/maps/dir/?api=1&destination={MAPS_QUERY}"
 MAPS_EMBED_SRC = (
     "https://maps.google.com/maps?q="
-    + quote(MAPS_EMBED_QUERY)
-    + "&hl=vi&z=16&output=embed"
+    + quote(MAPS_QUERY)
+    + "&hl=vi&z=17&output=embed"
 )
 FONT_CSS = "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=optional"
 _DRIVE_IMAGE = re.compile(r"^(https://lh3\.googleusercontent\.com/d/[A-Za-z0-9_-]+)")
@@ -378,13 +388,13 @@ def ld_script(data) -> str:
 
 def organization_node() -> dict:
     node = {
-        "@type": ["LocalBusiness", "Organization"],
+        "@type": ["LocalBusiness", "Store", "Organization"],
         "@id": ORG_ID,
         "name": COMPANY,
         "alternateName": "Vạn Phát",
         "url": SITE + "/",
         "logo": OG_IMAGE,
-        "image": OG_IMAGE,
+        "image": STOREFRONT_IMAGE,
         "telephone": HOTLINE_E164,
         "email": EMAIL,
         "address": {
@@ -1189,10 +1199,17 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
     )
 
 
+SITEMAP_IMAGES = {
+    "/": [{"loc": STOREFRONT_IMAGE, "title": "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"}],
+    "/lien-he.html": [{"loc": STOREFRONT_IMAGE, "title": "Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang"}],
+}
+
+
 def render_sitemap(urls: list[tuple[str, str, str]], lastmod: str) -> str:
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+        '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
     ]
     for path, freq, priority in urls:
         loc = SITE + path
@@ -1201,6 +1218,11 @@ def render_sitemap(urls: list[tuple[str, str, str]], lastmod: str) -> str:
         lines.append(f"    <lastmod>{lastmod}</lastmod>")
         lines.append(f"    <changefreq>{freq}</changefreq>")
         lines.append(f"    <priority>{priority}</priority>")
+        for image in SITEMAP_IMAGES.get(path, []):
+            lines.append("    <image:image>")
+            lines.append(f"      <image:loc>{esc(image['loc'])}</image:loc>")
+            lines.append(f"      <image:title>{esc(image['title'])}</image:title>")
+            lines.append("    </image:image>")
         lines.append("  </url>")
     lines.append("</urlset>")
     lines.append("")
@@ -1707,6 +1729,10 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("empty nhóm Bánh is still in the sitemap")
     if "/san-pham/nhom-giay.html" not in sitemap or "<loc>https://vanphatcompany.vn/</loc>" not in sitemap:
         raise SystemExit("sitemap dropped a page that should stay")
+    if f"<image:loc>{STOREFRONT_IMAGE}</image:loc>" not in sitemap:
+        raise SystemExit("sitemap is missing the storefront image")
+    if GEO_LAT not in (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8"):
+        raise SystemExit("LocalBusiness is missing the Mỹ Gia pin")
     robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
     if f"Sitemap: {SITE}/sitemap.xml" not in robots:
         raise SystemExit("robots.txt lost the sitemap line")

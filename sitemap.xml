@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://vanphatcompany.vn/</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://vanphatcompany.vn/assets/mat-tien-van-phat-van-phong-pham-my-gia-nha-trang.jpg</image:loc>
+      <image:title>Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://vanphatcompany.vn/san-pham.html</loc>
@@ -23,6 +28,10 @@
     <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://vanphatcompany.vn/assets/mat-tien-van-phat-van-phong-pham-my-gia-nha-trang.jpg</image:loc>
+      <image:title>Mặt tiền cửa hàng Vạn Phát tại KĐT Mỹ Gia, Nam Nha Trang</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://vanphatcompany.vn/thu-ngo.html</loc>
