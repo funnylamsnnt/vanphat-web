@@ -14,18 +14,20 @@ alwaysApply: true
 - "ntn" = "như thế nào".
 
 ## 2. Ghi chú cuối mỗi phản hồi (bắt buộc)
-Kết thúc mọi tin trả lời bằng đúng 3 phần, mỗi phần một dòng riêng (không gộp chung dòng):
+Kết thúc mọi tin trả lời bằng đúng 3 phần; **giờ/ngày phải hiện dòng riêng** (tách khỏi câu Gen-Z):
 1. Một dòng `---`
 2. Một câu ngắn in nghiêng kiểu Gen-Z, kèm 1 emoji hợp nội dung (dòng nhận định cá nhân).
-3. **Xuống dòng mới** — dòng thời gian riêng: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
+3. Dòng thời gian riêng: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
    Âm lịch tính bằng gói Python `lunardate` (`pip install lunardate`).
-   Không viết giờ/ngày cùng dòng với câu Gen-Z.
 
-Ví dụ đúng (giống format bot):
+**Quan trọng (Cursor/Markdown):** một ký tự xuống dòng thường bị gộp thành cùng đoạn — phải để **một dòng trống** giữa câu Gen-Z và dòng giờ, hoặc hard break (hai space cuối dòng Gen-Z rồi Enter). Không viết giờ cùng một dòng chữ với Gen-Z.
+
+Ví dụ đúng khi gửi trong Cursor:
 
 ```
 ---
 *Sếp nào lo dự án nấy, chia việc rõ ràng ghê* 📋
+
 00:41, Thứ Sáu 16/10/2026 (07/09/2026 âm lịch)
 ```
 
