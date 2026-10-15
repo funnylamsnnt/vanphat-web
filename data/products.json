@@ -297,7 +297,7 @@
       "dvt": "Ram",
       "gia": 63000,
       "anh": "https://lh3.googleusercontent.com/d/1FXCl8YNMhVIB34ZWE1UYEmJMA9_KzxTe",
-      "ton": -3
+      "ton": 57
     },
     {
       "nhom": "Giấy",
@@ -309,7 +309,7 @@
       "dvt": "Ram",
       "gia": 68000,
       "anh": "https://lh3.googleusercontent.com/d/1dJmTpg1hEnahXy5jyJktYmWB4DCs7nkA",
-      "ton": 80
+      "ton": 140
     },
     {
       "nhom": "Giấy",
@@ -549,7 +549,7 @@
       "dvt": "Xấp",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/18OJ6FSGPFW5iEO0sjiAehK7GagEgxKko",
-      "ton": 384
+      "ton": 424
     },
     {
       "nhom": "Giấy",
@@ -1041,7 +1041,7 @@
       "dvt": "Xấp",
       "gia": 39000,
       "anh": "https://lh3.googleusercontent.com/d/1kz1k9PMThs5vw5nzM5gIiQAnzhRckqAQ",
-      "ton": 20
+      "ton": 40
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1461,7 +1461,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1IsJcKlXujhZqJAaiXIdAvC3b1b0B0SUU",
-      "ton": 560
+      "ton": 760
     },
     {
       "nhom": "Bút & Mực",
@@ -1725,7 +1725,7 @@
       "dvt": "Cây",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1jPvamqc_maSvhdhR4xA8kkh34SV-Tfi7",
-      "ton": 160
+      "ton": 210
     },
     {
       "nhom": "Bút & Mực",
@@ -1992,6 +1992,42 @@
       "ton": 36
     },
     {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP464",
+      "ten": "Bút Gel Thiên Long GEL-027 (Xanh)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-",
+      "ton": 60
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP465",
+      "ten": "Bút Gel Thiên Long GEL-027 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-",
+      "ton": 40
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP466",
+      "ten": "Bút Gel Thiên Long GEL-027 (Đen)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-",
+      "ton": 20
+    },
+    {
       "nhom": "Băng Keo",
       "nhomId": "bang-keo",
       "linhVucId": "vpp",
@@ -2025,7 +2061,7 @@
       "dvt": "Cuộn",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1OKp0AMaSiD2vpVfyDZhSoiOT9zEAcp9x",
-      "ton": 36
+      "ton": 72
     },
     {
       "nhom": "Băng Keo",
@@ -2073,7 +2109,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1aq5-3gf2YVb7SQzwGlFChkJBMYv2wVNm",
-      "ton": 0
+      "ton": 120
     },
     {
       "nhom": "Băng Keo",
@@ -2085,7 +2121,7 @@
       "dvt": "Cuộn",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
-      "ton": 0
+      "ton": 96
     },
     {
       "nhom": "Băng Keo",
@@ -2805,7 +2841,7 @@
       "dvt": "Cái",
       "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1gASeQY1GuPPuagv1iw6WwnMwQzIJ_REk",
-      "ton": 17
+      "ton": 29
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3621,7 +3657,7 @@
       "dvt": "Hộp",
       "gia": 17000,
       "anh": "https://lh3.googleusercontent.com/d/1TywEtwJmMVdLuqxoDub2K357drHqwxYR",
-      "ton": 288
+      "ton": 300
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3837,7 +3873,7 @@
       "dvt": "Hộp",
       "gia": 4000,
       "anh": "https://lh3.googleusercontent.com/d/1NgF7-8XROX6qpVjloBRlMohSRfgFDdaP",
-      "ton": 0
+      "ton": 100
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4173,7 +4209,7 @@
       "dvt": "Cặp",
       "gia": 6500,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
-      "ton": 80
+      "ton": 160
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4413,7 +4449,7 @@
       "dvt": "Tập",
       "gia": 68000,
       "anh": "https://lh3.googleusercontent.com/d/1vodeJDsomtkWy0FjUkVJPbnUi_ZqP5QC",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4713,7 +4749,19 @@
       "dvt": "Xấp",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1fs5FN2_KCHJ-j81Ruy7UAvofcFM0rUBQ",
-      "ton": 0
+      "ton": 48
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP463",
+      "ten": "Sổ Lò xo A6 -200 trang (3767)",
+      "dvt": "Quyển",
+      "gia": 8000,
+      "anh": "",
+      "ton": 50
     },
     {
       "nhom": "Điện",
