@@ -17,14 +17,15 @@ alwaysApply: true
 Kết thúc mọi tin trả lời bằng đúng 3 phần:
 1. Một dòng `---`
 2. Một câu ngắn in nghiêng kiểu Gen-Z, kèm 1 emoji hợp nội dung.
-3. Dòng thời gian: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
-   Âm lịch tính bằng gói Python `lunardate` (`pip install lunardate`).
+3. Một dòng trống, rồi dòng thời gian trên dòng riêng: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
+   Ghi chú cá nhân và đồng hồ phải tách rõ bằng dòng trống. Âm lịch tính bằng gói Python `lunardate` (`pip install lunardate`).
 
 Ví dụ:
 
 ```
 ---
 *Xong vèo, anh check giúp em nha* ✅
+
 00:43, Thứ Sáu 16/10/2026 (07/09/2026 âm lịch)
 ```
 
