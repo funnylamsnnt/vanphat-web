@@ -73,17 +73,20 @@ Anh hoặc trợ lý ngoài nói một cụm là đúng việc, không cần nh�
 
 ## Quy tắc cứng
 
-Chi tiết nằm ở rule luôn áp dụng. Tóm tắt:
+Chi tiết nằm ở rule luôn áp dụng. Chỗ đã có file thì làm theo file đó, đừng viết bản thứ hai.
 
-1. Nhóm `Không đưa lên web` (khớp không phân biệt hoa thường, dấu, khoảng trắng; cấu hình `excludeGroups` trong `data/ia.json`) không bao giờ lên web: `products.json`, trang SKU, trang nhóm, trang lĩnh vực, tìm kiếm, sitemap. Mã đang có trên web mà bị gán nhóm này thì gỡ trong chính lượt đó và liệt kê mã trong PR. Cầu nối LIVE Đơn Đặt Hàng vẫn giữ đủ mọi mã; việc đó do trợ lý ngoài làm, không ghi fileId vào repo.
-2. Ba lĩnh vực (Văn phòng phẩm, Nước uống & Bánh, Điện gia dụng) do `data/ia.json` điều khiển, duyệt L1 rồi L2 rồi L3, tìm kiếm toàn cục. Nhóm mới chưa có trong `ia.json` thì tự xếp vào lĩnh vực khớp nhất, phát hành, và báo trong PR (anh Hà chốt 10/10/2026; thay quy tắc cũ phải hỏi trước).
-3. Mọi ảnh sản phẩm phía khách mở lightbox: ảnh lớn, số lượng, Thêm vào giỏ, đóng bằng nút X, phím Esc, hoặc click lớp phủ.
-4. Không ghi đè `CNAME`. Không commit bí mật, email cá nhân, tài khoản, fileId cầu nối hay đơn nội bộ, link hệ thống QLVB. Không thêm lại nút hoặc form «Đặt hàng online» / Apps Script đã gỡ. Giữ giỏ hàng, Zalo, hotline.
-5. Sửa trên nhánh, mở PR, chờ anh duyệt. Không push thẳng `main`.
+1. Ba lĩnh vực, khách đi lĩnh vực → nhóm → sản phẩm, ô tìm chung: `.cursor/rules/ia-linh-vuc.mdc`. Văn phòng phẩm `vpp` (`group-images`), Nước uống & Bánh `nuoc-banh` (`product-images`), Điện gia dụng `dien-gia-dung` (`group-images`). Nguồn là `data/ia.json`, không hardcode số lượng trong HTML. Không mở lĩnh vực thứ tư. Không đổi slug cũ. Nhóm mới thì tự xếp vào lĩnh vực khớp nhất và ghi trong PR.
+2. Ảnh sản phẩm phía khách mở lightbox: `.cursor/rules/product-lightbox.mdc`. Ảnh lớn, số lượng, Thêm vào giỏ, đóng bằng nút X, phím Escape, hoặc click lớp phủ. Không gỡ số lượng và nút thêm giỏ trên thẻ. Sổ nhân viên không gắn lightbox khách.
+3. Nguồn giá và nhóm «Không đưa lên web»: `.cursor/rules/khong-dua-len-web.mdc` và mục «Nguồn dữ liệu duy nhất» ở trên. FileId Drive `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`, sheet `Danh Mục Vật Tư`. Mã đang có trên web mà bị gán nhóm này thì gỡ trong cùng lượt. Form Đơn Đặt Hàng LIVE vẫn giữ đủ mọi mã. Không ghi fileId cầu nối LIVE hay sheet đơn nội bộ vào repo.
+4. Thông tin công ty (tên, địa chỉ Mỹ Gia, điện thoại 0335 652 832, tọa độ, LocalBusiness, Street View): `.cursor/rules/thong-tin-cong-ty.mdc`.
+5. Layout lọc: điện thoại là hàng chip cuộn ngang có nút thu gọn; PC là sidebar. `.cursor/rules/bo-loc-catalog.mdc`.
+6. SEO: đừng làm hỏng sitemap, schema ItemList, title và meta, thư mục noscript. `.cursor/rules/seo-ky-thuat.mdc`.
+7. Không ghi đè `CNAME`. Không commit bí mật, email cá nhân, tài khoản, fileId cầu nối hay đơn nội bộ, link hệ thống QLVB. Không thêm lại nút hoặc form «Đặt hàng online» / Apps Script đã gỡ. Giữ giỏ hàng, Zalo, hotline. Chi tiết: `.cursor/rules/ranh-gioi-repo.mdc`.
+8. Sửa trên nhánh, mở PR, chờ anh duyệt. Không push thẳng `main`.
 
 ## Giao tiếp với anh Hà
 
-Rule `.cursor/rules/giao-tiep.mdc`. Trả lời tiếng Việt, xưng em, gọi anh. Vào kết quả trước. Vạn Phát (web, catalog, bán hàng, kho) tách khỏi văn bản hành chính nhà nước.
+Rule `.cursor/rules/giao-tiep.mdc` và `.cursor/rules/quy-tac-giao-tiep.mdc`. Trả lời tiếng Việt, xưng em, gọi anh. Vào kết quả trước. Vạn Phát (web, catalog, bán hàng, kho) tách khỏi văn bản hành chính nhà nước.
 
 Mọi câu trả lời chat, mô tả PR và báo cáo cuối gửi anh kết thúc bằng một dòng `---`, một câu in nghiêng giọng Gen-Z kèm đúng một emoji, rồi dòng giờ Asia/Bangkok kèm ngày âm lịch tính bằng Python `lunardate`. Không gắn khối này vào chữ trên website, email gửi đi, hay văn bản hành chính.
 
@@ -109,6 +112,6 @@ python3 scripts/check_rules.py
 python3 scripts/check_seo.py
 ```
 
-`check-rules` chạy trên mọi pull request. `check-seo` chạy trên mọi pull request và thêm một lượt khi có push lên `main` (sau khi anh merge catalog). Workflow nào cũng không deploy Pages. Lượt trên `main` đỏ thì mở PR sửa, không sửa thẳng `main`.
+`check-rules` chạy trên mọi pull request. `check-seo` chạy trên mọi pull request và thêm một lượt khi có push lên `main` (sau khi anh merge catalog). `check_seo.py` cũng kiểm link nội bộ và ảnh cùng origin; không gọi mạng ra site khác. Workflow nào cũng không deploy Pages. Lượt trên `main` đỏ thì mở PR sửa, không sửa thẳng `main`.
 
 Semrush và Search Console làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.md`. Không gắn tài khoản vào repo.

@@ -1,0 +1,14 @@
+---
+description: Tên, địa chỉ Nam Nha Trang, điện thoại, tọa độ, LocalBusiness và Street View của Vạn Phát.
+alwaysApply: true
+---
+
+# Thông tin công ty
+
+Giữ đúng các mục dưới đây trên web, schema và bản đồ. Chữ in trên trang sinh tự động lấy từ hằng trong `scripts/generate_catalog_pages.py`. Sửa hằng đó rồi sinh lại, đừng sửa tay hàng trăm HTML. `scripts/check_rules.py` giữ các hằng này.
+
+- Tên: CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT
+- Địa chỉ: LK 19-06 Đường số 20, KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang. Không dùng địa chỉ Phước Hải. Dòng đang in có thể không có dấu phẩy ngay sau «Đường số 20»; vẫn là địa chỉ Mỹ Gia này.
+- Điện thoại: 0335 652 832 (máy `0335652832`, `tel:0335652832`). Dòng đang in `033 5652 832` là cùng số, từ `HOTLINE_DISPLAY`. Đừng đổi sang số khác.
+- Tọa độ: 12.237790, 109.166378. `GEO_LAT` và `GEO_LNG` đang ghi đủ số sau dấu phẩy.
+- Giữ schema `LocalBusiness`, bản đồ, và Street View pano `g-5g616SRGZtJMjpFNK1Jg`, heading `67.85`, pitch `-2.16`.

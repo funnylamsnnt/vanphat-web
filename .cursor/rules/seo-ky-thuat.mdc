@@ -1,0 +1,15 @@
+---
+description: Giữ sitemap, ItemList, title, meta và thư mục noscript; link và ảnh cùng origin phải có file.
+alwaysApply: true
+---
+
+# SEO kỹ thuật
+
+Đừng làm hỏng các phần sau. Trang lĩnh vực, nhóm và SKU sửa ở `scripts/generate_catalog_pages.py` rồi sinh lại.
+
+- `sitemap.xml`: mỗi `loc` là URL tuyệt đối của site và trỏ tới file thật. Không đưa sổ nhân viên vào sitemap.
+- Schema `ItemList` trên trang lĩnh vực, trang nhóm, và `san-pham.html`.
+- `title`, meta description, canonical và Open Graph trên từng trang khách.
+- Thư mục tĩnh trong `<noscript>` của `san-pham.html` (khối `vp-catalog-dir`).
+
+`scripts/check_seo.py` (workflow `seo-audit`) kiểm các mục đó, cộng link nội bộ và ảnh cùng origin (`href`, `src`, `srcset`, `og:image`, `twitter:image`). Ảnh local phải có file và đọc được. Script không gọi mạng ra host khác, nên link bên thứ ba không làm CI đỏ vì timeout. Sau khi sửa, chạy `python3 scripts/check_seo.py`.
