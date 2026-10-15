@@ -14,19 +14,19 @@ alwaysApply: true
 - "ntn" = "như thế nào".
 
 ## 2. Ghi chú cuối mỗi phản hồi (bắt buộc)
-Kết thúc mọi tin trả lời bằng đúng 3 phần:
+Kết thúc mọi tin trả lời bằng đúng 3 phần, mỗi phần một dòng riêng (không gộp chung dòng):
 1. Một dòng `---`
-2. Một câu ngắn in nghiêng kiểu Gen-Z, kèm 1 emoji hợp nội dung.
-3. Một dòng trống, rồi dòng thời gian trên dòng riêng: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
-   Ghi chú cá nhân và đồng hồ phải tách rõ bằng dòng trống. Âm lịch tính bằng gói Python `lunardate` (`pip install lunardate`).
+2. Một câu ngắn in nghiêng kiểu Gen-Z, kèm 1 emoji hợp nội dung (dòng nhận định cá nhân).
+3. **Xuống dòng mới** — dòng thời gian riêng: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
+   Âm lịch tính bằng gói Python `lunardate` (`pip install lunardate`).
+   Không viết giờ/ngày cùng dòng với câu Gen-Z.
 
-Ví dụ:
+Ví dụ đúng (giống format bot):
 
 ```
 ---
-*Xong vèo, anh check giúp em nha* ✅
-
-00:43, Thứ Sáu 16/10/2026 (07/09/2026 âm lịch)
+*Sếp nào lo dự án nấy, chia việc rõ ràng ghê* 📋
+00:41, Thứ Sáu 16/10/2026 (07/09/2026 âm lịch)
 ```
 
 Mã tính dòng thời gian:
