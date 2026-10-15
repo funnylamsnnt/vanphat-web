@@ -1504,6 +1504,12 @@ FONT_BLOCK_OLD = (
 REACH_RE = re.compile(r"[ \t]*<!-- vp-reach -->.*?<!-- /vp-reach -->\n?", re.S)
 FOOTER_BLURB_OLD = "văn phòng phẩm và photocopy tại KĐT Mỹ Gia, Phường Nam Nha Trang."
 FOOTER_BLURB_NEW = "văn phòng phẩm, nước uống và điện gia dụng tại KĐT Mỹ Gia, Phường Nam Nha Trang."
+# Visible homepage hero under the H1. Meta description stays separate.
+HERO_LEAD = (
+    "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT cung cấp văn phòng phẩm, "
+    "nước uống, điện gia dụng, photocopy và in màu khổ A5\u2013A3."
+)
+HERO_LEAD_RE = re.compile(r'(<p class="hero-lead">)\s*.*?\s*(</p>)', re.DOTALL)
 
 
 def defer_external_scripts(text: str) -> str:
@@ -1538,6 +1544,17 @@ def strip_google_fonts(text: str) -> str:
     return text
 
 
+def pin_hero_lead(text: str) -> str:
+    """Keep the homepage hero sentence. A catalog rebuild must not restore the old line."""
+    if 'class="hero-lead"' not in text:
+        return text
+
+    def repl(match: re.Match[str]) -> str:
+        return f"{match.group(1)}\n            {HERO_LEAD}\n          {match.group(2)}"
+
+    return HERO_LEAD_RE.sub(repl, text, count=1)
+
+
 def refresh_static_chrome(text: str) -> str:
     updated = strip_google_fonts(text)
     if "fonts.googleapis.com" not in updated and 'rel="stylesheet" href="' in updated:
@@ -1554,6 +1571,7 @@ def refresh_static_chrome(text: str) -> str:
     updated = re.sub(r"chat-widget\.js\?v=\d+", f"chat-widget.js?v={CHAT_V}", updated)
     updated = updated.replace(f"{SITE}/assets/logo.png", OG_IMAGE)
     updated = updated.replace(FOOTER_BLURB_OLD, FOOTER_BLURB_NEW)
+    updated = pin_hero_lead(updated)
     updated = defer_external_scripts(updated)
     updated = upsert_reach(updated)
     return updated
@@ -1654,6 +1672,20 @@ def assert_seo_helpers() -> None:
         raise SystemExit(f"image markup mismatch: {sample}")
     if 'loading="lazy"' not in sample or 'width="400"' not in sample:
         raise SystemExit("picture missing lazy/size")
+    old_lead = (
+        '<p class="hero-lead">\n'
+        "            CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT cung cấp văn phòng phẩm, "
+        "nước uống và điện gia dụng tại Nha Trang — cùng photocopy Mỹ Gia, "
+        "in màu khổ A5\u2013A3 tại Phường Nam Nha Trang.\n"
+        "          </p>"
+    )
+    pinned = pin_hero_lead(old_lead)
+    if HERO_LEAD not in pinned or "Phước" in pinned or "tại Nha Trang —" in pinned:
+        raise SystemExit(f"hero lead pin failed: {pinned!r}")
+    if pin_hero_lead(pinned) != pinned:
+        raise SystemExit("hero lead pin is not idempotent")
+    if pinned.count(", ") != 3:
+        raise SystemExit("hero lead must keep one space after each comma")
 
 
 def _product_node(doc: dict) -> dict:
@@ -1742,6 +1774,8 @@ def assert_generated_seo(products: list[dict]) -> None:
     if 'name="robots" content="noindex, follow"' not in banh:
         raise SystemExit("empty nhóm page should be noindex")
     home = (ROOT / "index.html").read_text(encoding="utf-8")
+    if HERO_LEAD not in home:
+        raise SystemExit("homepage hero lead drifted from the pinned sentence")
     token = str(GOOGLE_SITE_VERIFICATION or "").strip()
     if token and f'content="{token}"' not in home:
         raise SystemExit("homepage is missing google-site-verification")
