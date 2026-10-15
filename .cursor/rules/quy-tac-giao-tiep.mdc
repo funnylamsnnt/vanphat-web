@@ -20,14 +20,13 @@ Kết thúc mọi tin trả lời bằng đúng 3 phần; **giờ/ngày phải h
 3. Dòng thời gian riêng: `HH:mm, Thứ … DD/MM/YYYY (DD/MM/YYYY âm lịch)` theo giờ Asia/Bangkok (UTC+7).
    Âm lịch tính bằng gói Python `lunardate` (`pip install lunardate`).
 
-**Quan trọng (Cursor/Markdown):** một ký tự xuống dòng thường bị gộp thành cùng đoạn — phải để **một dòng trống** giữa câu Gen-Z và dòng giờ, hoặc hard break (hai space cuối dòng Gen-Z rồi Enter). Không viết giờ cùng một dòng chữ với Gen-Z.
+**Quan trọng (Cursor/Markdown):** một Enter thường bị gộp cùng đoạn. Để giờ xuống dòng **nhưng khoảng cách ngắn**: hard break — **hai space** ở cuối dòng Gen-Z rồi Enter (không dùng dòng trống, vì khoảng cách quá xa). Không viết giờ cùng một dòng chữ với Gen-Z.
 
-Ví dụ đúng khi gửi trong Cursor:
+Ví dụ đúng khi gửi trong Cursor (sau emoji có 2 space ẩn rồi Enter):
 
 ```
 ---
-*Sếp nào lo dự án nấy, chia việc rõ ràng ghê* 📋
-
+*Sếp nào lo dự án nấy, chia việc rõ ràng ghê* 📋  
 00:41, Thứ Sáu 16/10/2026 (07/09/2026 âm lịch)
 ```
 
