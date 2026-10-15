@@ -89,24 +89,24 @@ MAPS_EMBED_SRC = (
     + quote(MAPS_QUERY)
     + "&hl=vi&z=17&output=embed"
 )
-# Nearest default coverage at the pin is still July 2022 (pano qvRwpu1sxedXavKoyWOukQ).
-# The May 2025 capture is a separate panorama about 26 m away, on Đường số 20.
-# Heading 57 looks from that camera toward the shop pin. Do not drop the pano id
-# or the contact page falls back to the 2022 imagery.
-STREETVIEW_PANO = "hIKV2skn_zfm0ffCb2NuFg"
-STREETVIEW_HEADING = "57"
-STREETVIEW_PITCH = "10"
-STREETVIEW_PANO_LAT = "12.237663890642256"
-STREETVIEW_PANO_LNG = "109.1661799492981"
+# May 2025 capture on Đường số 20, the view anh Hà picked (not the July 2022 default).
+# The address-bar id mixes l/U; metadata id is g-5g616SRGZtJMjpFNK1Jg, dated 2025-05,
+# camera 12.237753056286802, 109.16614638042242. Heading 67.85, tilt 87.84 => pitch -2.16, fov 90.
+# Embed zoom 1 is the Maps equivalent of a 90° field of view. Do not drop the pano id.
+STREETVIEW_PANO = "g-5g616SRGZtJMjpFNK1Jg"
+STREETVIEW_HEADING = "67.85"
+STREETVIEW_PITCH = "-2.16"
+STREETVIEW_PANO_LAT = "12.237753056286802"
+STREETVIEW_PANO_LNG = "109.16614638042242"
 STREETVIEW_URL = (
     "https://www.google.com/maps/@?api=1&map_action=pano"
     f"&pano={STREETVIEW_PANO}&heading={STREETVIEW_HEADING}"
-    f"&pitch={STREETVIEW_PITCH}&fov=80"
+    f"&pitch={STREETVIEW_PITCH}&fov=90"
 )
 STREETVIEW_EMBED_SRC = (
     "https://www.google.com/maps/embed?pb=!1m0!3m2!1svi!2svn!6m8!1m7!1s"
     f"{STREETVIEW_PANO}!2m2!1d{STREETVIEW_PANO_LAT}!2d{STREETVIEW_PANO_LNG}"
-    f"!3f{STREETVIEW_HEADING}!4f{STREETVIEW_PITCH}!5f0.8&hl=vi"
+    f"!3f{STREETVIEW_HEADING}!4f{STREETVIEW_PITCH}!5f1&hl=vi"
 )
 FONT_CSS = "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=optional"
 _DRIVE_IMAGE = re.compile(r"^(https://lh3\.googleusercontent\.com/d/[A-Za-z0-9_-]+)")
