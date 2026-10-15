@@ -7,6 +7,8 @@
 2. Mọi thẻ sản phẩm khách (article.product-card trong HTML, cardHTML trong
    js/products.js, card_html trong generator) có data-product-zoom.
 3. CNAME đúng vanphatcompany.vn và chữ «Đặt hàng online» không trở lại HTML/JS.
+4. Hằng công ty trong generator: tên, địa chỉ Mỹ Gia (không Phước Hải),
+   số 0335652832, tọa độ 12.237790 / 109.166378, Street View đã chốt.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
 nằm trong hạng mục 2. Chạy: python3 scripts/check_rules.py
@@ -16,6 +18,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -200,14 +203,67 @@ def check_lightbox(errors: list[str]) -> int:
     return cards
 
 
+def fold_vn(text: str) -> str:
+    text = text.replace("đ", "d").replace("Đ", "D")
+    text = unicodedata.normalize("NFD", text)
+    return "".join(ch for ch in text if unicodedata.category(ch) != "Mn").lower()
+
+
+def assigned(text: str, name: str) -> str | None:
+    match = re.search(rf'^{re.escape(name)}\s*=\s*"([^"]*)"', text, re.M)
+    return match.group(1) if match else None
+
+
+def check_company(errors: list[str]) -> None:
+    gen = ROOT / "scripts" / "generate_catalog_pages.py"
+    text = gen.read_text(encoding="utf-8")
+    expect = {
+        "COMPANY": "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT",
+        "HOTLINE_TEL": "0335652832",
+        "STREETVIEW_PANO": "g-5g616SRGZtJMjpFNK1Jg",
+        "STREETVIEW_HEADING": "67.85",
+        "STREETVIEW_PITCH": "-2.16",
+    }
+    for name, wanted in expect.items():
+        got = assigned(text, name)
+        if got is None:
+            errors.append(f"generate_catalog_pages.py thiếu hằng {name}")
+        elif got != wanted:
+            errors.append(f"{name} sai: {got}")
+    address = assigned(text, "ADDRESS") or ""
+    if not address:
+        errors.append("generate_catalog_pages.py thiếu ADDRESS")
+    else:
+        for needle in ("LK 19-06", "Mỹ Gia", "Vĩnh Thái", "Nam Nha Trang"):
+            if needle not in address:
+                errors.append(f"ADDRESS thiếu {needle}")
+        if "phuoc hai" in fold_vn(address):
+            errors.append("ADDRESS đang dùng Phước Hải")
+    display = assigned(text, "HOTLINE_DISPLAY") or ""
+    if re.sub(r"\D", "", display) != "0335652832":
+        errors.append(f"HOTLINE_DISPLAY không còn số 0335 652 832: {display or 'trống'}")
+    lat = assigned(text, "GEO_LAT") or ""
+    lng = assigned(text, "GEO_LNG") or ""
+    if not lat.startswith("12.237790"):
+        errors.append(f"GEO_LAT sai: {lat or 'trống'}")
+    if not lng.startswith("109.166378"):
+        errors.append(f"GEO_LNG sai: {lng or 'trống'}")
+    if "LocalBusiness" not in text:
+        errors.append("generator thiếu schema LocalBusiness")
+
+
 def check_boundaries(errors: list[str]) -> None:
     cname = (ROOT / "CNAME").read_text(encoding="utf-8").strip()
     if cname != "vanphatcompany.vn":
         errors.append(f"CNAME đang là {cname!r}, phải là vanphatcompany.vn")
+    old_address = re.compile(r"phuoc\s*hai")
     for path in [*iter_html(), *ROOT.joinpath("js").glob("*.js")]:
         text = path.read_text(encoding="utf-8", errors="replace")
+        rel = path.relative_to(ROOT).as_posix()
         if BANNED_CTA in text:
-            errors.append(f"{path.relative_to(ROOT).as_posix()}: có lại «{BANNED_CTA}»")
+            errors.append(f"{rel}: có lại «{BANNED_CTA}»")
+        if old_address.search(fold_vn(text)):
+            errors.append(f"{rel}: còn địa chỉ Phước Hải")
 
 
 def self_test() -> None:
@@ -242,6 +298,7 @@ def main() -> None:
     product_count = check_excluded(errors, skus)
     cards = check_lightbox(errors)
     check_boundaries(errors)
+    check_company(errors)
     if errors:
         fail(errors)
     print(

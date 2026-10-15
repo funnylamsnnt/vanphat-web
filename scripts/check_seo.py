@@ -4,6 +4,10 @@
 Chạy trên mọi pull request và một lượt sau khi merge vào main.
 Không deploy Pages. Semrush và Search Console không nằm ở đây.
 
+Link nội bộ và ảnh cùng origin (href, src, srcset, og:image, twitter:image)
+phải có file trong repo. Ảnh local còn phải đọc được (không rỗng, đúng định dạng).
+Script không gọi HTTP ra host khác, nên link bên thứ ba không làm CI đỏ vì timeout.
+
     python3 scripts/check_seo.py
 """
 from __future__ import annotations
@@ -20,8 +24,12 @@ TITLE_HARD_MAX = 90
 DESC_HARD_MAX = 220
 HTML_WEIGHT_MAX = 500_000
 ATTR_RE = re.compile(r"""(?:href|src)\s*=\s*["']([^"']+)["']""", re.I)
+SRCSET_RE = re.compile(r"""(?:srcset|imagesrcset)\s*=\s*["']([^"']+)["']""", re.I)
+META_RE = re.compile(r"<meta\b[^>]*>", re.I | re.S)
 IMG_RE = re.compile(r"<img\b[^>]*>", re.I | re.S)
 LOC_RE = re.compile(r"<loc>\s*([^<]+?)\s*</loc>")
+IMAGE_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".avif", ".bmp"}
+META_IMAGE_NAMES = {"og:image", "twitter:image"}
 
 
 def fail(errors: list[str]) -> None:
@@ -56,6 +64,63 @@ def loc_to_path(loc: str) -> Path:
     if rel.endswith("/"):
         rel += "index.html"
     return ROOT / rel
+
+
+def split_srcset(value: str) -> list[str]:
+    refs: list[str] = []
+    for part in value.split(","):
+        bits = part.strip().split()
+        if bits:
+            refs.append(bits[0])
+    return refs
+
+
+def meta_image_refs(text: str) -> list[str]:
+    refs: list[str] = []
+    for tag in META_RE.findall(text):
+        name = re.search(r"""(?:property|name)\s*=\s*["']([^"']+)["']""", tag, re.I)
+        content = re.search(r"""content\s*=\s*["']([^"']+)["']""", tag, re.I)
+        if not name or not content:
+            continue
+        if name.group(1).strip().lower() in META_IMAGE_NAMES:
+            refs.append(content.group(1))
+    return refs
+
+
+def page_refs(text: str) -> list[tuple[str, str]]:
+    found: list[tuple[str, str]] = [("ref", ref) for ref in ATTR_RE.findall(text)]
+    for raw in SRCSET_RE.findall(text):
+        found.extend(("image", ref) for ref in split_srcset(raw))
+    found.extend(("image", ref) for ref in meta_image_refs(text))
+    return found
+
+
+def sniff_image(path: Path) -> str | None:
+    """None khi file ảnh đọc được. Chỉ gọi khi hậu tố là ảnh và file tồn tại."""
+    if path.stat().st_size == 0:
+        return "file rỗng"
+    blob = path.read_bytes()[:64]
+    ext = path.suffix.lower()
+    if ext == ".svg":
+        head = path.read_bytes()[:512].decode("utf-8", errors="ignore").lower()
+        if "<svg" not in head:
+            return "không phải SVG"
+        return None
+    if ext in (".jpg", ".jpeg") and blob[:3] != b"\xff\xd8\xff":
+        return "không phải JPEG"
+    if ext == ".png" and blob[:8] != b"\x89PNG\r\n\x1a\n":
+        return "không phải PNG"
+    if ext == ".gif" and blob[:6] not in (b"GIF87a", b"GIF89a"):
+        return "không phải GIF"
+    if ext == ".webp" and (blob[:4] != b"RIFF" or blob[8:12] != b"WEBP"):
+        return "không phải WebP"
+    if ext == ".ico" and blob[:4] not in (b"\x00\x00\x01\x00", b"\x00\x00\x02\x00"):
+        return "không phải ICO"
+    if ext == ".avif" and blob[4:8] != b"ftyp":
+        return "không phải AVIF"
+    if ext == ".bmp" and blob[:2] != b"BM":
+        return "không phải BMP"
+    return None
 
 
 def resolve_ref(page: Path, ref: str) -> Path | None:
@@ -114,8 +179,10 @@ def check_sitemap(errors: list[str]) -> int:
     return len(locs)
 
 
-def check_pages(errors: list[str]) -> int:
+def check_pages(errors: list[str]) -> tuple[int, int]:
     pages = 0
+    image_files: set[Path] = set()
+    sniffed: dict[Path, str | None] = {}
     for path in iter_html():
         text = path.read_text(encoding="utf-8", errors="replace")
         rel = path.relative_to(ROOT).as_posix()
@@ -126,6 +193,33 @@ def check_pages(errors: list[str]) -> int:
             if not re.search(r"\balt\s*=", img, re.I):
                 errors.append(f"{rel}: img thiếu alt")
                 break
+        seen: set[str] = set()
+        for kind, ref in page_refs(text):
+            if ref in seen:
+                continue
+            seen.add(ref)
+            target = resolve_ref(path, ref)
+            if target is None:
+                continue
+            try:
+                target.relative_to(ROOT)
+            except ValueError:
+                errors.append(f"{rel}: link thoát khỏi repo {ref}")
+                continue
+            is_image = kind == "image" or target.suffix.lower() in IMAGE_EXT
+            if not target.is_file():
+                label = "ảnh gãy" if is_image else "link gãy"
+                errors.append(f"{rel}: {label} {ref}")
+                continue
+            if target.suffix.lower() not in IMAGE_EXT:
+                continue
+            if target not in sniffed:
+                sniffed[target] = sniff_image(target)
+            reason = sniffed[target]
+            if reason:
+                errors.append(f"{rel}: ảnh hỏng {ref} ({reason})")
+                continue
+            image_files.add(target)
         if is_staff(path):
             if "noindex" not in text:
                 errors.append(f"{rel}: trang nhân viên phải noindex")
@@ -171,28 +265,43 @@ def check_pages(errors: list[str]) -> int:
                 errors.append("san-pham.html thiếu thư mục catalog tĩnh (noscript)")
             if "ItemList" not in text:
                 errors.append("san-pham.html thiếu ItemList trong JSON-LD")
-        for ref in ATTR_RE.findall(text):
-            target = resolve_ref(path, ref)
-            if target is None:
-                continue
-            try:
-                target.relative_to(ROOT)
-            except ValueError:
-                errors.append(f"{rel}: link thoát khỏi repo {ref}")
-                continue
-            if not target.is_file():
-                errors.append(f"{rel}: link gãy {ref}")
-    return pages
+    if not image_files:
+        errors.append("không thấy ảnh cùng origin nào — bộ quét ảnh hỏng")
+    return pages, len(image_files)
+
+
+def self_test() -> None:
+    if resolve_ref(ROOT / "index.html", "https://example.com/anh.jpg") is not None:
+        raise SystemExit("self-test: không được gọi file bên thứ ba")
+    if resolve_ref(ROOT / "index.html", "mailto:a@b.c") is not None:
+        raise SystemExit("self-test: mailto phải bỏ qua")
+    same = resolve_ref(ROOT / "index.html", f"{SITE}/assets/og.jpg?v=1")
+    if same != ROOT / "assets" / "og.jpg":
+        raise SystemExit(f"self-test: cùng origin phải về file local, ra {same}")
+    parts = split_srcset("a.webp?v=1, b.webp 2x")
+    if parts != ["a.webp?v=1", "b.webp"]:
+        raise SystemExit(f"self-test: srcset tách sai {parts}")
+    sample = meta_image_refs(
+        '<meta property="og:image" content="https://cdn.example/a.jpg" />'
+    )
+    if sample != ["https://cdn.example/a.jpg"]:
+        raise SystemExit("self-test: không đọc og:image")
+    if resolve_ref(ROOT / "index.html", sample[0]) is not None:
+        raise SystemExit("self-test: og:image host lạ phải bỏ qua, không timeout")
 
 
 def main() -> None:
+    self_test()
     errors: list[str] = []
     check_robots(errors)
     locs = check_sitemap(errors)
-    pages = check_pages(errors)
+    pages, images = check_pages(errors)
     if errors:
         fail(errors)
-    print(f"OK: SEO kỹ thuật, {pages} trang HTML, {locs} URL trong sitemap.")
+    print(
+        f"OK: SEO kỹ thuật, {pages} trang HTML, {locs} URL trong sitemap, "
+        f"{images} ảnh cùng origin đọc được."
+    )
 
 
 if __name__ == "__main__":

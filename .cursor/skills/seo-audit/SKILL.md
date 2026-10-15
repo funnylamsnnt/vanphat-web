@@ -3,7 +3,7 @@ name: seo-audit
 description: >-
   Dùng khi rà hoặc sửa SEO kỹ thuật của vanphatcompany.vn: robots.txt,
   sitemap.xml, canonical, title, description, Open Graph, schema.org, link gãy,
-  alt ảnh, dung lượng trang. Sửa bằng pull request, ưu tiên generator.
+  ảnh cùng origin, alt ảnh, dung lượng trang. Sửa bằng pull request, ưu tiên generator.
 ---
 
 # Rà SEO kỹ thuật
@@ -19,7 +19,7 @@ python3 scripts/check_rules.py
 python3 scripts/check_seo.py
 ```
 
-`scripts/check_seo.py` là lượt SEO kỹ thuật: robots, sitemap, canonical, title, description, Open Graph, Twitter, hreflang, schema Organization trên trang chủ, schema Product trên trang SKU, alt, link nội bộ, và HTML quá 500 KB. Workflow `.github/workflows/seo-audit.yml` chạy lệnh này trên mọi PR và một lượt nữa khi push lên `main`. Lượt trên `main` đỏ thì mở PR sửa, không sửa thẳng `main`. Workflow không deploy Pages.
+`scripts/check_seo.py` là lượt SEO kỹ thuật: robots, sitemap, canonical, title, description, Open Graph, Twitter, hreflang, schema Organization trên trang chủ, schema Product trên trang SKU, ItemList, thư mục noscript, alt, link nội bộ, ảnh cùng origin, và HTML quá 500 KB. Workflow `.github/workflows/seo-audit.yml` chạy lệnh này trên mọi PR và một lượt nữa khi push lên `main`. Lượt trên `main` đỏ thì mở PR sửa, không sửa thẳng `main`. Workflow không deploy Pages.
 
 Search Console và Semrush làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.md`. Không nhét tài khoản Semrush vào repo. Codeword để gọi việc này là `rà seo`.
 
@@ -37,7 +37,7 @@ Search Console và Semrush làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.m
 
 **schema.org.** Trang chủ: `Organization` / `LocalBusiness` và `WebSite`, đúng tên và địa chỉ đang public, `SearchAction` trỏ `san-pham.html?q=`. Trang SKU: `Product` với `name`, `sku`, `image`, `description`, breadcrumb; `Offer` chỉ khi có giá niêm yết thật. Không bịa review, điểm sao, hay tồn kho để lấy rich result.
 
-**Link gãy.** Với HTML trong repo, lấy `href` và `src` tương đối. Bỏ qua `http`, `mailto`, `tel`, `javascript`, `data`. Ghép với thư mục của file rồi kiểm file tồn tại. `sitemap` từng `loc` cũng phải có file. Anchor chỉ trên cùng trang thì bỏ qua.
+**Link gãy và ảnh cùng origin.** Với HTML trong repo, lấy `href`, `src`, `srcset`, `og:image` và `twitter:image`. Bỏ `mailto`, `tel`, `javascript`, `data`, và mọi host không phải `vanphatcompany.vn`. Không gọi HTTP ra ngoài, nên link bên thứ ba không làm CI đỏ vì timeout. File cùng origin phải có trong repo. Ảnh local (jpg, png, webp, …) còn phải đọc được, không rỗng. `sitemap` từng `loc` cũng phải có file. Anchor chỉ trên cùng trang thì bỏ qua.
 
 **Alt ảnh.** Mọi `img` có attribute `alt`. Ảnh sản phẩm dùng tên sản phẩm. Ảnh trang trí được `alt=""`, nhưng attribute phải có. Không để tên file làm alt.
 

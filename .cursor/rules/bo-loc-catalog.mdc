@@ -1,0 +1,16 @@
+---
+description: Điện thoại dùng hàng chip cuộn ngang có nút thu gọn; PC dùng sidebar lọc.
+alwaysApply: true
+---
+
+# Bộ lọc catalog
+
+Điện thoại (dưới 769px) giữ hàng chip một dòng, cuộn ngang, có nút thu gọn. PC và máy tính bảng (từ 769px) dùng sidebar lọc lĩnh vực rồi nhóm.
+
+Móc đang có:
+
+- Hàng chip và nút thu gọn: `js/main.js` (`initChipRails`, `.chip-rail-toggle`, nhớ `vp-chip-rail-collapsed`). Mũi tên trái phải chỉ hiện trên màn rộng; điện thoại cuộn bằng tay.
+- Catalog `san-pham.html`: sidebar `.catalog-side` từ 769px. Dưới mốc đó, nút «Lọc» mở sheet.
+- CSS: `css/styles.css`, khối catalog và `.chip-rail`.
+
+Đừng bỏ nút thu gọn trên điện thoại. Đừng đổi sidebar PC thành hàng chip. `initChipRails` bỏ qua sổ nhân viên (`nhan-vien`).
