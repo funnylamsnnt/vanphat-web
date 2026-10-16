@@ -46,6 +46,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vanphatcompany.vn/app/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://vanphatcompany.vn/linh-vuc/vpp.html</loc>
     <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>

@@ -464,6 +464,189 @@
     });
   }
 
+  const INSTALL_KEY = "vp-pwa-install-dismissed";
+  let deferredInstall = null;
+
+  function isStaffPage() {
+    return (
+      (document.body && document.body.classList.contains("staff-page")) ||
+      /\/nhan-vien(\/|\.html|$)/.test(location.pathname)
+    );
+  }
+
+  function isStandaloneMode() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function isIosDevice() {
+    const ua = navigator.userAgent || "";
+    if (/iPad|iPhone|iPod/.test(ua)) return true;
+    return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  }
+
+  function isInstallPage() {
+    return /\/app\/?$/.test(location.pathname) || /\/app\/index\.html$/.test(location.pathname);
+  }
+
+  function installHidden() {
+    try {
+      return localStorage.getItem(INSTALL_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function rememberInstallHide() {
+    try {
+      localStorage.setItem(INSTALL_KEY, "1");
+    } catch (e) {
+      /* bộ nhớ riêng tư */
+    }
+  }
+
+  function hideInstallBanner() {
+    const bar = document.getElementById("vp-install");
+    if (bar) bar.hidden = true;
+  }
+
+  function showInstallBanner() {
+    if (!document.body || isStaffPage() || isInstallPage() || installHidden() || isStandaloneMode()) {
+      return;
+    }
+    const ios = isIosDevice() && !deferredInstall;
+    if (!ios && !deferredInstall) return;
+    let bar = document.getElementById("vp-install");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "vp-install";
+      bar.className = "vp-install";
+      bar.innerHTML =
+        '<p data-install-text>Cài app Vạn Phát để đặt hàng nhanh trên điện thoại.</p>' +
+        '<button type="button" class="btn btn-gold btn-sm" data-pwa-install>Cài</button>' +
+        '<a class="vp-install-help" href="/app/">Cách cài</a>' +
+        '<button type="button" class="vp-install-x" data-pwa-dismiss aria-label="Đóng">×</button>';
+      document.body.insertBefore(bar, document.body.firstChild);
+      bar.querySelector("[data-pwa-dismiss]").addEventListener("click", () => {
+        rememberInstallHide();
+        hideInstallBanner();
+      });
+      bar.querySelector("[data-pwa-install]").addEventListener("click", async () => {
+        if (!deferredInstall) return;
+        deferredInstall.prompt();
+        try {
+          await deferredInstall.userChoice;
+        } catch (e) {
+          /* khách đóng hộp thoại cài */
+        }
+        deferredInstall = null;
+        hideInstallBanner();
+      });
+    }
+    const text = bar.querySelector("[data-install-text]");
+    const btn = bar.querySelector("[data-pwa-install]");
+    if (ios) {
+      if (text) text.textContent = "iPhone: bấm Chia sẻ, rồi Thêm vào Màn hình chính.";
+      if (btn) btn.hidden = true;
+    } else if (btn) {
+      if (text) text.textContent = "Cài app Vạn Phát để đặt hàng nhanh trên điện thoại.";
+      btn.hidden = false;
+    }
+    bar.hidden = false;
+  }
+
+  function tabIcon(path) {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + path + '"/></svg>';
+  }
+
+  function initTabBar() {
+    if (!document.body || isStaffPage() || document.querySelector(".vp-tabbar")) return;
+    if (!isStandaloneMode()) return;
+    document.documentElement.classList.add("vp-standalone");
+    const path = location.pathname;
+    const finding = location.hash === "#tim";
+    const home = (path === "/" || /\/index\.html$/.test(path)) && !finding;
+    const contact = /\/lien-he\.html$/.test(path);
+    const catalog =
+      !finding &&
+      (/\/san-pham\.html$/.test(path) || path.indexOf("/san-pham/") !== -1 || path.indexOf("/linh-vuc/") !== -1);
+    function link(href, label, icon, current) {
+      return (
+        '<a href="' +
+        href +
+        '"' +
+        (current ? ' aria-current="page"' : "") +
+        ">" +
+        icon +
+        "<span>" +
+        label +
+        "</span></a>"
+      );
+    }
+    const nav = document.createElement("nav");
+    nav.className = "vp-tabbar";
+    nav.setAttribute("aria-label", "Điều hướng app");
+    nav.innerHTML = [
+      link("/index.html", "Trang chủ", tabIcon("M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"), home),
+      link("/san-pham.html", "Danh mục", tabIcon("M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"), catalog),
+      link("/san-pham.html#tim", "Tìm", tabIcon("M10.5 4a6.5 6.5 0 0 1 5.2 10.4l4 4-1.4 1.4-4-4A6.5 6.5 0 1 1 10.5 4zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"), finding),
+      '<button type="button" data-cart-open>' +
+        tabIcon("M6 6h15l-1.5 9h-12zM6 6 5 3H2m5 16a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z") +
+        "<span>Giỏ</span>" +
+        '<span class="vp-tab-badge" data-cart-badge hidden>0</span></button>',
+      link("/lien-he.html", "Liên hệ", tabIcon("M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"), contact),
+    ].join("");
+    document.body.appendChild(nav);
+    if (window.VanPhatCart && window.VanPhatCart.render) window.VanPhatCart.render();
+  }
+
+  function focusSiteSearch() {
+    if (location.hash !== "#tim") return;
+    const input = document.querySelector(".nav-search input");
+    if (!input) return;
+    const nav = document.querySelector(".nav");
+    const toggle = document.querySelector(".nav-toggle");
+    if (nav && toggle && window.getComputedStyle(toggle).display !== "none") {
+      nav.classList.add("open");
+      toggle.setAttribute("aria-expanded", "true");
+    }
+    input.focus();
+  }
+
+  function openCartFromShortcut() {
+    const params = new URLSearchParams(location.search);
+    if (params.get("gio") !== "1" || isStaffPage()) return;
+    if (window.VanPhatCart && window.VanPhatCart.open) window.VanPhatCart.open();
+  }
+
+  function registerServiceWorker() {
+    if (!("serviceWorker" in navigator)) return;
+    const had = !!navigator.serviceWorker.controller;
+    if (had) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) return;
+        refreshing = true;
+        location.reload();
+      });
+    }
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    if (isStaffPage()) return;
+    deferredInstall = event;
+    showInstallBanner();
+  });
+  window.addEventListener("appinstalled", () => {
+    rememberInstallHide();
+    deferredInstall = null;
+    hideInstallBanner();
+  });
+
   document.addEventListener("DOMContentLoaded", () => {
     initNav();
     setActiveNav();
@@ -475,5 +658,11 @@
     syncChromeOffset();
     window.addEventListener("resize", syncChromeOffset);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncChromeOffset);
+    initTabBar();
+    showInstallBanner();
+    focusSiteSearch();
+    openCartFromShortcut();
   });
+
+  registerServiceWorker();
 })();
