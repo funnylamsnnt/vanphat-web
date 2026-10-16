@@ -146,8 +146,33 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-16T01:13:52Z",
-  "lastCheckResult": "changed_full_sync_web_deployed_VP324_rename_bridge_live_replaced_466",
+  "lastCheckAt": "2026-10-16T07:20:00Z",
+  "lastCheckResult": "web_deployed_VP467_bridge_PENDING_signin",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
+  "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
+  "pendingBridge": {
+    "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
+    "reason": "Chrome profile signed out of funnylams.nnt@gmail.com (password prompt); bridge 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc not replaced",
+    "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
+    "expectedRows": 467,
+    "note": "lastModifiedTime intentionally kept at previous value so next run retries bridge"
+  },
+  "webSync_20261016_1414": {
+    "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
+    "commit": "ff2cb432e416a3f43d8274c5a8882cf71fd463a1",
+    "pages_run": 38866124567,
+    "pages_status": "success",
+    "count": 433,
+    "with_img": 339,
+    "source_count": 467,
+    "added": [
+      "VP467"
+    ],
+    "price_chg": [],
+    "name_chg": [],
+    "zeroPrice_new": [
+      "VP467"
+    ],
+    "live_check": "products.json 433/339 img; VP467 page 200 + lightbox; VP415 404; sitemap 460; 3 linh-vuc 200"
+  }
 }
