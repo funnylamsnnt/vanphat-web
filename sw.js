@@ -71,7 +71,7 @@ function isPriceDocument(url) {
 async function putFresh(cache, request, response) {
   if (!response || !response.ok || response.redirected) return;
   try {
-    await cache.put(request, response.clone());
+    await cache.put(request.url, response.clone());
   } catch (_) {
     /* phản hồi đổi hướng hoặc không thân không lưu được */
   }
@@ -82,14 +82,14 @@ async function networkFirst(request) {
   const offline = self.navigator && self.navigator.onLine === false;
   if (!offline) {
     try {
-      const fresh = await fetch(request);
+      const fresh = await fetch(request.url, { method: "GET", cache: "no-store", redirect: "follow" });
       await putFresh(cache, request, fresh);
       return fresh;
     } catch (_) {
       /* mạng đứt giữa chừng — mới được dùng bản đã xem */
     }
   }
-  const cached = await cache.match(request);
+  const cached = (await cache.match(request)) || (await cache.match(request.url));
   if (cached) return cached;
   if (request.mode === "navigate") {
     const page = await cache.match("/offline.html");

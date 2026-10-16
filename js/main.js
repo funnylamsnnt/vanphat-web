@@ -637,7 +637,7 @@
 
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
-    if (isStaffPage()) return;
+    if (isStaffPage() || isIosDevice()) return;
     deferredInstall = event;
     showInstallBanner();
   });
