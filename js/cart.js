@@ -304,6 +304,136 @@
     };
   }
 
+  const QUEUE_KEY = "vp_order_queue";
+
+  function loadQueue() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveQueue(list) {
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(list));
+  }
+
+  function orderPayload(fields) {
+    return {
+      name: fields.name || "",
+      phone: fields.phone,
+      note: fields.note || "",
+      text: fields.text,
+      total: formatPrice(getTotal()),
+    };
+  }
+
+  function enqueueOrder(fields) {
+    const entry = orderPayload(fields);
+    entry.at = new Date().toISOString();
+    const list = loadQueue();
+    const last = list[list.length - 1];
+    if (!last || last.phone !== entry.phone || last.text !== entry.text) {
+      list.push(entry);
+      saveQueue(list);
+    }
+    renderHold();
+  }
+
+  async function postOrder(order) {
+    const res = await fetch("https://formsubmit.co/ajax/" + ORDER_EMAIL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        _subject: "Đơn hàng web Vạn Phát — " + order.phone,
+        _template: "table",
+        _captcha: "false",
+        name: order.name || "(chưa ghi)",
+        phone: order.phone,
+        note: order.note || "",
+        order: order.text,
+        total: order.total || formatPrice(getTotal()),
+        source: "vanphatcompany.vn",
+      }),
+    });
+    return !!res.ok;
+  }
+
+  function openMailto(order) {
+    const subject = encodeURIComponent("Đơn hàng web Vạn Phát — " + order.phone);
+    const body = encodeURIComponent(order.text || "");
+    window.location.href = "mailto:" + ORDER_EMAIL + "?subject=" + subject + "&body=" + body;
+  }
+
+  function renderHold() {
+    const list = loadQueue();
+    let bar = document.getElementById("vp-order-hold");
+    if (!list.length) {
+      if (bar) bar.hidden = true;
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "vp-order-hold";
+      bar.className = "vp-order-hold";
+      bar.setAttribute("role", "status");
+      bar.innerHTML =
+        '<p data-hold-text></p><button type="button" class="btn btn-gold btn-sm" data-hold-send>Gửi lại đơn</button>';
+      document.body.insertBefore(bar, document.body.firstChild);
+      bar.querySelector("[data-hold-send]").addEventListener("click", () => {
+        flushQueue();
+      });
+    }
+    bar.hidden = false;
+    const text = bar.querySelector("[data-hold-text]");
+    if (text) {
+      text.textContent = navigator.onLine
+        ? "Đã có mạng. Đơn đã giữ trên máy — bấm để gửi lại."
+        : "Mất mạng. Đơn được giữ trên máy và sẽ nhắc gửi lại khi có mạng.";
+    }
+  }
+
+  async function flushQueue() {
+    if (!navigator.onLine) {
+      showToast("Vẫn chưa có mạng. Đơn vẫn nằm trên máy.");
+      renderHold();
+      return;
+    }
+    const list = loadQueue();
+    const remain = [];
+    let openedMail = false;
+    for (let i = 0; i < list.length; i += 1) {
+      const order = list[i];
+      let sent = false;
+      try {
+        sent = await postOrder(order);
+      } catch (_) {
+        sent = false;
+      }
+      if (sent) continue;
+      if (!navigator.onLine) {
+        remain.push(...list.slice(i));
+        showToast("Mất mạng giữa chừng. Phần chưa gửi vẫn được giữ.");
+        break;
+      }
+      openMailto(order);
+      openedMail = true;
+      remain.push(...list.slice(i));
+      break;
+    }
+    saveQueue(remain);
+    renderHold();
+    if (!remain.length) {
+      showToast("Đã gửi đơn đã giữ. Giỏ vẫn còn trên máy nếu cần xem lại.");
+    } else if (openedMail) {
+      showToast("Mở email để gửi đơn đã giữ. Đơn vẫn nằm trên máy cho đến khi gửi được.");
+    }
+  }
+
   async function sendEmailOrder(btn) {
     const fields = getCheckoutFields();
     if (!fields) return;
@@ -312,57 +442,48 @@
       btn.disabled = true;
       btn.textContent = "Đang gửi…";
     }
-    const payload = {
-      _subject: "Đơn hàng web Vạn Phát — " + fields.phone,
-      _template: "table",
-      _captcha: "false",
-      name: fields.name || "(chưa ghi)",
-      phone: fields.phone,
-      note: fields.note || "",
-      order: fields.text,
-      total: formatPrice(getTotal()),
-      source: "vanphatcompany.vn",
-    };
+    if (!navigator.onLine) {
+      enqueueOrder(fields);
+      showToast("Mất mạng. Đơn được giữ trên máy và sẽ nhắc gửi lại khi có mạng.");
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = original || "Chốt đơn · Gửi email";
+      }
+      return;
+    }
     let sent = false;
     try {
-      const res = await fetch(
-        "https://formsubmit.co/ajax/" + ORDER_EMAIL,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-      if (res.ok) sent = true;
-    } catch (_) {}
-
+      sent = await postOrder(orderPayload(fields));
+    } catch (_) {
+      sent = false;
+    }
     if (sent) {
       showToast("Đã gửi đơn về email công ty");
-      // clear cart after successful send
       items = [];
       save();
       render();
       close();
+    } else if (!navigator.onLine) {
+      enqueueOrder(fields);
+      showToast("Mất mạng. Đơn được giữ trên máy và sẽ nhắc gửi lại khi có mạng.");
     } else {
-      // fallback: mailto
-      const subject = encodeURIComponent("Đơn hàng web Vạn Phát — " + fields.phone);
-      const body = encodeURIComponent(fields.text);
-      window.location.href =
-        "mailto:" + ORDER_EMAIL + "?subject=" + subject + "&body=" + body;
+      openMailto(orderPayload(fields));
       showToast("Mở email để gửi đơn cho công ty");
     }
     if (btn) {
       btn.disabled = false;
-      btn.textContent = original || "Chốt đơn · Gửi email công ty";
+      btn.textContent = original || "Chốt đơn · Gửi email";
     }
   }
 
   function sendWhatsApp() {
     const fields = getCheckoutFields();
     if (!fields) return;
+    if (!navigator.onLine) {
+      enqueueOrder(fields);
+      showToast("Mất mạng. Đơn được giữ trên máy và sẽ nhắc gửi lại khi có mạng.");
+      return;
+    }
     const url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(fields.text);
     window.open(url, "_blank", "noopener");
   }
@@ -522,9 +643,19 @@
     close,
   };
 
+  window.addEventListener("online", () => {
+    if (!loadQueue().length) return;
+    renderHold();
+    showToast("Đã có mạng. Đơn đã giữ trên máy — bấm để gửi lại.");
+  });
+  window.addEventListener("offline", () => {
+    if (loadQueue().length) renderHold();
+  });
+
   document.addEventListener("DOMContentLoaded", () => {
     ensureDrawer();
     bindUI();
     render();
+    renderHold();
   });
 })();

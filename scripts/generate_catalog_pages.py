@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101501"
+CSS_V = "2026101601"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101401"
 CHAT_V = "2026101309"
@@ -145,7 +145,27 @@ STATIC_PAGES = [
     ("/lien-he.html", "monthly", "0.8"),
     ("/thu-ngo.html", "yearly", "0.4"),
     ("/khu-vuc.html", "monthly", "0.7"),
+    ("/app/", "monthly", "0.4"),
 ]
+
+INSTALL_TITLE = "Cài app Vạn Phát trên điện thoại"
+INSTALL_DESC = (
+    "Cài Vạn Phát lên màn hình Android hoặc iPhone để xem hàng, giữ giỏ và gọi cửa hàng "
+    "tại KĐT Mỹ Gia, Nam Nha Trang. In mã QR tại quầy."
+)
+OFFLINE_TITLE = "Đang mất mạng | Vạn Phát"
+OFFLINE_DESC = (
+    "Điện thoại đang mất mạng. Vạn Phát giữ khung app, trang đã xem và giỏ hàng trên máy. "
+    "Khi có mạng, danh mục và giá được tải mới."
+)
+PWA_HEAD = """  <meta name="theme-color" content="#1F4E78" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Vạn Phát" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" sizes="180x180" />
+"""
 
 
 def slugify(text: str, max_len: int = 60) -> str:
@@ -462,7 +482,7 @@ def head_tags(
         extra.append(f'  <meta name="robots" content="{esc(robots)}" />')
     extra_html = ("\n" + "\n".join(extra)) if extra else ""
     return f"""  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />{extra_html}
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />{extra_html}
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}" />
   <link rel="canonical" href="{esc(canonical)}" />
@@ -478,7 +498,8 @@ def head_tags(
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{esc(title)}" />
   <meta name="twitter:description" content="{esc(description)}" />
-  <meta name="twitter:image" content="{esc(image)}" />"""
+  <meta name="twitter:image" content="{esc(image)}" />
+{PWA_HEAD.rstrip()}"""
 
 
 def chrome_header(prefix: str) -> str:
@@ -808,8 +829,8 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
       </article>"""
 
 
-def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body, robots: str | None = None, preload_image: str | None = None) -> str:
-    prefix = "../"
+def layout(*, title, description, canonical, image, image_alt, og_type, json_ld, body, robots: str | None = None, preload_image: str | None = None, asset_prefix: str = "../") -> str:
+    prefix = asset_prefix
     return f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1329,7 +1350,8 @@ STATIC_HTML = (
     "nhan-vien/index.html",
 )
 
-VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1" />'
+VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />'
+VIEWPORT_META_OLD = '<meta name="viewport" content="width=device-width, initial-scale=1" />'
 VERIFICATION_RE = re.compile(
     r'[ \t]*<meta name="google-site-verification" content="[^"]*"\s*/>\n?'
 )
@@ -1494,6 +1516,27 @@ def letter_page_ld() -> dict:
     }
 
 
+def normalize_viewport(text: str) -> str:
+    if VIEWPORT_META in text:
+        return text
+    return text.replace(VIEWPORT_META_OLD, VIEWPORT_META)
+
+
+def upsert_pwa_head(text: str) -> str:
+    if 'rel="manifest"' in text:
+        return text
+    block = PWA_HEAD if PWA_HEAD.endswith("\n") else PWA_HEAD + "\n"
+    for needle in (
+        '  <link rel="icon"',
+        '  <link rel="preconnect"',
+        '  <link rel="stylesheet" href="',
+        "</head>",
+    ):
+        if needle in text:
+            return text.replace(needle, block + needle, 1)
+    return text
+
+
 def upsert_verification(text: str) -> str:
     text = VERIFICATION_RE.sub("", text)
     tag = verification_tag()
@@ -1584,6 +1627,7 @@ def refresh_static_chrome(text: str) -> str:
         )
     updated = re.sub(r"styles\.css\?v=\d+", f"styles.css?v={CSS_V}", updated)
     updated = re.sub(r"main\.js(?:\?v=\d+)?(?=\")", f"main.js?v={CSS_V}", updated)
+    updated = re.sub(r"catalog-paths\.js(?:\?v=\d+)?(?=\")", f"catalog-paths.js?v={CSS_V}", updated)
     updated = re.sub(r"ia\.js\?v=\d+", f"ia.js?v={CSS_V}", updated)
     updated = re.sub(r"products\.js\?v=\d+", f"products.js?v={JS_V}", updated)
     updated = re.sub(r"product-lightbox\.js\?v=\d+", f"product-lightbox.js?v={JS_V}", updated)
@@ -1593,6 +1637,7 @@ def refresh_static_chrome(text: str) -> str:
     updated = pin_hero_lead(updated)
     updated = defer_external_scripts(updated)
     updated = upsert_reach(updated)
+    updated = upsert_pwa_head(updated)
     return updated
 
 
@@ -1613,7 +1658,7 @@ def refresh_static_heads(
         path = ROOT / rel
         if not path.is_file():
             continue
-        text = path.read_text(encoding="utf-8")
+        text = normalize_viewport(path.read_text(encoding="utf-8"))
         updated = upsert_verification(text)
         if rel in jsonld:
             updated = upsert_jsonld(updated, jsonld[rel])
@@ -1675,7 +1720,7 @@ def assert_seo_helpers() -> None:
         or availability_iri({}) is not None
     ):
         raise SystemExit("availability mismatch")
-    empty = upsert_verification('<head>\n  <meta name="viewport" content="width=device-width, initial-scale=1" />\n</head>\n')
+    empty = upsert_verification("<head>\n  " + VIEWPORT_META + "\n</head>\n")
     if GOOGLE_SITE_VERIFICATION and f'content="{GOOGLE_SITE_VERIFICATION}"' not in empty:
         raise SystemExit("verification tag was not inserted")
     if empty.count("google-site-verification") != 1:
@@ -1806,6 +1851,49 @@ def assert_generated_seo(products: list[dict]) -> None:
     token = str(GOOGLE_SITE_VERIFICATION or "").strip()
     if token and f'content="{token}"' not in home:
         raise SystemExit("homepage is missing google-site-verification")
+    if 'rel="manifest"' not in home or "viewport-fit=cover" not in home or 'name="theme-color"' not in home:
+        raise SystemExit("homepage missing PWA head")
+    if "/app/" not in sitemap:
+        raise SystemExit("sitemap missing /app/")
+    if "/offline.html" in sitemap:
+        raise SystemExit("offline page must stay out of the sitemap")
+    app_page = (ROOT / "app" / "index.html").read_text(encoding="utf-8")
+    if 'rel="manifest"' not in app_page or "qr-vanphat.png" not in app_page:
+        raise SystemExit("install page missing manifest or QR")
+    if f'href="{SITE}/app/"' not in app_page:
+        raise SystemExit("install page canonical must be /app/")
+    offline_page = (ROOT / "offline.html").read_text(encoding="utf-8")
+    if "noindex" not in offline_page:
+        raise SystemExit("offline page must be noindex")
+    manifest = json.loads((ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
+    if manifest.get("name") != "Vạn Phát" or manifest.get("short_name") != "Vạn Phát":
+        raise SystemExit("manifest name must be Vạn Phát")
+    if manifest.get("display") != "standalone" or manifest.get("start_url") != "/" or manifest.get("scope") != "/":
+        raise SystemExit("manifest display/start/scope mismatch")
+    if manifest.get("lang") != "vi" or manifest.get("theme_color") != "#1F4E78" or manifest.get("background_color") != "#F7F4EE":
+        raise SystemExit("manifest lang or brand colors drifted")
+    shortcuts = {item.get("name"): item.get("url") for item in manifest.get("shortcuts") or []}
+    expected_shortcuts = {
+        "Tìm sản phẩm": "/san-pham.html",
+        "Giỏ hàng": "/?gio=1",
+        "Văn phòng phẩm": "/linh-vuc/vpp.html",
+        "Nước uống & Bánh": "/linh-vuc/nuoc-banh.html",
+        "Điện gia dụng": "/linh-vuc/dien-gia-dung.html",
+    }
+    if shortcuts != expected_shortcuts:
+        raise SystemExit(f"manifest shortcuts mismatch: {shortcuts}")
+    icon_keys = {(icon.get("sizes"), icon.get("purpose")) for icon in manifest.get("icons") or []}
+    for key in (("192x192", "any"), ("512x512", "any"), ("192x192", "maskable"), ("512x512", "maskable")):
+        if key not in icon_keys:
+            raise SystemExit(f"manifest missing icon {key}")
+    sw = (ROOT / "sw.js").read_text(encoding="utf-8")
+    if f'const VERSION = "{CSS_V}"' not in sw:
+        raise SystemExit("sw.js VERSION phải trùng CSS_V")
+    if "networkFirst" not in sw or "/offline.html" not in sw or "/data/products.json" not in sw:
+        raise SystemExit("sw.js thiếu network-first, trang offline hoặc catalog phát hành")
+    sample_sku = (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8")
+    if 'rel="manifest"' not in sample_sku or "viewport-fit=cover" not in sample_sku:
+        raise SystemExit("SKU head missing PWA tags")
     local_dir = ROOT / "dia-phuong"
     local_pages = list(local_dir.glob("*.html")) if local_dir.is_dir() else []
     if len(local_pages) < 8:
@@ -2150,6 +2238,122 @@ def nhom_is_excluded(value: str, phrases: set[str]) -> bool:
     return any(folded == phrase or folded.startswith(phrase + " ") or f" {phrase} " in padded for phrase in phrases)
 
 
+def install_page_ld() -> dict:
+    canonical = SITE + "/app/"
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            organization_node(),
+            breadcrumb_ld([("Trang chủ", SITE + "/"), ("Cài app", canonical)]),
+            {
+                "@type": "WebPage",
+                "@id": canonical + "#install",
+                "name": INSTALL_TITLE,
+                "description": INSTALL_DESC,
+                "url": canonical,
+                "inLanguage": "vi",
+                "isPartOf": {"@id": SITE + "/#website"},
+            },
+        ],
+    }
+
+
+def build_install_page() -> str:
+    if len(INSTALL_DESC) > 220 or len(INSTALL_TITLE) > 90:
+        raise SystemExit("install page title or description is too long")
+    body = """    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb breadcrumb-light" aria-label="Breadcrumb">
+          <a href="/index.html">Trang chủ</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Cài app</span>
+        </nav>
+        <h1>Cài app Vạn Phát</h1>
+        <p>Thêm website lên màn hình điện thoại để xem hàng, giữ giỏ và gọi cửa hàng. Không cần chợ ứng dụng.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container pwa-guide">
+        <div class="pwa-steps">
+          <article class="pwa-step">
+            <h2>Android</h2>
+            <ol>
+              <li>Mở vanphatcompany.vn bằng Chrome.</li>
+              <li>Bấm «Cài app Vạn Phát» trên trang, hoặc mở menu của Chrome rồi chọn «Cài ứng dụng» hoặc «Thêm vào màn hình chính».</li>
+              <li>Xác nhận. Icon Vạn Phát nằm trên màn hình và mở trang chủ.</li>
+            </ol>
+          </article>
+          <article class="pwa-step">
+            <h2>iPhone</h2>
+            <ol>
+              <li>Mở vanphatcompany.vn bằng Safari.</li>
+              <li>Bấm nút Chia sẻ (ô vuông có mũi tên).</li>
+              <li>Chọn «Thêm vào Màn hình chính», rồi bấm «Thêm».</li>
+            </ol>
+          </article>
+          <p>Giỏ hàng nằm trên máy. Mất mạng vẫn mở lại trang đã xem. Khi có mạng, giá và danh mục được tải mới. Gọi <a href="tel:0335652832">033 5652 832</a> hoặc nhắn <a href="https://zalo.me/0335652832">Zalo</a>.</p>
+          <p><button type="button" class="btn btn-outline-navy" onclick="window.print()">In mã QR</button></p>
+        </div>
+        <figure class="pwa-qr">
+          <img src="/assets/qr-vanphat.png" width="280" height="280" alt="Mã QR mở https://vanphatcompany.vn/" />
+          <figcaption>Quét để mở vanphatcompany.vn. In tờ này để ở quầy KĐT Mỹ Gia.</figcaption>
+        </figure>
+      </div>
+    </section>"""
+    return layout(
+        title=INSTALL_TITLE,
+        description=INSTALL_DESC,
+        canonical=SITE + "/app/",
+        image=f"{STOREFRONT_IMAGE}?v={STOREFRONT_CACHE}",
+        image_alt=STOREFRONT_ALT,
+        og_type="website",
+        json_ld=install_page_ld(),
+        body=body,
+        asset_prefix="/",
+    )
+
+
+def build_offline_page() -> str:
+    if len(OFFLINE_DESC) > 220 or len(OFFLINE_TITLE) > 90:
+        raise SystemExit("offline page title or description is too long")
+    canonical = SITE + "/offline.html"
+    body = f"""    <section class="page-hero">
+      <div class="container">
+        <h1>Đang mất mạng</h1>
+        <p>Khung app vẫn mở được. Trang và ảnh đã xem nằm trên máy. Giỏ hàng cũng vẫn còn.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container pwa-offline">
+        <p>Khi có mạng trở lại, danh mục và giá được tải mới từ cửa hàng. Lúc đang online, app không hiện giá cũ.</p>
+        <p>{esc(COMPANY)} — {esc(ADDRESS)}. Hotline <a href="tel:{HOTLINE_TEL}">{esc(HOTLINE_DISPLAY)}</a> · <a href="{ZALO_URL}">Zalo</a>.</p>
+        <p class="pwa-offline-actions">
+          <a class="btn btn-gold" href="/index.html">Thử mở lại trang chủ</a>
+          <a class="btn btn-outline-navy" href="/san-pham.html">Xem danh mục đã lưu</a>
+          <a class="btn btn-outline-navy" href="/lien-he.html">Liên hệ</a>
+        </p>
+      </div>
+    </section>"""
+    return layout(
+        title=OFFLINE_TITLE,
+        description=OFFLINE_DESC,
+        canonical=canonical,
+        image=f"{STOREFRONT_IMAGE}?v={STOREFRONT_CACHE}",
+        image_alt=STOREFRONT_ALT,
+        og_type="website",
+        json_ld={
+            "@context": "https://schema.org",
+            "@graph": [
+                organization_node(),
+                breadcrumb_ld([("Trang chủ", SITE + "/"), ("Mất mạng", canonical)]),
+            ],
+        },
+        body=body,
+        robots="noindex, nofollow",
+        asset_prefix="/",
+    )
+
+
 def main() -> None:
     assert_slug_samples()
     assert_seo_helpers()
@@ -2241,6 +2445,10 @@ def main() -> None:
         ROOT / "js" / "catalog-paths.js",
         render_paths_js(product_map, category_map, category_by_id, linh_map),
     )
+
+    (ROOT / "app").mkdir(parents=True, exist_ok=True)
+    write_text(ROOT / "offline.html", build_offline_page())
+    write_text(ROOT / "app" / "index.html", build_install_page())
 
     mtime = datetime.fromtimestamp(products_path.stat().st_mtime, timezone.utc).date().isoformat()
     urls = list(STATIC_PAGES)
