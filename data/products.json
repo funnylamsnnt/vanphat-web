@@ -1269,7 +1269,7 @@
       "dvt": "Cái",
       "gia": 29000,
       "anh": "https://lh3.googleusercontent.com/d/1EfdV2R2zjgsr_xs3AKMSA8YZfVyv7W64",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -3909,7 +3909,7 @@
       "dvt": "Cái",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/1pit6J4yGE3lYAhOwQz1YhD3lDHGYlfNR",
-      "ton": 0
+      "ton": 18
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4049,11 +4049,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP324",
-      "ten": "Nhựa ép A4",
-      "dvt": "Xấp",
+      "ten": "Khăn giấy",
+      "dvt": "Gói",
       "gia": 0,
       "anh": "",
-      "ton": 0
+      "ton": 10
     },
     {
       "nhom": "Dụng cụ VP",
