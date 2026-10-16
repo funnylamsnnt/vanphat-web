@@ -2,31 +2,55 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-15T06:13:53.738Z",
-  "previousModifiedTime": "2026-10-14T03:17:35.455Z",
+  "lastModifiedTime": "2026-10-15T17:07:58.210Z",
+  "previousModifiedTime": "2026-10-15T06:13:53.738Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-15T07:21:19Z",
+  "lastSyncAt": "2026-10-16T01:13:52Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 466,
     "count": 432,
     "with_img": 338,
-    "added": [
-      "VP463",
-      "VP464",
-      "VP465",
-      "VP466"
-    ],
+    "added": [],
     "removed": [],
     "price_chg": [],
-    "name_chg": [],
-    "slugChanges": [],
-    "image_added": [
-      "VP464",
-      "VP465",
-      "VP466"
+    "name_chg": [
+      {
+        "ma": "VP324",
+        "old": "Nhựa ép A4",
+        "new": "Khăn giấy",
+        "dvt_old": "Xấp",
+        "dvt_new": "Gói",
+        "old_slug": "san-pham/vp324-nhua-ep-a4.html",
+        "new_slug": "san-pham/vp324-khan-giay.html"
+      }
+    ],
+    "slugChanges": [
+      {
+        "ma": "VP324",
+        "old": "Nhựa ép A4",
+        "new": "Khăn giấy"
+      }
+    ],
+    "image_added": [],
+    "ton_chg": [
+      {
+        "ma": "VP108",
+        "old": 0,
+        "new": 20
+      },
+      {
+        "ma": "VP306",
+        "old": 0,
+        "new": 18
+      },
+      {
+        "ma": "VP324",
+        "old": 0,
+        "new": 10
+      }
     ],
     "excluded_nhom": {
       "Không đưa lên web": [
@@ -68,20 +92,20 @@
     },
     "newly_excluded_removed_from_web": [],
     "web_deployed": true,
-    "commit": "a5cae3b178077100536d527722bc4f4dad32d0ec",
-    "pages_run": 38697781852,
+    "commit": "478fd5a12c7a6c4516e1e211c47ce2cd9f472afe",
+    "pages_run": 38833648199,
     "pages_status": "success",
-    "live_spot_check": "products.json 432 HTTP200 with_img 338; VP463 8000 Dụng cụ VP + /san-pham/vp463-so-lo-xo-a6-200-trang-3767.html 200; VP464–VP466 4500 Bút & Mực pages 200 + in sitemap; VP462 78000, VP001 36000; VP415/VP448 absent + /san-pham/vp415.html 404, 0 excluded in sitemap; /, /san-pham.html, /linh-vuc/nuoc-banh.html, /linh-vuc/vpp.html, /san-pham/nhom-but-muc.html 200; Pages cname vanphatcompany.vn",
+    "live_spot_check": "products.json 432 HTTP200 with_img 338; VP324 Khăn giấy /san-pham/vp324-khan-giay.html 200, old slug 404; VP415 404; 0 excluded in sitemap; /, /san-pham.html, /linh-vuc/{vpp,nuoc-banh,dien-gia-dung}.html 200; Mỹ Gia+LocalBusiness+viewport OK; lightbox+Product schema on sample SKU; Pages built 478fd5a",
     "bridge_refreshed": true,
-    "bridge_status": "OK 2026-10-15 14:20 ICT: browser File→Nhập→Tải lên→Thay thế bảng tính→Nhập dữ liệu on 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc succeeded (Chrome profile signed in). Drive modifiedTime 2026-10-15T07:20:20.228Z. Export verify 466 rows incl VP462–VP466.",
-    "bridge_rows_verified": "live export 466 == source_count; VP462–VP466 present",
+    "bridge_status": "OK 2026-10-16 08:12 ICT: browser File→Nhập→Tải lên→Thay thế bảng tính→Nhập dữ liệu on 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc succeeded (Default Chrome profile signed in). Drive modifiedTime 2026-10-16T01:12:18.195Z. Export verify 466 rows incl VP324=Khăn giấy, VP462–VP466.",
+    "bridge_rows_verified": "live export 466 == source_count; VP324 Khăn giấy; VP415 kept on bridge; VP462–VP466 present",
     "bridge_upload_path": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "bridge_live_modifiedTime": "2026-10-15T07:20:20.228Z",
+    "bridge_live_modifiedTime": "2026-10-16T01:12:18.195Z",
     "zero_price_count": 17,
     "unknown_groups": [],
     "autoPlacedGroups": [],
     "heldUnmappedGroups": {},
-    "keptImages": 3,
+    "keptImages": 0,
     "zeroPrice": [
       "VP238",
       "VP239",
@@ -115,60 +139,15 @@
       "dien-gia-dung": 10,
       "nuoc-banh": 36
     },
-    "added_detail": [
-      {
-        "ma": "VP463",
-        "ten": "Sổ Lò xo A6 -200 trang (3767)",
-        "nhom": "Dụng cụ VP",
-        "linhVuc": "vpp",
-        "dvt": "Quyển",
-        "gia": 8000,
-        "ton": 50,
-        "slug": "san-pham/vp463-so-lo-xo-a6-200-trang-3767.html",
-        "anh": null
-      },
-      {
-        "ma": "VP464",
-        "ten": "Bút Gel Thiên Long GEL-027 (Xanh)",
-        "nhom": "Bút & Mực",
-        "linhVuc": "vpp",
-        "dvt": "Cây",
-        "gia": 4500,
-        "ton": 60,
-        "slug": "san-pham/vp464-but-gel-thien-long-gel-027-xanh.html",
-        "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-"
-      },
-      {
-        "ma": "VP465",
-        "ten": "Bút Gel Thiên Long GEL-027 (Đỏ)",
-        "nhom": "Bút & Mực",
-        "linhVuc": "vpp",
-        "dvt": "Cây",
-        "gia": 4500,
-        "ton": 40,
-        "slug": "san-pham/vp465-but-gel-thien-long-gel-027-do.html",
-        "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-"
-      },
-      {
-        "ma": "VP466",
-        "ten": "Bút Gel Thiên Long GEL-027 (Đen)",
-        "nhom": "Bút & Mực",
-        "linhVuc": "vpp",
-        "dvt": "Cây",
-        "gia": 4500,
-        "ton": 20,
-        "slug": "san-pham/vp466-but-gel-thien-long-gel-027-den.html",
-        "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-"
-      }
-    ],
-    "html_written": 13,
+    "html_written": 4,
     "sitemap_urls": 459,
-    "seo_audit_run": 38697782841,
-    "wake_parent_notify": true
+    "seo_audit_run": null,
+    "wake_parent_notify": true,
+    "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-15T07:21:19Z",
-  "lastCheckResult": "changed_full_sync_web_deployed_+VP463-VP466_bridge_live_replaced_466",
+  "lastCheckAt": "2026-10-16T01:13:52Z",
+  "lastCheckResult": "changed_full_sync_web_deployed_VP324_rename_bridge_live_replaced_466",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 }
