@@ -307,7 +307,7 @@
       "ma": "VP211",
       "ten": "Giấy A4 70 gsm Supreme",
       "dvt": "Ram",
-      "gia": 68000,
+      "gia": 69000,
       "anh": "https://lh3.googleusercontent.com/d/1dJmTpg1hEnahXy5jyJktYmWB4DCs7nkA",
       "ton": 140
     },
@@ -1565,11 +1565,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP130",
-      "ten": "Bút dạ quang FO-HL02",
+      "ten": "Bút dạ quang FO-HL02/VN",
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
-      "ton": 60
+      "ton": 0
     },
     {
       "nhom": "Bút & Mực",
@@ -1965,7 +1965,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 30
+      "ton": 0
     },
     {
       "nhom": "Bút & Mực",
@@ -1977,7 +1977,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 30
+      "ton": 0
     },
     {
       "nhom": "Bút & Mực",
@@ -1989,7 +1989,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 36
+      "ton": 0
     },
     {
       "nhom": "Bút & Mực",
@@ -2026,6 +2026,66 @@
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1hXEm41bgNmaLjxufy99_OfU58tktNvu-",
       "ton": 20
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP485",
+      "ten": "Bút gel TL 066 (xanh)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1DVNrtjU3r8olFWqv_gHb_7P_Kcstgs_r",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP486",
+      "ten": "Bút gel TL 050 (màu xanh da trời)",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/18JMg6xxLST11yqLhoEW5nYsBGzLLKBUT",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP487",
+      "ten": "Bút bi fo-030 (Xanh)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/16wxMuND6FxNYkND17k4RLNbEbU5DU_BX",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP488",
+      "ten": "Bút fo-gel B 035/mm 0.5 xanh",
+      "dvt": "Cây",
+      "gia": 0,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/62425447b68e425b871070b37891d36d.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP494",
+      "ten": "Bút chì gỗ GP-C02",
+      "dvt": "Cây",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1MR0ojlzaFlp0kqx9vV6cZpIUOo1X_wcJ",
+      "ton": 0
     },
     {
       "nhom": "Băng Keo",
@@ -2157,7 +2217,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1ePGemScJvBcWYEivvC78iWebfPfhav2w",
-      "ton": 5
+      "ton": 0
     },
     {
       "nhom": "Băng Keo",
@@ -2538,7 +2598,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP010",
       "ten": "Bấm kim số 3 FO-ST01",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 75000,
       "anh": "",
       "ton": 0
@@ -2634,7 +2694,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP018",
       "ten": "Bấm kim trung Trio 100 tờ",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 420000,
       "anh": "",
       "ton": 0
@@ -2646,7 +2706,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP019",
       "ten": "Bấm lỗ 100 TỜ DELI",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 950000,
       "anh": "",
       "ton": 0
@@ -2658,7 +2718,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP020",
       "ten": "Bấm lỗ 938 TriO",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 1150000,
       "anh": "",
       "ton": 0
@@ -2670,7 +2730,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP021",
       "ten": "Bấm lỗ đại TriO 9556 (150 tờ)",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 1650000,
       "anh": "",
       "ton": 0
@@ -2682,7 +2742,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP022",
       "ten": "bấm lỗ Trio 09670",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 560000,
       "anh": "",
       "ton": 0
@@ -2694,7 +2754,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP023",
       "ten": "Bâm lỗ Trio 952",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 1650000,
       "anh": "",
       "ton": 0
@@ -2706,7 +2766,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP024",
       "ten": "Bấm trung Deli 0414",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 75000,
       "anh": "",
       "ton": 0
@@ -2718,7 +2778,7 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP025",
       "ten": "Bảng chức danh",
-      "dvt": "",
+      "dvt": "Cái",
       "gia": 55000,
       "anh": "",
       "ton": 0
@@ -3569,7 +3629,7 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP277",
-      "ten": "Kéo văn phòng",
+      "ten": "Kéo văn phòng Bitex (Đỏ)",
       "dvt": "Cái",
       "gia": 30000,
       "anh": "",
@@ -4017,7 +4077,7 @@
       "dvt": "Hủ",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1K3XgyzHA_e_jLfu2rFWOcm6u78ZnH3v8",
-      "ton": 12
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4807,7 +4867,7 @@
       "ma": "VP340",
       "ten": "Ổ cắm điện KIP OC 38 (5M)",
       "dvt": "Cái",
-      "gia": 148000,
+      "gia": 158000,
       "anh": "https://lh3.googleusercontent.com/d/1E78bbqByubK-oUdleOdktPGRy-CIOcCV",
       "ton": 0
     },
@@ -4999,7 +5059,7 @@
       "ma": "VP392",
       "ten": "Nước tăng lực Redbull 250ml",
       "dvt": "Lon",
-      "gia": 12000,
+      "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1vTNKjybJNCMJT-d_dpRzv2LyAiE7Eb4Z",
       "ton": 6
     },
@@ -5129,11 +5189,11 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP403",
-      "ten": "Nước Sting Sleek dâu (Lon 235ml)",
+      "ten": "Nước Sting Sleek dâu (Lon 320ml)",
       "dvt": "Lon",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1FmIRlKpxXxBVhQ2EyXsJ9xxizNqxKQnT",
-      "ton": 6
+      "ton": 0
     },
     {
       "nhom": "Nước uống",
@@ -5323,8 +5383,284 @@
       "ma": "VP467",
       "ten": "Trà đào và hạt chia Fuze tea 350ml (Chai)",
       "dvt": "Chai",
-      "gia": 0,
+      "gia": 7000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/d8be0fe95184457d8976f691c740e849.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP468",
+      "ten": "Trà bí đao Fuze tea la hán quả 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 9000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/59050fe33a764d14bf6a6fe41d80521e.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP469",
+      "ten": "Nước ngọt Sprite Hương chanh lon 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 10000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/686edcf9f46845c6be83d4ef38f6bbd9.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP470",
+      "ten": "Sprite lon 235ml (Lon)",
+      "dvt": "Lon",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1iFYradtjY8EKIi6FIL7I80ON0OfZC8BY",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP471",
+      "ten": "Coca light 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1PUt9zirY59MTU5Db5_pUqjYdaOvtFsAq",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP472",
+      "ten": "Fanta xá xị 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 10000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/d0d5001ae1c841e9abdaa8f5e5c5f431.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP473",
+      "ten": "Nước giải khát Schweppes Tonic water 320 ML (Lon)",
+      "dvt": "Lon",
+      "gia": 8000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/eab90a67fc504d2cbfd3f4b4b1e75dab.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP474",
+      "ten": "Fanta Hương cam 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 10000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/2eb4953451914d9fa76dcfd2562effa1.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP475",
+      "ten": "Nước tinh khiết Dasani 350ml (Chai)",
+      "dvt": "Chai",
+      "gia": 5000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/27ab5fadd4a8447b9c9063fd7bcf197c.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP476",
+      "ten": "Soda Schweppes đen vn 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 8000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/e01de65bbf1d49e892a0d5990d730a77.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP477",
+      "ten": "Nước ngọt Coca Cola Zero 320ml (Lon)",
+      "dvt": "Lon",
+      "gia": 11000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/0484d4c69ce343829899f9b60ba198d4.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP478",
+      "ten": "Nước cam ép Splash lon 330ml (Lon)",
+      "dvt": "Lon",
+      "gia": 10000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/993b262a3c5c4dafb9a9d1f3029d2a50.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP479",
+      "ten": "Nước khoáng Aquarius 390ml (Chai)",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/b97431e8be444c329ae7cfe7b5da6ff0.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP480",
+      "ten": "Coca chai 390ml (Chai)",
+      "dvt": "Chai",
+      "gia": 8000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/616dab014fd549f1b593c5db2cb903af.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP481",
+      "ten": "Sprite chai 390ml (Chai)",
+      "dvt": "Chai",
+      "gia": 8000,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/a9d9d6013c3841c3a5d4ddf07b2f44a9.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP482",
+      "ten": "Trà bí đao la hán (Chai)",
+      "dvt": "Chai",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP483",
+      "ten": "Trà vải mật ong Hương hoa nhài (Chai)",
+      "dvt": "Chai",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP484",
+      "ten": "Trà Chanh Dây và hạt chia FuzeTea+ (Chai)",
+      "dvt": "Chai",
+      "gia": 0,
+      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/5f04eb88cef240c5b32d4bfc8462351e.png",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP489",
+      "ten": "Nước uống vận động Aquarius 500ml",
+      "dvt": "Chai",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1l7qE_2OE6wmNFbyA32pSLXDHLGbAeC6k",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP490",
+      "ten": "Nước ngọt Coca Cola Không đường (chai 390ml)",
+      "dvt": "Chai",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1pjk_IpNRx5Qnl6scDi608EWqIA3ghvXM",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP491",
+      "ten": "Fanta Hương Cam (Lon 235 ML)",
+      "dvt": "Lon",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1Q_1apdu5pPbFhK1tcAeclVAVm3PeTROL",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP492",
+      "ten": "Fanta Hương Dâu 235ml/1 lon",
+      "dvt": "Lon",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1RUoVFplPnqKTPd-xluxr_lQj3rNqdfwH",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP493",
+      "ten": "Nước Aquarius Zero Calorie 390ml/Chai",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1m9_Uk_yQNuO1sCctIoBvM0c04NQqORzn",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP495",
+      "ten": "Nước uống bò Húc Redbull 250ml (NK Thái)",
+      "dvt": "Lon",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1i9V3kPYjCq4YRj7j1xIMixmbGPKaRtbN",
       "ton": 0
     }
   ],
