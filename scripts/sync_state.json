@@ -146,16 +146,16 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-16T07:20:00Z",
-  "lastCheckResult": "web_deployed_VP467_bridge_PENDING_signin",
+  "lastCheckAt": "2026-10-16T18:05:00Z",
+  "lastCheckResult": "web_deployed_VP495_bridge_PENDING",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "pendingBridge": {
-    "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
-    "reason": "Chrome profile signed out of funnylams.nnt@gmail.com (password prompt); bridge 15i18OWpioUHN3ooPGxf4ZtTBu4_C_FWVJXSMNwVFwVc not replaced",
+    "sourceModifiedTime": "2026-10-16T17:54:59.891Z",
+    "reason": "executor has no browser; bridge Import→Replace not run tonight (Google sign-in reported missing)",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "expectedRows": 467,
-    "note": "lastModifiedTime intentionally kept at previous value so next run retries bridge"
+    "expectedRows": 495,
+    "note": "lastModifiedTime kept so next run retries bridge"
   },
   "webSync_20261016_1414": {
     "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
@@ -174,5 +174,47 @@
       "VP467"
     ],
     "live_check": "products.json 433/339 img; VP467 page 200 + lightbox; VP415 404; sitemap 460; 3 linh-vuc 200"
+  },
+  "webSync_20261017_0057": {
+    "sourceModifiedTime": "2026-10-16T17:54:59.891Z",
+    "commit": "1e5b31b0118f30884f89919d4ce9d0483b67a4a5",
+    "pages_run": 38943458249,
+    "pages_status": "success",
+    "count": 461,
+    "with_img": 365,
+    "source_count": 495,
+    "added": "VP468–VP495 (excl none)",
+    "price_chg": [
+      [
+        "VP211",
+        68000,
+        69000
+      ],
+      [
+        "VP340",
+        148000,
+        158000
+      ],
+      [
+        "VP392",
+        12000,
+        13000
+      ],
+      [
+        "VP467",
+        0,
+        7000
+      ]
+    ],
+    "slug_chg": [
+      "VP130",
+      "VP277",
+      "VP403"
+    ],
+    "zeroPrice_count": 21,
+    "live_check": "/,san-pham,3 linh-vuc,sitemap(489, 0 excluded),products.json 461 200; VP495 page 200+lightbox; VP415 404; old VP403 slug 404",
+    "broken_image": [
+      "VP493 Drive image 404 (not public)"
+    ]
   }
 }
