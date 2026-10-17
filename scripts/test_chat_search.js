@@ -374,6 +374,57 @@ function testAppliancePhrases(search) {
   if (kept && mas(kept).indexOf("H1") !== -1) fail("khớp đúng bàn ủi kéo theo hóa đơn bán lẻ");
 }
 
+function testSkuQuestion(search, catalog, api) {
+  const cases = [
+    ["cho xem VP117", "VP117"],
+    ["vp117", "VP117"],
+    ["thông tin mã VP123", "VP123"],
+    ["thong tin VP117", "VP117"],
+  ];
+  cases.forEach((pair) => {
+    const query = pair[0];
+    const ma = pair[1];
+    const result = search(catalog, query, 8);
+    const got = mas(result);
+    if (!result || result.mode !== "match" || got.length !== 1 || got[0] !== ma) {
+      fail("«" + query + "»: muốn khớp đúng " + ma + ", được " + (result && result.mode) + " " + got.join(","));
+      return;
+    }
+    if (Number(result.items[0].gia) > 0) fail("«" + query + "»: " + ma + " phải là món giá 0 trong catalog");
+    const block = api.formatCatalogBlock(result.items, result.mode);
+    if (!block.includes(ma) || !block.includes("Liên hệ báo giá") || zeroDong(block)) {
+      fail("«" + query + "»: khối catalog chưa ghi Liên hệ báo giá cho " + ma + ": " + block);
+    }
+  });
+  const hidden = {
+    linh_vuc: [
+      { id: "vpp", visible: true },
+      { id: "an", visible: false },
+    ],
+    nhom: [
+      { id: "but", TenNhom: "Bút & Mực", visible: true },
+      { id: "cam", TenNhom: "Không đưa lên web", visible: true },
+      { id: "hidden", TenNhom: "Nhóm ẩn", visible: false },
+    ],
+    sanpham: [
+      { ma: "VP117", ten: "Bút ẩn", nhom: "Nhóm ẩn", nhomId: "hidden", linhVucId: "an", gia: 0 },
+      { ma: "VP118", ten: "Bút nội bộ", nhom: "Không đưa lên web", nhomId: "cam", linhVucId: "vpp", gia: 0 },
+      { ma: "VP204", ten: "Bút có giá", nhom: "Bút & Mực", nhomId: "but", linhVucId: "vpp", gia: 80000 },
+    ],
+  };
+  ["cho xem VP117", "VP118", "vp118"].forEach((query) => {
+    const result = search(hidden, query, 8);
+    const got = mas(result);
+    if (got.indexOf("VP117") !== -1 || got.indexOf("VP118") !== -1) {
+      fail("«" + query + "»: mã nhóm ẩn vẫn lọt " + got.join(","));
+    }
+  });
+  const shown = search(hidden, "vp204", 8);
+  if (!shown || shown.mode !== "match" || mas(shown).join(",") !== "VP204") {
+    fail("mã đang hiện phải khớp đúng VP204, được " + (shown && shown.mode) + " " + mas(shown).join(","));
+  }
+}
+
 function testZeroPriceQuote(search, catalog, api) {
   const found = search(catalog, "giấy in ảnh", 8);
   if (!found || found.mode !== "match" || !(found.items || []).some((p) => !(Number(p.gia) > 0))) {
@@ -411,6 +462,7 @@ function main() {
   testIron(search, catalog, "bàn ủi");
   testPlainPencilQuestion(search, catalog);
   testAppliancePhrases(search);
+  testSkuQuestion(search, catalog, api);
   testBinder(search, catalog);
   testQuestionOnly(search, catalog);
   testZeroPriceQuote(search, catalog, api);

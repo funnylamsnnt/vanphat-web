@@ -82,7 +82,7 @@
     (
       "giá bao nhiêu có không ko bán cho em anh chị ơi nhé nha mình tôi cần mua lấy " +
       "loại nào hàng shop của với và được dc gì thế còn hok hông bên hả vậy sao " +
-      "muốn xin hỏi tìm kiếm sản phẩm sp cái chiếc"
+      "muốn xin hỏi tìm kiếm sản phẩm sp cái chiếc xem coi mã"
     ).split(/\s+/)
   );
 
@@ -91,6 +91,7 @@
     ["gia", "bao", "nhieu"],
     ["co", "ban", "khong"],
     ["bao", "nhieu", "tien"],
+    ["thong", "tin"],
   ];
 
   // Câu không có đúng tên hàng thì gợi ý lĩnh vực này, không lấy món trùng từ sau khi bỏ dấu.
@@ -223,8 +224,27 @@
    * mode "alt":   không khớp đúng, trả 2–4 món gần nhất (từng từ khóa, cùng nhóm, hoặc món đầu nhóm liên quan).
    * mode "none":  không có gì gần.
    */
+  // Mã VP đúng một món đang hiện thì trả ngay, kể cả giá 0. Nhóm ẩn đã bị visibleProducts loại.
+  function searchByCode(catalog, query, max) {
+    const codes = String(query || "").toUpperCase().match(/VP\d+/g);
+    if (!codes) return null;
+    const products = visibleProducts(catalog);
+    const matched = [];
+    const seen = new Set();
+    codes.forEach((code) => {
+      if (seen.has(code)) return;
+      seen.add(code);
+      const hits = products.filter((p) => String(p.ma || "").toUpperCase() === code);
+      if (hits.length === 1) matched.push(hits[0]);
+    });
+    if (!matched.length) return null;
+    return { mode: "match", items: matched.slice(0, max).map(slimProduct) };
+  }
+
   function searchCatalogSmart(catalog, query, limit) {
     const max = limit || 8;
+    const byCode = searchByCode(catalog, query, max);
+    if (byCode) return byCode;
     const appliance = searchByAppliance(catalog, query, max);
     if (appliance) return appliance;
     const tokens = queryTokens(query);
