@@ -146,15 +146,17 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-16T18:05:00Z",
-  "lastCheckResult": "web_deployed_VP495_bridge_PENDING",
+  "lastCheckAt": "2026-10-17T01:20:00Z",
+  "lastCheckResult": "source unchanged (2026-10-16T23:56:58.810Z) web already deployed; bridge STILL PENDING: box Chrome ERR_CONNECTION_CLOSED on all sites (box-doctor all PASS, curl OK), 2 computerUse attempts + Chrome relaunch failed",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "pendingBridge": {
     "sourceModifiedTime": "2026-10-16T23:56:58.810Z",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "expectedRows": 495,
-    "reason": "no browser / Google sign-in; Import→Replace not run"
+    "reason": "no browser / Google sign-in; Import→Replace not run",
+    "lastAttempt": "2026-10-17 08:20 ICT Chrome cannot load any page",
+    "bridgeLiveModifiedTime": "2026-10-16T01:12:18.195Z"
   },
   "webSync_20261016_1414": {
     "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
