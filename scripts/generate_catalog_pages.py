@@ -27,12 +27,12 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101726"
+CSS_V = "2026101727"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
 SEARCH_V = "2026101721"
-CHAT_V = "2026101309"
+CHAT_V = "2026101727"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"
 ADDRESS = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang"
@@ -2412,6 +2412,8 @@ def assert_generated_seo(products: list[dict]) -> None:
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
     if f'const VERSION = "{CSS_V}"' not in sw:
         raise SystemExit("sw.js VERSION phải trùng CSS_V")
+    if f"/js/chat-widget.js?v={CHAT_V}" not in sw:
+        raise SystemExit("sw.js SHELL_URLS phải trùng CHAT_V")
     if "networkFirst" not in sw or "/offline.html" not in sw or "/data/products.json" not in sw:
         raise SystemExit("sw.js thiếu network-first, trang offline hoặc catalog phát hành")
     sample_sku = (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8")

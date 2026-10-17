@@ -1040,6 +1040,94 @@
     scrollPageTo(section);
   }
 
+  const CHAT_SESSION_KEY = "vp-chat-session";
+  const CHAT_RESET_CONFIRM = "Xóa nội dung chat? Giỏ hàng vẫn giữ.";
+  const CHAT_LOCAL_KEY_RE = /^vp[-_]?chat[-_]?(history|transcript|messages|session|turns|log)/i;
+  const CHAT_KEEP_LOCAL_KEYS = new Set([
+    "vp_chat_bills",
+    "vanphat_cart",
+    "vanphat_cart_queue",
+    "vanphat_staff_cart",
+    "vanphat_staff_name",
+  ]);
+
+  function listStorageKeys(store) {
+    if (!store || typeof store.length !== "number" || typeof store.key !== "function") return [];
+    const names = [];
+    for (let i = 0; i < store.length; i += 1) {
+      const key = store.key(i);
+      if (key) names.push(key);
+    }
+    return names;
+  }
+
+  function isChatHistoryKey(key) {
+    const name = String(key || "");
+    if (!name || CHAT_KEEP_LOCAL_KEYS.has(name)) return false;
+    return CHAT_LOCAL_KEY_RE.test(name);
+  }
+
+  function chatSessionId(store) {
+    try {
+      const box = store || sessionStorage;
+      let id = box.getItem(CHAT_SESSION_KEY);
+      if (!id) {
+        id = "s" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        box.setItem(CHAT_SESSION_KEY, id);
+      }
+      return id;
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function resetChatState(state) {
+    const box = state || {};
+    if (Array.isArray(box.history)) box.history.splice(0, box.history.length);
+    if (box.sessionStorage && typeof box.sessionStorage.removeItem === "function") {
+      try {
+        box.sessionStorage.removeItem(CHAT_SESSION_KEY);
+      } catch (e) {}
+    }
+    if (box.localStorage && typeof box.localStorage.removeItem === "function") {
+      listStorageKeys(box.localStorage)
+        .filter(isChatHistoryKey)
+        .forEach((key) => {
+          try {
+            box.localStorage.removeItem(key);
+          } catch (e) {}
+        });
+    }
+    if (box.messages) box.messages.innerHTML = "";
+    if (box.leadBox && typeof box.leadBox.setAttribute === "function") {
+      box.leadBox.setAttribute("hidden", "true");
+    }
+    if (box.quick && typeof box.quick.removeAttribute === "function") {
+      box.quick.removeAttribute("hidden");
+    }
+    const doc = box.document;
+    if (doc && typeof doc.getElementById === "function") {
+      const sync = doc.getElementById("vp-chat-sync");
+      if (sync && typeof sync.remove === "function") sync.remove();
+      if (typeof doc.querySelectorAll === "function") {
+        doc.querySelectorAll(".vp-chat-hit").forEach((card) => {
+          if (card && card.classList) card.classList.remove("vp-chat-hit");
+        });
+      }
+    }
+    if (box.catalogBridge) box.catalogBridge._pendingCodes = null;
+    if (typeof box.showWelcome === "function") box.showWelcome();
+    return true;
+  }
+
+  function requestChatReset(state, confirmFn) {
+    if (typeof confirmFn !== "function") return false;
+    if (!confirmFn(CHAT_RESET_CONFIRM)) return false;
+    if (state && typeof state.invalidate === "function") state.invalidate();
+    resetChatState(state);
+    return true;
+  }
+
   function mount(cfg, catalog) {
     const catalogIndex = buildCatalogIndex(catalog);
     const hotlineTel = cfg.hotlineTel || "0335652832";
@@ -1052,6 +1140,8 @@
     const history = [];
     let pendingLead = null;
     let sending = false;
+    let chatGen = 0;
+    let activeAbort = null;
     const CHAT_TIMEOUT_MS = 25000;
     const CHAT_SLOW_MS = 5000;
     const HISTORY_LIMIT = 6;
@@ -1083,6 +1173,19 @@
       hidden: "true",
     });
 
+    const clearBtn = el("button", {
+      className: "vp-chat-clear",
+      type: "button",
+      "aria-label": "Xóa nội dung chat",
+      title: "Xóa nội dung chat",
+      text: "Xóa nội dung chat",
+    });
+    const closeBtn = el("button", {
+      className: "vp-chat-close",
+      type: "button",
+      "aria-label": "Đóng chat",
+      text: "×",
+    });
     const header = el("div", { className: "vp-chat-header" }, [
       el("div", { className: "vp-chat-brand" }, [
         el("span", { className: "vp-chat-avatar", "aria-hidden": "true", text: "VP" }),
@@ -1091,12 +1194,7 @@
           el("div", { className: "vp-chat-sub", text: "Giá theo website" }),
         ]),
       ]),
-      el("button", {
-        className: "vp-chat-close",
-        type: "button",
-        "aria-label": "Đóng chat",
-        text: "×",
-      }),
+      el("div", { className: "vp-chat-header-actions" }, [clearBtn, closeBtn]),
     ]);
 
     const messages = el("div", {
@@ -1310,7 +1408,37 @@
     }
 
     fabChat.addEventListener("click", () => setOpen(panel.hasAttribute("hidden")));
-    header.querySelector(".vp-chat-close").addEventListener("click", () => setOpen(false));
+    closeBtn.addEventListener("click", () => setOpen(false));
+    clearBtn.addEventListener("click", () => {
+      const accepted = requestChatReset(
+        {
+          history: history,
+          sessionStorage: sessionStorage,
+          localStorage: localStorage,
+          messages: messages,
+          leadBox: leadBox,
+          quick: quick,
+          document: document,
+          catalogBridge: window.VanPhatCatalog,
+          invalidate: () => {
+            chatGen += 1;
+            if (activeAbort) {
+              try {
+                activeAbort.abort();
+              } catch (e) {}
+              activeAbort = null;
+            }
+          },
+          showWelcome: () => addBubble("bot", welcome),
+        },
+        (message) => window.confirm(message)
+      );
+      if (!accepted) return;
+      pendingLead = null;
+      sending = false;
+      input.disabled = false;
+      sendBtn.disabled = false;
+    });
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape" || panel.hasAttribute("hidden")) return;
       if (document.body.classList.contains("lightbox-open")) return;
@@ -1340,6 +1468,7 @@
     function sendMessage(text) {
       const msg = String(text || "").trim();
       if (!msg || sending) return;
+      const gen = chatGen;
       addBubble("user", msg);
       history.push({ role: "user", text: msg });
       input.value = "";
@@ -1390,6 +1519,7 @@
       messages.scrollTop = messages.scrollHeight;
 
       const controller = typeof AbortController === "function" ? new AbortController() : null;
+      activeAbort = controller;
       const slowTimer = window.setTimeout(() => {
         const label = typing.querySelector(".vp-typing-label");
         if (label && label.isConnected) label.textContent = "Đang soạn trả lời…";
@@ -1415,6 +1545,7 @@
 
       Promise.race([request, timeout])
         .then((data) => {
+          if (gen !== chatGen) return;
           typing.remove();
           const replyText = data && data.ok && data.reply ? data.reply : apologyText();
           const parsed = addBubble("bot", replyText);
@@ -1425,6 +1556,7 @@
           }
         })
         .catch(() => {
+          if (gen !== chatGen) return;
           typing.remove();
           const err = apologyText();
           const parsed = addBubble("bot", err);
@@ -1433,6 +1565,8 @@
         .finally(() => {
           window.clearTimeout(slowTimer);
           window.clearTimeout(abortTimer);
+          if (gen !== chatGen) return;
+          if (activeAbort === controller) activeAbort = null;
           unlockComposer();
         });
     }
@@ -1497,20 +1631,6 @@
       sendMessage(input.value);
     });
 
-    function chatSessionId() {
-      try {
-        const key = "vp-chat-session";
-        let id = sessionStorage.getItem(key);
-        if (!id) {
-          id = "s" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-          sessionStorage.setItem(key, id);
-        }
-        return id;
-      } catch (e) {
-        return "";
-      }
-    }
-
     quick.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-q]");
       if (!btn) return;
@@ -1525,6 +1645,11 @@
     searchCatalogSmart: searchCatalogSmart,
     formatCatalogBlock: formatCatalogBlock,
     decoratePlain: decoratePlain,
+    chatSessionId: chatSessionId,
+    resetChatState: resetChatState,
+    requestChatReset: requestChatReset,
+    CHAT_SESSION_KEY: CHAT_SESSION_KEY,
+    CHAT_RESET_CONFIRM: CHAT_RESET_CONFIRM,
   };
 
   document.addEventListener("DOMContentLoaded", () => {
