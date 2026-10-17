@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101701"
+CSS_V = "2026101719"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101401"
 CHAT_V = "2026101309"
@@ -51,7 +51,7 @@ STOREFRONT_ALT = (
 )
 STOREFRONT_IMAGE = f"{SITE}/assets/{STOREFRONT_STEM}.jpg"
 # Same file as schema image. Query only busts sitemap/HTML caches after the sign text edit.
-STOREFRONT_CACHE = "2026101517"
+STOREFRONT_CACHE = "2026101719"
 # Pin measured for the published Mỹ Gia address. Do not swap in another street line.
 GEO_LAT = "12.237790072249387"
 GEO_LNG = "109.16637827055754"
@@ -108,7 +108,8 @@ STREETVIEW_EMBED_SRC = (
     f"{STREETVIEW_PANO}!2m2!1d{STREETVIEW_PANO_LAT}!2d{STREETVIEW_PANO_LNG}"
     f"!3f{STREETVIEW_HEADING}!4f{STREETVIEW_PITCH}!5f1&hl=vi"
 )
-FONT_CSS = "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=optional"
+FONT_MAIN = "assets/fonts/be-vietnam-pro-400.woff2"
+LOGO_TAGLINE = "Văn phòng phẩm · Nước uống & Bánh · Điện gia dụng"
 _DRIVE_IMAGE = re.compile(r"^(https://lh3\.googleusercontent\.com/d/[A-Za-z0-9_-]+)")
 CARD_IMAGE_W = 480
 HERO_IMAGE_W = 800
@@ -347,20 +348,41 @@ def derive_brand(name: str) -> str | None:
     return best[2]
 
 
-def product_seo_title(name: str, group: str) -> str:
-    """Product name + nhóm + Nha Trang, kept near 65 characters."""
+def source_name_key(name: str) -> str:
+    return re.sub(r"\s+", " ", str(name or "")).strip().casefold()
+
+
+def duplicate_source_name_keys(products: list[dict]) -> set[str]:
+    """Tên nguồn xuất hiện từ hai mã trở lên. Không đổi tên trong dữ liệu."""
+    counts: dict[str, int] = {}
+    for product in products:
+        key = source_name_key(product.get("ten") or "")
+        if not key:
+            continue
+        counts[key] = counts.get(key, 0) + 1
+    return {key for key, count in counts.items() if count >= 2}
+
+
+def product_seo_title(name: str, group: str, code: str | None = None) -> str:
+    """Product name + nhóm + Nha Trang, kept near 65 characters.
+
+    Khi hai mã trùng tên nguồn, `code` được gắn vào title để hết trùng.
+    Tên trong data/products.json không đổi.
+    """
     name = re.sub(r"\s+", " ", str(name or "Sản phẩm")).strip()
     group = re.sub(r"\s+", " ", str(group or "")).strip()
+    code = re.sub(r"\s+", "", str(code or "")).strip().upper()
     local = "Nha Trang"
-    full = f"{name} | {group} {local}" if group else f"{name} | {local}"
+    suffix = f" | {group} {local}" if group else f" | {local}"
+    tail = f" {code}" if code else ""
+    full = f"{name}{tail}{suffix}"
     if len(full) <= TITLE_MAX:
         return full
-    suffix = f" | {group} {local}" if group else f" | {local}"
-    room = TITLE_TARGET - len(suffix)
+    room = TITLE_MAX - len(suffix) - len(tail)
     if room < 12:
         suffix = f" | {local}"
-        room = TITLE_TARGET - len(suffix)
-    return f"{clip(name, max(room, 12))}{suffix}"
+        room = TITLE_MAX - len(suffix) - len(tail)
+    return f"{clip(name, max(room, 8))}{tail}{suffix}"
 
 
 def group_seo_title(nhom: str) -> str:
@@ -515,7 +537,7 @@ def chrome_header(prefix: str) -> str:
     <div class="container nav">
       <a class="logo" href="{p}index.html" aria-label="Vạn Phát — Trang chủ">
         <img class="logo-img" src="{p}assets/logo-nav.png?v={LOGO_NAV_V}" width="44" height="44" alt="Vạn Phát" />
-        <span class="logo-text">Vạn Phát<small>Văn phòng phẩm · Photocopy</small></span>
+        <span class="logo-text">Vạn Phát<small>{esc(LOGO_TAGLINE)}</small></span>
       </a>
       <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -581,13 +603,9 @@ def chrome_footer(prefix: str) -> str:
   </footer>"""
 
 
-def font_links() -> str:
-    # Non-blocking. display=optional so a late font does not repaint text LCP.
-    return f"""  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="{FONT_CSS}" />
-  <link rel="stylesheet" href="{FONT_CSS}" media="print" onload="this.media='all'" />
-  <noscript><link rel="stylesheet" href="{FONT_CSS}" /></noscript>"""
+def font_links(prefix: str = "") -> str:
+    """Preload the regular face. Other weights load from @font-face in CSS."""
+    return f'  <link rel="preload" href="{prefix}{FONT_MAIN}" as="font" type="font/woff2" crossorigin />'
 
 
 def reach_html() -> str:
@@ -836,7 +854,7 @@ def layout(*, title, description, canonical, image, image_alt, og_type, json_ld,
 <head>
   <!-- {MARKER} -->
 {head_tags(title=title, description=description, canonical=canonical, image=image, image_alt=image_alt, og_type=og_type, robots=robots)}
-{font_links()}
+{font_links(prefix)}
   {f'<link rel="preload" as="image" href="{esc(preload_image)}" fetchpriority="high" />' if preload_image else ""}
   <link rel="icon" type="image/png" href="{prefix}assets/favicon.png?v={LOGO_NAV_V}" />
   <link rel="stylesheet" href="{prefix}css/styles.css?v={CSS_V}" />
@@ -1123,7 +1141,14 @@ def build_linh_vuc_page(lv: dict, ia: dict, by_group: dict, cat_files: dict) -> 
     )
 
 
-def build_product_page(product: dict, groups: list[str], files: dict, related: list[dict], ia: dict) -> str:
+def build_product_page(
+    product: dict,
+    groups: list[str],
+    files: dict,
+    related: list[dict],
+    ia: dict,
+    duplicate_names: set[str] | None = None,
+) -> str:
     filename = product["_file"]
     nhom = product.get("nhom") or ""
     canonical = f"{SITE}/san-pham/{filename}"
@@ -1132,7 +1157,11 @@ def build_product_page(product: dict, groups: list[str], files: dict, related: l
     priced = price_amount(product.get("gia")) is not None
     price = format_price(product.get("gia"))
     description = product_seo_description(product, nhom)
-    title = product_seo_title(str(product.get("ten") or product.get("ma") or "Sản phẩm"), nhom)
+    ten = str(product.get("ten") or product.get("ma") or "Sản phẩm")
+    code = None
+    if source_name_key(product.get("ten") or "") in (duplicate_names or set()):
+        code = str(product.get("ma") or "").strip().upper() or None
+    title = product_seo_title(ten, nhom, code)
     crumbs = [
         ("Trang chủ", "../index.html"),
         ("Sản phẩm", "../san-pham.html"),
@@ -1558,11 +1587,6 @@ def upsert_jsonld(text: str, data: dict) -> str:
     return text.replace("</head>", block + "</head>", 1)
 
 
-FONT_BLOCK_OLD = (
-    '  <link rel="preconnect" href="https://fonts.googleapis.com" />\n'
-    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n'
-    f'  <link href="{FONT_CSS}" rel="stylesheet" />'
-)
 REACH_RE = re.compile(r"[ \t]*<!-- vp-reach -->.*?<!-- /vp-reach -->\n?", re.S)
 FOOTER_BLURB_OLD = "văn phòng phẩm và photocopy tại KĐT Mỹ Gia, Phường Nam Nha Trang."
 FOOTER_BLURB_NEW = "văn phòng phẩm, nước uống và điện gia dụng tại KĐT Mỹ Gia, Phường Nam Nha Trang."
@@ -1617,14 +1641,43 @@ def pin_hero_lead(text: str) -> str:
     return HERO_LEAD_RE.sub(repl, text, count=1)
 
 
-def refresh_static_chrome(text: str) -> str:
+def pin_storefront_picture(text: str) -> str:
+    """Giữ jpg cho og:image. Trang thì ưu tiên AVIF, rồi WebP, rồi jpg."""
+    text = re.sub(
+        rf"({re.escape(STOREFRONT_STEM)}\.(?:avif|webp|jpg))\?v=\d+",
+        rf"\1?v={STOREFRONT_CACHE}",
+        text,
+    )
+    if f"{STOREFRONT_STEM}.avif" in text:
+        return text
+    pattern = re.compile(
+        rf'([ \t]*)<source srcset="([^"]*{re.escape(STOREFRONT_STEM)}\.webp\?v={STOREFRONT_CACHE})" type="image/webp" />'
+    )
+
+    def repl(match: re.Match[str]) -> str:
+        indent, src = match.group(1), match.group(2)
+        avif = src.replace(".webp", ".avif")
+        return (
+            f'{indent}<source srcset="{avif}" type="image/avif" />\n'
+            f'{indent}<source srcset="{src}" type="image/webp" />'
+        )
+
+    return pattern.sub(repl, text)
+
+
+def refresh_static_chrome(text: str, prefix: str = "") -> str:
     updated = strip_google_fonts(text)
-    if "fonts.googleapis.com" not in updated and 'rel="stylesheet" href="' in updated:
+    if 'as="font"' not in updated and 'rel="stylesheet" href="' in updated:
         updated = updated.replace(
             '  <link rel="stylesheet" href="',
-            font_links() + '\n  <link rel="stylesheet" href="',
+            font_links(prefix) + '\n  <link rel="stylesheet" href="',
             1,
         )
+    updated = updated.replace(
+        "<small>Văn phòng phẩm · Photocopy</small>",
+        f"<small>{esc(LOGO_TAGLINE)}</small>",
+    )
+    updated = pin_storefront_picture(updated)
     updated = re.sub(r"styles\.css\?v=\d+", f"styles.css?v={CSS_V}", updated)
     updated = re.sub(r"main\.js(?:\?v=\d+)?(?=\")", f"main.js?v={CSS_V}", updated)
     updated = re.sub(r"catalog-paths\.js(?:\?v=\d+)?(?=\")", f"catalog-paths.js?v={CSS_V}", updated)
@@ -1666,7 +1719,7 @@ def refresh_static_heads(
             updated = upsert_catalog_dir(updated, dir_block)
         prefix = "../" if "/" in rel else ""
         updated = upsert_local_links(updated, prefix)
-        updated = refresh_static_chrome(updated)
+        updated = refresh_static_chrome(updated, prefix)
         if 'http-equiv="refresh"' in updated:
             updated = REACH_RE.sub("", updated)
         if write_text(path, updated):
@@ -1703,6 +1756,16 @@ def assert_seo_helpers() -> None:
         raise SystemExit(f"long title dropped local/group: {long!r}")
     if len(long) > TITLE_MAX:
         raise SystemExit(f"title too long ({len(long)}): {long!r}")
+    shared = "Bút Chì Gỗ 2B Maped (Hộp 12 cây)"
+    left = product_seo_title(shared, "Bút & Mực", "VP125")
+    right = product_seo_title(shared, "Bút & Mực", "VP126")
+    plain = product_seo_title(shared, "Bút & Mực")
+    if left == right or "VP125" not in left or "VP126" not in right:
+        raise SystemExit(f"duplicate source titles must include the code: {left!r} {right!r}")
+    if "VP" in plain:
+        raise SystemExit(f"unique source title must not gain a code: {plain!r}")
+    if len(left) > TITLE_MAX or len(right) > TITLE_MAX:
+        raise SystemExit(f"coded title too long: {left!r} {right!r}")
     if group_seo_title("Giấy") != "Giấy Nha Trang | Vạn Phát":
         raise SystemExit(f"group title mismatch: {group_seo_title('Giấy')!r}")
     if "Nha Trang" not in linh_vuc_seo_title("Văn phòng phẩm"):
@@ -2421,6 +2484,7 @@ def main() -> None:
         product["_file"] = filename
         by_group.setdefault(nhom, []).append(product)
 
+    dup_names = duplicate_source_name_keys(products)
     groups = group_names(ia, list(by_group))
     for name in groups:
         by_group.setdefault(name, [])
@@ -2449,7 +2513,7 @@ def main() -> None:
         with_img = [p for p in same if p.get("anh")]
         pool = with_img or same
         related = pool[:4]
-        page = build_product_page(product, groups, cat_files, related, ia)
+        page = build_product_page(product, groups, cat_files, related, ia, dup_names)
         if write_text(out_dir / product["_file"], page):
             written += 1
 
@@ -2507,9 +2571,12 @@ def main() -> None:
             print("warning: index.html is missing #linh-vuc-grid")
 
     assert_generated_seo(products)
-    title_lens = [
-        len(product_seo_title(str(p.get("ten") or ""), p.get("nhom") or "")) for p in products
-    ]
+    title_lens = []
+    for product in products:
+        code = None
+        if source_name_key(product.get("ten") or "") in dup_names:
+            code = str(product.get("ma") or "").strip().upper() or None
+        title_lens.append(len(product_seo_title(str(product.get("ten") or ""), product.get("nhom") or "", code)))
     branded = sum(1 for p in products if derive_brand(str(p.get("ten") or "")))
     print(
         json.dumps(

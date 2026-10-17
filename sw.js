@@ -2,7 +2,7 @@
    Catalog phát hành (data/products.json, trang HTML) đã loại nhóm «Không đưa lên web».
    Không tải nguồn khác. Có mạng: giá và catalog là network-first, không trả bản cũ.
    Mất mạng: dùng đúng bản đã lưu. Bản SW mới tự kích hoạt, không cần khách bấm. */
-const VERSION = "2026101701";
+const VERSION = "2026101719";
 const SHELL = "vp-shell-" + VERSION;
 const PAGES = "vp-pages-" + VERSION;
 const IMAGES = "vp-img-" + VERSION;
@@ -22,6 +22,11 @@ const SHELL_URLS = [
   "/assets/icons/apple-touch-icon.png",
   "/assets/favicon.png?v=20260925",
   "/assets/logo-nav.png?v=20260925",
+  "/assets/fonts/be-vietnam-pro-400.woff2",
+  "/assets/fonts/be-vietnam-pro-500.woff2",
+  "/assets/fonts/be-vietnam-pro-600.woff2",
+  "/assets/fonts/be-vietnam-pro-700.woff2",
+  "/assets/fonts/be-vietnam-pro-800.woff2",
 ];
 
 const PAGE_URLS = [
