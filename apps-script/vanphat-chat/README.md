@@ -7,7 +7,7 @@
   - Chỉ model suy luận, ví dụ `grok-4.7`, đi `POST https://api.x.ai/v1/responses` với `reasoning.effort` = `low`. `store` để `false` để không lưu hội thoại khách trên xAI.
 - Prompt kiểm soát: `content/chat-system-prompt.md` → Script Property `SYSTEM_PROMPT`. Thẻ `[[SP]]` và `[[LEAD]]` giữ trong prompt đó và trong câu mặc định của `Code.gs`.
 - API Cursor dùng cho phiên sửa repo. Không gắn API đó vào chat khách.
-- Cache widget trên web: `js/chat-widget.js?v=2026101309`.
+- Cache widget trên web: `js/chat-widget.js?v=2026101727`. Nút «Xóa nội dung chat» trên header xóa hội thoại và `sessionId`, giữ giỏ hàng và bill đã gửi.
 
 ## Quy tắc nghiệp vụ
 

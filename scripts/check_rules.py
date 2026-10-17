@@ -13,6 +13,8 @@
    gợi ý món giá 0 (kể cả món đầu nhóm), và không báo khách 0đ.
    Giỏ và sổ đơn (`scripts/test_cart_quote.js`) hiện «Liên hệ báo giá»
    thay cho giá 0, tổng ghi món chưa gồm.
+   Xóa chat (`scripts/test_chat_reset.js`) xóa hội thoại và session,
+   giữ giỏ và bill. Mọi trang khách dùng cùng `chat-widget.js?v` với `sw.js`.
 6. Trang HTML không chứa «0đ» hay schema price 0.
 7. Mô tả dài trong data/descriptions.json chỉ khi trang_thai là da_xac_minh
    và nguon_url là http(s). Câu đệm không nguồn không được vào file hay trang SKU.
@@ -438,6 +440,58 @@ def check_node_script(errors: list[str], name: str, label: str) -> None:
 def check_chat_search(errors: list[str]) -> None:
     check_node_script(errors, "test_chat_search.js", "test tìm chat")
     check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
+    check_node_script(errors, "test_chat_reset.js", "test xóa chat")
+
+
+CHAT_WIDGET_RE = re.compile(r"chat-widget\.js\?v=(\d+)")
+STAFF_HTML = {"nhan-vien.html", "nhan-vien/index.html"}
+
+
+def check_chat_widget_cache(errors: list[str]) -> None:
+    sw = (ROOT / "sw.js").read_text(encoding="utf-8")
+    version_m = re.search(r'const VERSION = "(\d+)"', sw)
+    if not version_m:
+        errors.append("sw.js thiếu const VERSION")
+        return
+    version = version_m.group(1)
+    if 'const SHELL = "vp-shell-" + VERSION' not in sw:
+        errors.append("sw.js SHELL không gắn VERSION")
+    if 'const PAGES = "vp-pages-" + VERSION' not in sw or 'const IMAGES = "vp-img-" + VERSION' not in sw:
+        errors.append("sw.js PAGES/IMAGES không gắn VERSION")
+    if "keys.filter((key) => !keep.has(key)).map((key) => caches.delete(key))" not in sw:
+        errors.append("sw.js activate không xóa cache ngoài bộ keep")
+    keep = {f"vp-shell-{version}", f"vp-pages-{version}", f"vp-img-{version}"}
+    previous = "2026101726" if version != "2026101726" else "2026101725"
+    stale = [f"vp-shell-{previous}", f"vp-pages-{previous}", f"vp-img-{previous}"]
+    if [name for name in stale if name not in keep] != stale:
+        errors.append("SW mới không xóa cache VERSION cũ khi activate")
+    chat_versions = CHAT_WIDGET_RE.findall(sw)
+    if len(set(chat_versions)) != 1:
+        errors.append("sw.js phải có đúng một chat-widget.js?v")
+        return
+    expected = chat_versions[0]
+    missing: list[str] = []
+    mismatched: list[str] = []
+    for path in iter_html():
+        rel = path.relative_to(ROOT).as_posix()
+        found = set(CHAT_WIDGET_RE.findall(path.read_text(encoding="utf-8", errors="replace")))
+        if not found:
+            if rel not in STAFF_HTML:
+                missing.append(rel)
+            continue
+        if found != {expected}:
+            mismatched.append(f"{rel} ({', '.join(sorted(found))})")
+    if missing:
+        errors.append("trang thiếu chat-widget.js?v: " + ", ".join(missing[:8]))
+    if mismatched:
+        errors.append(f"chat-widget.js?v lệch sw.js ({expected}): " + ", ".join(mismatched[:8]))
+    widget = (ROOT / "js" / "chat-widget.js").read_text(encoding="utf-8")
+    if '"aria-label": "Xóa nội dung chat"' not in widget:
+        errors.append("js/chat-widget.js thiếu aria-label Xóa nội dung chat")
+    css = (ROOT / "css" / "styles.css").read_text(encoding="utf-8")
+    block = re.search(r"\.vp-chat-clear\s*\{([^}]+)\}", css)
+    if not block or "min-height: 40px" not in block.group(1) or "min-width: 40px" not in block.group(1):
+        errors.append("nút .vp-chat-clear chưa đủ vùng bấm 40px")
 
 
 def main() -> None:
@@ -451,6 +505,7 @@ def main() -> None:
     check_zero_price_pages(errors)
     check_product_descriptions(errors)
     check_chat_search(errors)
+    check_chat_widget_cache(errors)
     if errors:
         fail(errors)
     print(
