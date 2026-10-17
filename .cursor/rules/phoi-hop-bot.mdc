@@ -1,5 +1,5 @@
 ---
-description: Cursor thuộc Bộ phận BOT A.I; bot nào giao việc gì, nguồn dữ liệu, và khi nào squash-merge.
+description: Cursor thuộc Bộ phận BOT A.I; bot giao việc, nguồn dữ liệu, squash-merge, và đề xuất cải tiến trong mô tả PR.
 alwaysApply: true
 ---
 
@@ -33,6 +33,14 @@ Một việc, một PR. Cursor không push thẳng `main` và không tự merge.
 PR không conflict và CI xanh thì bot giao việc squash-merge. Anh Hà cho phép thường trực việc này từ 14/10/2026. CI đỏ thì Cursor sửa tiếp. Không merge PR đỏ.
 
 Việc luôn cần anh Hà duyệt, bot không tự làm: xác nhận đã thu tiền, hủy hoặc sửa bill, xuất hóa đơn, gửi email hoặc Zalo ra ngoài, xóa dữ liệu, đổi cơ chế mã sản phẩm.
+
+## Tự học và đề xuất cải tiến
+
+Anh Hà chốt ngày 17/10/2026 cho mọi bot Bộ phận BOT A.I, gồm Cursor: luôn tự học hỏi, nghiên cứu và chủ động đề xuất cải tiến trong mảng của mình, không chỉ làm đúng việc được giao.
+
+Mỗi PR Cursor mở phải có mục «Đề xuất cải tiến» trong mô tả PR. Ghi ngắn 1–3 đề xuất về UI, SEO hoặc hiệu năng mà Cursor thấy khi làm task. Mỗi đề xuất gồm ba ý: đề xuất gì, lợi ích gì, cần anh Hà duyệt gì. Đề xuất chỉ ghi vào mô tả PR. Không tự làm ngoài phạm vi task.
+
+Mẫu mô tả PR: `.github/PULL_REQUEST_TEMPLATE.md`.
 
 ## Quy tắc web đã có
 

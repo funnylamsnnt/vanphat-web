@@ -14,6 +14,20 @@
 - Nhóm mới tự xếp: tên trong Excel, lĩnh vực, lý do
 - Giữ ngoài web: ô Nhóm trống, nhãn Khác
 
+## Đề xuất cải tiến
+
+Ghi 1–3 đề xuất ngắn về UI, SEO hoặc hiệu năng thấy khi làm task. Mỗi đề xuất đủ ba ý. Chỉ ghi ở đây, không tự làm ngoài phạm vi task. Ô không dùng thì ghi «không có».
+
+1. Đề xuất:
+   Lợi ích:
+   Cần anh duyệt:
+2. Đề xuất:
+   Lợi ích:
+   Cần anh duyệt:
+3. Đề xuất:
+   Lợi ích:
+   Cần anh duyệt:
+
 ## Kiểm tra
 
 - [ ] `python3 scripts/check_rules.py`

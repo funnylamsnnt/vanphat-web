@@ -120,4 +120,6 @@ Semrush và Search Console làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.m
 
 Cursor thuộc Bộ phận BOT A.I của Công ty Vạn Phát (CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT), do anh Lý Lâm Hà làm giám đốc. Cursor chỉ sửa code và script của web vanphatcompany.vn. Bot giao việc mô tả việc; Cursor mở một PR. PR không conflict và CI xanh thì bot giao việc squash-merge. CI đỏ thì Cursor sửa tiếp, không merge PR đỏ.
 
+Anh Hà chốt ngày 17/10/2026, cho mọi bot Bộ phận BOT A.I, gồm Cursor: luôn tự học hỏi, nghiên cứu và chủ động đề xuất cải tiến trong mảng của mình, không chỉ làm đúng việc được giao. Mỗi PR Cursor mở có mục «Đề xuất cải tiến» trong mô tả: ngắn 1–3 đề xuất về UI, SEO hoặc hiệu năng thấy khi làm task. Mỗi đề xuất gồm đề xuất gì, lợi ích gì, và cần anh Hà duyệt gì. Đề xuất chỉ ghi trong mô tả PR, không tự làm ngoài phạm vi task.
+
 Chi tiết vai trò, nguồn dữ liệu và cách phối hợp: `.cursor/rules/phoi-hop-bot.mdc`. Sơ đồ ngắn: `docs/so-do-phoi-hop.md`. Các mục phía trên giữ nguyên.
