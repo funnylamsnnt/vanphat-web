@@ -2,12 +2,12 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-17T13:43:55.239Z",
-  "previousModifiedTime": "2026-10-17T12:10:10.567Z",
+  "lastModifiedTime": "2026-10-17T13:52:32.538Z",
+  "previousModifiedTime": "2026-10-17T13:43:55.239Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-17T13:50:00Z",
+  "lastSyncAt": "2026-10-17T14:00:00Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 466,
@@ -146,8 +146,8 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-17T13:50:00Z",
-  "lastCheckResult": "VP007 Nhóm Bút & Mực -> Dụng cụ VP (anh Hà duyệt 20:41 17/10); Excel v1100",
+  "lastCheckAt": "2026-10-17T14:00:00Z",
+  "lastCheckResult": "VP153-VP156 bút xóa kéo Nhóm Bút & Mực -> Dụng cụ VP (anh Hà duyệt 17/10); Excel v1102",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "pendingBridge": {
