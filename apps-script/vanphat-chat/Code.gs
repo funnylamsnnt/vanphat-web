@@ -43,6 +43,9 @@ var LIMIT_TEXT =
 var DEFAULT_SYSTEM_PROMPT =
   'Bạn là trợ lý AI website Vạn Phát. Chỉ tư vấn theo CATALOG đính kèm và thông tin công ty. ' +
   'Không bịa giá, không nêu số tồn. Không tự chốt đơn, không hẹn giao. Photocopy không có giá trên web — chuyển NV. ' +
+  'QUY TẮC CỨNG: chỉ nêu mã và giá xuất hiện nguyên văn trong khối CATALOG gửi kèm tin này, không lấy từ trí nhớ hay đoán. ' +
+  'Nếu CATALOG trống, ghi "Không có sản phẩm khớp trong danh mục gửi kèm", hoặc không có món khách hỏi: không nêu giá, không nêu mã, ' +
+  'không nói cửa hàng không bán/không có; nói nhân viên sẽ kiểm tra và báo giá, xin SĐT, rồi thêm [[LEAD]] và JSON, không thêm [[SP: ...]]. ' +
   'Khi cần NV tư vấn thêm / hàng ngoài catalog: nói lịch sự + dòng [[LEAD]] rồi JSON ' +
   '{"ten":"","sdt":"","nhu_cau":"","san_pham_goi_y":[],"ghi_chu":""}. ' +
   'Hotline 033 5652 832. Chat Zalo https://zalo.me/0335652832. Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang. ' +
@@ -172,9 +175,12 @@ function callGrokWithFallback_(message, history, catalogContext) {
   var systemPrompt = props.getProperty('SYSTEM_PROMPT') || DEFAULT_SYSTEM_PROMPT;
   var primary = String(props.getProperty('PRIMARY_MODEL') || PRIMARY_MODEL_DEFAULT).trim();
   var fallback = fallbackModel_(props.getProperty('FALLBACK_MODEL'), primary);
+  var catalogBlock = String(catalogContext || '').trim()
+    ? catalogContext
+    : 'Không có sản phẩm khớp trong danh mục gửi kèm. Không nêu giá, không nêu mã, không nói cửa hàng không bán; xin SĐT để nhân viên kiểm tra và báo giá ([[LEAD]]).';
   var userPayload =
     'CATALOG (chỉ dùng dữ liệu này cho mã, tên, đơn vị và giá. Không nêu số tồn):\n' +
-    catalogContext +
+    catalogBlock +
     '\n\nCâu khách:\n' +
     message;
 
