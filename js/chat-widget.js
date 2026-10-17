@@ -76,7 +76,7 @@
   }
 
   // Từ hỏi chung, so nguyên từ CÒN DẤU rồi mới bỏ dấu để so tên hàng.
-  // Không có dạng không dấu: «chi/anh/ban/the/con» nuốt chì, ảnh, bàn, thẻ, con.
+  // Không có dạng không dấu từng từ: «chi/anh/ban/the/con» nuốt chì, ảnh, bàn, thẻ, con.
   // Không chặn «là, hộp, cuộn, gói» — đó là tên hàng (bàn là, hộp, cuộn, gói).
   const STOPWORDS = new Set(
     (
@@ -86,16 +86,59 @@
     ).split(/\s+/)
   );
 
+  // Cụm không dấu chỉ khi đủ các từ liền nhau. Không lọc «gia», «ban», «chi» đứng một mình.
+  const STOP_PHRASES = [
+    ["gia", "bao", "nhieu"],
+    ["co", "ban", "khong"],
+    ["bao", "nhieu", "tien"],
+  ];
+
+  // Câu không có đúng tên hàng thì gợi ý lĩnh vực này, không lấy món trùng từ sau khi bỏ dấu.
+  const APPLIANCE_PHRASES = [
+    { words: ["ban", "la"], linhVucId: "dien-gia-dung" },
+    { words: ["ban", "ui"], linhVucId: "dien-gia-dung" },
+    { words: ["noi", "com"], linhVucId: "dien-gia-dung" },
+    { words: ["binh", "dun"], linhVucId: "dien-gia-dung" },
+  ];
+
+  function queryWords(query) {
+    return (
+      String(query || "")
+        .toLowerCase()
+        .match(/[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+/g) || []
+    );
+  }
+
+  function phraseSpans(plain, phrase) {
+    const spans = [];
+    const n = phrase.length;
+    for (let i = 0; i + n <= plain.length; i++) {
+      let ok = true;
+      for (let j = 0; j < n; j++) {
+        if (plain[i + j] !== phrase[j]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) spans.push(i);
+    }
+    return spans;
+  }
+
   function queryTokens(query) {
-    const words = String(query || "")
-      .toLowerCase()
-      .match(/[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+/g);
-    if (!words) return [];
+    const words = queryWords(query);
+    if (!words.length) return [];
+    const plain = words.map(norm);
+    const drop = new Set();
+    STOP_PHRASES.forEach((phrase) => {
+      phraseSpans(plain, phrase).forEach((start) => {
+        for (let j = 0; j < phrase.length; j++) drop.add(start + j);
+      });
+    });
     const kept = [];
     for (let i = 0; i < words.length; i++) {
-      const w = words[i];
-      if (w.length < 2 || STOPWORDS.has(w)) continue;
-      kept.push(norm(w));
+      if (words[i].length < 2 || STOPWORDS.has(words[i]) || drop.has(i)) continue;
+      kept.push(plain[i]);
     }
     return kept;
   }
@@ -136,6 +179,44 @@
     return { ma: p.ma, ten: p.ten, nhom: p.nhom, dvt: p.dvt, gia: p.gia, ton: p.ton };
   }
 
+  function nameWords(ten) {
+    return norm(ten)
+      .split(/[^a-z0-9]+/)
+      .filter(Boolean);
+  }
+
+  function makeAltAdder(picked, seen, altMax) {
+    return function add(p) {
+      const key = nameWords(p.ten).slice(0, 3).join(" ");
+      if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
+      seen.add(key);
+      picked.push(p);
+    };
+  }
+
+  // Cụm điện gia dụng: khớp đúng tên thì giữ cả món giá 0. Không có tên thì gợi ý lĩnh vực, bỏ giá 0.
+  function searchByAppliance(catalog, query, max) {
+    const plain = queryWords(query).map(norm);
+    const hits = APPLIANCE_PHRASES.filter((ph) => phraseSpans(plain, ph.words).length);
+    if (!hits.length) return null;
+    const products = visibleProducts(catalog);
+    const matched = [];
+    products.forEach((p) => {
+      const words = nameWords(p.ten);
+      if (hits.some((ph) => phraseSpans(words, ph.words).length)) matched.push(p);
+    });
+    if (matched.length) {
+      return { mode: "match", items: matched.slice(0, max).map(slimProduct) };
+    }
+    const altMax = Math.min(4, max);
+    const picked = [];
+    const add = makeAltAdder(picked, new Set(), altMax);
+    const lv = hits[0].linhVucId;
+    products.filter((p) => p.linhVucId === lv).forEach(add);
+    if (!picked.length) return { mode: "none", items: [] };
+    return { mode: "alt", items: picked.slice(0, altMax).map(slimProduct) };
+  }
+
   /**
    * Tìm sản phẩm cho câu khách.
    * mode "match": có sản phẩm chứa đủ từ khóa (≤3 từ: đủ cả; ≥4 từ: thiếu tối đa 1).
@@ -144,6 +225,8 @@
    */
   function searchCatalogSmart(catalog, query, limit) {
     const max = limit || 8;
+    const appliance = searchByAppliance(catalog, query, max);
+    if (appliance) return appliance;
     const tokens = queryTokens(query);
     if (!tokens.length) return { mode: "none", items: [] };
     const products = visibleProducts(catalog);
@@ -179,17 +262,7 @@
     const altMax = Math.min(4, max);
     const picked = [];
     // Bỏ món gần trùng (cùng 3 từ đầu, ví dụ chỉ khác màu) và món chưa có giá, để gợi ý đa dạng và báo giá được.
-    const seen = new Set();
-    const add = (p) => {
-      const key = norm(p.ten)
-        .split(/[^a-z0-9]+/)
-        .filter(Boolean)
-        .slice(0, 3)
-        .join(" ");
-      if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
-      seen.add(key);
-      picked.push(p);
-    };
+    const add = makeAltAdder(picked, new Set(), altMax);
     if (partial.length) {
       partial.sort(byScore);
       // Nhóm mạnh nhất trong các món khớp một phần.

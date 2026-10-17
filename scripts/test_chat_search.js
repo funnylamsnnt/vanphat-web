@@ -128,7 +128,12 @@ function testIron(search, catalog, query) {
         (result && result.items && result.items.length)
     );
   }
-  if (result && result.mode === "alt") assertNoZero(result, "«" + query + "»");
+  if (result && result.mode === "alt") {
+    assertNoZero(result, "«" + query + "»");
+    (result.items || []).forEach((p) => {
+      if (p.nhom !== "Điện") fail("«" + query + "»: gợi ý không thuộc Điện " + p.ma + " " + p.ten);
+    });
+  }
   assertNoExcluded(result, "«" + query + "»");
 }
 
@@ -301,8 +306,79 @@ function zeroDong(text) {
   return /(^|[^0-9.])0\s*đ/.test(String(text || ""));
 }
 
+function testPlainPencilQuestion(search, catalog) {
+  const result = search(catalog, "gia bao nhieu but chi", 8);
+  if (!result || result.mode !== "match") {
+    fail("«gia bao nhieu but chi»: muốn khớp đúng, được mode=" + (result && result.mode));
+    return;
+  }
+  const banned = new Set(["VP111", "VP112", "VP113", "VP114"]);
+  (result.items || []).forEach((p) => {
+    if (banned.has(p.ma) || /^bút bi\b/i.test(p.ten)) {
+      fail("«gia bao nhieu but chi»: trả bút bi làm khớp đúng " + p.ma + " " + p.ten);
+    }
+  });
+  if (!(result.items || []).some((p) => /bút chì/i.test(p.ten))) {
+    fail("«gia bao nhieu but chi»: không thấy bút chì");
+  }
+  const lone = search(catalog, "chi", 8);
+  if (!lone || !lone.items || !lone.items.length) {
+    fail("từ đơn không dấu «chi» bị lọc mất, không còn kết quả");
+  }
+  const ask = search(catalog, "co ban khong", 8);
+  if (!ask || ask.mode !== "none" || (ask.items && ask.items.length)) {
+    fail("cụm «co ban khong» phải bị bỏ, được mode=" + (ask && ask.mode));
+  }
+  const ban = search(catalog, "ban", 8);
+  if (!ban || !ban.items || !ban.items.length) {
+    fail("từ đơn không dấu «ban» bị lọc như stopword");
+  }
+}
+
+function testAppliancePhrases(search) {
+  const catalog = {
+    linh_vuc: [
+      { id: "dien-gia-dung", visible: true },
+      { id: "vpp", visible: true },
+    ],
+    nhom: [
+      { id: "dien", TenNhom: "Điện", visible: true, moTa: "ổ cắm" },
+      { id: "bia", TenNhom: "Bìa Hồ Sơ", visible: true, moTa: "bìa lá" },
+    ],
+    sanpham: [
+      { ma: "E0", ten: "Ổ cắm điện đỏ", nhom: "Điện", nhomId: "dien", linhVucId: "dien-gia-dung", gia: 0 },
+      { ma: "E1", ten: "Ổ cắm điện xanh", nhom: "Điện", nhomId: "dien", linhVucId: "dien-gia-dung", gia: 90000 },
+      { ma: "E2", ten: "Dây điện 2m", nhom: "Điện", nhomId: "dien", linhVucId: "dien-gia-dung", gia: 20000 },
+      { ma: "L1", ten: "Bìa lá A4", nhom: "Bìa Hồ Sơ", nhomId: "bia", linhVucId: "vpp", gia: 15000 },
+      { ma: "H1", ten: "Hóa đơn bán lẻ", nhom: "Bìa Hồ Sơ", nhomId: "bia", linhVucId: "vpp", gia: 30000 },
+      { ma: "Z9", ten: "Bàn ủi mini", nhom: "Điện", nhomId: "dien", linhVucId: "dien-gia-dung", gia: 0 },
+    ],
+  };
+  ["bàn là", "nồi cơm", "bình đun", "ban la", "noi com", "binh dun"].forEach((query) => {
+    const result = search(catalog, query, 8);
+    const got = new Set(mas(result));
+    if (!result || result.mode !== "alt") {
+      fail("«" + query + "»: chưa có món, muốn gợi ý Điện, được " + (result && result.mode));
+      return;
+    }
+    if (got.has("L1") || got.has("H1") || got.has("E0")) {
+      fail("«" + query + "»: gợi ý sai " + mas(result).join(","));
+    }
+    if (!got.has("E1") || !got.has("E2")) fail("«" + query + "»: thiếu món Điện có giá " + mas(result).join(","));
+    assertNoZero(result, "«" + query + "»");
+  });
+  const kept = search(catalog, "bàn ủi giá bao nhiêu", 8);
+  if (!kept || kept.mode !== "match" || mas(kept).indexOf("Z9") === -1) {
+    fail("khớp đúng «bàn ủi» giá 0 phải giữ Z9, được " + (kept && kept.mode) + " " + mas(kept).join(","));
+  }
+  if (kept && mas(kept).indexOf("H1") !== -1) fail("khớp đúng bàn ủi kéo theo hóa đơn bán lẻ");
+}
+
 function testZeroPriceQuote(search, catalog, api) {
   const found = search(catalog, "giấy in ảnh", 8);
+  if (!found || found.mode !== "match" || !(found.items || []).some((p) => !(Number(p.gia) > 0))) {
+    fail("khớp đúng «giấy in ảnh» phải giữ món giá 0");
+  }
   ["match", "alt"].forEach((mode) => {
     const block = api.formatCatalogBlock(found.items, mode);
     if (!block.includes("Liên hệ báo giá")) fail("khối " + mode + " giá 0 thiếu «Liên hệ báo giá»");
@@ -333,6 +409,8 @@ function main() {
   testPhotoPaper(search, catalog);
   testIron(search, catalog, "bàn là");
   testIron(search, catalog, "bàn ủi");
+  testPlainPencilQuestion(search, catalog);
+  testAppliancePhrases(search);
   testBinder(search, catalog);
   testQuestionOnly(search, catalog);
   testZeroPriceQuote(search, catalog, api);
