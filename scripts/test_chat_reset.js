@@ -163,7 +163,7 @@ function testButtonMarkup() {
   const src = fs.readFileSync(path.join(root, "js/chat-widget.js"), "utf8");
   if (!src.includes('className: "vp-chat-clear"')) fail("thiếu nút vp-chat-clear");
   if (!src.includes('"aria-label": "Xóa nội dung chat"')) fail("nút xóa thiếu aria-label");
-  const css = fs.readFileSync(path.join(root, "css/styles.css"), "utf8");
+  const css = fs.readFileSync(path.join(root, "css/chat-widget.css"), "utf8");
   const block = css.match(/\.vp-chat-clear\s*\{([^}]+)\}/);
   if (!block || !/min-height:\s*40px/.test(block[1]) || !/min-width:\s*40px/.test(block[1])) {
     fail("nút xóa chưa có vùng bấm 40px");

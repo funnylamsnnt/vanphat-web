@@ -1,6 +1,32 @@
-/* Vạn Phát — chat tư vấn theo catalog. Não trả lời là Grok qua Apps Script. */
+/* Vạn Phát — chat tư vấn theo catalog. Não trả lời là Grok qua Apps Script.
+   Style nằm ở /css/chat-widget.css. File này tự nạp, không thêm link trên từng trang.
+   Chỉ gắn khung chat sau khi CSS đã áp, để không nháy mất style. */
 (function () {
   const CONFIG_URL = "/data/chat-config.json?v=20261002";
+  const CHAT_CSS_URL = "/css/chat-widget.css";
+
+  function ensureChatCss() {
+    if (!document || typeof document.createElement !== "function") return Promise.resolve();
+    const existing = document.querySelector && document.querySelector('link[data-vp-chat-css]');
+    if (existing) {
+      if (existing.sheet) return Promise.resolve();
+      return new Promise((resolve) => {
+        existing.addEventListener("load", () => resolve(), { once: true });
+        existing.addEventListener("error", () => resolve(), { once: true });
+      });
+    }
+    return new Promise((resolve) => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = CHAT_CSS_URL;
+      link.setAttribute("data-vp-chat-css", "1");
+      link.addEventListener("load", () => resolve(), { once: true });
+      link.addEventListener("error", () => resolve(), { once: true });
+      const head = document.head || document.documentElement;
+      if (head) head.appendChild(link);
+      else resolve();
+    });
+  }
 
   function absDataUrl(url) {
     const u = String(url || "");
@@ -1652,11 +1678,22 @@
     CHAT_RESET_CONFIRM: CHAT_RESET_CONFIRM,
   };
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function startChat() {
+    const cssReady = ensureChatCss();
     loadJson(CONFIG_URL).then((cfg) => {
       const c = cfg || {};
       const productsUrl = absDataUrl(c.productsUrl || "/data/products.json");
-      return loadJson(productsUrl).then((catalog) => mount(c, catalog || { sanpham: [] }));
+      return loadJson(productsUrl).then((catalog) =>
+        cssReady.then(() => mount(c, catalog || { sanpham: [] }))
+      );
     });
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startChat);
+  } else if (typeof document.createElement === "function") {
+    startChat();
+  } else {
+    document.addEventListener("DOMContentLoaded", startChat);
+  }
 })();

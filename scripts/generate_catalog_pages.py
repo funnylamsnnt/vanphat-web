@@ -32,8 +32,8 @@ LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
 SEARCH_V = "2026101721"
-# Widget chat trong sw.js là network-first theo pathname, bỏ qua query.
-# Sửa js/chat-widget.js không cần tăng CHAT_V hay ?v trên HTML.
+# Widget chat và css/chat-widget.css trong sw.js là network-first theo pathname, bỏ qua query.
+# Sửa js/chat-widget.js hoặc css/chat-widget.css không cần tăng CHAT_V hay ?v trên HTML.
 CHAT_V = "2026101727"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"

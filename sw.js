@@ -2,20 +2,21 @@
    Catalog phát hành (data/products.json, trang HTML) đã loại nhóm «Không đưa lên web».
    Không tải nguồn khác. Có mạng: giá và catalog là network-first, không trả bản cũ.
    Mất mạng: dùng đúng bản đã lưu. Bản SW mới tự kích hoạt, không cần khách bấm.
-   chat-widget.js khớp theo pathname, bỏ qua ?v, network-first (timeout 3 giây).
-   Sửa file đó không cần tăng ?v trên HTML. CSS chat nằm trong styles.css dùng chung,
-   nên vẫn cache-first như phần shell còn lại. */
+   chat-widget.js và css/chat-widget.css khớp theo pathname, bỏ qua ?v,
+   network-first (timeout 3 giây). Sửa hai file đó không cần tăng ?v trên HTML.
+   css/styles.css dùng chung vẫn cache-first. */
 const VERSION = "2026101728";
 const SHELL = "vp-shell-" + VERSION;
 const PAGES = "vp-pages-" + VERSION;
 const IMAGES = "vp-img-" + VERSION;
 const CHAT_NETWORK_TIMEOUT_MS = 3000;
-const CHAT_NETWORK_FIRST_PATHS = ["/js/chat-widget.js"];
+const CHAT_NETWORK_FIRST_PATHS = ["/js/chat-widget.js", "/css/chat-widget.css"];
 const SITE_ORIGIN = "https://vanphatcompany.vn";
 
 const SHELL_URLS = [
   "/manifest.webmanifest",
   "/css/styles.css?v=" + VERSION,
+  "/css/chat-widget.css",
   "/js/main.js?v=" + VERSION,
   "/js/cart.js",
   "/js/catalog-paths.js?v=" + VERSION,
@@ -104,19 +105,32 @@ function chooseFetchStrategy(input, options) {
   return "shell-cache-first";
 }
 
-function chatCanonicalRequest() {
-  return new Request(new URL("/js/chat-widget.js", self.location.origin).href);
+function assetPathname(request) {
+  try {
+    return new URL(request.url).pathname;
+  } catch (_) {
+    return "";
+  }
+}
+
+function canonicalAssetRequest(pathname) {
+  return new Request(new URL(pathname, self.location.origin).href);
 }
 
 async function readChatCache(cache, request) {
-  const canonical = await cache.match(chatCanonicalRequest());
-  if (canonical) return canonical;
+  const path = assetPathname(request);
+  if (path) {
+    const canonical = await cache.match(canonicalAssetRequest(path));
+    if (canonical) return canonical;
+  }
   return cache.match(request, { ignoreSearch: true });
 }
 
-async function writeChatCache(cache, response) {
+async function writeChatCache(cache, request, response) {
+  const path = assetPathname(request);
+  if (!path) return;
   try {
-    await cache.put(chatCanonicalRequest(), response.clone());
+    await cache.put(canonicalAssetRequest(path), response.clone());
   } catch (_) {
     /* phản hồi đổi hướng hoặc không thân không lưu được */
   }
@@ -146,7 +160,7 @@ async function networkFirstChat(request, timeoutMs) {
         fetch(next).then(resolve, reject);
       });
       if (fresh && fresh.ok && !fresh.redirected) {
-        await writeChatCache(cache, fresh);
+        await writeChatCache(cache, request, fresh);
         return fresh;
       }
       const stale = await readChatCache(cache, request);

@@ -473,8 +473,10 @@ def check_chat_widget_cache(errors: list[str]) -> None:
         errors.append("sw.js timeout chat phải khoảng 3 giây")
     if "ignoreSearch: true" not in sw:
         errors.append("sw.js chưa khớp chat-widget.js theo pathname, bỏ query")
-    if "/css/styles.css" in sw and 'CHAT_NETWORK_FIRST_PATHS = ["/js/chat-widget.js"]' not in sw:
-        errors.append("sw.js không được đưa styles.css dùng chung vào network-first của chat")
+    if 'CHAT_NETWORK_FIRST_PATHS = ["/js/chat-widget.js", "/css/chat-widget.css"]' not in sw:
+        errors.append("sw.js phải network-first cho chat-widget.js và css/chat-widget.css")
+    if '"/css/chat-widget.css"' not in sw:
+        errors.append("sw.js chưa precache css/chat-widget.css")
     stale = [f"vp-shell-{previous}", f"vp-pages-{previous}", f"vp-img-{previous}"]
     if [name for name in stale if name not in keep] != stale:
         errors.append("SW mới không xóa cache VERSION cũ khi activate")
@@ -501,10 +503,21 @@ def check_chat_widget_cache(errors: list[str]) -> None:
     widget = (ROOT / "js" / "chat-widget.js").read_text(encoding="utf-8")
     if '"aria-label": "Xóa nội dung chat"' not in widget:
         errors.append("js/chat-widget.js thiếu aria-label Xóa nội dung chat")
-    css = (ROOT / "css" / "styles.css").read_text(encoding="utf-8")
+    if "/css/chat-widget.css" not in widget or "ensureChatCss" not in widget:
+        errors.append("js/chat-widget.js chưa tự nạp css/chat-widget.css")
+    shared = (ROOT / "css" / "styles.css").read_text(encoding="utf-8")
+    if ".vp-chat-panel {" in shared or ".vp-chat-header {" in shared:
+        errors.append("style khung chat còn trong css/styles.css")
+    css_path = ROOT / "css" / "chat-widget.css"
+    if not css_path.is_file():
+        errors.append("thiếu css/chat-widget.css")
+        return
+    css = css_path.read_text(encoding="utf-8")
     block = re.search(r"\.vp-chat-clear\s*\{([^}]+)\}", css)
     if not block or "min-height: 40px" not in block.group(1) or "min-width: 40px" not in block.group(1):
         errors.append("nút .vp-chat-clear chưa đủ vùng bấm 40px")
+    if ".vp-chat-panel {" not in css or ".vp-chat-dock {" not in css:
+        errors.append("css/chat-widget.css thiếu khung chat")
 
 
 def main() -> None:
