@@ -503,6 +503,25 @@ function testQuotePriceSkuLine(api, catalog) {
   if (keptProse.indexOf(quote.ma) !== -1) fail("dòng VP123 còn trong chữ sau parse");
 }
 
+function testLivePencilReply(api, catalog) {
+  const raw =
+    "**Em xin báo giá một số mẫu bút chì đang có trên web Vạn Phát:**\n\n" +
+    "- Bút chì đen Aimee-2B: **4.000đ**  \n" +
+    "- Bút chì bấm: **Liên hệ báo giá**  \n" +
+    "- Bút Chì Gỗ 2B Maped (Hộp 12 cây): **7.000đ**\n\n" +
+    "[[SP: VP124, VP123, VP125, VP127, VP128, VP129, VP494]]";
+  const index = api.buildCatalogIndex(catalog);
+  const turned = renderLikeRuntime(api, index, raw);
+  const prose = withoutSkuCards(turned.html);
+  if (prose.indexOf("Em xin báo giá một số mẫu bút chì đang có trên web Vạn Phát") === -1) {
+    fail("mất câu mở đầu: " + prose);
+  }
+  if (/<li[\s>]/.test(prose)) fail("còn dòng món dạng danh sách: " + prose);
+  ["Bút chì đen Aimee-2B", "Bút chì bấm", "Bút Chì Gỗ 2B Maped", "VP123", "VP124", "VP125"].forEach((bit) => {
+    if (prose.toLowerCase().indexOf(bit.toLowerCase()) !== -1) fail("còn dòng tên món trong chữ: " + bit);
+  });
+}
+
 function main() {
   const api = loadSearch();
   const search = api && api.searchCatalogSmart;
@@ -526,6 +545,7 @@ function main() {
   testFallbackDropsLeadingZeros(search);
   testDecoratePlain(api);
   testQuotePriceSkuLine(api, catalog);
+  testLivePencilReply(api, catalog);
   if (failures.length) {
     console.error("KHÔNG ĐẠT: " + failures.length + " lỗi");
     failures.forEach((item) => console.error("- " + item));
