@@ -115,7 +115,12 @@
   }
 
   function cardHTML(p, lvMap) {
-    const price = Number(p.gia) > 0 ? window.VanPhat.formatPrice(p.gia) : "Liên hệ";
+    const priced = Number(p.gia) > 0;
+    const price = priced ? window.VanPhat.formatPrice(p.gia) : "Liên hệ báo giá";
+    const zalo = "https://zalo.me/" + String(window.VanPhat.HOTLINE_TEL || "0335652832").replace(/\s+/g, "");
+    const cartBtn = priced
+      ? `<button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>`
+      : `<a class="btn btn-add-cart" data-add-cart href="${escapeAttr(zalo)}" target="_blank" rel="noopener">Chat Zalo</a>`;
     const href = productHref(p);
     const badge = badgeLabel(p, lvMap);
     return `
@@ -145,7 +150,7 @@
               <input type="number" class="qty-input" value="1" min="1" max="999" data-qty-input aria-label="Số lượng" />
               <button type="button" class="qty-btn" data-qty-plus aria-label="Tăng số lượng">+</button>
             </div>
-            <button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>
+            ${cartBtn}
           </div>
         </div>
       </article>`;

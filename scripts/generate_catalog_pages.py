@@ -217,11 +217,24 @@ def price_amount(value) -> int | None:
     return n
 
 
+CONTACT_PRICE = "Liên hệ báo giá"
+
+
 def format_price(value) -> str:
     n = price_amount(value)
     if n is None:
-        return "Liên hệ"
+        return CONTACT_PRICE
     return f"{n:,}".replace(",", ".") + " ₫"
+
+
+def cart_control(product: dict) -> str:
+    """Giá 0 hoặc trống không vào giỏ: nút dẫn Zalo. Món có giá giữ nút thêm giỏ."""
+    if price_amount(product.get("gia")) is None:
+        return (
+            f'<a class="btn btn-add-cart" data-add-cart href="{ZALO_URL}" '
+            f'target="_blank" rel="noopener">Chat Zalo</a>'
+        )
+    return '<button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>'
 
 
 def availability_iri(product: dict) -> str | None:
@@ -430,7 +443,7 @@ def product_seo_description(product: dict, group: str) -> str:
     body = _DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product)
     amount = price_amount(product.get("gia"))
     if amount is None:
-        price_bit = "Giá: Liên hệ."
+        price_bit = "Giá: Liên hệ báo giá."
     else:
         unit = product.get("dvt") or "đơn vị"
         price_bit = f"Giá {format_price(amount)}/{unit}."
@@ -892,7 +905,7 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
               <input type="number" class="qty-input" value="1" min="1" max="999" data-qty-input aria-label="Số lượng" />
               <button type="button" class="qty-btn" data-qty-plus aria-label="Tăng số lượng">+</button>
             </div>
-            <button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>
+            {cart_control(product)}
           </div>
         </div>
       </article>"""
@@ -1287,14 +1300,14 @@ def build_product_page(
             </div>
             <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>
             <p class="product-detail-desc">{esc(_DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product))}</p>
-            <p class="product-detail-note">{esc("Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng." if priced else "Giá chưa niêm yết — liên hệ hotline hoặc Zalo để báo giá. Có thể thêm vào giỏ để ghi nhận số lượng.")}</p>
+            <p class="product-detail-note">{esc("Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng." if priced else "Liên hệ báo giá qua hotline hoặc Zalo. Giá chưa niêm yết trên web.")}</p>
             <div class="product-actions">
               <div class="qty-control">
                 <button type="button" class="qty-btn" data-qty-minus aria-label="Giảm số lượng">−</button>
                 <input type="number" class="qty-input" value="1" min="1" max="999" data-qty-input aria-label="Số lượng" />
                 <button type="button" class="qty-btn" data-qty-plus aria-label="Tăng số lượng">+</button>
               </div>
-              <button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>
+              {cart_control(product)}
             </div>
             <div class="product-detail-cta">
               <a class="btn btn-zalo" href="{ZALO_URL}" target="_blank" rel="noopener">Chat Zalo</a>
@@ -1832,8 +1845,12 @@ def assert_seo_helpers() -> None:
         raise SystemExit("zero/empty price should be omitted")
     if price_amount(12000) != 12000:
         raise SystemExit("price parse failed")
-    if format_price(0) != "Liên hệ" or format_price(15000) != "15.000 ₫":
-        raise SystemExit(f"price label mismatch: {format_price(0)!r} {format_price(15000)!r}")
+    if format_price(0) != "Liên hệ báo giá" or format_price("") != "Liên hệ báo giá" or format_price(15000) != "15.000 ₫":
+        raise SystemExit(f"price label mismatch: {format_price(0)!r} {format_price('')!r} {format_price(15000)!r}")
+    if "Chat Zalo" not in cart_control({"gia": 0}) or "data-add-cart" not in cart_control({"gia": 0}):
+        raise SystemExit("zero price must keep a cart hook that opens Zalo")
+    if "Thêm vào giỏ" not in cart_control({"gia": 15000}):
+        raise SystemExit("priced SKU lost add-to-cart")
     if (
         availability_iri({"ton": 3}) != "https://schema.org/InStock"
         or availability_iri({"ton": 0}) != "https://schema.org/OutOfStock"
@@ -1942,8 +1959,8 @@ def assert_generated_seo(products: list[dict]) -> None:
     zero_text = (ROOT / "san-pham" / zero["_file"]).read_text(encoding="utf-8")
     zero_node = _product_node(_load_ld(ROOT / "san-pham" / zero["_file"]))
     detail = zero_text.split('class="product-card product-detail"', 1)[1].split("</article>", 1)[0]
-    if "offers" in zero_node or "Liên hệ" not in detail or "0 ₫" in detail:
-        raise SystemExit("VP035 should omit offers and show Liên hệ")
+    if "offers" in zero_node or "Liên hệ báo giá" not in detail or "0 ₫" in detail or '"price":"0"' in zero_text:
+        raise SystemExit("VP035 should omit offers and show Liên hệ báo giá")
     if "Khánh Hòa" not in zero_text:
         raise SystemExit("VP035 description missing Khánh Hòa")
 

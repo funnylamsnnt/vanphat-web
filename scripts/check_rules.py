@@ -9,8 +9,9 @@
 3. CNAME đúng vanphatcompany.vn và chữ «Đặt hàng online» không trở lại HTML/JS.
 4. Hằng công ty trong generator: tên, địa chỉ Mỹ Gia (không Phước Hải),
    số 0335652832, tọa độ 12.237790 / 109.166378, Street View đã chốt.
-5. Tìm chat (`scripts/test_chat_search.js`) lọc từ hỏi còn dấu và không
-   gợi ý món giá 0.
+5. Tìm chat (`scripts/test_chat_search.js`) lọc từ hỏi còn dấu, không
+   gợi ý món giá 0, và không báo khách 0đ.
+6. Trang HTML không chứa «0đ» hay schema price 0.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
 nằm trong hạng mục 2. Chạy: python3 scripts/check_rules.py
@@ -184,6 +185,8 @@ def check_lightbox(errors: list[str]) -> int:
 
     generator = (ROOT / "scripts" / "generate_catalog_pages.py").read_text(encoding="utf-8")
     card_py = py_function(generator, "card_html")
+    if "cart_control(" in card_py:
+        card_py += py_function(generator, "cart_control")
     if "data-product-zoom" not in card_py or "data-add-cart" not in card_py:
         errors.append("scripts/generate_catalog_pages.py card_html thiếu móc lightbox hoặc thêm giỏ")
 
@@ -294,6 +297,19 @@ def self_test() -> None:
         raise SystemExit("self-test: thẻ mẫu không được coi là đã có lightbox")
 
 
+def check_zero_price_pages(errors: list[str]) -> None:
+    needles = ("0đ", '"price": "0"', '"price":"0"')
+    price_zero = re.compile(r"Giá</span>\s*0\s*₫")
+    for path in iter_html():
+        text = path.read_text(encoding="utf-8", errors="replace")
+        rel = path.relative_to(ROOT).as_posix()
+        for needle in needles:
+            if needle in text:
+                errors.append(f"{rel}: còn {needle}")
+        if price_zero.search(text):
+            errors.append(f"{rel}: giá hiện 0 ₫")
+
+
 def check_chat_search(errors: list[str]) -> None:
     script = ROOT / "scripts" / "test_chat_search.js"
     if not script.is_file():
@@ -327,6 +343,7 @@ def main() -> None:
     cards = check_lightbox(errors)
     check_boundaries(errors)
     check_company(errors)
+    check_zero_price_pages(errors)
     check_chat_search(errors)
     if errors:
         fail(errors)

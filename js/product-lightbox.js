@@ -165,8 +165,10 @@
     dialog.querySelector("[data-lb-dvt]").textContent = product.dvt || "—";
     setFact(dialog, "[data-lb-brand-wrap]", "[data-lb-brand]", product.thuongHieu);
     setFact(dialog, "[data-lb-spec-wrap]", "[data-lb-spec]", product.quyCach);
-    dialog.querySelector("[data-lb-price]").textContent =
-      product.gia > 0 ? formatPrice(product.gia) : "Liên hệ";
+    const priced = Number(product.gia) > 0;
+    dialog.querySelector("[data-lb-price]").textContent = priced ? formatPrice(product.gia) : "Liên hệ báo giá";
+    const addBtn = dialog.querySelector("[data-lb-add]");
+    if (addBtn) addBtn.textContent = priced ? "Thêm vào giỏ" : "Chat Zalo";
 
     const qty = dialog.querySelector("[data-lb-qty]");
     if (qty) qty.value = "1";

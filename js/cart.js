@@ -47,7 +47,26 @@
     );
   }
 
+  function hasListPrice(gia) {
+    return Number(gia) > 0;
+  }
+
+  function linePrice(gia) {
+    if (!hasListPrice(gia)) return "Liên hệ báo giá";
+    return formatPrice(gia);
+  }
+
+  function openZalo() {
+    const tel = String((window.VanPhat && window.VanPhat.HOTLINE_TEL) || "0335652832").replace(/\s+/g, "");
+    window.open("https://zalo.me/" + tel, "_blank", "noopener");
+  }
+
   function add(product, qty) {
+    if (!product) return;
+    if (!hasListPrice(product.gia)) {
+      openZalo();
+      return;
+    }
     const q = Math.max(1, Math.min(999, Number(qty) || 1));
     const ma = String(product.ma || "");
     if (!ma) return;
@@ -267,7 +286,7 @@
           " " +
           (it.dvt || "") +
           " — " +
-          formatPrice(lineTotal)
+          linePrice(hasListPrice(it.gia) ? lineTotal : it.gia)
       );
     });
     lines.push("", "*Tổng: " + formatPrice(getTotal()) + "*");
@@ -507,7 +526,7 @@
           </div>
           <div class="cart-item-info">
             <div class="cart-item-name">${escapeHtml(it.ten)}</div>
-            <div class="cart-item-meta">ĐVT: ${escapeHtml(it.dvt || "—")} · ${formatPrice(it.gia)}</div>
+            <div class="cart-item-meta">ĐVT: ${escapeHtml(it.dvt || "—")} · ${linePrice(it.gia)}</div>
             <div class="cart-item-row">
               <div class="qty-control qty-control-sm">
                 <button type="button" class="qty-btn" data-cart-minus data-ma="${escapeAttr(it.ma)}" aria-label="Giảm">−</button>

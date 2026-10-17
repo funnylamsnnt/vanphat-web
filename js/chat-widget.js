@@ -230,8 +230,17 @@
     return searchCatalogSmart(catalog, query, limit).items;
   }
 
+  function hasListPrice(gia) {
+    return Number(gia) > 0;
+  }
+
+  function webPriceText(gia) {
+    if (!hasListPrice(gia)) return "Liên hệ báo giá";
+    return Number(gia).toLocaleString("vi-VN") + "đ";
+  }
+
   function catalogLine(p) {
-    return `- [${p.ma}] ${p.ten} | nhóm: ${p.nhom} | ĐVT: ${p.dvt} | giá web: ${p.gia}`;
+    return `- [${p.ma}] ${p.ten} | nhóm: ${p.nhom} | ĐVT: ${p.dvt} | giá web: ${webPriceText(p.gia)}`;
   }
 
   function formatCatalogBlock(items, mode) {
@@ -509,8 +518,8 @@
   }
 
   function chatPriceLabel(product) {
-    const amount = Number(product && product.gia);
-    if (!(amount > 0)) return "Liên hệ";
+    if (!hasListPrice(product && product.gia)) return "Liên hệ báo giá";
+    const amount = Number(product.gia);
     const money = amount.toLocaleString("vi-VN") + "đ";
     const unit = String((product && product.dvt) || "").trim().toLowerCase();
     return unit ? money + "/" + unit : money;
@@ -528,6 +537,8 @@
 
   function skuCardHtml(product) {
     const price = chatPriceLabel(product);
+    const priced = hasListPrice(product && product.gia);
+    const addLabel = priced ? "Thêm vào giỏ" : "Chat Zalo";
     const thumb = productThumb(product);
     const onerror =
       thumb.jpeg && thumb.shown !== thumb.jpeg
@@ -567,11 +578,15 @@
       "</div>" +
       '<button type="button" class="vp-chat-sku-add" data-vp-add="' +
       escapeAttr(product.ma) +
-      '" data-vp-add-label="Thêm vào giỏ" data-vp-add-aria="' +
-      escapeAttr("Thêm " + name + " vào giỏ") +
+      '" data-vp-add-label="' +
+      escapeAttr(addLabel) +
+      '" data-vp-add-aria="' +
+      escapeAttr(priced ? "Thêm " + name + " vào giỏ" : "Hỏi giá " + name + " qua Zalo") +
       '" aria-label="' +
-      escapeAttr("Thêm " + name + " vào giỏ") +
-      '">Thêm vào giỏ</button></div></article>'
+      escapeAttr(priced ? "Thêm " + name + " vào giỏ" : "Hỏi giá " + name + " qua Zalo") +
+      '">' +
+      escapeHtml(addLabel) +
+      "</button></div></article>"
     );
   }
 
@@ -722,7 +737,12 @@
 
   function syncCardHTML(p) {
     const prefix = pagePrefix();
-    const price = Number(p.gia) > 0 && window.VanPhat ? window.VanPhat.formatPrice(p.gia) : "Liên hệ";
+    const priced = hasListPrice(p.gia);
+    const price = priced && window.VanPhat ? window.VanPhat.formatPrice(p.gia) : "Liên hệ báo giá";
+    const zalo = "https://zalo.me/" + String((window.VanPhat && window.VanPhat.HOTLINE_TEL) || "0335652832").replace(/\s+/g, "");
+    const cartBtn = priced
+      ? '<button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>'
+      : '<a class="btn btn-add-cart" data-add-cart href="' + escapeAttr(zalo) + '" target="_blank" rel="noopener">Chat Zalo</a>';
     const pathMap = (window.VanPhatPaths && window.VanPhatPaths.product) || {};
     const href = prefix + (pathMap[p.ma] || "san-pham.html?q=" + encodeURIComponent(p.ma || ""));
     const catMap = (window.VanPhatPaths && window.VanPhatPaths.category) || {};
@@ -788,7 +808,7 @@
       '<input type="number" class="qty-input" value="1" min="1" max="999" data-qty-input aria-label="Số lượng" />' +
       '<button type="button" class="qty-btn" data-qty-plus aria-label="Tăng số lượng">+</button>' +
       "</div>" +
-      '<button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>' +
+      cartBtn +
       "</div></div></article>"
     );
   }
@@ -1066,7 +1086,7 @@
         const qty = clampChatQty(input);
         if (product && window.VanPhatCart && window.VanPhatCart.add) {
           window.VanPhatCart.add(product, qty);
-          flashChatAdded(addBtn);
+          if (hasListPrice(product.gia)) flashChatAdded(addBtn);
         }
         return;
       }
@@ -1176,7 +1196,7 @@
             (found.mode === "alt" ? "Món này chưa có trên web, em gợi ý vài món gần nhất:\n" : "Em tìm thấy trên web:\n") +
             matches
               .slice(0, 5)
-              .map((p) => "• " + p.ten + " (" + p.ma + ") — " + Number(p.gia).toLocaleString("vi-VN") + "₫")
+              .map((p) => "• " + p.ten + " (" + p.ma + ") — " + webPriceText(p.gia))
               .join("\n") +
             "\n\nEm chưa nối được AI. Anh/chị thêm vào giỏ, gọi hotline " +
             hotline +
