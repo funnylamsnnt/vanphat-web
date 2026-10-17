@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101725"
+CSS_V = "2026101726"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
@@ -80,7 +80,7 @@ DESCRIPTIONS_PATH = ROOT / "data" / "descriptions.json"
 LOCAL_PAGES_PATH = ROOT / "data" / "local-pages.json"
 LOCAL_LINKS_START = "<!-- vp-local-links -->"
 LOCAL_LINKS_END = "<!-- /vp-local-links -->"
-_DESCRIPTION_BY_MA: dict[str, str] = {}
+_DESCRIPTION_BY_MA: dict[str, dict] = {}
 
 # Product <title> aims at ~65 characters and may run to this hard cap so a full
 # product name is not chopped for two extra characters.
@@ -462,15 +462,65 @@ def linh_vuc_seo_title(ten: str) -> str:
     return short if len(short) <= TITLE_MAX else clip(short, TITLE_MAX)
 
 
+# Câu ghép sẵn, không có web hãng hay cột Excel. Không được vào mô tả dài.
+DESCRIPTION_FILLER = (
+    "Dùng để viết hoặc châm mực",
+    "Phù hợp cho văn phòng, cơ quan",
+    "Liên hệ để giao hàng tại Nha Trang.",
+    "Đồ dùng trên bàn làm việc.",
+    "Đồ uống cho văn phòng và khách.",
+    "Dùng để in, photo và lưu hồ sơ",
+    "Dùng để đựng và phân loại tài liệu.",
+    "Dùng để dán thùng, tem và đồ văn phòng.",
+    "Thiết bị điện nhỏ cho bàn làm việc.",
+    "Đồ ăn nhẹ cho văn phòng.",
+    "Mặt hàng khác đang bán tại cửa hàng.",
+    "Đang bán tại cửa hàng Vạn Phát.",
+    "Hãng ghi trên tên:",
+    "Quy cách lấy từ tên:",
+)
+
+
+def description_has_filler(text: str) -> bool:
+    return any(phrase in str(text or "") for phrase in DESCRIPTION_FILLER)
+
+
+def verified_long_text(ma: str) -> str:
+    """Mô tả dài chỉ khi đã xác minh và có URL nguồn. Không thì chuỗi rỗng."""
+    rec = _DESCRIPTION_BY_MA.get(str(ma or ""))
+    if not isinstance(rec, dict) or rec.get("trang_thai") != "da_xac_minh":
+        return ""
+    url = str(rec.get("nguon_url") or "").strip()
+    text = re.sub(r"\s+", " ", str(rec.get("mo_ta") or "")).strip()
+    if not text or not url.startswith(("http://", "https://")) or description_has_filler(text):
+        return ""
+    return text
+
+
 def product_seo_description(product: dict, group: str) -> str:
-    body = _DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product)
-    amount = price_amount(product.get("gia"))
-    if amount is None:
-        price_bit = "Giá: Liên hệ báo giá."
+    """Meta chỉ từ dữ liệu catalog. Câu đệm không có nguồn không được vào thẻ."""
+    name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
+    group = re.sub(r"\s+", " ", str(group or "")).strip()
+    bits = [name + "."]
+    if group:
+        bits.append(f"Nhóm {group}.")
+    brand = product_brand(product)
+    if brand:
+        bits.append(f"Thương hiệu {brand}.")
+    quy_cach = quy_cach_text(product)
+    if quy_cach:
+        bits.append(f"Quy cách {quy_cach}.")
+    unit = display_unit(product.get("dvt"))
+    if unit:
+        bits.append(f"Đơn vị tính {unit}.")
+    if price_amount(product.get("gia")) is None:
+        bits.append("Giá: Liên hệ báo giá.")
     else:
-        unit = product.get("dvt") or "đơn vị"
-        price_bit = f"Giá {format_price(amount)}/{unit}."
-    return clip(f"{body} {price_bit} Hotline {HOTLINE_DISPLAY}.")
+        bits.append(f"Giá {format_price_line(product)}.")
+    bits.append(f"Hotline {HOTLINE_DISPLAY}.")
+    long = verified_long_text(str(product.get("ma") or ""))
+    body = f"{long} {' '.join(bits)}" if long else " ".join(bits)
+    return clip(body)
 
 
 def offer_node(product: dict, canonical: str) -> dict | None:
@@ -1264,6 +1314,72 @@ def product_specs_html(product: dict, ia: dict, cat_file: str, brand: str | None
     return '<dl class="product-specs">' + "".join(rows) + "</dl>"
 
 
+def keyword_chips_html(product: dict, ia: dict, cat_file: str, brand: str | None) -> str:
+    """Chip từ dữ liệu đã có: lĩnh vực, nhóm, thương hiệu, quy cách. Không bịa từ khóa."""
+    chips: list[tuple[str, str]] = []
+    seen: set[str] = set()
+
+    def add(label: str, href: str) -> None:
+        text = re.sub(r"\s+", " ", str(label or "")).strip()
+        key = text.casefold()
+        if not text or not href or key in seen:
+            return
+        seen.add(key)
+        chips.append((text, href))
+
+    nhom = str(product.get("nhom") or "").strip()
+    lv = ia["lv_by_id"].get(product.get("linhVucId") or "") or lv_for_nhom(nhom, ia)
+    if lv and str(lv.get("ten") or "").strip() and lv.get("slug"):
+        add(str(lv.get("ten") or ""), f"../linh-vuc/{lv['slug']}.html")
+    if nhom:
+        add(nhom, cat_file or "../san-pham.html")
+    if brand:
+        add(brand, "../san-pham.html?q=" + quote(brand, safe=""))
+    stated = re.sub(r"\s+", " ", str(product.get("quyCach") or "")).strip()
+    if stated:
+        add(stated, "../san-pham.html?q=" + quote(stated, safe=""))
+    for token in quy_cach_tokens(str(product.get("ten") or "")):
+        add(token, "../san-pham.html?q=" + quote(token, safe=""))
+    if not chips:
+        return ""
+    links = "".join(
+        f'<a class="chip" href="{esc(href)}">{esc(label)}</a>' for label, href in chips
+    )
+    return f'<nav class="product-keywords" aria-label="Từ khóa">{links}</nav>'
+
+
+def product_copy_html(ma: str) -> str:
+    text = verified_long_text(ma)
+    if not text:
+        return '<p class="product-tab-empty">Chưa có mô tả chi tiết đã xác minh.</p>'
+    rec = _DESCRIPTION_BY_MA.get(str(ma or "")) or {}
+    url = str(rec.get("nguon_url") or "").strip()
+    return (
+        f'<p class="product-detail-desc">{esc(text)}</p>'
+        f'<p class="product-desc-source">Nguồn: '
+        f'<a href="{esc(url)}" target="_blank" rel="noopener noreferrer">{esc(url)}</a></p>'
+    )
+
+
+def product_tabs_html(specs_html: str, ma: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", str(ma or "sp").lower()).strip("-") or "sp"
+    info = specs_html or '<p class="product-tab-empty">Chưa có thông tin từ danh mục.</p>'
+    return f"""<div class="product-tabs" data-product-tabs>
+              <div class="product-tablist" role="tablist" aria-label="Nội dung sản phẩm">
+                <button type="button" class="product-tab is-active" role="tab" id="tab-thong-tin-{slug}" data-tab="thong-tin" aria-selected="true" aria-controls="panel-thong-tin-{slug}">Thông tin</button>
+                <button type="button" class="product-tab" role="tab" id="tab-mo-ta-{slug}" data-tab="mo-ta" aria-selected="false" aria-controls="panel-mo-ta-{slug}" tabindex="-1">Mô tả</button>
+              </div>
+              <div class="product-tab-panel" role="tabpanel" id="panel-thong-tin-{slug}" data-panel="thong-tin" aria-labelledby="tab-thong-tin-{slug}">
+                <h2 class="product-tab-fallback">Thông tin</h2>
+                {info}
+              </div>
+              <div class="product-tab-panel" role="tabpanel" id="panel-mo-ta-{slug}" data-panel="mo-ta" aria-labelledby="tab-mo-ta-{slug}">
+                <h2 class="product-tab-fallback">Mô tả</h2>
+                {product_copy_html(ma)}
+              </div>
+            </div>"""
+
+
 def build_product_page(
     product: dict,
     groups: list[str],
@@ -1333,6 +1449,8 @@ def build_product_page(
     src = image_src(product)
     badge = badge_text(product, ia)
     specs_html = product_specs_html(product, ia, cat_file, brand)
+    chips_html = keyword_chips_html(product, ia, cat_file, brand)
+    tabs_html = product_tabs_html(specs_html, str(product.get("ma") or ""))
     vat_html = ""
     if priced and str(VAT_NOTE).strip():
         vat_html = f'\n            <p class="product-vat-note">{esc(str(VAT_NOTE).strip())}</p>'
@@ -1342,12 +1460,14 @@ def build_product_page(
             card_html(p, p["_file"], files.get(p.get("nhom"), cat_file), badge_text(p, ia)) for p in related
         )
         related_html = f"""
-        <div class="section-header" style="margin-top:2.5rem">
-          <span class="eyebrow">Cùng nhóm</span>
-          <h2>Sản phẩm {esc(nhom)} khác</h2>
-        </div>
-        <div class="product-grid">
+        <div class="product-related">
+          <div class="section-header">
+            <span class="eyebrow">Cùng nhóm</span>
+            <h2>Sản phẩm liên quan</h2>
+          </div>
+          <div class="product-grid">
 {cards}
+          </div>
         </div>"""
     body = f"""    <section class="section product-page">
       <div class="container">
@@ -1367,9 +1487,9 @@ def build_product_page(
           <div class="product-body product-detail-info">
             <div class="product-badge"><a href="{esc(cat_file)}">{esc(badge)}</a></div>
             <h1 class="product-detail-title">{esc(product.get('ten'))}</h1>
-            {specs_html}
             <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>{vat_html}
-            <p class="product-detail-desc">{esc(_DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product))}</p>
+            {chips_html}
+            {tabs_html}
             <p class="product-detail-note">{esc("Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng." if priced else "Liên hệ báo giá qua hotline hoặc Zalo. Giá chưa niêm yết trên web.")}</p>
             <div class="product-actions">
               <div class="qty-control">
@@ -1892,6 +2012,48 @@ def assert_seo_helpers() -> None:
             raise SystemExit(f"brand mismatch: {name!r} -> {got!r}, expected {expected!r}")
     if derive_brand("Vạn Phát văn phòng phẩm"):
         raise SystemExit("company name must not be used as product brand")
+    kept = normalize_description_record(
+        {
+            "mo_ta": "Kim bấm 24/6, hộp 1000 kim.",
+            "nguon_url": "https://example.com/stapler",
+            "trang_thai": "da_xac_minh",
+        }
+    )
+    if kept.get("trang_thai") != "da_xac_minh" or "1000 kim" not in kept.get("mo_ta", ""):
+        raise SystemExit("a sourced description must be kept")
+    dropped = normalize_description_record("Dùng để viết hoặc châm mực cho đồ dùng văn phòng.")
+    if dropped.get("mo_ta") or dropped.get("trang_thai") != "cho_xac_minh" or dropped.get("nguon_url"):
+        raise SystemExit("old filler strings must become an empty waiting record")
+    filler = normalize_description_record(
+        {
+            "mo_ta": "Dùng để viết hoặc châm mực cho đồ dùng văn phòng.",
+            "nguon_url": "https://example.com/pen",
+            "trang_thai": "da_xac_minh",
+        }
+    )
+    if filler.get("mo_ta") or filler.get("trang_thai") != "cho_xac_minh":
+        raise SystemExit("filler must not stay verified even with a URL")
+    unsourced = normalize_description_record(
+        {"mo_ta": "Câu không có nguồn.", "nguon_url": "", "trang_thai": "da_xac_minh"}
+    )
+    if unsourced.get("mo_ta"):
+        raise SystemExit("long text without a source must be dropped")
+    global _DESCRIPTION_BY_MA
+    previous_descriptions = _DESCRIPTION_BY_MA
+    _DESCRIPTION_BY_MA = {"VPTEST": kept}
+    try:
+        if verified_long_text("VPTEST") != kept["mo_ta"] or verified_long_text("VP007"):
+            raise SystemExit("verified long text leaked or dropped")
+        seo = product_seo_description(
+            {"ma": "VPNONE", "ten": "Bấm kim đại", "gia": 0, "dvt": "Cái"},
+            "Dụng cụ VP",
+        )
+        if "Phù hợp cho văn phòng" in seo or "Dùng để viết" in seo:
+            raise SystemExit(f"meta description still has filler: {seo}")
+        if "Bấm kim đại" not in seo or "Liên hệ báo giá" not in seo:
+            raise SystemExit(f"meta description dropped catalog facts: {seo}")
+    finally:
+        _DESCRIPTION_BY_MA = previous_descriptions
     title = product_seo_title("Gôm", "Dụng cụ VP")
     if title != "Gôm | Dụng cụ VP Nha Trang":
         raise SystemExit(f"title mismatch: {title!r}")
@@ -2108,9 +2270,36 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("VP206 category links missing")
     if not VAT_NOTE.strip() and "product-vat-note" in vp206_html:
         raise SystemExit("empty VAT_NOTE must not render under a priced SKU")
+    if 'data-product-tabs' not in vp206_html or 'data-tab="thong-tin"' not in vp206_html or 'data-tab="mo-ta"' not in vp206_html:
+        raise SystemExit("VP206 is missing the Thông tin / Mô tả tabs")
+    if 'class="product-related"' not in vp206_html or "Sản phẩm liên quan" not in vp206_html:
+        raise SystemExit("VP206 is missing the related-products block")
+    if 'class="product-keywords"' not in vp206_html:
+        raise SystemExit("VP206 is missing keyword chips")
+    vp206_kw = vp206_html.split('class="product-keywords"', 1)[1].split("</nav>", 1)[0]
+    if "linh-vuc/vpp.html" not in vp206_kw or "nhom-giay.html" not in vp206_kw:
+        raise SystemExit("VP206 keyword chips lost lĩnh vực or nhóm")
+    if "q=IK%20Plus" not in vp206_kw or "q=A4" not in vp206_kw or "q=70%20gsm" not in vp206_kw:
+        raise SystemExit(f"VP206 keyword chips mismatch: {vp206_kw!r}")
+    if "Chưa có mô tả chi tiết đã xác minh." not in vp206_html:
+        raise SystemExit("VP206 should show the empty verified-description state")
+    if "Phù hợp cho văn phòng" in vp206_html or "Dùng để in, photo" in vp206_html:
+        raise SystemExit("VP206 still prints filler copy")
     punch = _specs("VP001")
     if ">A0<" in punch or "A0," in punch or ", A0" in punch or "8 tờ" not in punch or "KW-triO" not in punch:
         raise SystemExit(f"VP001 specs must keep the sheet brand and 8 tờ, without A0: {punch!r}")
+    vp001_html = (ROOT / "san-pham" / by_ma["VP001"]["_file"]).read_text(encoding="utf-8")
+    vp001_kw = vp001_html.split('class="product-keywords"', 1)[1].split("</nav>", 1)[0]
+    if "q=A0" in vp001_kw or ">A0<" in vp001_kw:
+        raise SystemExit(f"VP001 chips must not invent khổ A0: {vp001_kw!r}")
+    staple = (ROOT / "san-pham" / by_ma["VP007"]["_file"]).read_text(encoding="utf-8")
+    if "Dùng để viết hoặc châm mực" in staple or "Phù hợp cho văn phòng" in staple:
+        raise SystemExit("VP007 still describes a stapler with pen filler")
+    if 'data-product-tabs' not in staple or "Chưa có mô tả chi tiết đã xác minh." not in staple:
+        raise SystemExit("VP007 is missing the description tab")
+    staple_rec = _DESCRIPTION_BY_MA.get("VP007") or {}
+    if staple_rec.get("mo_ta") or staple_rec.get("trang_thai") != "cho_xac_minh":
+        raise SystemExit(f"VP007 description must wait for a source: {staple_rec!r}")
 
     paper = by_ma["VP204"]
     paper_node = _product_node(_load_ld(ROOT / "san-pham" / paper["_file"]))
@@ -2252,11 +2441,33 @@ def assert_generated_seo(products: list[dict]) -> None:
     missing = sorted(published - in_sitemap)
     if missing:
         raise SystemExit(f"published SKUs missing from the sitemap: {missing[:10]}")
-    paper_desc = _DESCRIPTION_BY_MA.get("VP204") or ""
-    if "Double A" not in paper_desc or "A4" not in paper_desc or "70 gsm" not in paper_desc:
-        raise SystemExit(f"VP204 description dropped name facts: {paper_desc}")
-    if "80 gsm" in paper_desc:
-        raise SystemExit("VP204 description invented a spec")
+    paper_rec = _DESCRIPTION_BY_MA.get("VP204") or {}
+    if (
+        not isinstance(paper_rec, dict)
+        or str(paper_rec.get("mo_ta") or "").strip()
+        or paper_rec.get("trang_thai") != "cho_xac_minh"
+        or str(paper_rec.get("nguon_url") or "").strip()
+    ):
+        raise SystemExit(f"VP204 long description must stay empty until a source exists: {paper_rec!r}")
+    paper_specs_204 = _specs("VP204")
+    if "Double A" not in paper_specs_204 or "A4" not in paper_specs_204 or "70 gsm" not in paper_specs_204:
+        raise SystemExit(f"VP204 specs dropped name facts: {paper_specs_204!r}")
+    if "80 gsm" in paper_specs_204:
+        raise SystemExit("VP204 specs invented 80 gsm")
+    paper_page = (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8")
+    paper_copy = paper_page.split('data-panel="mo-ta"', 1)[1].split("</article>", 1)[0]
+    if "80 gsm" in paper_copy or "Phù hợp cho văn phòng" in paper_copy:
+        raise SystemExit("VP204 description panel invented a spec or filler")
+    for product in products:
+        page = (ROOT / "san-pham" / product["_file"]).read_text(encoding="utf-8")
+        for phrase in DESCRIPTION_FILLER:
+            if phrase in page:
+                raise SystemExit(f"{product.get('ma')} still prints filler: {phrase}")
+        rec = _DESCRIPTION_BY_MA.get(str(product.get("ma") or ""))
+        if not isinstance(rec, dict) or rec.get("trang_thai") not in {"da_xac_minh", "cho_xac_minh"}:
+            raise SystemExit(f"{product.get('ma')} description record is invalid: {rec!r}")
+        if str(rec.get("mo_ta") or "").strip() and not verified_long_text(str(product.get("ma") or "")):
+            raise SystemExit(f"{product.get('ma')} has long text without a usable source")
     for rel in ("san-pham.html", "thu-ngo.html"):
         doc = _load_ld(ROOT / rel)
         types = [node.get("@type") for node in doc.get("@graph") or []]
@@ -2294,17 +2505,6 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("linh-vuc/vpp.html lost group ItemList")
 
 
-NHOM_USE = {
-    "Giấy": "Dùng để in, photo và lưu hồ sơ văn phòng.",
-    "Bìa Hồ Sơ": "Dùng để đựng và phân loại tài liệu.",
-    "Bút & Mực": "Dùng để viết hoặc châm mực cho đồ dùng văn phòng.",
-    "Băng Keo": "Dùng để dán thùng, tem và đồ văn phòng.",
-    "Dụng cụ VP": "Đồ dùng trên bàn làm việc.",
-    "Điện": "Thiết bị điện nhỏ cho bàn làm việc.",
-    "Nước uống": "Đồ uống cho văn phòng và khách.",
-    "Bánh": "Đồ ăn nhẹ cho văn phòng.",
-    "Khác": "Mặt hàng khác đang bán tại cửa hàng.",
-}
 QUY_CACH_RE = re.compile(
     r"(?i)\d+(?:[.,]\d+)?\s*[x×]\s*\d+(?:[.,]\d+)?\s*(?:mm|cm|m)\b"
     r"|(?:khổ\s*)?\b(?:A[0-6]|F4)\b"
@@ -2339,78 +2539,42 @@ def fold_text(value: str) -> str:
     return re.sub(r"\s+", " ", s)
 
 
-def compose_product_description(product: dict) -> str:
-    """Unique copy from the product name and nhóm. Specs are quoted from the name only."""
-    name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
-    group = re.sub(r"\s+", " ", str(product.get("nhom") or "")).strip() or "hàng hóa"
-    bits = quy_cach_tokens(name)
-    parts = [f"{name} thuộc nhóm {group}."]
-    stated = stated_brand(product)
-    brand = stated or derive_brand(name)
-    if stated:
-        parts.append(f"Thương hiệu: {stated}.")
-    elif brand:
-        parts.append(f"Hãng ghi trên tên: {brand}.")
-    if bits:
-        parts.append("Quy cách lấy từ tên: " + ", ".join(bits) + ".")
-    unit = re.sub(r"\s+", " ", str(product.get("dvt") or "")).strip()
-    if unit:
-        parts.append(f"Đơn vị tính: {unit}.")
-    parts.append(NHOM_USE.get(group, "Đang bán tại cửa hàng Vạn Phát."))
-    parts.append(
-        "Phù hợp cho văn phòng, cơ quan và cửa hàng tại Nha Trang, Khánh Hòa. "
-        "Liên hệ để giao hàng tại Nha Trang."
-    )
-    return " ".join(parts)
-
-
-FALSE_PLASTIC_SENTENCE = "Hãng ghi trên tên: Plastic."
-
-
-def correct_false_plastic_sentence(text: str, product: dict) -> str:
-    """Replace the false Plastic brand. Sheet Thương Hiệu is the replacement.
-
-    VP456–VP459 have a blank Thương Hiệu, so the sentence is removed. The
-    column is the only source; this does not invent Pilot for those SKUs.
-    """
-    if FALSE_PLASTIC_SENTENCE not in text:
-        return text
-    stated = stated_brand(product)
-    if stated:
-        return text.replace(FALSE_PLASTIC_SENTENCE, f"Thương hiệu: {stated}.", 1)
-    cleaned = text.replace(" " + FALSE_PLASTIC_SENTENCE, "", 1)
-    if FALSE_PLASTIC_SENTENCE in cleaned:
-        cleaned = cleaned.replace(FALSE_PLASTIC_SENTENCE, "", 1)
-    return re.sub(r"[ \t]{2,}", " ", cleaned).strip()
+def normalize_description_record(raw) -> dict:
+    """Chuỗi cũ hoặc bản ghi không đủ nguồn thì về chờ xác minh, mô tả để trống."""
+    empty = {"mo_ta": "", "nguon_url": "", "trang_thai": "cho_xac_minh"}
+    if not isinstance(raw, dict):
+        return dict(empty)
+    status = str(raw.get("trang_thai") or "").strip()
+    url = str(raw.get("nguon_url") or "").strip()
+    text = re.sub(r"\s+", " ", str(raw.get("mo_ta") or "")).strip()
+    if (
+        status == "da_xac_minh"
+        and text
+        and url.startswith(("http://", "https://"))
+        and not description_has_filler(text)
+    ):
+        return {"mo_ta": text, "nguon_url": url, "trang_thai": "da_xac_minh"}
+    return dict(empty)
 
 
 def sync_descriptions(products: list[dict]) -> None:
     global _DESCRIPTION_BY_MA
-    stored: dict[str, str] = {}
+    loaded: dict = {}
     if DESCRIPTIONS_PATH.is_file():
-        loaded = json.loads(DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
-        if isinstance(loaded, dict):
-            stored = {str(k): v for k, v in loaded.items() if isinstance(v, str)}
-    changed = not DESCRIPTIONS_PATH.is_file()
+        raw = json.loads(DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            loaded = raw
+    ordered: dict[str, dict] = {}
     for product in products:
-        ma = str(product.get("ma") or "")
+        ma = str(product.get("ma") or "").strip()
         if not ma:
             continue
-        current = stored.get(ma, "")
-        if not current.strip():
-            stored[ma] = compose_product_description(product)
-            changed = True
-            continue
-        fixed = correct_false_plastic_sentence(current, product)
-        if fixed != current:
-            stored[ma] = fixed
-            changed = True
-    ordered = {ma: stored[ma] for ma in sorted(stored) if stored[ma].strip()}
-    if changed or list(stored) != list(ordered):
-        DESCRIPTIONS_PATH.write_text(
-            json.dumps(ordered, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
+        ordered[ma] = normalize_description_record(loaded.get(ma))
+    ordered = {ma: ordered[ma] for ma in sorted(ordered)}
+    payload = json.dumps(ordered, ensure_ascii=False, indent=2) + "\n"
+    current = DESCRIPTIONS_PATH.read_text(encoding="utf-8") if DESCRIPTIONS_PATH.is_file() else ""
+    if current != payload:
+        DESCRIPTIONS_PATH.write_text(payload, encoding="utf-8")
     _DESCRIPTION_BY_MA = ordered
 
 
@@ -2878,6 +3042,12 @@ def main() -> None:
                 "branded": branded,
                 "title_max": max(title_lens) if title_lens else 0,
                 "titles_over_65": sum(1 for n in title_lens if n > TITLE_TARGET),
+                "mo_ta_da_xac_minh": [
+                    ma
+                    for ma, rec in _DESCRIPTION_BY_MA.items()
+                    if verified_long_text(ma)
+                    and isinstance(rec, dict)
+                ],
             },
             ensure_ascii=False,
         )

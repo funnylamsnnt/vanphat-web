@@ -602,6 +602,38 @@
     if (window.VanPhatCart && window.VanPhatCart.render) window.VanPhatCart.render();
   }
 
+  function initProductTabs() {
+    document.querySelectorAll("[data-product-tabs]").forEach((root) => {
+      const tabs = Array.from(root.querySelectorAll("[data-tab]"));
+      const panels = Array.from(root.querySelectorAll("[data-panel]"));
+      if (!tabs.length || !panels.length) return;
+      function select(name) {
+        tabs.forEach((tab) => {
+          const on = tab.getAttribute("data-tab") === name;
+          tab.classList.toggle("is-active", on);
+          tab.setAttribute("aria-selected", on ? "true" : "false");
+          tab.tabIndex = on ? 0 : -1;
+        });
+        panels.forEach((panel) => {
+          panel.hidden = panel.getAttribute("data-panel") !== name;
+        });
+      }
+      root.classList.add("is-ready");
+      select("thong-tin");
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => select(tab.getAttribute("data-tab")));
+        tab.addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          const step = event.key === "ArrowRight" ? 1 : -1;
+          const next = tabs[(index + step + tabs.length) % tabs.length];
+          next.focus();
+          select(next.getAttribute("data-tab"));
+        });
+      });
+    });
+  }
+
   function focusSiteSearch() {
     if (location.hash !== "#tim") return;
     const input = document.querySelector(".nav-search input");
@@ -659,6 +691,7 @@
     window.addEventListener("resize", syncChromeOffset);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncChromeOffset);
     initTabBar();
+    initProductTabs();
     showInstallBanner();
     focusSiteSearch();
     openCartFromShortcut();
