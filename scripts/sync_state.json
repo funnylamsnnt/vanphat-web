@@ -151,11 +151,10 @@
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "pendingBridge": {
-    "sourceModifiedTime": "2026-10-16T17:54:59.891Z",
-    "reason": "executor has no browser; bridge Import→Replace not run tonight (Google sign-in reported missing)",
+    "sourceModifiedTime": "2026-10-16T23:56:58.810Z",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "expectedRows": 495,
-    "note": "lastModifiedTime kept so next run retries bridge"
+    "reason": "no browser / Google sign-in; Import→Replace not run"
   },
   "webSync_20261016_1414": {
     "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
@@ -216,5 +215,46 @@
     "broken_image": [
       "VP493 Drive image 404 (not public)"
     ]
+  },
+  "webSync_20261017_0657": {
+    "sourceModifiedTime": "2026-10-16T23:56:58.810Z",
+    "commit": "3681de1aa750d25fe6be056891a588608988ea3b",
+    "pages_run": 38984140226,
+    "pages_status": "success",
+    "count": 461,
+    "source_count": 495,
+    "price_chg": [
+      [
+        "VP198",
+        128000,
+        138000
+      ],
+      [
+        "VP199",
+        116000,
+        128000
+      ],
+      [
+        "VP201",
+        215000,
+        130000
+      ],
+      [
+        "VP202",
+        124000,
+        126000
+      ],
+      [
+        "VP203",
+        130000,
+        138000
+      ],
+      [
+        "VP209",
+        63000,
+        65000
+      ]
+    ],
+    "zeroPrice_count": 21
   }
 }
