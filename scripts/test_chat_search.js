@@ -456,6 +456,57 @@ function testZeroPriceQuote(search, catalog, api) {
   }
 }
 
+function withoutSkuCards(html) {
+  return String(html || "").replace(/<article class="vp-chat-sku">[\s\S]*?<\/article>/g, "");
+}
+
+function testQuotePriceSkuLine(api, catalog) {
+  const byMa = {};
+  (catalog.sanpham || []).forEach((p) => {
+    if (p && p.ma) byMa[p.ma] = p;
+  });
+  const priced = ["VP111", "VP076"].map((ma) => byMa[ma]);
+  const quote = byMa.VP123;
+  if (priced.some((p) => !p || !p.ten) || !quote || !quote.ten) {
+    fail("thiếu VP111, VP076 hoặc VP123 trong catalog để test dòng Liên hệ báo giá");
+    return;
+  }
+  const index = api.buildCatalogIndex(catalog);
+  ["Liên hệ báo giá", "lien he bao gia", "LIÊN HỆ BÁO GIÁ"].forEach((label) => {
+    const lines = priced.map((p) => p.ten + " · " + p.ma + " · 12.000đ");
+    lines.push(quote.ten + " · " + quote.ma + " · " + label);
+    lines.push("[[SP:" + priced.map((p) => p.ma).concat(quote.ma).join(",") + "]]");
+    const html = api.renderBotHtml(lines.join("\n"), index);
+    const prose = withoutSkuCards(html);
+    const cards = (html.match(/<article class="vp-chat-sku">/g) || []).length;
+    if (cards !== 3) fail("«" + label + "»: muốn 3 thẻ, được " + cards);
+    [quote.ten, quote.ma, priced[0].ten, priced[0].ma, priced[1].ten, priced[1].ma, "báo giá", "bao gia"].forEach((bit) => {
+      if (bit && prose.toLowerCase().includes(String(bit).toLowerCase())) {
+        fail("«" + label + "»: còn dòng món trong chữ («" + bit + "»)");
+      }
+    });
+  });
+  const kept = api.renderBotHtml(
+    "Nhờ anh liên hệ báo giá giúp em.\n" + quote.ten + " · " + quote.ma + " · Liên hệ báo giá\n[[SP:" + quote.ma + "]]",
+    index
+  );
+  const keptProse = withoutSkuCards(kept);
+  if (!keptProse.toLowerCase().includes("nhờ anh liên hệ báo giá")) {
+    fail("câu không có mã bị xóa: " + keptProse);
+  }
+  if (keptProse.includes(quote.ten) || keptProse.includes(quote.ma)) {
+    fail("dòng VP123 Liên hệ báo giá còn trong chữ");
+  }
+  const outside = api.renderBotHtml(
+    quote.ten + " · " + quote.ma + " · Liên hệ báo giá\n[[SP:VP111]]",
+    index
+  );
+  const outsideProse = withoutSkuCards(outside);
+  if (!outsideProse.includes(quote.ma)) {
+    fail("mã không có trong [[SP:]] vẫn bị xóa khỏi chữ");
+  }
+}
+
 function main() {
   const api = loadSearch();
   const search = api && api.searchCatalogSmart;
@@ -478,6 +529,7 @@ function main() {
   testFallbackFilters(search);
   testFallbackDropsLeadingZeros(search);
   testDecoratePlain(api);
+  testQuotePriceSkuLine(api, catalog);
   if (failures.length) {
     console.error("KHÔNG ĐẠT: " + failures.length + " lỗi");
     failures.forEach((item) => console.error("- " + item));

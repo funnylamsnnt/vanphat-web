@@ -722,9 +722,28 @@
     }, 1600);
   }
 
-  function isPriceOnlyLine(line) {
-    if (!/\d/.test(line || "")) return false;
-    let rest = String(line).replace(
+  // «Liên hệ báo giá» và «lien he bao gia», không phân biệt hoa thường.
+  function quotePriceRe() {
+    return /li[eê]n\s+h[eệ]\s+b[aá]o\s+gi[aá]/giu;
+  }
+
+  function lineMatchesSpCode(line, spCodes) {
+    if (!spCodes || typeof spCodes.has !== "function" || !spCodes.size) return false;
+    const codes = String(line || "").toUpperCase().match(/VP\d+/g);
+    if (!codes) return false;
+    return codes.some((code) => spCodes.has(code));
+  }
+
+  function stripQuotePrice(line, spCodes) {
+    const text = String(line || "");
+    if (!lineMatchesSpCode(text, spCodes)) return text;
+    return text.replace(quotePriceRe(), " ");
+  }
+
+  function isPriceOnlyLine(line, spCodes) {
+    const source = stripQuotePrice(line, spCodes);
+    if (!/\d/.test(source)) return false;
+    let rest = source.replace(
       new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
       " "
     );
@@ -733,7 +752,7 @@
     return !/[A-Za-zÀ-ỹ]/.test(rest);
   }
 
-  function isSkuLine(line, products) {
+  function isSkuLine(line, products, spCodes) {
     if (!products || !products.length) return false;
     let rest = String(line || "");
     products.forEach((product) => {
@@ -742,6 +761,7 @@
       const unit = String(product.dvt || "").trim();
       if (unit) rest = rest.replace(new RegExp("\\/?\\s*" + escapeRegExp(unit), "ig"), " ");
     });
+    if (lineMatchesSpCode(line, spCodes)) rest = rest.replace(quotePriceRe(), " ");
     rest = rest.replace(
       new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
       " "
@@ -772,7 +792,7 @@
     return '<div class="vp-turn vp-turn-bot">' + html + "</div>";
   }
 
-  function composeTurn(clean, products, index) {
+  function composeTurn(clean, products, index, spCodes) {
     const allowed = new Map();
     (products || []).forEach((product) => {
       const ma = String((product && product.ma) || "").toUpperCase();
@@ -809,9 +829,9 @@
         prose.push(line);
         return;
       }
-      if (lastWasSku && isPriceOnlyLine(line)) return;
+      if (lastWasSku && isPriceOnlyLine(line, spCodes)) return;
       const found = mentionsIn(line, index);
-      if (found.length && isSkuLine(line, found)) {
+      if (found.length && isSkuLine(line, found, spCodes)) {
         flushProse();
         found.forEach(emit);
         lastWasSku = true;
@@ -838,12 +858,13 @@
   function renderBotHtml(text, index, products) {
     let clean = String(text || "");
     let list = products;
+    const spCodes = new Set(extractSp(clean).tagged);
     if (!list) {
       const parsed = parseBotReply(clean, index);
       clean = parsed.clean;
       list = parsed.products;
     }
-    return composeTurn(clean, list, index);
+    return composeTurn(clean, list, index, spCodes);
   }
 
   function pagePrefix() {
