@@ -284,10 +284,14 @@ function testDecoratePlain(api) {
       fail("decoratePlain còn giá 0 trong «" + sample + "»: " + html);
     }
   });
-  ["từ 0 đến 5", "có 0 đơn", "0 đơn", "0 đầu", "20đ"].forEach((sample) => {
+  ["từ 0 đến 5", "có 0 đơn", "0 đơn", "0 đơn hàng", "0 đầu", "20đ"].forEach((sample) => {
     const html = decorate(sample);
     if (html !== sample) fail("decoratePlain đổi nhầm «" + sample + "»: " + html);
   });
+  const range = decorate("từ 15.000 đến 20.000đ");
+  if (!range.includes("15.000 đến") || !range.includes("20.000đ") || range.includes("Liên hệ báo giá")) {
+    fail("decoratePlain nuốt «đ» của «đến»: " + range);
+  }
   const priced = decorate("10.000đ");
   if (!priced.includes("10.000đ") || priced.includes("Liên hệ báo giá")) {
     fail("decoratePlain đụng 10.000đ: " + priced);

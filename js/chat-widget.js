@@ -500,12 +500,15 @@
     return (match ? match[1] : String(raw || "")) + "đ";
   }
 
+  // Đơn vị tiền phải hết từ. \p{L} gồm chữ có dấu: «đ» của «đơn», «đến», «đầu» không phải ₫.
+  // scrubZeroPrice không nhận «d» trần. Regex giá có dấu ngăn nghìn thì có.
+  const PRICE_UNIT_TAIL = "(?![\\p{L}\\d])";
+
   // Chỉ số 0 đứng riêng kèm đơn vị tiền («0đ», «0 ₫», «0 VNĐ», «0 đồng»).
-  // Lookahead chặn mọi chữ cái Unicode: «0 đến», «0 đơn», «0 đầu» giữ nguyên.
-  // Không đụng «10.000đ» hay «20đ».
+  // «0 đơn hàng», «từ 0 đến 5», «0 đầu» giữ nguyên. Không đụng «10.000đ» hay «20đ».
   function scrubZeroPrice(text) {
     return String(text || "").replace(
-      /(^|[^\d.,])0(\s*)(đồng|vnđ|vnd|đ|₫)(?![\p{L}\d])/giu,
+      new RegExp("(^|[^\\d.,])0(\\s*)(?:đồng|vnđ|vnd|đ|₫)" + PRICE_UNIT_TAIL, "giu"),
       function (_full, lead) {
         return lead + "Liên hệ báo giá";
       }
@@ -515,7 +518,7 @@
   function decoratePlain(text) {
     if (!text) return "";
     text = scrubZeroPrice(text);
-    const priceRe = /(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi;
+    const priceRe = new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu");
     let html = "";
     let cursor = 0;
     let priceMatch;
@@ -721,7 +724,10 @@
 
   function isPriceOnlyLine(line) {
     if (!/\d/.test(line || "")) return false;
-    let rest = String(line).replace(/(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi, " ");
+    let rest = String(line).replace(
+      new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
+      " "
+    );
     rest = rest.replace(/\/[^\s,;:]{1,16}/g, " ");
     rest = rest.replace(/[0-9\s\-–—:.,;•*|/()[\]₫đĐd]+/g, " ");
     return !/[A-Za-zÀ-ỹ]/.test(rest);
@@ -736,7 +742,10 @@
       const unit = String(product.dvt || "").trim();
       if (unit) rest = rest.replace(new RegExp("\\/?\\s*" + escapeRegExp(unit), "ig"), " ");
     });
-    rest = rest.replace(/(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi, " ");
+    rest = rest.replace(
+      new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
+      " "
+    );
     rest = rest.replace(/\/[^\s,;:]{1,16}/g, " ");
     rest = rest.replace(/\b(mã|ma|giá|gia|đvt|dvt)\b/gi, " ");
     rest = rest.replace(/[0-9\s\-–—:.,;•*|/()[\]₫đĐd]+/g, " ");
