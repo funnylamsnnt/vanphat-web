@@ -304,7 +304,7 @@
 
   function suggestPrice(product) {
     const amount = Number(product.gia);
-    if (!(amount > 0)) return "Liên hệ";
+    if (!(amount > 0)) return "Liên hệ báo giá";
     if (window.VanPhat && window.VanPhat.formatPrice) return window.VanPhat.formatPrice(amount);
     return String(amount);
   }

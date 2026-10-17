@@ -130,7 +130,7 @@
     const cards = items
       .map((item) => {
         const amount = Number(item.gia);
-        const price = amount > 0 ? window.VanPhat.formatPrice(amount) : "Liên hệ";
+        const price = amount > 0 ? window.VanPhat.formatPrice(amount) : "Liên hệ báo giá";
         const src = window.VanPhat.driveImage(item.anh, 240, true) || window.VanPhat.placeholderSvg();
         return `<a class="recent-card" href="${escText(item.href)}">
           <img src="${escText(src)}" alt="" width="148" height="110" loading="lazy" />
