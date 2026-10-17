@@ -75,19 +75,29 @@
       .replace(/đ/g, "d");
   }
 
-  // Từ hỏi chung, không mang nghĩa sản phẩm. Bỏ ra trước khi so khớp.
+  // Từ hỏi chung, so nguyên từ CÒN DẤU rồi mới bỏ dấu để so tên hàng.
+  // Không có dạng không dấu: «chi/anh/ban/the/con» nuốt chì, ảnh, bàn, thẻ, con.
+  // Không chặn «là, hộp, cuộn, gói» — đó là tên hàng (bàn là, hộp, cuộn, gói).
   const STOPWORDS = new Set(
     (
-      "gia bao nhieu co khong ko k ban cho em anh chi a oi nhe nha minh toi can mua lay " +
-      "loai nao hang shop cua voi va la duoc dc gi the con hok hong ben ha vay sao " +
-      "muon xin hoi tim kiem san pham sp cai chiec cuon hop goi"
-    ).split(" ")
+      "giá bao nhiêu có không ko bán cho em anh chị ơi nhé nha mình tôi cần mua lấy " +
+      "loại nào hàng shop của với và được dc gì thế còn hok hông bên hả vậy sao " +
+      "muốn xin hỏi tìm kiếm sản phẩm sp cái chiếc"
+    ).split(/\s+/)
   );
 
   function queryTokens(query) {
-    return norm(query)
-      .split(/[^a-z0-9]+/)
-      .filter((t) => t && t.length >= 2 && !STOPWORDS.has(t));
+    const words = String(query || "")
+      .toLowerCase()
+      .match(/[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+/g);
+    if (!words) return [];
+    const kept = [];
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
+      if (w.length < 2 || STOPWORDS.has(w)) continue;
+      kept.push(norm(w));
+    }
+    return kept;
   }
 
   // Chỉ sản phẩm thuộc nhóm và lĩnh vực đang hiện trên web (nhóm «Không đưa lên web» đã bị gỡ khỏi products.json; lọc thêm cho chắc).
@@ -167,7 +177,19 @@
     }
 
     const altMax = Math.min(4, max);
-    let picked = [];
+    const picked = [];
+    // Bỏ món gần trùng (cùng 3 từ đầu, ví dụ chỉ khác màu) và món chưa có giá, để gợi ý đa dạng và báo giá được.
+    const seen = new Set();
+    const add = (p) => {
+      const key = norm(p.ten)
+        .split(/[^a-z0-9]+/)
+        .filter(Boolean)
+        .slice(0, 3)
+        .join(" ");
+      if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
+      seen.add(key);
+      picked.push(p);
+    };
     if (partial.length) {
       partial.sort(byScore);
       // Nhóm mạnh nhất trong các món khớp một phần.
@@ -176,23 +198,16 @@
         groupScore[x.p.nhom] = (groupScore[x.p.nhom] || 0) + x.score;
       });
       const bestGroup = Object.keys(groupScore).sort((a, b) => groupScore[b] - groupScore[a])[0];
-      // Bỏ món gần trùng (cùng 3 từ đầu, ví dụ chỉ khác màu) và món chưa có giá, để gợi ý đa dạng và báo giá được.
-      const seen = new Set();
-      const add = (p) => {
-        const key = norm(p.ten).split(/[^a-z0-9]+/).filter(Boolean).slice(0, 3).join(" ");
-        if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
-        seen.add(key);
-        picked.push(p);
-      };
       partial.filter((x) => x.p.nhom === bestGroup).forEach((x) => add(x.p));
       if (picked.length < 2) partial.forEach((x) => add(x.p));
     }
     if (!picked.length && Array.isArray(catalog && catalog.nhom)) {
-      // Không từ nào khớp tên: thử mô tả nhóm, lấy món đầu nhóm đó.
+      // Không từ nào khớp tên: thử mô tả nhóm, rồi cùng luật giá và gần trùng với nhánh trên.
       let best = null;
       let bestScore = 0;
       catalog.nhom.forEach((g) => {
         if (!g || g.visible === false) return;
+        if (/không đưa lên web/i.test(String(g.TenNhom || ""))) return;
         const gw = new Set(norm(g.TenNhom + " " + (g.moTa || "")).split(/[^a-z0-9]+/).filter(Boolean));
         let sc = 0;
         tokens.forEach((t) => {
@@ -204,7 +219,7 @@
         }
       });
       if (best) {
-        picked = products.filter((p) => p.nhomId === best.id || p.nhom === best.TenNhom).slice(0, altMax);
+        products.filter((p) => p.nhomId === best.id || p.nhom === best.TenNhom).forEach(add);
       }
     }
     if (!picked.length) return { mode: "none", items: [] };
