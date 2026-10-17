@@ -2,7 +2,7 @@
    Catalog phát hành (data/products.json, trang HTML) đã loại nhóm «Không đưa lên web».
    Không tải nguồn khác. Có mạng: giá và catalog là network-first, không trả bản cũ.
    Mất mạng: dùng đúng bản đã lưu. Bản SW mới tự kích hoạt, không cần khách bấm. */
-const VERSION = "2026101721";
+const VERSION = "2026101725";
 const SHELL = "vp-shell-" + VERSION;
 const PAGES = "vp-pages-" + VERSION;
 const IMAGES = "vp-img-" + VERSION;

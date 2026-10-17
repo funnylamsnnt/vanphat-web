@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101721"
+CSS_V = "2026101725"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
@@ -63,6 +63,10 @@ ORG_ID = f"{SITE}/#organization"
 # insert the google-site-verification meta on the homepage and every other page.
 # An empty string omits the tag.
 GOOGLE_SITE_VERIFICATION = "lyjjIzdcmnmzSuzgiR2wFDZt0k5mxWQpp75Gn40XFFE"
+
+# Ghi chú thuế in dưới giá khi SKU có giá. Chuỗi rỗng = không hiện.
+# Chưa điền câu: chữ chờ anh Hà duyệt. Không tự viết thuế, vận chuyển hay đổi trả.
+VAT_NOTE = ""
 
 # Public profile URLs (Facebook page, Zalo OA, Google Maps place). Leave empty
 # until the owner supplies them — do not invent profiles.
@@ -235,6 +239,25 @@ def cart_control(product: dict) -> str:
             f'target="_blank" rel="noopener">Chat Zalo</a>'
         )
     return '<button type="button" class="btn btn-add-cart" data-add-cart>Thêm vào giỏ</button>'
+
+
+def display_unit(value) -> str:
+    """Đơn vị tính khi in: hoa chữ đầu, phần còn lại giữ nguyên. Rỗng thì chuỗi rỗng."""
+    unit = re.sub(r"\s+", " ", str(value or "")).strip()
+    if not unit:
+        return ""
+    return unit[:1].upper() + unit[1:]
+
+
+def format_price_line(product: dict) -> str:
+    """Giá kèm đơn vị khi có giá. Không có giá thì chỉ câu liên hệ, không gắn đơn vị."""
+    if price_amount(product.get("gia")) is None:
+        return CONTACT_PRICE
+    price = format_price(product.get("gia"))
+    unit = display_unit(product.get("dvt"))
+    if not unit:
+        return price
+    return f"{price} / {unit}"
 
 
 def availability_iri(product: dict) -> str | None:
@@ -459,6 +482,11 @@ def offer_node(product: dict, canonical: str) -> dict | None:
         "url": canonical,
         "priceCurrency": "VND",
         "price": str(amount),
+        "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": str(amount),
+            "priceCurrency": "VND",
+        },
         "seller": {"@id": ORG_ID},
     }
     avail = availability_iri(product)
@@ -1205,6 +1233,37 @@ def build_linh_vuc_page(lv: dict, ia: dict, by_group: dict, cat_files: dict) -> 
     )
 
 
+def product_specs_html(product: dict, ia: dict, cat_file: str, brand: str | None) -> str:
+    """Khối thông tin dưới H1. Dòng nào không có dữ liệu thì bỏ cả dòng."""
+    rows: list[str] = []
+    ma = str(product.get("ma") or "").strip()
+    if ma:
+        rows.append(f"<div><dt>Mã SP</dt><dd>{esc(ma)}</dd></div>")
+    nhom = str(product.get("nhom") or "").strip()
+    lv = ia["lv_by_id"].get(product.get("linhVucId") or "") or lv_for_nhom(nhom, ia)
+    cat_parts: list[str] = []
+    if lv and str(lv.get("ten") or "").strip() and lv.get("slug"):
+        cat_parts.append(
+            f'<a href="../linh-vuc/{esc(lv["slug"])}.html">{esc(lv.get("ten"))}</a>'
+        )
+    if nhom:
+        href = cat_file or "../san-pham.html"
+        cat_parts.append(f'<a href="{esc(href)}">{esc(nhom)}</a>')
+    if cat_parts:
+        rows.append(f"<div><dt>Danh mục</dt><dd>{' › '.join(cat_parts)}</dd></div>")
+    if brand:
+        rows.append(f"<div><dt>Thương hiệu</dt><dd>{esc(brand)}</dd></div>")
+    quy_cach = quy_cach_text(product)
+    if quy_cach:
+        rows.append(f"<div><dt>Quy cách</dt><dd>{esc(quy_cach)}</dd></div>")
+    unit = display_unit(product.get("dvt"))
+    if unit:
+        rows.append(f"<div><dt>Đơn vị tính</dt><dd>{esc(unit)}</dd></div>")
+    if not rows:
+        return ""
+    return '<dl class="product-specs">' + "".join(rows) + "</dl>"
+
+
 def build_product_page(
     product: dict,
     groups: list[str],
@@ -1219,7 +1278,7 @@ def build_product_page(
     cat_file = files.get(nhom, "")
     lv = ia["lv_by_id"].get(product.get("linhVucId") or "") or lv_for_nhom(nhom, ia)
     priced = price_amount(product.get("gia")) is not None
-    price = format_price(product.get("gia"))
+    price = format_price_line(product)
     description = product_seo_description(product, nhom)
     ten = str(product.get("ten") or product.get("ma") or "Sản phẩm")
     code = None
@@ -1255,6 +1314,15 @@ def build_product_page(
     brand = product_brand(product)
     if brand:
         product_ld["brand"] = {"@type": "Brand", "name": brand}
+    props = []
+    quy_cach = quy_cach_text(product)
+    if quy_cach:
+        props.append({"@type": "PropertyValue", "name": "Quy cách", "value": quy_cach})
+    unit_label = display_unit(product.get("dvt"))
+    if unit_label:
+        props.append({"@type": "PropertyValue", "name": "Đơn vị tính", "value": unit_label})
+    if props:
+        product_ld["additionalProperty"] = props
     offer = offer_node(product, canonical)
     if offer:
         product_ld["offers"] = offer
@@ -1264,6 +1332,10 @@ def build_product_page(
     }
     src = image_src(product)
     badge = badge_text(product, ia)
+    specs_html = product_specs_html(product, ia, cat_file, brand)
+    vat_html = ""
+    if priced and str(VAT_NOTE).strip():
+        vat_html = f'\n            <p class="product-vat-note">{esc(str(VAT_NOTE).strip())}</p>'
     related_html = ""
     if related:
         cards = "\n".join(
@@ -1295,10 +1367,8 @@ def build_product_page(
           <div class="product-body product-detail-info">
             <div class="product-badge"><a href="{esc(cat_file)}">{esc(badge)}</a></div>
             <h1 class="product-detail-title">{esc(product.get('ten'))}</h1>
-            <div class="product-meta-row">
-              {detail_meta_html(product)}
-            </div>
-            <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>
+            {specs_html}
+            <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>{vat_html}
             <p class="product-detail-desc">{esc(_DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product))}</p>
             <p class="product-detail-note">{esc("Giá niêm yết trên web. Thêm vào giỏ để chốt đơn, hoặc gọi hotline nếu cần báo giá số lượng." if priced else "Liên hệ báo giá qua hotline hoặc Zalo. Giá chưa niêm yết trên web.")}</p>
             <div class="product-actions">
@@ -1805,6 +1875,9 @@ def assert_seo_helpers() -> None:
         "Nẹp Acco nhựa UNI": "Acco",
         "Kệ hồ sơ 2 tầng Mica": None,
         "Giấy ép plastic A4 80mic": None,
+        "Giấy ép plastic A5 80mic (100 tờ/xấp)": None,
+        "Giấy ép plastic A3 80mic (100 tờ/xấp)": None,
+        "Ép plastic 150mic - Bằng Lái": None,
         "Bút bi Plastic BP-1RT-F": None,
     }
     if product_brand({"ten": "Bút bi Plastic BP-1RT-F", "thuongHieu": " Pilot "}) != "Pilot":
@@ -1888,6 +1961,30 @@ def assert_seo_helpers() -> None:
         raise SystemExit("hero lead pin is not idempotent")
     if pinned.count(", ") != 3:
         raise SystemExit("hero lead must keep one space after each comma")
+    quy_cach_cases = {
+        "Bấm 1 lổ Kwtrio 97A0 (8 tờ)": ["8 tờ"],
+        "Phiếu thu 2 liên 13x19cm": ["13x19cm"],
+        "Phiếu thu 3 liên 13x19cm": ["13x19cm"],
+        "Giấy ghi chú màu vàng có keo dán (76x127mm)": ["76x127mm"],
+        "Bảng Trắng Mica 80x120cm": ["80x120cm"],
+        "Giấy A4 70 gsm IK plus": ["A4", "70 gsm"],
+    }
+    for name, expected in quy_cach_cases.items():
+        got = quy_cach_tokens(name)
+        if got != expected:
+            raise SystemExit(f"quy cách mismatch: {name!r} -> {got!r}, expected {expected!r}")
+    if any(token.upper() == "A0" for token in quy_cach_tokens("Bấm 1 lổ Kwtrio 97A0 (8 tờ)")):
+        raise SystemExit("97A0 must not yield quy cách A0")
+    if quy_cach_text({"ten": "Giấy ép plastic A5 80mic (100 tờ/xấp)", "quyCach": "100 tờ/xấp"}) != "100 tờ/xấp":
+        raise SystemExit("filled quyCach must be copied as written, without name tokens")
+    if quy_cach_text({"ten": "Giấy A4 70 gsm IK plus", "quyCach": ""}) != "A4, 70 gsm":
+        raise SystemExit("blank quyCach must fall back to name tokens")
+    if format_price_line({"gia": 69000, "dvt": "Ram"}) != "69.000 ₫ / Ram":
+        raise SystemExit("price line mismatch")
+    if format_price_line({"gia": 0, "dvt": "Cuộn"}) != CONTACT_PRICE:
+        raise SystemExit("unpriced line must stay the contact label, without a unit")
+    if display_unit("cái") != "Cái" or display_unit("Ram") != "Ram" or display_unit("  ") != "":
+        raise SystemExit("display unit mismatch")
     assert_local_titles_do_not_collide()
 
 
@@ -1963,6 +2060,14 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("VP035 should omit offers and show Liên hệ báo giá")
     if "Khánh Hòa" not in zero_text:
         raise SystemExit("VP035 description missing Khánh Hòa")
+    zero_price_html = zero_text.split('class="product-price"', 1)[1].split("</div>", 1)[0]
+    if CONTACT_PRICE not in zero_price_html or " / " in zero_price_html or "Cuộn" in zero_price_html:
+        raise SystemExit(f"VP035 price must be the contact label without a unit: {zero_price_html!r}")
+    if "priceSpecification" in zero_node or "valueAddedTaxIncluded" in zero_text or "product-vat-note" in zero_text:
+        raise SystemExit("VP035 must not emit an offer, a tax flag, or a tax note")
+    zero_actions = zero_text.split('class="product-actions"', 1)[1].split('class="product-detail-cta"', 1)[0]
+    if "Thêm vào giỏ" in zero_actions or "Chat Zalo" not in zero_actions:
+        raise SystemExit("VP035 must open Zalo instead of add-to-cart")
 
     lavie = _product_node(_load_ld(ROOT / "san-pham" / by_ma["VP332"]["_file"]))
     if (lavie.get("brand") or {}).get("name") != "La Vie":
@@ -1972,6 +2077,40 @@ def assert_generated_seo(products: list[dict]) -> None:
     lavie_url = f"{SITE}/san-pham/{by_ma['VP332']['_file']}"
     if lavie.get("url") != lavie_url or lavie.get("@id") != lavie_url + "#product":
         raise SystemExit(f"Lavie Product.url/@id missing: {lavie.get('url')} {lavie.get('@id')}")
+    lavie_props = {item.get("name"): item.get("value") for item in lavie.get("additionalProperty") or []}
+    if lavie_props.get("Đơn vị tính") != "Chai" or "350ml" not in str(lavie_props.get("Quy cách") or ""):
+        raise SystemExit(f"Lavie additionalProperty mismatch: {lavie_props!r}")
+    lavie_spec = (lavie.get("offers") or {}).get("priceSpecification") or {}
+    if (
+        lavie_spec.get("@type") != "UnitPriceSpecification"
+        or lavie_spec.get("price") != "5000"
+        or lavie_spec.get("priceCurrency") != "VND"
+        or "valueAddedTaxIncluded" in lavie_spec
+    ):
+        raise SystemExit(f"Lavie priceSpecification mismatch: {lavie_spec!r}")
+    if "aggregateRating" in lavie or "review" in lavie:
+        raise SystemExit("product schema must not add rating or review")
+    lavie_html = (ROOT / "san-pham" / by_ma["VP332"]["_file"]).read_text(encoding="utf-8")
+    if "5.000 ₫ / Chai" not in lavie_html or 'class="product-specs"' not in lavie_html:
+        raise SystemExit("VP332 page is missing the spec list or the unit price")
+
+    def _specs(ma: str) -> str:
+        page = (ROOT / "san-pham" / by_ma[ma]["_file"]).read_text(encoding="utf-8")
+        return page.split('class="product-specs"', 1)[1].split("</dl>", 1)[0]
+
+    vp206_html = (ROOT / "san-pham" / by_ma["VP206"]["_file"]).read_text(encoding="utf-8")
+    paper_specs = _specs("VP206")
+    if "69.000 ₫ / Ram" not in vp206_html or "Thêm vào giỏ" not in vp206_html:
+        raise SystemExit("VP206 price must include the unit and keep add-to-cart")
+    if "IK Plus" not in paper_specs or "A4" not in paper_specs or "70 gsm" not in paper_specs:
+        raise SystemExit(f"VP206 specs mismatch: {paper_specs!r}")
+    if 'href="../linh-vuc/vpp.html"' not in paper_specs or "nhom-giay.html" not in paper_specs:
+        raise SystemExit("VP206 category links missing")
+    if not VAT_NOTE.strip() and "product-vat-note" in vp206_html:
+        raise SystemExit("empty VAT_NOTE must not render under a priced SKU")
+    punch = _specs("VP001")
+    if ">A0<" in punch or "A0," in punch or ", A0" in punch or "8 tờ" not in punch or "KW-triO" not in punch:
+        raise SystemExit(f"VP001 specs must keep the sheet brand and 8 tờ, without A0: {punch!r}")
 
     paper = by_ma["VP204"]
     paper_node = _product_node(_load_ld(ROOT / "san-pham" / paper["_file"]))
@@ -1990,20 +2129,18 @@ def assert_generated_seo(products: list[dict]) -> None:
     if "Hãng ghi trên tên: Plastic" in film_text or '"name":"Plastic"' in film_text:
         raise SystemExit("VP456 still brands the film as Plastic")
 
-    def sku_meta(ma: str) -> str:
-        page = (ROOT / "san-pham" / by_ma[ma]["_file"]).read_text(encoding="utf-8")
-        detail = page.split('class="product-card product-detail"', 1)[1].split("</article>", 1)[0]
-        return detail.split("product-meta-row", 1)[1].split("</div>", 1)[0]
-
-    pilot_meta = sku_meta("VP111")
-    if "Thương hiệu: Pilot" not in pilot_meta or "Quy cách: 12 cây/hộp" not in pilot_meta:
-        raise SystemExit(f"VP111 meta should sit next to ĐVT: {pilot_meta}")
-    film_meta = sku_meta("VP456")
-    if "Quy cách: 100 tờ/xấp" not in film_meta or "Thương hiệu:" in film_meta:
-        raise SystemExit(f"VP456 should show quy cách only: {film_meta}")
-    bare_meta = sku_meta("VP459")
-    if "Thương hiệu:" in bare_meta or "Quy cách:" in bare_meta:
-        raise SystemExit(f"VP459 has blank sheet cells and must omit both labels: {bare_meta}")
+    pilot_specs = _specs("VP111")
+    if "Pilot" not in pilot_specs or "12 cây/hộp" not in pilot_specs or "Plastic" in pilot_specs:
+        raise SystemExit(f"VP111 specs must follow the sheet, not the Plastic name: {pilot_specs!r}")
+    film_props = {item.get("name"): item.get("value") for item in film.get("additionalProperty") or []}
+    if film_props.get("Quy cách") != "100 tờ/xấp":
+        raise SystemExit(f"VP456 additionalProperty must copy cột Quy Cách: {film_props!r}")
+    film_specs = _specs("VP456")
+    if "100 tờ/xấp" not in film_specs or "A5" in film_specs or "Thương hiệu" in film_specs:
+        raise SystemExit(f"VP456 specs must show the sheet quy cách only: {film_specs!r}")
+    bare_specs = _specs("VP459")
+    if "Thương hiệu" in bare_specs or "Quy cách" in bare_specs:
+        raise SystemExit(f"VP459 blank sheet cells must omit both rows: {bare_specs!r}")
     offer = paper_node.get("offers") or {}
     if int(paper.get("ton") or 0) > 0 and offer.get("availability") != "https://schema.org/InStock":
         raise SystemExit(f"in-stock availability missing on VP204: {offer.get('availability')}")
@@ -2169,11 +2306,30 @@ NHOM_USE = {
     "Khác": "Mặt hàng khác đang bán tại cửa hàng.",
 }
 QUY_CACH_RE = re.compile(
-    r"(?i)(?:khổ\s*)?(?:A[0-6]|F4)"
-    r"|\d+(?:[.,]\d+)?\s*(?:ml|mm|cm|gsm|kg)"
+    r"(?i)\d+(?:[.,]\d+)?\s*[x×]\s*\d+(?:[.,]\d+)?\s*(?:mm|cm|m)\b"
+    r"|(?:khổ\s*)?\b(?:A[0-6]|F4)\b"
+    r"|\d+(?:[.,]\d+)?\s*(?:ml|mm|cm|gsm|kg)\b"
     r"|\d+(?:[.,]\d+)?\s*m\b"
     r"|\d+\s*(?:cái|cây|cuộn|ram|tờ|lá|hộp|viên|lỗ)(?:\s*/\s*(?:hộp|cây|ram|bộ))?"
 )
+
+
+def quy_cach_tokens(name: str) -> list[str]:
+    """Token quy cách có trong tên. Không suy ra thông số ngoài tên."""
+    bits: list[str] = []
+    for match in QUY_CACH_RE.finditer(str(name or "")):
+        token = re.sub(r"\s+", " ", match.group(0)).strip()
+        if token and token not in bits:
+            bits.append(token)
+    return bits
+
+
+def quy_cach_text(product: dict) -> str:
+    """Cột Quy Cách khi có chữ. Chỉ đọc tên khi cột đó trống."""
+    stated = re.sub(r"\s+", " ", str((product or {}).get("quyCach") or "")).strip()
+    if stated:
+        return stated
+    return ", ".join(quy_cach_tokens(str((product or {}).get("ten") or "")))
 
 
 def fold_text(value: str) -> str:
@@ -2187,11 +2343,7 @@ def compose_product_description(product: dict) -> str:
     """Unique copy from the product name and nhóm. Specs are quoted from the name only."""
     name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
     group = re.sub(r"\s+", " ", str(product.get("nhom") or "")).strip() or "hàng hóa"
-    bits = []
-    for match in QUY_CACH_RE.finditer(name):
-        token = re.sub(r"\s+", " ", match.group(0)).strip()
-        if token and token not in bits:
-            bits.append(token)
+    bits = quy_cach_tokens(name)
     parts = [f"{name} thuộc nhóm {group}."]
     stated = stated_brand(product)
     brand = stated or derive_brand(name)

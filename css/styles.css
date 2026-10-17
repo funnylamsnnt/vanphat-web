@@ -3008,6 +3008,28 @@ body.lightbox-open { overflow: hidden; }
 .breadcrumb-light { color: rgba(255,255,255,0.78); }
 .breadcrumb-light a { color: var(--gold-light); font-weight: 600; }
 .breadcrumb a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
+  .product-page .breadcrumb {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .product-page .breadcrumb > a,
+  .product-page .breadcrumb > span[aria-hidden="true"] {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .product-page .breadcrumb > span[aria-current="page"] {
+    flex: 0 1 auto;
+    min-width: 2.5rem;
+    max-width: 46%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 
 .catalog-group-links { margin-top: 1rem; }
 .catalog-static-groups { margin-bottom: 0.5rem; }
@@ -3039,11 +3061,50 @@ body.lightbox-open { overflow: hidden; }
   box-shadow: var(--shadow);
 }
 .product-detail:hover .product-img img { transform: none; }
-@media (min-width: 800px) {
+@media (min-width: 769px) {
   .product-detail {
     grid-template-columns: minmax(240px, 420px) 1fr;
     align-items: start;
   }
+}
+.product-detail-info { min-width: 0; }
+.product-specs {
+  display: grid;
+  gap: 0.28rem;
+  margin: 0.2rem 0 0.85rem;
+}
+.product-specs > div {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.25rem) minmax(0, 1fr);
+  gap: 0.15rem 0.75rem;
+  align-items: baseline;
+  padding-bottom: 0.28rem;
+  border-bottom: 1px solid var(--border);
+}
+.product-specs dt {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.product-specs dd {
+  margin: 0;
+  color: var(--navy-deep);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  min-width: 0;
+}
+.product-specs a {
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration: none;
+}
+.product-specs a:hover { text-decoration: underline; }
+.product-vat-note {
+  margin: -0.2rem 0 0.7rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
 }
 .product-detail-title {
   font-size: clamp(1.35rem, 2.4vw, 1.85rem);
