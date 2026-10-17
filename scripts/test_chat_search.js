@@ -271,7 +271,7 @@ function testDecoratePlain(api) {
     fail("decoratePlain không gắn lên window.VanPhatChatFormat");
     return;
   }
-  const samples = ["Giá 0đ", "0 đ", "0 ₫", "0 VNĐ", "0 đồng", "còn 0₫."];
+  const samples = ["Giá 0đ", "0 đ", "0 ₫", "0 VNĐ", "0 vnđ", "0 đồng", "0 Đồng", "0 ĐỒNG", "còn 0₫."];
   samples.forEach((sample) => {
     const html = decorate(sample);
     if (!html.includes("Liên hệ báo giá")) fail("decoratePlain chưa đổi «" + sample + "»: " + html);
@@ -279,6 +279,14 @@ function testDecoratePlain(api) {
       fail("decoratePlain còn giá 0 trong «" + sample + "»: " + html);
     }
   });
+  ["từ 0 đến 5", "có 0 đơn", "0 đơn", "0 đầu", "20đ"].forEach((sample) => {
+    const html = decorate(sample);
+    if (html !== sample) fail("decoratePlain đổi nhầm «" + sample + "»: " + html);
+  });
+  const priced = decorate("10.000đ");
+  if (!priced.includes("10.000đ") || priced.includes("Liên hệ báo giá")) {
+    fail("decoratePlain đụng 10.000đ: " + priced);
+  }
   const kept = decorate("Còn 10.000đ và 20đ, không phải 0đ.");
   if (!kept.includes("10.000đ") || !kept.includes("20đ")) {
     fail("decoratePlain đụng giá khác 0: " + kept);

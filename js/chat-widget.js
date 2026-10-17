@@ -407,10 +407,12 @@
     return (match ? match[1] : String(raw || "")) + "đ";
   }
 
-  // Chỉ số 0 đứng riêng («0đ», «0 ₫», «0 VNĐ»). Không đụng «10.000đ» hay «20đ».
+  // Chỉ số 0 đứng riêng kèm đơn vị tiền («0đ», «0 ₫», «0 VNĐ», «0 đồng»).
+  // Lookahead chặn mọi chữ cái Unicode: «0 đến», «0 đơn», «0 đầu» giữ nguyên.
+  // Không đụng «10.000đ» hay «20đ».
   function scrubZeroPrice(text) {
     return String(text || "").replace(
-      /(^|[^\d.,])0(\s*)(đồng|vnđ|vnd|đ|₫)(?![a-z0-9])/gi,
+      /(^|[^\d.,])0(\s*)(đồng|vnđ|vnd|đ|₫)(?![\p{L}\d])/giu,
       function (_full, lead) {
         return lead + "Liên hệ báo giá";
       }
