@@ -2,8 +2,8 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-15T17:07:58.210Z",
-  "previousModifiedTime": "2026-10-15T06:13:53.738Z",
+  "lastModifiedTime": "2026-10-17T02:22:10.498Z",
+  "previousModifiedTime": "2026-10-15T17:07:58.210Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
@@ -146,12 +146,12 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-17T01:20:00Z",
-  "lastCheckResult": "source unchanged (2026-10-16T23:56:58.810Z) web already deployed; bridge STILL PENDING: box Chrome ERR_CONNECTION_CLOSED on all sites (box-doctor all PASS, curl OK), 2 computerUse attempts + Chrome relaunch failed",
+  "lastCheckAt": "2026-10-17T02:25:00Z",
+  "lastCheckResult": "web deployed 94d1f44",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "pendingBridge": {
-    "sourceModifiedTime": "2026-10-16T23:56:58.810Z",
+    "sourceModifiedTime": "2026-10-17T02:22:10.498Z",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "expectedRows": 495,
     "reason": "no browser / Google sign-in; Import→Replace not run",
@@ -258,5 +258,59 @@
       ]
     ],
     "zeroPrice_count": 21
+  },
+  "webSync_20261017_0916": {
+    "sourceModifiedTime": "2026-10-17T02:16:01.652Z",
+    "commit": "8976df5b1c931140fed580d011eebc6e655e6615",
+    "pages_run": 38994299913,
+    "pages_status": "success",
+    "count": 461,
+    "source_count": 495,
+    "price_chg": [
+      [
+        "VP352",
+        6500,
+        7000
+      ],
+      [
+        "VP354",
+        8000,
+        9000
+      ],
+      [
+        "VP356",
+        6500,
+        7000
+      ]
+    ],
+    "slug_chg": [
+      "VP492 235ml->320ml"
+    ],
+    "zeroPrice_count": 21,
+    "live_check": "products.json live == local; VP492 new 200 old 404; VP415 404; 3 linh-vuc 200",
+    "note": "VP477 Excel=11000 (reverted from 10000 set 08:33); web shows 11000",
+    "bridge": "pending (no browser)"
+  },
+  "webSync_20261017_0922": {
+    "sourceModifiedTime": "2026-10-17T02:22:10.498Z",
+    "driveVersion": "1089 (upload; metadata reads 1090 after)",
+    "md5": "fb0a0b8e49c0bee9e9ddf04efd456c9a",
+    "commit": "94d1f44bc70a5e3ee3873649749eb643f6182cb6",
+    "pages_run": 38994717491,
+    "pages_status": "success",
+    "count": 461,
+    "source_count": 495,
+    "price_chg": [
+      [
+        "VP477",
+        11000,
+        10000
+      ]
+    ],
+    "slug_chg": [],
+    "zeroPrice_count": 21,
+    "live_check": "products.json live == local; VP477 gia 10000; VP477 page 200 shows 10.000 ₫ + schema price 10000; VP415 404; 3 linh-vuc 200",
+    "note": "VP477 10000 confirmed by anh Hà 09:2x 17/10",
+    "bridge": "pending (no browser)"
   }
 }
