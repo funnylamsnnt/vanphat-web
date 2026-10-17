@@ -25,6 +25,13 @@ var FALLBACK_MODEL_DEFAULT = 'grok-4-1-fast-non-reasoning';
 var NON_REASONING_MAX_TOKENS = 450;
 var REASONING_MAX_OUTPUT_TOKENS = 700;
 
+// Ngân sách thời gian. Widget bỏ chờ ở 25s; Apps Script chạy quá ~30s thì link echo sau 302 hỏng,
+// curl/fetch rơi về doGet (JSON ping) hoặc 404. UrlFetchApp không có tham số timeout,
+// nên chỉ chặn được bằng cách KHÔNG gọi lần hai khi đã tốn nhiều thời gian.
+var CHAT_BUDGET_MS = 22000; // trần cho cả lượt chat, dưới 25s của widget
+var FALLBACK_MIN_LEFT_MS = 12000; // còn ít hơn mức này thì bỏ dự phòng, trả HELP_TEXT ngay
+var GLOBAL_LOCK_WAIT_MS = 1000;
+
 var HOTLINE_TEXT = '033 5652 832';
 var ZALO_URL = 'https://zalo.me/0335652832';
 var HELP_TEXT =
@@ -94,6 +101,7 @@ function doPost(e) {
 }
 
 function handleChat_(body) {
+  var startedAt = Date.now();
   var message = String(body.message || '').trim();
   if (!message) return jsonOut_({ ok: false, error: 'Thiếu message' });
   if (message.length > 2000) return jsonOut_({ ok: false, error: 'Tin nhắn quá dài' });
@@ -105,16 +113,21 @@ function handleChat_(body) {
     return jsonOut_({ ok: true, reply: LIMIT_TEXT, degraded: true, limited: true });
   }
 
-  var result = callGrokWithFallback_(message, history, catalogContext);
-  if (!result.text) {
-    return jsonOut_({ ok: true, reply: HELP_TEXT, degraded: true });
+  var result = callGrokWithFallback_(message, history, catalogContext, startedAt);
+  var timing = result.timing || {};
+  timing.totalMs = Date.now() - startedAt;
+  timing.emptyCatalog = !String(catalogContext || '').trim();
+  console.log('vp-chat timing ' + JSON.stringify(timing));
+  if (!result.text || result.text === HELP_TEXT) {
+    return jsonOut_({ ok: true, reply: HELP_TEXT, degraded: true, timing: timing });
   }
   var needLead = result.text.indexOf('[[LEAD]]') !== -1;
   return jsonOut_({
     ok: true,
     reply: result.text,
     model: result.model,
-    needLead: needLead
+    needLead: needLead,
+    timing: timing
   });
 }
 
@@ -171,10 +184,12 @@ function getLeadSheet_() {
   return sh;
 }
 
-function callGrokWithFallback_(message, history, catalogContext) {
+function callGrokWithFallback_(message, history, catalogContext, startedAt) {
+  var t0 = startedAt || Date.now();
+  var timing = { prepMs: 0, primaryMs: 0, fallbackMs: 0, primaryError: '', fallbackSkipped: '' };
   var props = PropertiesService.getScriptProperties();
   var apiKey = props.getProperty('XAI_API_KEY');
-  if (!apiKey) return { text: HELP_TEXT, model: '' };
+  if (!apiKey) return { text: HELP_TEXT, model: '', timing: timing };
 
   var systemPrompt = props.getProperty('SYSTEM_PROMPT') || DEFAULT_SYSTEM_PROMPT;
   var primary = String(props.getProperty('PRIMARY_MODEL') || PRIMARY_MODEL_DEFAULT).trim();
@@ -190,22 +205,33 @@ function callGrokWithFallback_(message, history, catalogContext) {
     '\n\nCâu khách:\n' +
     message;
 
+  timing.prepMs = Date.now() - t0;
+  var tp = Date.now();
   try {
-    return {
-      text: generateContent_(apiKey, primary, systemPrompt, userPayload, history),
-      model: primary
-    };
+    var text1 = generateContent_(apiKey, primary, systemPrompt, userPayload, history);
+    timing.primaryMs = Date.now() - tp;
+    return { text: text1, model: primary, timing: timing };
   } catch (err1) {
+    timing.primaryMs = Date.now() - tp;
+    timing.primaryError = String((err1 && err1.message) || err1).slice(0, 40);
     if (!fallback || !isClearGrokFailure_(err1)) {
-      return { text: HELP_TEXT, model: '' };
+      timing.fallbackSkipped = 'not-eligible';
+      return { text: HELP_TEXT, model: '', timing: timing };
     }
+    var left = CHAT_BUDGET_MS - (Date.now() - t0);
+    if (left < FALLBACK_MIN_LEFT_MS) {
+      // Gọi thêm một lượt sẽ vượt 25s của widget và ~30s của Apps Script. Trả hotline ngay.
+      timing.fallbackSkipped = 'budget';
+      return { text: HELP_TEXT, model: '', timing: timing };
+    }
+    var tf = Date.now();
     try {
-      return {
-        text: generateContent_(apiKey, fallback, systemPrompt, userPayload, history),
-        model: fallback
-      };
+      var text2 = generateContent_(apiKey, fallback, systemPrompt, userPayload, history);
+      timing.fallbackMs = Date.now() - tf;
+      return { text: text2, model: fallback, timing: timing };
     } catch (err2) {
-      return { text: HELP_TEXT, model: '' };
+      timing.fallbackMs = Date.now() - tf;
+      return { text: HELP_TEXT, model: '', timing: timing };
     }
   }
 }
@@ -360,7 +386,7 @@ function bumpCache_(key, limit, ttl) {
 function bumpGlobalDay_(day, cap) {
   var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(3000);
+    lock.waitLock(GLOBAL_LOCK_WAIT_MS);
   } catch (err) {
     return true;
   }
