@@ -21,10 +21,9 @@ function loadSearch() {
   };
   vm.createContext(sandbox);
   vm.runInContext(code, sandbox, { filename: "js/chat-widget.js" });
-  const fn =
-    sandbox.window.VanPhatChatFormat && sandbox.window.VanPhatChatFormat.searchCatalogSmart;
-  if (typeof fn !== "function") fail("searchCatalogSmart không gắn lên window.VanPhatChatFormat");
-  return fn;
+  const api = sandbox.window.VanPhatChatFormat || {};
+  if (typeof api.searchCatalogSmart !== "function") fail("searchCatalogSmart không gắn lên window.VanPhatChatFormat");
+  return api;
 }
 
 function loadCatalog() {
@@ -227,8 +226,33 @@ function testFallbackFilters(search) {
   assertNoZero(result, "gợi ý theo mô tả nhóm");
 }
 
+function zeroDong(text) {
+  return /(^|[^0-9.])0\s*đ/.test(String(text || ""));
+}
+
+function testZeroPriceQuote(search, catalog, api) {
+  const found = search(catalog, "giấy in ảnh", 8);
+  ["match", "alt"].forEach((mode) => {
+    const block = api.formatCatalogBlock(found.items, mode);
+    if (!block.includes("Liên hệ báo giá")) fail("khối " + mode + " giá 0 thiếu «Liên hệ báo giá»");
+    if (zeroDong(block) || /giá web:\s*0(?!\d)/.test(block)) fail("khối " + mode + " còn báo 0đ");
+  });
+  const index = api.buildCatalogIndex(catalog);
+  const html = api.renderBotHtml("[[SP:VP239]]", index);
+  if (!html.includes("Liên hệ báo giá")) fail("thẻ chat VP239 thiếu «Liên hệ báo giá»");
+  if (zeroDong(html)) fail("thẻ chat VP239 còn 0đ");
+  const blank = api.formatCatalogBlock(
+    [{ ma: "Z9", ten: "Món chưa giá", nhom: "Điện", dvt: "Cái", gia: "" }],
+    "match"
+  );
+  if (!blank.includes("Liên hệ báo giá") || zeroDong(blank) || /giá web:\s*0(?!\d)/.test(blank)) {
+    fail("giá trống chưa thành Liên hệ báo giá");
+  }
+}
+
 function main() {
-  const search = loadSearch();
+  const api = loadSearch();
+  const search = api && api.searchCatalogSmart;
   if (!search) {
     console.error("KHÔNG ĐẠT: " + failures.join("\n"));
     process.exit(1);
@@ -240,6 +264,7 @@ function main() {
   testIron(search, catalog, "bàn ủi");
   testBinder(search, catalog);
   testQuestionOnly(search, catalog);
+  testZeroPriceQuote(search, catalog, api);
   testIronWhenStocked(search);
   testFallbackFilters(search);
   if (failures.length) {
