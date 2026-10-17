@@ -46,3 +46,7 @@ Nội dung này nằm ở `.cursor/rules/phoi-hop-bot.mdc`, mục «Tự học v
 
 ## 4. Cách dùng trong Cursor
 Lưu file này vào `.cursor/rules/quy-tac-giao-tiep.mdc` (thêm frontmatter `alwaysApply: true`) hoặc dán vào Cursor Settings > Rules > User Rules để áp dụng cho mọi Project.
+
+## 5. Đăng nhập (anh Hà giao 17/10/2026)
+- Bot nào bị đăng xuất phải gửi anh Hà màn hình đăng nhập ngay, không để việc bị ngắt quãng.
+- Connector thì gửi thẻ xác thực; trang web thì mở trang đăng nhập trên máy Bot và nhờ anh nhập.
