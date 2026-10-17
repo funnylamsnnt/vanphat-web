@@ -26,6 +26,8 @@ Bot vận hành chỉ chạy script, không tự sửa code. Cursor nhận việ
 
 Mỗi loại dữ liệu một nguồn chuẩn, mỗi nguồn chỉ một bot được ghi. Bot khác thấy sai thì nhắn bot chủ, không tự sửa. Ktra Seo Catolog thấy web lệch Excel thì báo QL Kiot, kèm mã VP, giá web và giá Excel.
 
+Văn mô tả sản phẩm: `.cursor/rules/mo-ta-san-pham.mdc`.
+
 ## Mỗi việc một PR
 
 Một việc, một PR. Cursor không push thẳng `main` và không tự merge. Ranh giới còn lại (bí mật, `CNAME`, form đặt hàng đã gỡ) ở `.cursor/rules/ranh-gioi-repo.mdc`.
@@ -54,5 +56,6 @@ Không chép lại. Làm đúng file sau:
 - SEO kỹ thuật: `.cursor/rules/seo-ky-thuat.mdc`
 - Ranh giới repo: `.cursor/rules/ranh-gioi-repo.mdc`
 - Giọng với anh Hà: `.cursor/rules/quy-tac-giao-tiep.mdc`. File `.cursor/rules/giao-tiep.mdc` chỉ trỏ tới đó.
+- Mô tả sản phẩm: `.cursor/rules/mo-ta-san-pham.mdc`.
 
 Sơ đồ ngắn: `docs/so-do-phoi-hop.md`. Tài liệu đầy đủ nằm trên máy chung của các bot; Cursor không truy cập được file đó: `/workspace/sodo/so-do-va-mo-hinh-hoat-dong-van-phat.docx`.
