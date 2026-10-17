@@ -2,7 +2,7 @@
    Catalog phát hành (data/products.json, trang HTML) đã loại nhóm «Không đưa lên web».
    Không tải nguồn khác. Có mạng: giá và catalog là network-first, không trả bản cũ.
    Mất mạng: dùng đúng bản đã lưu. Bản SW mới tự kích hoạt, không cần khách bấm. */
-const VERSION = "2026101719";
+const VERSION = "2026101721";
 const SHELL = "vp-shell-" + VERSION;
 const PAGES = "vp-pages-" + VERSION;
 const IMAGES = "vp-img-" + VERSION;
@@ -13,9 +13,9 @@ const SHELL_URLS = [
   "/js/main.js?v=" + VERSION,
   "/js/cart.js",
   "/js/catalog-paths.js?v=" + VERSION,
-  "/js/ia.js?v=2026101720",
-  "/js/products.js?v=2026101720",
-  "/js/product-lightbox.js?v=2026101401",
+  "/js/ia.js?v=2026101721",
+  "/js/products.js?v=2026101721",
+  "/js/product-lightbox.js?v=2026101721",
   "/js/chat-widget.js?v=2026101309",
   "/assets/icons/icon-192.png",
   "/assets/icons/icon-512.png",
