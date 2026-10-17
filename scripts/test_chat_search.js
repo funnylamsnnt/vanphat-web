@@ -292,6 +292,10 @@ function testDecoratePlain(api) {
   if (!range.includes("15.000 đến") || !range.includes("20.000đ") || range.includes("Liên hệ báo giá")) {
     fail("decoratePlain nuốt «đ» của «đến»: " + range);
   }
+  const bareRange = decorate("từ 1.000 đến 5.000");
+  if (bareRange !== "từ 1.000 đến 5.000") {
+    fail("decoratePlain nuốt chữ đ trong «từ 1.000 đến 5.000»: " + bareRange);
+  }
   const priced = decorate("10.000đ");
   if (!priced.includes("10.000đ") || priced.includes("Liên hệ báo giá")) {
     fail("decoratePlain đụng 10.000đ: " + priced);
