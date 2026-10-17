@@ -1,0 +1,50 @@
+---
+description: Cursor thuộc Bộ phận BOT A.I; bot nào giao việc gì, nguồn dữ liệu, và khi nào squash-merge.
+alwaysApply: true
+---
+
+# Vai trò của Cursor và phối hợp với các bot
+
+## Vị trí
+
+Cursor thuộc Bộ phận BOT A.I của Công ty Vạn Phát (CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT). Giám đốc là anh Lý Lâm Hà. Công ty có năm bộ phận: Phát triển khách hàng, Chăm sóc khách hàng, Quản lý cửa hàng, Hành chính - kế toán, BOT A.I.
+
+Cursor chỉ sửa code và script của web vanphatcompany.vn. Không sửa tay giá hay tên sản phẩm. Không ghi vào Excel gốc, sổ công nợ v7, hay KiotViet.
+
+## Bot giao việc
+
+- Ktra Seo Catolog là đầu mối chính: giao diện, SEO, PWA, Google Business Profile.
+- QL Kiot (CTY VP) giao việc script đồng bộ catalog và bridge Đơn Đặt Hàng.
+- New Bot giao việc chat widget và Apps Script vanphat-chat. Không gắn lại form «Đặt hàng online» đã gỡ; xem `.cursor/rules/ranh-gioi-repo.mdc`.
+- Grok Bot giao các việc web khác.
+
+Bot vận hành chỉ chạy script, không tự sửa code. Cursor nhận việc code qua cloud agent: bot giao việc mô tả việc, Cursor mở đúng một PR cho việc đó.
+
+## Dữ liệu sản phẩm
+
+`data/products.json` và các file dữ liệu catalog khác chỉ đi từ Excel gốc trên Drive, fileId `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`, sheet `Danh Mục Vật Tư`, qua lượt đồng bộ của QL Kiot. Từ 17/10/2026 QL Kiot đảm nhiệm nhánh Excel → web. Cách giữ nguồn và nhóm «Không đưa lên web»: `.cursor/rules/khong-dua-len-web.mdc`.
+
+Mỗi loại dữ liệu một nguồn chuẩn, mỗi nguồn chỉ một bot được ghi. Bot khác thấy sai thì nhắn bot chủ, không tự sửa. Ktra Seo Catolog thấy web lệch Excel thì báo QL Kiot, kèm mã VP, giá web và giá Excel.
+
+## Mỗi việc một PR
+
+Một việc, một PR. Cursor không push thẳng `main` và không tự merge. Ranh giới còn lại (bí mật, `CNAME`, form đặt hàng đã gỡ) ở `.cursor/rules/ranh-gioi-repo.mdc`.
+
+PR không conflict và CI xanh thì bot giao việc squash-merge. Anh Hà cho phép thường trực việc này từ 14/10/2026. CI đỏ thì Cursor sửa tiếp. Không merge PR đỏ.
+
+Việc luôn cần anh Hà duyệt, bot không tự làm: xác nhận đã thu tiền, hủy hoặc sửa bill, xuất hóa đơn, gửi email hoặc Zalo ra ngoài, xóa dữ liệu, đổi cơ chế mã sản phẩm.
+
+## Quy tắc web đã có
+
+Không chép lại. Làm đúng file sau:
+
+- Ba lĩnh vực L1 → L2 → L3, `data/ia.json`: `.cursor/rules/ia-linh-vuc.mdc`
+- Lightbox mọi ảnh sản phẩm phía khách: `.cursor/rules/product-lightbox.mdc`
+- Nhóm «Không đưa lên web»: `.cursor/rules/khong-dua-len-web.mdc`
+- Tên công ty và địa chỉ LK 19-06 Đường số 20, KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang: `.cursor/rules/thong-tin-cong-ty.mdc`
+- Layout điện thoại và PC: `.cursor/rules/bo-loc-catalog.mdc`
+- SEO kỹ thuật: `.cursor/rules/seo-ky-thuat.mdc`
+- Ranh giới repo: `.cursor/rules/ranh-gioi-repo.mdc`
+- Giọng với anh Hà: `.cursor/rules/giao-tiep.mdc` và `.cursor/rules/quy-tac-giao-tiep.mdc`
+
+Sơ đồ ngắn: `docs/so-do-phoi-hop.md`. Tài liệu đầy đủ nằm trên máy chung của các bot; Cursor không truy cập được file đó: `/workspace/sodo/so-do-va-mo-hinh-hoat-dong-van-phat.docx`.
