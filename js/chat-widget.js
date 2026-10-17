@@ -76,26 +76,70 @@
   }
 
   // Từ hỏi chung, so nguyên từ CÒN DẤU rồi mới bỏ dấu để so tên hàng.
-  // Không có dạng không dấu: «chi/anh/ban/the/con» nuốt chì, ảnh, bàn, thẻ, con.
+  // Không có dạng không dấu từng từ: «chi/anh/ban/the/con» nuốt chì, ảnh, bàn, thẻ, con.
   // Không chặn «là, hộp, cuộn, gói» — đó là tên hàng (bàn là, hộp, cuộn, gói).
   const STOPWORDS = new Set(
     (
       "giá bao nhiêu có không ko bán cho em anh chị ơi nhé nha mình tôi cần mua lấy " +
       "loại nào hàng shop của với và được dc gì thế còn hok hông bên hả vậy sao " +
-      "muốn xin hỏi tìm kiếm sản phẩm sp cái chiếc"
+      "muốn xin hỏi tìm kiếm sản phẩm sp cái chiếc xem coi mã"
     ).split(/\s+/)
   );
 
+  // Cụm không dấu chỉ khi đủ các từ liền nhau. Không lọc «gia», «ban», «chi» đứng một mình.
+  const STOP_PHRASES = [
+    ["gia", "bao", "nhieu"],
+    ["co", "ban", "khong"],
+    ["bao", "nhieu", "tien"],
+    ["thong", "tin"],
+  ];
+
+  // Câu không có đúng tên hàng thì gợi ý lĩnh vực này, không lấy món trùng từ sau khi bỏ dấu.
+  const APPLIANCE_PHRASES = [
+    { words: ["ban", "la"], linhVucId: "dien-gia-dung" },
+    { words: ["ban", "ui"], linhVucId: "dien-gia-dung" },
+    { words: ["noi", "com"], linhVucId: "dien-gia-dung" },
+    { words: ["binh", "dun"], linhVucId: "dien-gia-dung" },
+  ];
+
+  function queryWords(query) {
+    return (
+      String(query || "")
+        .toLowerCase()
+        .match(/[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+/g) || []
+    );
+  }
+
+  function phraseSpans(plain, phrase) {
+    const spans = [];
+    const n = phrase.length;
+    for (let i = 0; i + n <= plain.length; i++) {
+      let ok = true;
+      for (let j = 0; j < n; j++) {
+        if (plain[i + j] !== phrase[j]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) spans.push(i);
+    }
+    return spans;
+  }
+
   function queryTokens(query) {
-    const words = String(query || "")
-      .toLowerCase()
-      .match(/[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+/g);
-    if (!words) return [];
+    const words = queryWords(query);
+    if (!words.length) return [];
+    const plain = words.map(norm);
+    const drop = new Set();
+    STOP_PHRASES.forEach((phrase) => {
+      phraseSpans(plain, phrase).forEach((start) => {
+        for (let j = 0; j < phrase.length; j++) drop.add(start + j);
+      });
+    });
     const kept = [];
     for (let i = 0; i < words.length; i++) {
-      const w = words[i];
-      if (w.length < 2 || STOPWORDS.has(w)) continue;
-      kept.push(norm(w));
+      if (words[i].length < 2 || STOPWORDS.has(words[i]) || drop.has(i)) continue;
+      kept.push(plain[i]);
     }
     return kept;
   }
@@ -136,14 +180,73 @@
     return { ma: p.ma, ten: p.ten, nhom: p.nhom, dvt: p.dvt, gia: p.gia, ton: p.ton };
   }
 
+  function nameWords(ten) {
+    return norm(ten)
+      .split(/[^a-z0-9]+/)
+      .filter(Boolean);
+  }
+
+  function makeAltAdder(picked, seen, altMax) {
+    return function add(p) {
+      const key = nameWords(p.ten).slice(0, 3).join(" ");
+      if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
+      seen.add(key);
+      picked.push(p);
+    };
+  }
+
+  // Cụm điện gia dụng: khớp đúng tên thì giữ cả món giá 0. Không có tên thì gợi ý lĩnh vực, bỏ giá 0.
+  function searchByAppliance(catalog, query, max) {
+    const plain = queryWords(query).map(norm);
+    const hits = APPLIANCE_PHRASES.filter((ph) => phraseSpans(plain, ph.words).length);
+    if (!hits.length) return null;
+    const products = visibleProducts(catalog);
+    const matched = [];
+    products.forEach((p) => {
+      const words = nameWords(p.ten);
+      if (hits.some((ph) => phraseSpans(words, ph.words).length)) matched.push(p);
+    });
+    if (matched.length) {
+      return { mode: "match", items: matched.slice(0, max).map(slimProduct) };
+    }
+    const altMax = Math.min(4, max);
+    const picked = [];
+    const add = makeAltAdder(picked, new Set(), altMax);
+    const lv = hits[0].linhVucId;
+    products.filter((p) => p.linhVucId === lv).forEach(add);
+    if (!picked.length) return { mode: "none", items: [] };
+    return { mode: "alt", items: picked.slice(0, altMax).map(slimProduct) };
+  }
+
   /**
    * Tìm sản phẩm cho câu khách.
    * mode "match": có sản phẩm chứa đủ từ khóa (≤3 từ: đủ cả; ≥4 từ: thiếu tối đa 1).
    * mode "alt":   không khớp đúng, trả 2–4 món gần nhất (từng từ khóa, cùng nhóm, hoặc món đầu nhóm liên quan).
    * mode "none":  không có gì gần.
    */
+  // Mã VP đúng một món đang hiện thì trả ngay, kể cả giá 0. Nhóm ẩn đã bị visibleProducts loại.
+  function searchByCode(catalog, query, max) {
+    const codes = String(query || "").toUpperCase().match(/VP\d+/g);
+    if (!codes) return null;
+    const products = visibleProducts(catalog);
+    const matched = [];
+    const seen = new Set();
+    codes.forEach((code) => {
+      if (seen.has(code)) return;
+      seen.add(code);
+      const hits = products.filter((p) => String(p.ma || "").toUpperCase() === code);
+      if (hits.length === 1) matched.push(hits[0]);
+    });
+    if (!matched.length) return null;
+    return { mode: "match", items: matched.slice(0, max).map(slimProduct) };
+  }
+
   function searchCatalogSmart(catalog, query, limit) {
     const max = limit || 8;
+    const byCode = searchByCode(catalog, query, max);
+    if (byCode) return byCode;
+    const appliance = searchByAppliance(catalog, query, max);
+    if (appliance) return appliance;
     const tokens = queryTokens(query);
     if (!tokens.length) return { mode: "none", items: [] };
     const products = visibleProducts(catalog);
@@ -179,17 +282,7 @@
     const altMax = Math.min(4, max);
     const picked = [];
     // Bỏ món gần trùng (cùng 3 từ đầu, ví dụ chỉ khác màu) và món chưa có giá, để gợi ý đa dạng và báo giá được.
-    const seen = new Set();
-    const add = (p) => {
-      const key = norm(p.ten)
-        .split(/[^a-z0-9]+/)
-        .filter(Boolean)
-        .slice(0, 3)
-        .join(" ");
-      if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
-      seen.add(key);
-      picked.push(p);
-    };
+    const add = makeAltAdder(picked, new Set(), altMax);
     if (partial.length) {
       partial.sort(byScore);
       // Nhóm mạnh nhất trong các món khớp một phần.
@@ -407,12 +500,15 @@
     return (match ? match[1] : String(raw || "")) + "đ";
   }
 
+  // Đơn vị tiền phải hết từ. \p{L} gồm chữ có dấu: «đ» của «đơn», «đến», «đầu» không phải ₫.
+  // scrubZeroPrice không nhận «d» trần. Regex giá có dấu ngăn nghìn thì có.
+  const PRICE_UNIT_TAIL = "(?![\\p{L}\\d])";
+
   // Chỉ số 0 đứng riêng kèm đơn vị tiền («0đ», «0 ₫», «0 VNĐ», «0 đồng»).
-  // Lookahead chặn mọi chữ cái Unicode: «0 đến», «0 đơn», «0 đầu» giữ nguyên.
-  // Không đụng «10.000đ» hay «20đ».
+  // «0 đơn hàng», «từ 0 đến 5», «0 đầu» giữ nguyên. Không đụng «10.000đ» hay «20đ».
   function scrubZeroPrice(text) {
     return String(text || "").replace(
-      /(^|[^\d.,])0(\s*)(đồng|vnđ|vnd|đ|₫)(?![\p{L}\d])/giu,
+      new RegExp("(^|[^\\d.,])0(\\s*)(?:đồng|vnđ|vnd|đ|₫)" + PRICE_UNIT_TAIL, "giu"),
       function (_full, lead) {
         return lead + "Liên hệ báo giá";
       }
@@ -422,7 +518,7 @@
   function decoratePlain(text) {
     if (!text) return "";
     text = scrubZeroPrice(text);
-    const priceRe = /(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi;
+    const priceRe = new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu");
     let html = "";
     let cursor = 0;
     let priceMatch;
@@ -628,7 +724,10 @@
 
   function isPriceOnlyLine(line) {
     if (!/\d/.test(line || "")) return false;
-    let rest = String(line).replace(/(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi, " ");
+    let rest = String(line).replace(
+      new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
+      " "
+    );
     rest = rest.replace(/\/[^\s,;:]{1,16}/g, " ");
     rest = rest.replace(/[0-9\s\-–—:.,;•*|/()[\]₫đĐd]+/g, " ");
     return !/[A-Za-zÀ-ỹ]/.test(rest);
@@ -643,7 +742,10 @@
       const unit = String(product.dvt || "").trim();
       if (unit) rest = rest.replace(new RegExp("\\/?\\s*" + escapeRegExp(unit), "ig"), " ");
     });
-    rest = rest.replace(/(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi, " ");
+    rest = rest.replace(
+      new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
+      " "
+    );
     rest = rest.replace(/\/[^\s,;:]{1,16}/g, " ");
     rest = rest.replace(/\b(mã|ma|giá|gia|đvt|dvt)\b/gi, " ");
     rest = rest.replace(/[0-9\s\-–—:.,;•*|/()[\]₫đĐd]+/g, " ");
