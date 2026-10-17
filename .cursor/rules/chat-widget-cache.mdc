@@ -1,0 +1,14 @@
+---
+description: Widget chat lấy network-first theo pathname; sửa chat-widget.js không cần tăng ?v.
+alwaysApply: true
+---
+
+# Cache widget chat
+
+Service worker khớp `/js/chat-widget.js` theo pathname và bỏ qua query `?v`. Chiến lược là network-first: có mạng thì tải bản mới, timeout khoảng 3 giây thì dùng cache; mất mạng mà đã có cache thì widget vẫn mở.
+
+Sửa `js/chat-widget.js` không cần đổi `CHAT_V` trong `scripts/generate_catalog_pages.py` và không cần đổi `?v` trên các trang HTML.
+
+CSS của khung chat đang nằm trong `css/styles.css` dùng chung, không có file CSS chat riêng, nên file đó vẫn cache-first như shell. Chỉ khi tách một file CSS chat riêng mới đưa pathname đó vào network-first.
+
+Trang HTML, `data/products.json`, ảnh và phần shell còn lại giữ chiến lược hiện tại.

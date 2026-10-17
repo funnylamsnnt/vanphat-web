@@ -1,11 +1,17 @@
 /* Vạn Phát — service worker ở gốc site.
    Catalog phát hành (data/products.json, trang HTML) đã loại nhóm «Không đưa lên web».
    Không tải nguồn khác. Có mạng: giá và catalog là network-first, không trả bản cũ.
-   Mất mạng: dùng đúng bản đã lưu. Bản SW mới tự kích hoạt, không cần khách bấm. */
-const VERSION = "2026101727";
+   Mất mạng: dùng đúng bản đã lưu. Bản SW mới tự kích hoạt, không cần khách bấm.
+   chat-widget.js khớp theo pathname, bỏ qua ?v, network-first (timeout 3 giây).
+   Sửa file đó không cần tăng ?v trên HTML. CSS chat nằm trong styles.css dùng chung,
+   nên vẫn cache-first như phần shell còn lại. */
+const VERSION = "2026101728";
 const SHELL = "vp-shell-" + VERSION;
 const PAGES = "vp-pages-" + VERSION;
 const IMAGES = "vp-img-" + VERSION;
+const CHAT_NETWORK_TIMEOUT_MS = 3000;
+const CHAT_NETWORK_FIRST_PATHS = ["/js/chat-widget.js"];
+const SITE_ORIGIN = "https://vanphatcompany.vn";
 
 const SHELL_URLS = [
   "/manifest.webmanifest",
@@ -71,6 +77,90 @@ function isPriceDocument(url) {
   if (path === "/data/products.json") return true;
   if (path === "/" || path.endsWith("/")) return true;
   return path.endsWith(".html");
+}
+
+function chooseFetchStrategy(input, options) {
+  let url;
+  try {
+    if (typeof input === "string") {
+      url = new URL(input, (options && options.origin) || SITE_ORIGIN);
+    } else {
+      url = new URL(input.href);
+    }
+  } catch (_) {
+    return "bypass";
+  }
+  const site = (options && options.origin) || SITE_ORIGIN;
+  if (url.origin !== site) {
+    if (url.hostname === "lh3.googleusercontent.com") return "image-cache-first";
+    return "bypass";
+  }
+  const path = url.pathname;
+  for (let i = 0; i < CHAT_NETWORK_FIRST_PATHS.length; i += 1) {
+    if (path === CHAT_NETWORK_FIRST_PATHS[i]) return "chat-network-first";
+  }
+  const mode = (options && options.mode) || "";
+  if (mode === "navigate" || isPriceDocument(url)) return "page-network-first";
+  return "shell-cache-first";
+}
+
+function chatCanonicalRequest() {
+  return new Request(new URL("/js/chat-widget.js", self.location.origin).href);
+}
+
+async function readChatCache(cache, request) {
+  const canonical = await cache.match(chatCanonicalRequest());
+  if (canonical) return canonical;
+  return cache.match(request, { ignoreSearch: true });
+}
+
+async function writeChatCache(cache, response) {
+  try {
+    await cache.put(chatCanonicalRequest(), response.clone());
+  } catch (_) {
+    /* phản hồi đổi hướng hoặc không thân không lưu được */
+  }
+}
+
+async function networkFirstChat(request, timeoutMs) {
+  const cache = await caches.open(SHELL);
+  const limit = Number(timeoutMs) > 0 ? Number(timeoutMs) : CHAT_NETWORK_TIMEOUT_MS;
+  const offline = self.navigator && self.navigator.onLine === false;
+  if (!offline) {
+    const controller = typeof AbortController === "function" ? new AbortController() : null;
+    let timer = 0;
+    try {
+      const fresh = await new Promise((resolve, reject) => {
+        timer = setTimeout(() => {
+          if (controller) {
+            try {
+              controller.abort();
+            } catch (_) {}
+          }
+          reject(new Error("timeout"));
+        }, limit);
+        const next = new Request(request, {
+          cache: "no-store",
+          signal: controller ? controller.signal : undefined,
+        });
+        fetch(next).then(resolve, reject);
+      });
+      if (fresh && fresh.ok && !fresh.redirected) {
+        await writeChatCache(cache, fresh);
+        return fresh;
+      }
+      const stale = await readChatCache(cache, request);
+      if (stale) return stale;
+      if (fresh) return fresh;
+    } catch (_) {
+      /* quá 3 giây hoặc mạng đứt — dùng bản đã lưu */
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  const hit = await readChatCache(cache, request);
+  if (hit) return hit;
+  return new Response("", { status: 504, statusText: "Offline" });
 }
 
 async function putFresh(cache, request, response) {
@@ -142,15 +232,29 @@ self.addEventListener("fetch", (event) => {
   } catch (_) {
     return;
   }
-  if (url.origin !== self.location.origin) {
-    if (url.hostname === "lh3.googleusercontent.com") {
-      event.respondWith(cacheFirst(request, IMAGES, true));
-    }
+  const strategy = chooseFetchStrategy(url, {
+    mode: request.mode,
+    origin: self.location.origin,
+  });
+  if (strategy === "image-cache-first") {
+    event.respondWith(cacheFirst(request, IMAGES, true));
     return;
   }
-  if (request.mode === "navigate" || isPriceDocument(url)) {
+  if (strategy === "bypass") return;
+  if (strategy === "chat-network-first") {
+    event.respondWith(networkFirstChat(request));
+    return;
+  }
+  if (strategy === "page-network-first") {
     event.respondWith(networkFirst(request));
     return;
   }
   event.respondWith(cacheFirst(request, SHELL, false));
 });
+
+self.VanPhatSW = {
+  chooseFetchStrategy: chooseFetchStrategy,
+  networkFirstChat: networkFirstChat,
+  CHAT_NETWORK_TIMEOUT_MS: CHAT_NETWORK_TIMEOUT_MS,
+  CHAT_NETWORK_FIRST_PATHS: CHAT_NETWORK_FIRST_PATHS,
+};

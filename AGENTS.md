@@ -84,6 +84,7 @@ Chi tiết nằm ở rule luôn áp dụng. Chỗ đã có file thì làm theo f
 7. Không ghi đè `CNAME`. Không commit bí mật, email cá nhân, tài khoản, fileId cầu nối hay đơn nội bộ, link hệ thống QLVB. Không thêm lại nút hoặc form «Đặt hàng online» / Apps Script đã gỡ. Giữ giỏ hàng, Zalo, hotline. Chi tiết: `.cursor/rules/ranh-gioi-repo.mdc`.
 8. Sửa trên nhánh, mở PR, chờ anh duyệt. Không push thẳng `main`.
 9. Mô tả sản phẩm, anh Hà chốt ngày 17/10/2026: `.cursor/rules/mo-ta-san-pham.mdc`. Văn tự viết, không chép nguyên văn web khác. Thông số, chất liệu, xuất xứ, công dụng và tiêu chuẩn chỉ lấy từ web chính hãng, bao bì hoặc catalog hãng, và Excel gốc hoặc KiotViet. Chưa có nguồn hãng thì chỉ hiện dữ liệu Excel hoặc Kiot, để trống mô tả dài và gắn cờ chờ xác minh. Cursor ghi nguồn từng mã trong mô tả PR; bot Web & SEO Vạn Phát đối chiếu trước khi merge.
+10. Widget chat: `.cursor/rules/chat-widget-cache.mdc`. Sửa `js/chat-widget.js` không cần tăng `?v`. Service worker lấy file đó network-first theo pathname.
 
 ## Giao tiếp với anh Hà
 
