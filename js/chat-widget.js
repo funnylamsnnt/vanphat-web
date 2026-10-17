@@ -75,40 +75,159 @@
       .replace(/đ/g, "d");
   }
 
-  function searchCatalog(catalog, query, limit) {
-    if (!catalog || !Array.isArray(catalog.sanpham)) return [];
-    const q = norm(query);
-    if (!q || q.length < 2) return [];
-    const tokens = q.split(/\s+/).filter(Boolean);
-    const scored = [];
-    for (let i = 0; i < catalog.sanpham.length; i++) {
-      const p = catalog.sanpham[i];
-      const hay = norm([p.ma, p.ten, p.nhom, p.dvt].join(" "));
-      let score = 0;
-      for (let t = 0; t < tokens.length; t++) {
-        if (hay.indexOf(tokens[t]) !== -1) score += tokens[t].length;
-      }
-      if (score > 0) scored.push({ score, p });
-    }
-    scored.sort((a, b) => b.score - a.score);
-    return scored.slice(0, limit || 8).map((x) => ({
-      ma: x.p.ma,
-      ten: x.p.ten,
-      nhom: x.p.nhom,
-      dvt: x.p.dvt,
-      gia: x.p.gia,
-      ton: x.p.ton,
-    }));
+  // Từ hỏi chung, không mang nghĩa sản phẩm. Bỏ ra trước khi so khớp.
+  const STOPWORDS = new Set(
+    (
+      "gia bao nhieu co khong ko k ban cho em anh chi a oi nhe nha minh toi can mua lay " +
+      "loai nao hang shop cua voi va la duoc dc gi the con hok hong ben ha vay sao " +
+      "muon xin hoi tim kiem san pham sp cai chiec cuon hop goi"
+    ).split(" ")
+  );
+
+  function queryTokens(query) {
+    return norm(query)
+      .split(/[^a-z0-9]+/)
+      .filter((t) => t && t.length >= 2 && !STOPWORDS.has(t));
   }
 
-  function formatCatalogBlock(items) {
-    if (!items.length) return "(Không khớp sản phẩm trong catalog web cho câu hỏi này.)";
-    return items
-      .map(
-        (p) =>
-          `- [${p.ma}] ${p.ten} | nhóm: ${p.nhom} | ĐVT: ${p.dvt} | giá web: ${p.gia}`
-      )
-      .join("\n");
+  // Chỉ sản phẩm thuộc nhóm và lĩnh vực đang hiện trên web (nhóm «Không đưa lên web» đã bị gỡ khỏi products.json; lọc thêm cho chắc).
+  function visibleProducts(catalog) {
+    if (!catalog || !Array.isArray(catalog.sanpham)) return [];
+    const hiddenNhom = new Set();
+    const hiddenLv = new Set();
+    (Array.isArray(catalog.nhom) ? catalog.nhom : []).forEach((g) => {
+      if (g && g.visible === false) {
+        hiddenNhom.add(g.id);
+        hiddenNhom.add(g.TenNhom);
+      }
+    });
+    (Array.isArray(catalog.linh_vuc) ? catalog.linh_vuc : []).forEach((lv) => {
+      if (lv && lv.visible === false) hiddenLv.add(lv.id);
+    });
+    return catalog.sanpham.filter(
+      (p) =>
+        p &&
+        p.ma &&
+        !/không đưa lên web/i.test(String(p.nhom || "")) &&
+        !hiddenNhom.has(p.nhomId) &&
+        !hiddenNhom.has(p.nhom) &&
+        !hiddenLv.has(p.linhVucId)
+    );
+  }
+
+  function tokenHit(token, words, compact) {
+    if (words.has(token)) return 2;
+    // Token dài hoặc có số (7cm, 500ml) cho khớp một phần: "7cm" ~ "7 cm".
+    if ((token.length >= 4 || /\d/.test(token)) && compact.indexOf(token) !== -1) return 1;
+    return 0;
+  }
+
+  function slimProduct(p) {
+    return { ma: p.ma, ten: p.ten, nhom: p.nhom, dvt: p.dvt, gia: p.gia, ton: p.ton };
+  }
+
+  /**
+   * Tìm sản phẩm cho câu khách.
+   * mode "match": có sản phẩm chứa đủ từ khóa (≤3 từ: đủ cả; ≥4 từ: thiếu tối đa 1).
+   * mode "alt":   không khớp đúng, trả 2–4 món gần nhất (từng từ khóa, cùng nhóm, hoặc món đầu nhóm liên quan).
+   * mode "none":  không có gì gần.
+   */
+  function searchCatalogSmart(catalog, query, limit) {
+    const max = limit || 8;
+    const tokens = queryTokens(query);
+    if (!tokens.length) return { mode: "none", items: [] };
+    const products = visibleProducts(catalog);
+    const need = tokens.length <= 3 ? tokens.length : tokens.length - 1;
+    const strong = [];
+    const partial = [];
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      const name = norm(p.ten + " " + p.ma);
+      const words = new Set(name.split(/[^a-z0-9]+/).filter(Boolean));
+      const compact = name.replace(/[^a-z0-9]+/g, "");
+      const groupWords = new Set(norm(p.nhom).split(/[^a-z0-9]+/).filter(Boolean));
+      let hits = 0;
+      let score = 0;
+      for (let t = 0; t < tokens.length; t++) {
+        const h = tokenHit(tokens[t], words, compact) || (groupWords.has(tokens[t]) ? 1 : 0);
+        if (h) {
+          hits++;
+          score += h * tokens[t].length;
+        }
+      }
+      if (!hits) continue;
+      const row = { p, hits, score, order: i };
+      if (hits >= need) strong.push(row);
+      else partial.push(row);
+    }
+    const byScore = (a, b) => b.hits - a.hits || b.score - a.score || a.order - b.order;
+    if (strong.length) {
+      strong.sort(byScore);
+      return { mode: "match", items: strong.slice(0, max).map((x) => slimProduct(x.p)) };
+    }
+
+    const altMax = Math.min(4, max);
+    let picked = [];
+    if (partial.length) {
+      partial.sort(byScore);
+      // Nhóm mạnh nhất trong các món khớp một phần.
+      const groupScore = {};
+      partial.slice(0, 20).forEach((x) => {
+        groupScore[x.p.nhom] = (groupScore[x.p.nhom] || 0) + x.score;
+      });
+      const bestGroup = Object.keys(groupScore).sort((a, b) => groupScore[b] - groupScore[a])[0];
+      // Bỏ món gần trùng (cùng 3 từ đầu, ví dụ chỉ khác màu) và món chưa có giá, để gợi ý đa dạng và báo giá được.
+      const seen = new Set();
+      const add = (p) => {
+        const key = norm(p.ten).split(/[^a-z0-9]+/).filter(Boolean).slice(0, 3).join(" ");
+        if (picked.length >= altMax || picked.indexOf(p) !== -1 || seen.has(key) || !(Number(p.gia) > 0)) return;
+        seen.add(key);
+        picked.push(p);
+      };
+      partial.filter((x) => x.p.nhom === bestGroup).forEach((x) => add(x.p));
+      if (picked.length < 2) partial.forEach((x) => add(x.p));
+    }
+    if (!picked.length && Array.isArray(catalog && catalog.nhom)) {
+      // Không từ nào khớp tên: thử mô tả nhóm, lấy món đầu nhóm đó.
+      let best = null;
+      let bestScore = 0;
+      catalog.nhom.forEach((g) => {
+        if (!g || g.visible === false) return;
+        const gw = new Set(norm(g.TenNhom + " " + (g.moTa || "")).split(/[^a-z0-9]+/).filter(Boolean));
+        let sc = 0;
+        tokens.forEach((t) => {
+          if (gw.has(t)) sc += t.length;
+        });
+        if (sc > bestScore) {
+          bestScore = sc;
+          best = g;
+        }
+      });
+      if (best) {
+        picked = products.filter((p) => p.nhomId === best.id || p.nhom === best.TenNhom).slice(0, altMax);
+      }
+    }
+    if (!picked.length) return { mode: "none", items: [] };
+    return { mode: "alt", items: picked.slice(0, altMax).map(slimProduct) };
+  }
+
+  function searchCatalog(catalog, query, limit) {
+    return searchCatalogSmart(catalog, query, limit).items;
+  }
+
+  function catalogLine(p) {
+    return `- [${p.ma}] ${p.ten} | nhóm: ${p.nhom} | ĐVT: ${p.dvt} | giá web: ${p.gia}`;
+  }
+
+  function formatCatalogBlock(items, mode) {
+    if (!items.length) return "(Không có sản phẩm khớp trong danh mục gửi kèm.)";
+    if (mode === "alt") {
+      return (
+        "GỢI Ý THAY THẾ — không có món khớp đúng câu khách hỏi. Đây là các món gần nhất công ty đang bán, chỉ dùng để gợi ý:\n" +
+        items.map(catalogLine).join("\n")
+      );
+    }
+    return items.map(catalogLine).join("\n");
   }
 
   function stripLeadMarkers(text) {
@@ -1031,14 +1150,15 @@
       input.disabled = true;
       sendBtn.disabled = true;
 
-      const matches = searchCatalog(catalog, msg, 8);
-      const catalogContext = formatCatalogBlock(matches);
+      const found = searchCatalogSmart(catalog, msg, 8);
+      const matches = found.items;
+      const catalogContext = formatCatalogBlock(matches, found.mode);
 
       if (!apiUrl) {
         let fallback;
         if (matches.length) {
           fallback =
-            "Em tìm thấy trên web:\n" +
+            (found.mode === "alt" ? "Món này chưa có trên web, em gợi ý vài món gần nhất:\n" : "Em tìm thấy trên web:\n") +
             matches
               .slice(0, 5)
               .map((p) => "• " + p.ten + " (" + p.ma + ") — " + Number(p.gia).toLocaleString("vi-VN") + "₫")
@@ -1205,6 +1325,8 @@
     buildCatalogIndex: buildCatalogIndex,
     parseBotReply: parseBotReply,
     renderBotHtml: renderBotHtml,
+    searchCatalogSmart: searchCatalogSmart,
+    formatCatalogBlock: formatCatalogBlock,
   };
 
   document.addEventListener("DOMContentLoaded", () => {
