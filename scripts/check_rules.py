@@ -14,6 +14,8 @@
    Giỏ và sổ đơn (`scripts/test_cart_quote.js`) hiện «Liên hệ báo giá»
    thay cho giá 0, tổng ghi món chưa gồm.
 6. Trang HTML không chứa «0đ» hay schema price 0.
+7. Mô tả dài trong data/descriptions.json chỉ khi trang_thai là da_xac_minh
+   và nguon_url là http(s). Câu đệm không nguồn không được vào file hay trang SKU.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
 nằm trong hạng mục 2. Chạy: python3 scripts/check_rules.py
@@ -40,6 +42,39 @@ SKIP_DIRS = {".git", "node_modules", "__pycache__"}
 ARTICLE_RE = re.compile(r"<article\b([^>]*)>(.*?)</article>", re.I | re.S)
 PRODUCT_CARD_RE = re.compile(r"\bproduct-card\b", re.I)
 BANNED_CTA = "Đặt hàng online"
+DESCRIPTION_FILLER = (
+    "Dùng để viết hoặc châm mực",
+    "Phù hợp cho văn phòng, cơ quan",
+    "Liên hệ để giao hàng tại Nha Trang.",
+    "Đồ dùng trên bàn làm việc.",
+    "Đồ uống cho văn phòng và khách.",
+    "Dùng để in, photo và lưu hồ sơ",
+    "Dùng để đựng và phân loại tài liệu.",
+    "Dùng để dán thùng, tem và đồ văn phòng.",
+    "Thiết bị điện nhỏ cho bàn làm việc.",
+    "Đồ ăn nhẹ cho văn phòng.",
+    "Mặt hàng khác đang bán tại cửa hàng.",
+    "Đang bán tại cửa hàng Vạn Phát.",
+    "Hãng ghi trên tên:",
+    "Quy cách lấy từ tên:",
+)
+
+
+def description_problem(ma: str, rec) -> str | None:
+    """Mô tả dài không có nguồn, hoặc còn câu đệm, thì trả về lỗi."""
+    if not isinstance(rec, dict):
+        return f"{ma}: mô tả phải là object mo_ta, nguon_url, trang_thai"
+    status = str(rec.get("trang_thai") or "").strip()
+    if status not in {"da_xac_minh", "cho_xac_minh"}:
+        return f"{ma}: trang_thai phải là da_xac_minh hoặc cho_xac_minh"
+    text = re.sub(r"\s+", " ", str(rec.get("mo_ta") or "")).strip()
+    url = str(rec.get("nguon_url") or "").strip()
+    for phrase in DESCRIPTION_FILLER:
+        if phrase in text:
+            return f"{ma}: mô tả còn câu đệm «{phrase}»"
+    if text and (status != "da_xac_minh" or not url.startswith(("http://", "https://"))):
+        return f"{ma}: mô tả dài không có nguồn"
+    return None
 
 
 def fail(errors: list[str]) -> None:
@@ -297,6 +332,32 @@ def self_test() -> None:
     attrs, body = ARTICLE_RE.findall(html)[0]
     if "data-product-zoom" in attrs + body:
         raise SystemExit("self-test: thẻ mẫu không được coi là đã có lightbox")
+    if description_problem("VP0", "Dùng để viết hoặc châm mực") is None:
+        raise SystemExit("self-test: chuỗi mô tả cũ phải bị chặn")
+    if description_problem(
+        "VP0",
+        {"mo_ta": "Có chữ nhưng không nguồn.", "nguon_url": "", "trang_thai": "da_xac_minh"},
+    ) is None:
+        raise SystemExit("self-test: mô tả dài không nguồn phải bị chặn")
+    if description_problem(
+        "VP0",
+        {
+            "mo_ta": "Dùng để viết hoặc châm mực.",
+            "nguon_url": "https://example.com/pen",
+            "trang_thai": "da_xac_minh",
+        },
+    ) is None:
+        raise SystemExit("self-test: câu đệm phải bị chặn dù có URL")
+    if description_problem(
+        "VP0",
+        {"mo_ta": "", "nguon_url": "", "trang_thai": "cho_xac_minh"},
+    ) is not None:
+        raise SystemExit("self-test: bản ghi chờ xác minh bị chặn nhầm")
+    if description_problem(
+        "VP0",
+        {"mo_ta": "Kim bấm 24/6.", "nguon_url": "https://example.com/kim", "trang_thai": "da_xac_minh"},
+    ) is not None:
+        raise SystemExit("self-test: mô tả đã có nguồn bị chặn nhầm")
 
 
 def check_zero_price_pages(errors: list[str]) -> None:
@@ -310,6 +371,43 @@ def check_zero_price_pages(errors: list[str]) -> None:
                 errors.append(f"{rel}: còn {needle}")
         if price_zero.search(text):
             errors.append(f"{rel}: giá hiện 0 ₫")
+
+
+def check_product_descriptions(errors: list[str]) -> None:
+    path = ROOT / "data" / "descriptions.json"
+    if not path.is_file():
+        errors.append("thiếu data/descriptions.json")
+        return
+    try:
+        records = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"data/descriptions.json không đọc được: {exc}")
+        return
+    if not isinstance(records, dict):
+        errors.append("data/descriptions.json phải là object mã → bản ghi")
+        return
+    products = json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))
+    published = {
+        str(item.get("ma") or "").strip()
+        for item in products.get("sanpham") or []
+        if str(item.get("ma") or "").strip()
+    }
+    for ma, rec in records.items():
+        problem = description_problem(str(ma), rec)
+        if problem:
+            errors.append("data/descriptions.json: " + problem)
+    missing = sorted(published - set(records))
+    if missing:
+        errors.append("data/descriptions.json thiếu mã: " + ", ".join(missing[:12]))
+    extra = sorted(set(records) - published)
+    if extra:
+        errors.append("data/descriptions.json có mã không phát hành: " + ", ".join(extra[:12]))
+    for page in (ROOT / "san-pham").glob("vp*.html"):
+        text = page.read_text(encoding="utf-8", errors="replace")
+        for phrase in DESCRIPTION_FILLER:
+            if phrase in text:
+                errors.append(f"{page.relative_to(ROOT).as_posix()}: còn câu đệm «{phrase}»")
+                break
 
 
 def check_node_script(errors: list[str], name: str, label: str) -> None:
@@ -351,6 +449,7 @@ def main() -> None:
     check_boundaries(errors)
     check_company(errors)
     check_zero_price_pages(errors)
+    check_product_descriptions(errors)
     check_chat_search(errors)
     if errors:
         fail(errors)
