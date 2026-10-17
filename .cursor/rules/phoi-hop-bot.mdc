@@ -53,6 +53,6 @@ Không chép lại. Làm đúng file sau:
 - Layout điện thoại và PC: `.cursor/rules/bo-loc-catalog.mdc`
 - SEO kỹ thuật: `.cursor/rules/seo-ky-thuat.mdc`
 - Ranh giới repo: `.cursor/rules/ranh-gioi-repo.mdc`
-- Giọng với anh Hà: `.cursor/rules/giao-tiep.mdc` và `.cursor/rules/quy-tac-giao-tiep.mdc`
+- Giọng với anh Hà: `.cursor/rules/quy-tac-giao-tiep.mdc`. File `.cursor/rules/giao-tiep.mdc` chỉ trỏ tới đó.
 
 Sơ đồ ngắn: `docs/so-do-phoi-hop.md`. Tài liệu đầy đủ nằm trên máy chung của các bot; Cursor không truy cập được file đó: `/workspace/sodo/so-do-va-mo-hinh-hoat-dong-van-phat.docx`.

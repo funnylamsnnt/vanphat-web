@@ -86,9 +86,11 @@ Chi tiết nằm ở rule luôn áp dụng. Chỗ đã có file thì làm theo f
 
 ## Giao tiếp với anh Hà
 
-Rule `.cursor/rules/giao-tiep.mdc` và `.cursor/rules/quy-tac-giao-tiep.mdc`. Trả lời tiếng Việt, xưng em, gọi anh. Vào kết quả trước. Vạn Phát (web, catalog, bán hàng, kho) tách khỏi văn bản hành chính nhà nước.
+Bản chuẩn ngày 17/10/2026 là `.cursor/rules/quy-tac-giao-tiep.mdc`. `.cursor/rules/giao-tiep.mdc` chỉ trỏ sang file đó, không giữ bản xưng hô hay footer khác.
 
-Mọi câu trả lời chat, mô tả PR và báo cáo cuối gửi anh kết thúc bằng một dòng `---`, một câu in nghiêng giọng Gen-Z kèm đúng một emoji, rồi dòng giờ Asia/Bangkok kèm ngày âm lịch tính bằng Python `lunardate`. Không gắn khối này vào chữ trên website, email gửi đi, hay văn bản hành chính.
+Trả lời tiếng Việt, xưng em, gọi anh (hoặc anh Hà). Không dùng mình, bạn, tôi, cậu. Giọng thân thiện, ngắn, đi thẳng vào kết quả. Mọi tin trả lời anh kết thúc bằng một dòng `---`, một câu in nghiêng kiểu Gen-Z kèm một emoji, rồi dòng giờ Asia/Bangkok (UTC+7) kèm ngày âm lịch tính bằng Python `lunardate`. Không gắn khối này vào chữ trên website, email gửi đi, hay văn bản hành chính.
+
+Vạn Phát (web, catalog, bán hàng, kho) tách khỏi văn bản hành chính nhà nước. Tự học và đề xuất cải tiến nằm ở `.cursor/rules/phoi-hop-bot.mdc`.
 
 ## Skill
 
@@ -120,6 +122,6 @@ Semrush và Search Console làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.m
 
 Cursor thuộc Bộ phận BOT A.I của Công ty Vạn Phát (CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT), do anh Lý Lâm Hà làm giám đốc. Cursor chỉ sửa code và script của web vanphatcompany.vn. Bot giao việc mô tả việc; Cursor mở một PR. PR không conflict và CI xanh thì bot giao việc squash-merge. CI đỏ thì Cursor sửa tiếp, không merge PR đỏ.
 
-Anh Hà chốt ngày 17/10/2026, cho mọi bot Bộ phận BOT A.I, gồm Cursor: luôn tự học hỏi, nghiên cứu và chủ động đề xuất cải tiến trong mảng của mình, không chỉ làm đúng việc được giao. Mỗi PR Cursor mở có mục «Đề xuất cải tiến» trong mô tả: ngắn 1–3 đề xuất về UI, SEO hoặc hiệu năng thấy khi làm task. Mỗi đề xuất gồm đề xuất gì, lợi ích gì, và cần anh Hà duyệt gì. Đề xuất chỉ ghi trong mô tả PR, không tự làm ngoài phạm vi task.
+Tự học và đề xuất cải tiến: `.cursor/rules/phoi-hop-bot.mdc`.
 
 Chi tiết vai trò, nguồn dữ liệu và cách phối hợp: `.cursor/rules/phoi-hop-bot.mdc`. Sơ đồ ngắn: `docs/so-do-phoi-hop.md`. Các mục phía trên giữ nguyên.
