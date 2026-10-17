@@ -9,6 +9,8 @@
 3. CNAME đúng vanphatcompany.vn và chữ «Đặt hàng online» không trở lại HTML/JS.
 4. Hằng công ty trong generator: tên, địa chỉ Mỹ Gia (không Phước Hải),
    số 0335652832, tọa độ 12.237790 / 109.166378, Street View đã chốt.
+5. Tìm chat (`scripts/test_chat_search.js`) lọc từ hỏi còn dấu và không
+   gợi ý món giá 0.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
 nằm trong hạng mục 2. Chạy: python3 scripts/check_rules.py
@@ -17,6 +19,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 import unicodedata
 from pathlib import Path
@@ -291,6 +294,31 @@ def self_test() -> None:
         raise SystemExit("self-test: thẻ mẫu không được coi là đã có lightbox")
 
 
+def check_chat_search(errors: list[str]) -> None:
+    script = ROOT / "scripts" / "test_chat_search.js"
+    if not script.is_file():
+        errors.append("thiếu scripts/test_chat_search.js")
+        return
+    try:
+        proc = subprocess.run(
+            ["node", str(script)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+    except FileNotFoundError:
+        errors.append("không có node để chạy scripts/test_chat_search.js")
+        return
+    except subprocess.TimeoutExpired:
+        errors.append("scripts/test_chat_search.js quá thời gian")
+        return
+    if proc.returncode != 0:
+        detail = ((proc.stdout or "") + (proc.stderr or "")).strip()
+        errors.append("test tìm chat lỗi:\n" + (detail or f"exit {proc.returncode}"))
+
+
 def main() -> None:
     self_test()
     errors: list[str] = []
@@ -299,6 +327,7 @@ def main() -> None:
     cards = check_lightbox(errors)
     check_boundaries(errors)
     check_company(errors)
+    check_chat_search(errors)
     if errors:
         fail(errors)
     print(
