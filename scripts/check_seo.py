@@ -12,8 +12,11 @@ Script không gọi HTTP ra host khác, nên link bên thứ ba không làm CI �
 """
 from __future__ import annotations
 
+import html
+import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -30,6 +33,7 @@ IMG_RE = re.compile(r"<img\b[^>]*>", re.I | re.S)
 LOC_RE = re.compile(r"<loc>\s*([^<]+?)\s*</loc>")
 IMAGE_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".avif", ".bmp"}
 META_IMAGE_NAMES = {"og:image", "twitter:image"}
+SKU_PAGE_RE = re.compile(r"^san-pham/(vp\d+)-.+\.html$", re.I)
 
 
 def fail(errors: list[str]) -> None:
@@ -270,6 +274,74 @@ def check_pages(errors: list[str]) -> tuple[int, int]:
     return pages, len(image_files)
 
 
+def norm_title(value: str) -> str:
+    text = html.unescape(value)
+    text = unicodedata.normalize("NFC", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def load_sku_names() -> dict[str, str]:
+    path = ROOT / "data" / "products.json"
+    if not path.is_file():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    names: dict[str, str] = {}
+    for item in data.get("sanpham") or []:
+        ma = str(item.get("ma") or "").strip().lower()
+        ten = norm_title(str(item.get("ten") or ""))
+        if ma and ten:
+            names[ma] = ten
+    return names
+
+
+def same_source_sku(pages: list[str], names: dict[str, str]) -> bool:
+    """True khi mọi trang là SKU và tên trong Excel/nguồn giống hệt nhau."""
+    found: list[str] = []
+    for rel in pages:
+        match = SKU_PAGE_RE.match(rel)
+        if not match:
+            return False
+        ten = names.get(match.group(1).lower())
+        if not ten:
+            return False
+        found.append(ten)
+    return len(found) >= 2 and all(ten == found[0] for ten in found)
+
+
+def check_duplicate_titles(errors: list[str], warnings: list[str]) -> None:
+    """Title index được phải khác nhau. SKU trùng tên nguồn chỉ cảnh báo.
+
+    So khớp không phân biệt hoa thường, sau khi bỏ thực thể HTML. VP125 và VP126
+    cùng tên trong Excel thì không làm fail — đó là dữ liệu nguồn, không bịa tên.
+    """
+    names = load_sku_names()
+    buckets: dict[str, list[tuple[str, str]]] = {}
+    for path in iter_html():
+        if is_staff(path):
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        match = re.search(r"<title>(.*?)</title>", text, re.S)
+        if not match:
+            continue
+        title = norm_title(match.group(1))
+        if not title:
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        buckets.setdefault(title.casefold(), []).append((rel, title))
+    for items in buckets.values():
+        if len(items) < 2:
+            continue
+        pages = [rel for rel, _title in items]
+        shown = items[0][1]
+        listed = ", ".join(pages)
+        if same_source_sku(pages, names):
+            warnings.append(
+                f"title trùng ở SKU cùng tên nguồn «{names[SKU_PAGE_RE.match(pages[0]).group(1).lower()]}»: {listed}"
+            )
+            continue
+        errors.append(f"title trùng «{shown}»: {listed}")
+
+
 def self_test() -> None:
     if resolve_ref(ROOT / "index.html", "https://example.com/anh.jpg") is not None:
         raise SystemExit("self-test: không được gọi file bên thứ ba")
@@ -288,19 +360,42 @@ def self_test() -> None:
         raise SystemExit("self-test: không đọc og:image")
     if resolve_ref(ROOT / "index.html", sample[0]) is not None:
         raise SystemExit("self-test: og:image host lạ phải bỏ qua, không timeout")
+    sku_names = {"vp125": "Bút Chì Gỗ 2B Maped (Hộp 12 cây)", "vp126": "Bút Chì Gỗ 2B Maped (Hộp 12 cây)", "vp127": "Bút khác"}
+    same = [
+        "san-pham/vp125-but-chi-go-2b-maped-hop-12-cay.html",
+        "san-pham/vp126-but-chi-go-2b-maped-hop-12-cay.html",
+    ]
+    if not same_source_sku(same, sku_names):
+        raise SystemExit("self-test: SKU cùng tên nguồn phải chỉ cảnh báo")
+    mixed = same + ["linh-vuc/vpp.html"]
+    if same_source_sku(mixed, sku_names):
+        raise SystemExit("self-test: title trùng ngoài SKU phải là lỗi")
+    different = [
+        "san-pham/vp125-but-chi-go-2b-maped-hop-12-cay.html",
+        "san-pham/vp127-but-khac.html",
+    ]
+    if same_source_sku(different, sku_names):
+        raise SystemExit("self-test: SKU khác tên không được bỏ qua")
+    if norm_title("Băng Keo Nha Trang | Vạn Phát").casefold() != norm_title("Băng keo Nha Trang | Vạn Ph&#225;t").casefold():
+        raise SystemExit("self-test: title phải so sau khi bỏ thực thể và hoa thường")
 
 
 def main() -> None:
     self_test()
     errors: list[str] = []
+    warnings: list[str] = []
     check_robots(errors)
     locs = check_sitemap(errors)
     pages, images = check_pages(errors)
+    check_duplicate_titles(errors, warnings)
+    for item in warnings:
+        print(f"CẢNH BÁO: {item}")
     if errors:
         fail(errors)
+    note = f", {len(warnings)} cảnh báo title SKU cùng tên nguồn" if warnings else ""
     print(
         f"OK: SEO kỹ thuật, {pages} trang HTML, {locs} URL trong sitemap, "
-        f"{images} ảnh cùng origin đọc được."
+        f"{images} ảnh cùng origin đọc được{note}."
     )
 
 

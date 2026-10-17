@@ -258,14 +258,20 @@ display: none; /* hide old VP mark */
   mask-image: linear-gradient(to bottom, black, transparent);
   pointer-events: none;
 }
+/* Cột hero là grid item. min-width:auto (mặc định) lấy min-content của hàng chip
+   nowrap, nên dưới 900px track phình khoảng 436px và .hero {overflow:hidden} cắt mất
+   H1, ô tìm và nút. minmax(0, …) cộng min-width:0 cho cột co theo khung; chip vẫn
+   cuộn trong .chip-rail-scroll. */
 .hero .container {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
   align-items: center;
 }
+.hero .container > * { min-width: 0; }
 @media (min-width: 900px) {
-  .hero .container { grid-template-columns: 1.15fr 0.85fr; }
+  .hero .container { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); }
 }
 .hero-badge {
   display: inline-flex;
