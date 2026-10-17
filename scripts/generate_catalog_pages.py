@@ -30,6 +30,8 @@ MARKER = "vp-generated-catalog"
 CSS_V = "2026101719"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101401"
+# ia.js and products.js learned thuongHieu / quyCach. Lightbox did not change.
+SEARCH_V = "2026101720"
 CHAT_V = "2026101309"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"
@@ -300,7 +302,9 @@ BRAND_PHRASES: tuple[tuple[str, str], ...] = (
     ("aquarius", "Aquarius"),
     ("vikoda", "Vikoda"),
     ("revive", "Revive"),
-    ("plastic", "Plastic"),
+    # "plastic" is a material (ép plastic) or a Pilot model word (BP-1RT),
+    # not a manufacturer. Guessing it branded VP111–VP113 and VP456–VP459
+    # as Plastic. The sheet column Thương Hiệu is the brand when it is set.
     ("bitex", "Bitex"),
     ("kanex", "Kanex"),
     ("maped", "Maped"),
@@ -346,6 +350,22 @@ def derive_brand(name: str) -> str | None:
     if best is None or best[2] in {"Vạn Phát", "Van Phat"}:
         return None
     return best[2]
+
+
+def stated_brand(product: dict) -> str | None:
+    """Trimmed Thương Hiệu from the sheet. Blank means the column was empty."""
+    value = re.sub(r"\s+", " ", str((product or {}).get("thuongHieu") or "")).strip()
+    if not value or value in {"Vạn Phát", "Van Phat"}:
+        return None
+    return value
+
+
+def product_brand(product: dict) -> str | None:
+    """Use cột Thương Hiệu when it is present. Otherwise guess from the name."""
+    stated = stated_brand(product)
+    if stated:
+        return stated
+    return derive_brand(str((product or {}).get("ten") or ""))
 
 
 def source_name_key(name: str) -> str:
@@ -622,7 +642,7 @@ def scripts(prefix: str) -> str:
     return f"""  <script defer src="{p}js/main.js?v={CSS_V}"></script>
   <script defer src="{p}js/cart.js"></script>
   <script defer src="{p}js/catalog-paths.js?v={CSS_V}"></script>
-  <script defer src="{p}js/ia.js?v={CSS_V}"></script>
+  <script defer src="{p}js/ia.js?v={SEARCH_V}"></script>
   <script defer src="{p}js/product-lightbox.js?v={JS_V}"></script>
   <script defer src="{p}js/chat-widget.js?v={CHAT_V}"></script>"""
 
@@ -1188,7 +1208,7 @@ def build_product_page(
         "description": description,
         "image": image,
     }
-    brand = derive_brand(str(product.get("ten") or ""))
+    brand = product_brand(product)
     if brand:
         product_ld["brand"] = {"@type": "Brand", "name": brand}
     offer = offer_node(product, canonical)
@@ -1681,8 +1701,8 @@ def refresh_static_chrome(text: str, prefix: str = "") -> str:
     updated = re.sub(r"styles\.css\?v=\d+", f"styles.css?v={CSS_V}", updated)
     updated = re.sub(r"main\.js(?:\?v=\d+)?(?=\")", f"main.js?v={CSS_V}", updated)
     updated = re.sub(r"catalog-paths\.js(?:\?v=\d+)?(?=\")", f"catalog-paths.js?v={CSS_V}", updated)
-    updated = re.sub(r"ia\.js\?v=\d+", f"ia.js?v={CSS_V}", updated)
-    updated = re.sub(r"products\.js\?v=\d+", f"products.js?v={JS_V}", updated)
+    updated = re.sub(r"ia\.js\?v=\d+", f"ia.js?v={SEARCH_V}", updated)
+    updated = re.sub(r"products\.js\?v=\d+", f"products.js?v={SEARCH_V}", updated)
     updated = re.sub(r"product-lightbox\.js\?v=\d+", f"product-lightbox.js?v={JS_V}", updated)
     updated = re.sub(r"chat-widget\.js\?v=\d+", f"chat-widget.js?v={CHAT_V}", updated)
     updated = updated.replace(f"{SITE}/assets/logo.png", OG_IMAGE)
@@ -1741,7 +1761,15 @@ def assert_seo_helpers() -> None:
         "Ổ điện Lioa 3DNW 3.2.10 (3m)": "Lioa",
         "Nẹp Acco nhựa UNI": "Acco",
         "Kệ hồ sơ 2 tầng Mica": None,
+        "Giấy ép plastic A4 80mic": None,
+        "Bút bi Plastic BP-1RT-F": None,
     }
+    if product_brand({"ten": "Bút bi Plastic BP-1RT-F", "thuongHieu": " Pilot "}) != "Pilot":
+        raise SystemExit("thuongHieu must replace the name guess")
+    if product_brand({"ten": "Giấy A4 70 gsm Double A", "thuongHieu": "  "}) != "Double A":
+        raise SystemExit("blank thuongHieu must fall back to the name")
+    if product_brand({"ten": "Giấy ép plastic A5", "thuongHieu": ""}) is not None:
+        raise SystemExit("blank thuongHieu must not invent a brand from plastic")
     for name, expected in samples.items():
         got = derive_brand(name)
         if got != expected:
@@ -1890,8 +1918,8 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("VP035 description missing Khánh Hòa")
 
     lavie = _product_node(_load_ld(ROOT / "san-pham" / by_ma["VP332"]["_file"]))
-    if (lavie.get("brand") or {}).get("name") != "Lavie":
-        raise SystemExit(f"Lavie brand missing: {lavie.get('brand')}")
+    if (lavie.get("brand") or {}).get("name") != "La Vie":
+        raise SystemExit(f"Lavie brand should follow cột Thương Hiệu: {lavie.get('brand')}")
     if (lavie.get("offers") or {}).get("seller", {}).get("@id") != ORG_ID:
         raise SystemExit("Lavie offer is missing the company seller")
     lavie_url = f"{SITE}/san-pham/{by_ma['VP332']['_file']}"
@@ -1902,6 +1930,18 @@ def assert_generated_seo(products: list[dict]) -> None:
     paper_node = _product_node(_load_ld(ROOT / "san-pham" / paper["_file"]))
     if (paper_node.get("brand") or {}).get("name") != "Double A":
         raise SystemExit(f"Double A brand missing: {paper_node.get('brand')}")
+    pilot = _product_node(_load_ld(ROOT / "san-pham" / by_ma["VP111"]["_file"]))
+    if (pilot.get("brand") or {}).get("name") != "Pilot":
+        raise SystemExit(f"VP111 should use sheet brand Pilot: {pilot.get('brand')}")
+    pilot_text = (ROOT / "san-pham" / by_ma["VP111"]["_file"]).read_text(encoding="utf-8")
+    if "Hãng ghi trên tên: Plastic" in pilot_text or '"name":"Plastic"' in pilot_text:
+        raise SystemExit("VP111 still brands the pen as Plastic")
+    film = _product_node(_load_ld(ROOT / "san-pham" / by_ma["VP456"]["_file"]))
+    if (film.get("brand") or {}).get("name"):
+        raise SystemExit(f"VP456 has a blank Thương Hiệu and must not guess a brand: {film.get('brand')}")
+    film_text = (ROOT / "san-pham" / by_ma["VP456"]["_file"]).read_text(encoding="utf-8")
+    if "Hãng ghi trên tên: Plastic" in film_text or '"name":"Plastic"' in film_text:
+        raise SystemExit("VP456 still brands the film as Plastic")
     offer = paper_node.get("offers") or {}
     if int(paper.get("ton") or 0) > 0 and offer.get("availability") != "https://schema.org/InStock":
         raise SystemExit(f"in-stock availability missing on VP204: {offer.get('availability')}")
@@ -2091,8 +2131,11 @@ def compose_product_description(product: dict) -> str:
         if token and token not in bits:
             bits.append(token)
     parts = [f"{name} thuộc nhóm {group}."]
-    brand = derive_brand(name)
-    if brand:
+    stated = stated_brand(product)
+    brand = stated or derive_brand(name)
+    if stated:
+        parts.append(f"Thương hiệu: {stated}.")
+    elif brand:
         parts.append(f"Hãng ghi trên tên: {brand}.")
     if bits:
         parts.append("Quy cách lấy từ tên: " + ", ".join(bits) + ".")
@@ -2105,6 +2148,26 @@ def compose_product_description(product: dict) -> str:
         "Liên hệ để giao hàng tại Nha Trang."
     )
     return " ".join(parts)
+
+
+FALSE_PLASTIC_SENTENCE = "Hãng ghi trên tên: Plastic."
+
+
+def correct_false_plastic_sentence(text: str, product: dict) -> str:
+    """Replace the false Plastic brand. Sheet Thương Hiệu is the replacement.
+
+    VP456–VP459 have a blank Thương Hiệu, so the sentence is removed. The
+    column is the only source; this does not invent Pilot for those SKUs.
+    """
+    if FALSE_PLASTIC_SENTENCE not in text:
+        return text
+    stated = stated_brand(product)
+    if stated:
+        return text.replace(FALSE_PLASTIC_SENTENCE, f"Thương hiệu: {stated}.", 1)
+    cleaned = text.replace(" " + FALSE_PLASTIC_SENTENCE, "", 1)
+    if FALSE_PLASTIC_SENTENCE in cleaned:
+        cleaned = cleaned.replace(FALSE_PLASTIC_SENTENCE, "", 1)
+    return re.sub(r"[ \t]{2,}", " ", cleaned).strip()
 
 
 def sync_descriptions(products: list[dict]) -> None:
@@ -2122,6 +2185,11 @@ def sync_descriptions(products: list[dict]) -> None:
         current = stored.get(ma, "")
         if not current.strip():
             stored[ma] = compose_product_description(product)
+            changed = True
+            continue
+        fixed = correct_false_plastic_sentence(current, product)
+        if fixed != current:
+            stored[ma] = fixed
             changed = True
     ordered = {ma: stored[ma] for ma in sorted(stored) if stored[ma].strip()}
     if changed or list(stored) != list(ordered):
@@ -2185,7 +2253,7 @@ def select_local_products(products: list[dict], spec: dict) -> list[dict]:
         folded = fold_text(product.get("ten") or "")
         if any(token not in folded for token in tokens):
             continue
-        if spec.get("brand") and derive_brand(str(product.get("ten") or "")) != spec.get("brand"):
+        if spec.get("brand") and product_brand(product) != spec.get("brand"):
             continue
         matched.append(product)
     matched.sort(key=lambda product: (0 if product.get("anh") else 1, str(product.get("ma") or "")))
@@ -2577,7 +2645,7 @@ def main() -> None:
         if source_name_key(product.get("ten") or "") in dup_names:
             code = str(product.get("ma") or "").strip().upper() or None
         title_lens.append(len(product_seo_title(str(product.get("ten") or ""), product.get("nhom") or "", code)))
-    branded = sum(1 for p in products if derive_brand(str(p.get("ten") or "")))
+    branded = sum(1 for p in products if product_brand(p))
     print(
         json.dumps(
             {

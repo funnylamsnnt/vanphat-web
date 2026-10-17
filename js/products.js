@@ -146,8 +146,8 @@
     const q = String(qRaw || "").trim();
     if (!q) return true;
     const f = fold(q);
-    const hay = fold([p.ma, p.ten, p.nhom, p.linhVucTen].filter(Boolean).join(" "));
-    const raw = [p.ma, p.ten, p.nhom, p.linhVucTen].filter(Boolean).join(" ").toLowerCase();
+    const hay = fold([p.ma, p.ten, p.thuongHieu, p.quyCach, p.nhom, p.linhVucTen].filter(Boolean).join(" "));
+    const raw = [p.ma, p.ten, p.thuongHieu, p.quyCach, p.nhom, p.linhVucTen].filter(Boolean).join(" ").toLowerCase();
     return hay.includes(f) || raw.includes(q.toLowerCase());
   }
 
