@@ -27,11 +27,11 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101719"
+CSS_V = "2026101721"
 LOGO_NAV_V = "20260925"
-JS_V = "2026101401"
-# ia.js and products.js learned thuongHieu / quyCach. Lightbox did not change.
-SEARCH_V = "2026101720"
+JS_V = "2026101721"
+# products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
+SEARCH_V = "2026101721"
 CHAT_V = "2026101309"
 
 COMPANY = "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT"
@@ -846,6 +846,37 @@ def lv_for_nhom(name: str, ia: dict) -> dict | None:
     return ia["lv_by_id"].get(meta.get("linhVucId") or "")
 
 
+def sheet_fact(value) -> str:
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def fact_attr_lines(product: dict, indent: str = "        ") -> str:
+    """Lightbox reads these. A blank sheet cell adds no attribute and no label."""
+    lines = []
+    brand = sheet_fact(product.get("thuongHieu"))
+    spec = sheet_fact(product.get("quyCach"))
+    if brand:
+        lines.append(f'data-thuong-hieu="{esc(brand)}"')
+    if spec:
+        lines.append(f'data-quy-cach="{esc(spec)}"')
+    if not lines:
+        return ""
+    return "\n" + "\n".join(indent + line for line in lines)
+
+
+def detail_meta_html(product: dict) -> str:
+    """ĐVT, then thương hiệu and quy cách only when the sheet cell has text."""
+    bits = [f'<span class="product-dvt">ĐVT: {esc(product.get("dvt") or "—")}</span>']
+    brand = sheet_fact(product.get("thuongHieu"))
+    spec = sheet_fact(product.get("quyCach"))
+    if brand:
+        bits.append(f'<span class="product-fact">Thương hiệu: {esc(brand)}</span>')
+    if spec:
+        bits.append(f'<span class="product-fact">Quy cách: {esc(spec)}</span>')
+    bits.append(f'<span class="product-ma">Mã {esc(product.get("ma") or "")}</span>')
+    return "\n              ".join(bits)
+
+
 def card_html(product: dict, product_href: str, category_href: str, badge: str) -> str:
     src = image_src(product)
     return f"""<article class="product-card"
@@ -855,7 +886,7 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
         data-dvt="{esc(product.get('dvt'))}"
         data-anh="{esc(product.get('anh') or '')}"
         data-nhom="{esc(product.get('nhom'))}"
-        data-linh-vuc-id="{esc(product.get('linhVucId') or '')}">
+        data-linh-vuc-id="{esc(product.get('linhVucId') or '')}"{fact_attr_lines(product)}>
         <div class="product-img" data-product-zoom role="button" tabindex="0"
              aria-label="Xem ảnh lớn: {esc(product.get('ten'))}" title="Xem ảnh lớn">
           {product_picture(src, str(product.get('ten') or ''), 400, 400, loading="lazy")}
@@ -1256,7 +1287,7 @@ def build_product_page(
           data-dvt="{esc(product.get('dvt'))}"
           data-anh="{esc(product.get('anh') or '')}"
           data-nhom="{esc(product.get('nhom'))}"
-          data-linh-vuc-id="{esc(product.get('linhVucId') or '')}">
+          data-linh-vuc-id="{esc(product.get('linhVucId') or '')}"{fact_attr_lines(product, "          ")}>
           <div class="product-img product-detail-media" data-product-zoom role="button" tabindex="0"
                aria-label="Xem ảnh lớn: {esc(product.get('ten'))}" title="Xem ảnh lớn">
             {product_picture(src, str(product.get('ten') or ''), 800, 800, loading="eager", fetchpriority="high")}
@@ -1265,8 +1296,7 @@ def build_product_page(
             <div class="product-badge"><a href="{esc(cat_file)}">{esc(badge)}</a></div>
             <h1 class="product-detail-title">{esc(product.get('ten'))}</h1>
             <div class="product-meta-row">
-              <span class="product-dvt">ĐVT: {esc(product.get('dvt') or '—')}</span>
-              <span class="product-ma">Mã {esc(product.get('ma') or '')}</span>
+              {detail_meta_html(product)}
             </div>
             <div class="product-price"><span class="price-label">Giá</span> {esc(price)}</div>
             <p class="product-detail-desc">{esc(_DESCRIPTION_BY_MA.get(str(product.get("ma") or "")) or compose_product_description(product))}</p>
@@ -1959,6 +1989,21 @@ def assert_generated_seo(products: list[dict]) -> None:
     film_text = (ROOT / "san-pham" / by_ma["VP456"]["_file"]).read_text(encoding="utf-8")
     if "Hãng ghi trên tên: Plastic" in film_text or '"name":"Plastic"' in film_text:
         raise SystemExit("VP456 still brands the film as Plastic")
+
+    def sku_meta(ma: str) -> str:
+        page = (ROOT / "san-pham" / by_ma[ma]["_file"]).read_text(encoding="utf-8")
+        detail = page.split('class="product-card product-detail"', 1)[1].split("</article>", 1)[0]
+        return detail.split("product-meta-row", 1)[1].split("</div>", 1)[0]
+
+    pilot_meta = sku_meta("VP111")
+    if "Thương hiệu: Pilot" not in pilot_meta or "Quy cách: 12 cây/hộp" not in pilot_meta:
+        raise SystemExit(f"VP111 meta should sit next to ĐVT: {pilot_meta}")
+    film_meta = sku_meta("VP456")
+    if "Quy cách: 100 tờ/xấp" not in film_meta or "Thương hiệu:" in film_meta:
+        raise SystemExit(f"VP456 should show quy cách only: {film_meta}")
+    bare_meta = sku_meta("VP459")
+    if "Thương hiệu:" in bare_meta or "Quy cách:" in bare_meta:
+        raise SystemExit(f"VP459 has blank sheet cells and must omit both labels: {bare_meta}")
     offer = paper_node.get("offers") or {}
     if int(paper.get("ton") or 0) > 0 and offer.get("availability") != "https://schema.org/InStock":
         raise SystemExit(f"in-stock availability missing on VP204: {offer.get('availability')}")

@@ -105,6 +105,15 @@
     return `<img src="${escapeAttr(shown)}" alt="${escapeAttr(alt)}" width="400" height="400" loading="lazy" decoding="async" onerror="${escapeAttr(onerror)}" />`;
   }
 
+  function factAttrs(p) {
+    const brand = String((p && p.thuongHieu) || "").trim();
+    const spec = String((p && p.quyCach) || "").trim();
+    return (
+      (brand ? ` data-thuong-hieu="${escapeAttr(brand)}"` : "") +
+      (spec ? ` data-quy-cach="${escapeAttr(spec)}"` : "")
+    );
+  }
+
   function cardHTML(p, lvMap) {
     const priced = Number(p.gia) > 0;
     const price = priced ? window.VanPhat.formatPrice(p.gia) : "Liên hệ báo giá";
@@ -122,7 +131,7 @@
         data-dvt="${escapeAttr(p.dvt)}"
         data-anh="${escapeAttr(p.anh || "")}"
         data-nhom="${escapeAttr(p.nhom)}"
-        data-linh-vuc-id="${escapeAttr(p.linhVucId || "")}">
+        data-linh-vuc-id="${escapeAttr(p.linhVucId || "")}"${factAttrs(p)}>
         <div class="product-img" data-product-zoom role="button" tabindex="0"
              aria-label="Xem ảnh lớn: ${escapeAttr(p.ten)}" title="Xem ảnh lớn">
           ${pictureHTML(p.anh, p.ten)}

@@ -25,11 +25,21 @@
       dvt: card.getAttribute("data-dvt") || "",
       anh: card.getAttribute("data-anh") || "",
       nhom: card.getAttribute("data-nhom") || "",
+      thuongHieu: card.getAttribute("data-thuong-hieu") || "",
+      quyCach: card.getAttribute("data-quy-cach") || "",
     };
   }
 
   function isOpen() {
     return document.body.classList.contains("lightbox-open");
+  }
+
+  function setFact(dialog, wrapSel, valueSel, value) {
+    const text = String(value || "").trim();
+    const wrap = dialog.querySelector(wrapSel);
+    const node = dialog.querySelector(valueSel);
+    if (node) node.textContent = text;
+    if (wrap) wrap.hidden = !text;
   }
 
   function ensureModal() {
@@ -59,6 +69,8 @@
           <div class="product-lightbox-meta">
             <span>Mã: <strong data-lb-ma></strong></span>
             <span>ĐVT: <strong data-lb-dvt></strong></span>
+            <span data-lb-brand-wrap hidden>Thương hiệu: <strong data-lb-brand></strong></span>
+            <span data-lb-spec-wrap hidden>Quy cách: <strong data-lb-spec></strong></span>
           </div>
           <div class="product-lightbox-price" data-lb-price></div>
           <div class="product-actions">
@@ -151,6 +163,8 @@
       product.ten || product.ma || "Sản phẩm";
     dialog.querySelector("[data-lb-ma]").textContent = product.ma || "—";
     dialog.querySelector("[data-lb-dvt]").textContent = product.dvt || "—";
+    setFact(dialog, "[data-lb-brand-wrap]", "[data-lb-brand]", product.thuongHieu);
+    setFact(dialog, "[data-lb-spec-wrap]", "[data-lb-spec]", product.quyCach);
     const priced = Number(product.gia) > 0;
     dialog.querySelector("[data-lb-price]").textContent = priced ? formatPrice(product.gia) : "Liên hệ báo giá";
     const addBtn = dialog.querySelector("[data-lb-add]");
@@ -185,6 +199,8 @@
         dvt: raw.dvt || "",
         anh: raw.anh || "",
         nhom: raw.nhom || "",
+        thuongHieu: raw.thuongHieu || "",
+        quyCach: raw.quyCach || "",
       },
       raw.anh || placeholder(),
       trigger
