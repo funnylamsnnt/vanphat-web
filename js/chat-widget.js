@@ -752,6 +752,15 @@
     return !/[A-Za-zÀ-ỹ]/.test(rest);
   }
 
+  function namedProductAllowsQuote(line, product, spCodes) {
+    const ten = String((product && product.ten) || "").trim();
+    if (ten.length < 2) return false;
+    if (String(line || "").toLowerCase().indexOf(ten.toLowerCase()) === -1) return false;
+    const ma = String((product && product.ma) || "").toUpperCase();
+    if (ma && spCodes && typeof spCodes.has === "function" && spCodes.has(ma)) return true;
+    return !(Number(product && product.gia) > 0);
+  }
+
   function isSkuLine(line, products, spCodes) {
     if (!products || !products.length) return false;
     let rest = String(line || "");
@@ -761,7 +770,8 @@
       const unit = String(product.dvt || "").trim();
       if (unit) rest = rest.replace(new RegExp("\\/?\\s*" + escapeRegExp(unit), "ig"), " ");
     });
-    if (lineMatchesSpCode(line, spCodes)) rest = rest.replace(quotePriceRe(), " ");
+    const quoteByName = products.some((product) => namedProductAllowsQuote(line, product, spCodes));
+    if (lineMatchesSpCode(line, spCodes) || quoteByName) rest = rest.replace(quotePriceRe(), " ");
     rest = rest.replace(
       new RegExp("(\\d{1,3}(?:\\.\\d{3})+)(\\s*)(?:đồng|vnđ|vnd|đ|₫|d)" + PRICE_UNIT_TAIL, "giu"),
       " "
