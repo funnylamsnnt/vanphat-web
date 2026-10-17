@@ -492,7 +492,7 @@
     sp.tagged.forEach(push);
     mentionsIn(leadParsed.clean, index).forEach((product) => push(product.ma));
     const clean = leadParsed.clean.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
-    return { clean: clean, lead: leadParsed.lead, products: ordered.slice(0, 12) };
+    return { clean: clean, lead: leadParsed.lead, products: ordered.slice(0, 12), tagged: sp.tagged };
   }
 
   function priceLabel(raw) {
@@ -855,14 +855,29 @@
     return blocksToHtml(blocks);
   }
 
+  function codesOf(list) {
+    const set = new Set();
+    (list || []).forEach((item) => {
+      const ma = String((item && item.ma) || item || "")
+        .trim()
+        .toUpperCase();
+      if (ma) set.add(ma);
+    });
+    return set;
+  }
+
   function renderBotHtml(text, index, products) {
     let clean = String(text || "");
     let list = products;
-    const spCodes = new Set(extractSp(clean).tagged);
-    if (!list) {
+    let spCodes;
+    // shown đã bỏ [[SP:]]. Mã thẻ nằm ở products. Không có products thì lấy tagged lúc parse.
+    if (!list || !list.length) {
       const parsed = parseBotReply(clean, index);
       clean = parsed.clean;
       list = parsed.products;
+      spCodes = codesOf(parsed.tagged);
+    } else {
+      spCodes = codesOf(list);
     }
     return composeTurn(clean, list, index, spCodes);
   }
@@ -1171,6 +1186,7 @@
           ? "Em gắn các mã này lên trang để anh/chị xem và thêm vào giỏ."
           : String(text || ""));
       parsed.shown = shown;
+      // shown không còn [[SP:]]. renderBotHtml lấy mã thẻ từ parsed.products, kể cả khi dựng lại lịch sử từ shown.
       const html = renderBotHtml(shown, catalogIndex, parsed.products);
       const holder = document.createElement("div");
       holder.innerHTML = html;

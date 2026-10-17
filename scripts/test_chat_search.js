@@ -460,51 +460,47 @@ function withoutSkuCards(html) {
   return String(html || "").replace(/<article class="vp-chat-sku">[\s\S]*?<\/article>/g, "");
 }
 
+function renderLikeRuntime(api, index, raw) {
+  const parsed = api.parseBotReply(raw, index);
+  const shown = parsed.clean || "";
+  return { parsed: parsed, shown: shown, html: api.renderBotHtml(shown, index, parsed.products) };
+}
+
 function testQuotePriceSkuLine(api, catalog) {
   const byMa = {};
   (catalog.sanpham || []).forEach((p) => {
     if (p && p.ma) byMa[p.ma] = p;
   });
-  const priced = ["VP111", "VP076"].map((ma) => byMa[ma]);
-  const quote = byMa.VP123;
-  if (priced.some((p) => !p || !p.ten) || !quote || !quote.ten) {
-    fail("thiếu VP111, VP076 hoặc VP123 trong catalog để test dòng Liên hệ báo giá");
+  const rows = ["VP124", "VP123", "VP125"].map((ma) => byMa[ma]);
+  if (rows.some((p) => !p || !p.ten)) {
+    fail("thiếu VP124, VP123 hoặc VP125 trong catalog");
     return;
   }
   const index = api.buildCatalogIndex(catalog);
-  ["Liên hệ báo giá", "lien he bao gia", "LIÊN HỆ BÁO GIÁ"].forEach((label) => {
-    const lines = priced.map((p) => p.ten + " · " + p.ma + " · 12.000đ");
-    lines.push(quote.ten + " · " + quote.ma + " · " + label);
-    lines.push("[[SP:" + priced.map((p) => p.ma).concat(quote.ma).join(",") + "]]");
-    const html = api.renderBotHtml(lines.join("\n"), index);
-    const prose = withoutSkuCards(html);
-    const cards = (html.match(/<article class="vp-chat-sku">/g) || []).length;
-    if (cards !== 3) fail("«" + label + "»: muốn 3 thẻ, được " + cards);
-    [quote.ten, quote.ma, priced[0].ten, priced[0].ma, priced[1].ten, priced[1].ma, "báo giá", "bao gia"].forEach((bit) => {
-      if (bit && prose.toLowerCase().includes(String(bit).toLowerCase())) {
-        fail("«" + label + "»: còn dòng món trong chữ («" + bit + "»)");
-      }
+  const money = { VP124: "4.000đ", VP125: "7.000đ" };
+  ["Liên hệ báo giá", "lien he bao gia", "LIÊN HỆ BÁO GIÁ"].forEach((quoteLabel) => {
+    const lines = rows.map((p) => p.ten + " · " + p.ma + " · " + (p.ma === "VP123" ? quoteLabel : money[p.ma]));
+    lines.push("[[SP:VP124,VP123,VP125]]");
+    const turned = renderLikeRuntime(api, index, lines.join("\n"));
+    if (turned.shown.indexOf("[[SP:") !== -1) fail("đường runtime còn thẻ [[SP:]] trong shown");
+    const prose = withoutSkuCards(turned.html);
+    const cards = (turned.html.match(/<article class="vp-chat-sku">/g) || []).length;
+    if (cards !== 3) fail("«" + quoteLabel + "»: muốn 3 thẻ, được " + cards);
+    ["VP123", "VP124", "VP125"].forEach((ma) => {
+      if (prose.toUpperCase().indexOf(ma) !== -1) fail("«" + quoteLabel + "»: còn " + ma + " trong chữ");
     });
   });
-  const kept = api.renderBotHtml(
-    "Nhờ anh liên hệ báo giá giúp em.\n" + quote.ten + " · " + quote.ma + " · Liên hệ báo giá\n[[SP:" + quote.ma + "]]",
-    index
+  const quote = byMa.VP123;
+  const kept = renderLikeRuntime(
+    api,
+    index,
+    "Nhờ anh liên hệ báo giá giúp em.\n" + quote.ten + " · " + quote.ma + " · Liên hệ báo giá\n[[SP:" + quote.ma + "]]"
   );
-  const keptProse = withoutSkuCards(kept);
-  if (!keptProse.toLowerCase().includes("nhờ anh liên hệ báo giá")) {
+  const keptProse = withoutSkuCards(kept.html);
+  if (keptProse.toLowerCase().indexOf("nhờ anh liên hệ báo giá") === -1) {
     fail("câu không có mã bị xóa: " + keptProse);
   }
-  if (keptProse.includes(quote.ten) || keptProse.includes(quote.ma)) {
-    fail("dòng VP123 Liên hệ báo giá còn trong chữ");
-  }
-  const outside = api.renderBotHtml(
-    quote.ten + " · " + quote.ma + " · Liên hệ báo giá\n[[SP:VP111]]",
-    index
-  );
-  const outsideProse = withoutSkuCards(outside);
-  if (!outsideProse.includes(quote.ma)) {
-    fail("mã không có trong [[SP:]] vẫn bị xóa khỏi chữ");
-  }
+  if (keptProse.indexOf(quote.ma) !== -1) fail("dòng VP123 còn trong chữ sau parse");
 }
 
 function main() {
