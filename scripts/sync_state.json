@@ -2,12 +2,12 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-17T02:22:10.498Z",
-  "previousModifiedTime": "2026-10-15T17:07:58.210Z",
+  "lastModifiedTime": "2026-10-17T12:10:10.567Z",
+  "previousModifiedTime": "2026-10-17T02:22:10.498Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-16T01:13:52Z",
+  "lastSyncAt": "2026-10-17T12:20:00Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 466,
@@ -312,5 +312,16 @@
     "live_check": "products.json live == local; VP477 gia 10000; VP477 page 200 shows 10.000 ₫ + schema price 10000; VP415 404; 3 linh-vuc 200",
     "note": "VP477 10000 confirmed by anh Hà 09:2x 17/10",
     "bridge": "pending (no browser)"
+  },
+  "webSync_20261017_thuongHieu": {
+    "sourceModifiedTime": "2026-10-17T12:10:10.567Z",
+    "count": 461,
+    "added": [],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "withThuongHieu": 261,
+    "withQuyCach": 34,
+    "note": "Cột Thương Hiệu và Quy Cách. VP111-VP113 brand Pilot. VP456-VP459 cột Thương Hiệu trống, không ghi Pilot, bỏ brand Plastic đoán từ tên."
   }
 }

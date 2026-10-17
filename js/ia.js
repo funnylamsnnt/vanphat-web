@@ -266,7 +266,7 @@
     if (ma && (ma.startsWith(queryFold) || queryFold.startsWith(ma))) return 80;
     if (ten.startsWith(queryFold) || rawTen.startsWith(rawQ)) return 65;
     if (ten.includes(queryFold) || rawTen.includes(rawQ)) return 50;
-    const extra = fold([product.nhom, product.linhVucTen].filter(Boolean).join(" "));
+    const extra = fold([product.thuongHieu, product.quyCach, product.nhom, product.linhVucTen].filter(Boolean).join(" "));
     if (extra.includes(queryFold)) return 30;
     return 0;
   }

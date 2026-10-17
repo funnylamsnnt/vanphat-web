@@ -26,7 +26,11 @@ ROOT = Path(__file__).resolve().parent.parent
 IA_PATH = ROOT / "data" / "ia.json"
 
 # Default (legacy) layout: A nhóm, B mã, C tên, D ĐVT, E giá, F link ảnh, K tồn.
+# Thương Hiệu and Quy Cách are not here: they are found by header name only.
 DEFAULT_COLS = {"nhom": 0, "ma": 1, "ten": 2, "dvt": 3, "gia": 4, "anh": 5, "ton": 10}
+# Optional columns. A missing header does not fail the export and never falls
+# back to a fixed index such as column S or T.
+OPTIONAL_HEADER_KEYS = ("thuong_hieu", "quy_cach")
 HEADER_PATTERNS = {
     "nhom": [r"^nh[oó]m"],
     "ma": [r"^m[aã]\s*(sp|s[aả]n ph[aẩ]m|h[aà]ng|vt)?$"],
@@ -35,11 +39,17 @@ HEADER_PATTERNS = {
     "gia": [r"^đ[oơ]n gi[aá]", r"^gi[aá] b[aá]n", r"^gi[aá]$"],
     "anh": [r"(link|url).*(h[iì]nh|[aả]nh)", r"^h[iì]nh [aả]nh", r"^[aả]nh$"],
     "ton": [r"^t[oồ]n kho", r"^t[oồ]n$"],
+    "thuong_hieu": [r"^th[uư][oơ]ng hi[eệ]u"],
+    "quy_cach": [r"^quy c[aá]ch"],
 }
 
 
 def detect_columns(header) -> dict:
-    """Map fields to column indexes from the header row; fall back to the legacy layout."""
+    """Map fields to column indexes from the header row; fall back to the legacy layout.
+
+    thuong_hieu and quy_cach are optional. They are set only when the header
+    matches, even if the required columns fall back to DEFAULT_COLS.
+    """
     cols = dict(DEFAULT_COLS)
     names = [re.sub(r"\s+", " ", str(h or "")).strip().lower() for h in header]
     found = {}
@@ -48,8 +58,13 @@ def detect_columns(header) -> dict:
             if name and any(re.search(p, name) for p in pats):
                 found[key] = idx
                 break
-    if all(k in found for k in ("ma", "ten", "gia")):
-        cols.update(found)
+    required = {key: idx for key, idx in found.items() if key not in OPTIONAL_HEADER_KEYS}
+    optional = {key: idx for key, idx in found.items() if key in OPTIONAL_HEADER_KEYS}
+    if all(k in required for k in ("ma", "ten", "gia")):
+        cols.update(required)
+    for key in OPTIONAL_HEADER_KEYS:
+        cols.pop(key, None)
+    cols.update(optional)
     return cols
 
 
@@ -255,6 +270,30 @@ def ensure_group(raw_nhom: str, ia: dict, nhom_cfg: list, by_fold: dict, lv_by_i
     return meta
 
 
+def assert_optional_columns() -> None:
+    """Thương Hiệu and Quy Cách follow the header. No fixed column fallback."""
+    full = [
+        "Nhóm Hàng", "Mã SP", "Tên Sản Phẩm", "ĐVT", "Đơn Giá",
+        "Link Hình Ảnh", "", "", "", "", "Tồn Kho",
+    ]
+    full += [""] * 7
+    full += ["Thương Hiệu", "Quy Cách"]
+    cols = detect_columns(full)
+    if cols.get("thuong_hieu") != 18 or cols.get("quy_cach") != 19:
+        raise SystemExit(f"header columns missed: {cols.get('thuong_hieu')} {cols.get('quy_cach')}")
+    bare = ["Nhóm", "Mã SP", "Tên sản phẩm", "ĐVT", "Giá", "Ảnh", "", "", "", "", "Tồn"]
+    bare += ["x"] * 10
+    legacy = detect_columns(bare)
+    if "thuong_hieu" in legacy or "quy_cach" in legacy:
+        raise SystemExit(f"optional columns fell back without a header: {legacy}")
+    shifted = ["Thuong hieu", "Quy cach", "Nhóm", "Mã SP", "Tên sản phẩm", "ĐVT", "Đơn giá"]
+    shifted_cols = detect_columns(shifted)
+    if shifted_cols.get("thuong_hieu") != 0 or shifted_cols.get("quy_cach") != 1:
+        raise SystemExit(f"optional columns must follow the header: {shifted_cols}")
+    if shifted_cols.get("ma") != 3 or shifted_cols.get("ten") != 4:
+        raise SystemExit(f"required columns should still map from the header: {shifted_cols}")
+
+
 def assert_placement_rules() -> None:
     expect = {
         "": None,
@@ -425,20 +464,25 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
             old = prev_by_ma.get(ma) or {}
             anh = clean(old.get("anh"))
         ton = to_int(cell("ton"))
-        products.append(
-            {
-                "nhom": meta["TenNhom"],
-                "nhomId": meta.get("id") or meta.get("slug") or "",
-                "linhVucId": lv_id,
-                "linhVucTen": lv.get("ten") or "",
-                "ma": ma,
-                "ten": ten,
-                "dvt": dvt,
-                "gia": gia,
-                "anh": anh,
-                "ton": ton if ton is not None else 0,
-            }
-        )
+        record = {
+            "nhom": meta["TenNhom"],
+            "nhomId": meta.get("id") or meta.get("slug") or "",
+            "linhVucId": lv_id,
+            "linhVucTen": lv.get("ten") or "",
+            "ma": ma,
+            "ten": ten,
+            "dvt": dvt,
+            "gia": gia,
+            "anh": anh,
+            "ton": ton if ton is not None else 0,
+        }
+        thuong_hieu = clean(cell("thuong_hieu"))
+        quy_cach = clean(cell("quy_cach"))
+        if thuong_hieu:
+            record["thuongHieu"] = thuong_hieu
+        if quy_cach:
+            record["quyCach"] = quy_cach
+        products.append(record)
     wb.close()
 
     by = {}
@@ -533,6 +577,8 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         "excludedGroups": excluded,
         "heldUnmappedGroups": held,
         "keptImages": sum(1 for p in products if p["anh"] and not (prev_by_ma.get(p["ma"]) or {}).get("anh") and p["ma"] not in prev_by_ma) ,
+        "withThuongHieu": sum(1 for p in products if p.get("thuongHieu")),
+        "withQuyCach": sum(1 for p in products if p.get("quyCach")),
         "path": str(out_json),
     }
 
@@ -564,6 +610,7 @@ def main():
     regenerate_catalog_pages(out)
 
 
+assert_optional_columns()
 assert_placement_rules()
 
 if __name__ == "__main__":
