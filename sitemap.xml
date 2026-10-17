@@ -712,12 +712,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://vanphatcompany.vn/san-pham/vp007-bam-kim-dai-tro-luc-deli-0383-210-to.html</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://vanphatcompany.vn/san-pham/vp111-but-bi-plastic-bp-1rt-f-den-12-cay-hop.html</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -1325,6 +1319,12 @@
   </url>
   <url>
     <loc>https://vanphatcompany.vn/san-pham/vp006-bam-kim-dai-deli.html</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vanphatcompany.vn/san-pham/vp007-bam-kim-dai-tro-luc-deli-0383-210-to.html</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
