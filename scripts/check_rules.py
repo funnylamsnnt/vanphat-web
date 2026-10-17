@@ -15,6 +15,8 @@
    thay cho giá 0, tổng ghi món chưa gồm.
    Xóa chat (`scripts/test_chat_reset.js`) xóa hội thoại và session,
    giữ giỏ và bill. Mọi trang khách dùng cùng `chat-widget.js?v` với `sw.js`.
+   Service worker (`scripts/test_sw_strategy.js`) lấy chat-widget.js
+   network-first theo pathname, bỏ qua query, timeout 3 giây.
 6. Trang HTML không chứa «0đ» hay schema price 0.
 7. Mô tả dài trong data/descriptions.json chỉ khi trang_thai là da_xac_minh
    và nguon_url là http(s). Câu đệm không nguồn không được vào file hay trang SKU.
@@ -441,6 +443,7 @@ def check_chat_search(errors: list[str]) -> None:
     check_node_script(errors, "test_chat_search.js", "test tìm chat")
     check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
     check_node_script(errors, "test_chat_reset.js", "test xóa chat")
+    check_node_script(errors, "test_sw_strategy.js", "test chiến lược service worker")
 
 
 CHAT_WIDGET_RE = re.compile(r"chat-widget\.js\?v=(\d+)")
@@ -461,7 +464,17 @@ def check_chat_widget_cache(errors: list[str]) -> None:
     if "keys.filter((key) => !keep.has(key)).map((key) => caches.delete(key))" not in sw:
         errors.append("sw.js activate không xóa cache ngoài bộ keep")
     keep = {f"vp-shell-{version}", f"vp-pages-{version}", f"vp-img-{version}"}
-    previous = "2026101726" if version != "2026101726" else "2026101725"
+    previous = "2026101727" if version != "2026101727" else "2026101726"
+    if version == "2026101727":
+        errors.append("sw.js VERSION cần tăng sau khi chat-widget.js chuyển network-first")
+    if "chooseFetchStrategy" not in sw or "chat-network-first" not in sw:
+        errors.append("sw.js thiếu chiến lược network-first cho chat-widget.js")
+    if "CHAT_NETWORK_TIMEOUT_MS = 3000" not in sw:
+        errors.append("sw.js timeout chat phải khoảng 3 giây")
+    if "ignoreSearch: true" not in sw:
+        errors.append("sw.js chưa khớp chat-widget.js theo pathname, bỏ query")
+    if "/css/styles.css" in sw and 'CHAT_NETWORK_FIRST_PATHS = ["/js/chat-widget.js"]' not in sw:
+        errors.append("sw.js không được đưa styles.css dùng chung vào network-first của chat")
     stale = [f"vp-shell-{previous}", f"vp-pages-{previous}", f"vp-img-{previous}"]
     if [name for name in stale if name not in keep] != stale:
         errors.append("SW mới không xóa cache VERSION cũ khi activate")
