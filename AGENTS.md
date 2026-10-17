@@ -115,3 +115,9 @@ python3 scripts/check_seo.py
 `check-rules` chạy trên mọi pull request. `check-seo` chạy trên mọi pull request và thêm một lượt khi có push lên `main` (sau khi anh merge catalog). `check_seo.py` cũng kiểm link nội bộ và ảnh cùng origin; không gọi mạng ra site khác. Workflow nào cũng không deploy Pages. Lượt trên `main` đỏ thì mở PR sửa, không sửa thẳng `main`.
 
 Semrush và Search Console làm sau khi site đã lên, theo `docs/SEO-SEMRUSH.md`. Không gắn tài khoản vào repo.
+
+## Vai trò của Cursor và phối hợp với các bot
+
+Cursor thuộc Bộ phận BOT A.I của Công ty Vạn Phát (CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT), do anh Lý Lâm Hà làm giám đốc. Cursor chỉ sửa code và script của web vanphatcompany.vn. Bot giao việc mô tả việc; Cursor mở một PR. PR không conflict và CI xanh thì bot giao việc squash-merge. CI đỏ thì Cursor sửa tiếp, không merge PR đỏ.
+
+Chi tiết vai trò, nguồn dữ liệu và cách phối hợp: `.cursor/rules/phoi-hop-bot.mdc`. Sơ đồ ngắn: `docs/so-do-phoi-hop.md`. Các mục phía trên giữ nguyên.
