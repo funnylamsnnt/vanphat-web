@@ -407,8 +407,21 @@
     return (match ? match[1] : String(raw || "")) + "đ";
   }
 
+  // Chỉ số 0 đứng riêng kèm đơn vị tiền («0đ», «0 ₫», «0 VNĐ», «0 đồng»).
+  // Lookahead chặn mọi chữ cái Unicode: «0 đến», «0 đơn», «0 đầu» giữ nguyên.
+  // Không đụng «10.000đ» hay «20đ».
+  function scrubZeroPrice(text) {
+    return String(text || "").replace(
+      /(^|[^\d.,])0(\s*)(đồng|vnđ|vnd|đ|₫)(?![\p{L}\d])/giu,
+      function (_full, lead) {
+        return lead + "Liên hệ báo giá";
+      }
+    );
+  }
+
   function decoratePlain(text) {
     if (!text) return "";
+    text = scrubZeroPrice(text);
     const priceRe = /(\d{1,3}(?:\.\d{3})+)(\s*)(đồng|vnđ|vnd|đ|₫|d)(?![a-z0-9])/gi;
     let html = "";
     let cursor = 0;
@@ -1362,6 +1375,7 @@
     renderBotHtml: renderBotHtml,
     searchCatalogSmart: searchCatalogSmart,
     formatCatalogBlock: formatCatalogBlock,
+    decoratePlain: decoratePlain,
   };
 
   document.addEventListener("DOMContentLoaded", () => {

@@ -226,6 +226,77 @@ function testFallbackFilters(search) {
   assertNoZero(result, "gợi ý theo mô tả nhóm");
 }
 
+function testFallbackDropsLeadingZeros(search) {
+  const base = {
+    linh_vuc: [{ id: "vpp", visible: true }],
+    nhom: [{ id: "keo", TenNhom: "Băng keo", visible: true, moTa: "keo dan thung" }],
+  };
+  const leading = search(
+    Object.assign({}, base, {
+      sanpham: [
+        { ma: "K0", ten: "Hop carton do", nhom: "Băng keo", nhomId: "keo", linhVucId: "vpp", gia: 0 },
+        { ma: "K1", ten: "Hop carton vang", nhom: "Băng keo", nhomId: "keo", linhVucId: "vpp", gia: "" },
+        { ma: "K2", ten: "Hop carton xanh", nhom: "Băng keo", nhomId: "keo", linhVucId: "vpp", gia: 15000 },
+      ],
+    }),
+    "keo dan",
+    8
+  );
+  const got = mas(leading);
+  if (!leading || leading.mode !== "alt" || got.indexOf("K2") === -1) {
+    fail("món đầu nhóm giá 0: muốn gợi ý K2, được " + (leading && leading.mode) + " " + got.join(","));
+  }
+  if (got.indexOf("K0") !== -1 || got.indexOf("K1") !== -1) {
+    fail("món đầu nhóm giá 0 hoặc trống vẫn được gợi ý: " + got.join(","));
+  }
+  assertNoZero(leading, "món đầu nhóm");
+  const none = search(
+    Object.assign({}, base, {
+      sanpham: [
+        { ma: "K0", ten: "Hop carton do", nhom: "Băng keo", nhomId: "keo", linhVucId: "vpp", gia: 0 },
+        { ma: "K1", ten: "Hop carton vang", nhom: "Băng keo", nhomId: "keo", linhVucId: "vpp", gia: null },
+      ],
+    }),
+    "keo dan",
+    8
+  );
+  if (!none || none.mode !== "none" || mas(none).length) {
+    fail("cả nhóm giá 0 phải mode none, được " + (none && none.mode) + " " + mas(none).join(","));
+  }
+}
+
+function testDecoratePlain(api) {
+  const decorate = api && api.decoratePlain;
+  if (typeof decorate !== "function") {
+    fail("decoratePlain không gắn lên window.VanPhatChatFormat");
+    return;
+  }
+  const samples = ["Giá 0đ", "0 đ", "0 ₫", "0 VNĐ", "0 vnđ", "0 đồng", "0 Đồng", "0 ĐỒNG", "còn 0₫."];
+  samples.forEach((sample) => {
+    const html = decorate(sample);
+    if (!html.includes("Liên hệ báo giá")) fail("decoratePlain chưa đổi «" + sample + "»: " + html);
+    if (zeroDong(html) || /0\s*₫/.test(html) || /0\s*vnđ/i.test(html) || /0\s*đồng/i.test(html)) {
+      fail("decoratePlain còn giá 0 trong «" + sample + "»: " + html);
+    }
+  });
+  ["từ 0 đến 5", "có 0 đơn", "0 đơn", "0 đầu", "20đ"].forEach((sample) => {
+    const html = decorate(sample);
+    if (html !== sample) fail("decoratePlain đổi nhầm «" + sample + "»: " + html);
+  });
+  const priced = decorate("10.000đ");
+  if (!priced.includes("10.000đ") || priced.includes("Liên hệ báo giá")) {
+    fail("decoratePlain đụng 10.000đ: " + priced);
+  }
+  const kept = decorate("Còn 10.000đ và 20đ, không phải 0đ.");
+  if (!kept.includes("10.000đ") || !kept.includes("20đ")) {
+    fail("decoratePlain đụng giá khác 0: " + kept);
+  }
+  if (!kept.includes("Liên hệ báo giá") || zeroDong(kept)) {
+    fail("decoratePlain chưa gỡ 0đ đứng riêng khi cạnh giá khác: " + kept);
+  }
+  if (decorate("") !== "" || decorate(null) !== "") fail("decoratePlain chuỗi rỗng phải trả về rỗng");
+}
+
 function zeroDong(text) {
   return /(^|[^0-9.])0\s*đ/.test(String(text || ""));
 }
@@ -267,6 +338,8 @@ function main() {
   testZeroPriceQuote(search, catalog, api);
   testIronWhenStocked(search);
   testFallbackFilters(search);
+  testFallbackDropsLeadingZeros(search);
+  testDecoratePlain(api);
   if (failures.length) {
     console.error("KHÔNG ĐẠT: " + failures.length + " lỗi");
     failures.forEach((item) => console.error("- " + item));
