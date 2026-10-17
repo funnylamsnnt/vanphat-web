@@ -10,7 +10,9 @@
 4. Hằng công ty trong generator: tên, địa chỉ Mỹ Gia (không Phước Hải),
    số 0335652832, tọa độ 12.237790 / 109.166378, Street View đã chốt.
 5. Tìm chat (`scripts/test_chat_search.js`) lọc từ hỏi còn dấu, không
-   gợi ý món giá 0, và không báo khách 0đ.
+   gợi ý món giá 0 (kể cả món đầu nhóm), và không báo khách 0đ.
+   Giỏ và sổ đơn (`scripts/test_cart_quote.js`) hiện «Liên hệ báo giá»
+   thay cho giá 0, tổng ghi món chưa gồm.
 6. Trang HTML không chứa «0đ» hay schema price 0.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
@@ -310,10 +312,10 @@ def check_zero_price_pages(errors: list[str]) -> None:
             errors.append(f"{rel}: giá hiện 0 ₫")
 
 
-def check_chat_search(errors: list[str]) -> None:
-    script = ROOT / "scripts" / "test_chat_search.js"
+def check_node_script(errors: list[str], name: str, label: str) -> None:
+    script = ROOT / "scripts" / name
     if not script.is_file():
-        errors.append("thiếu scripts/test_chat_search.js")
+        errors.append(f"thiếu scripts/{name}")
         return
     try:
         proc = subprocess.run(
@@ -325,14 +327,19 @@ def check_chat_search(errors: list[str]) -> None:
             check=False,
         )
     except FileNotFoundError:
-        errors.append("không có node để chạy scripts/test_chat_search.js")
+        errors.append(f"không có node để chạy scripts/{name}")
         return
     except subprocess.TimeoutExpired:
-        errors.append("scripts/test_chat_search.js quá thời gian")
+        errors.append(f"scripts/{name} quá thời gian")
         return
     if proc.returncode != 0:
         detail = ((proc.stdout or "") + (proc.stderr or "")).strip()
-        errors.append("test tìm chat lỗi:\n" + (detail or f"exit {proc.returncode}"))
+        errors.append(f"{label} lỗi:\n" + (detail or f"exit {proc.returncode}"))
+
+
+def check_chat_search(errors: list[str]) -> None:
+    check_node_script(errors, "test_chat_search.js", "test tìm chat")
+    check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
 
 
 def main() -> None:

@@ -56,6 +56,14 @@
     return formatPrice(gia);
   }
 
+  function totalLabel() {
+    const quote = items.some((it) => !hasListPrice(it.gia));
+    const amount = getTotal();
+    if (!quote) return formatPrice(amount);
+    if (!(amount > 0)) return "Chưa gồm các món liên hệ báo giá";
+    return formatPrice(amount) + " (chưa gồm các món liên hệ báo giá)";
+  }
+
   function openZalo() {
     const tel = String((window.VanPhat && window.VanPhat.HOTLINE_TEL) || "0335652832").replace(/\s+/g, "");
     window.open("https://zalo.me/" + tel, "_blank", "noopener");
@@ -289,7 +297,7 @@
           linePrice(hasListPrice(it.gia) ? lineTotal : it.gia)
       );
     });
-    lines.push("", "*Tổng: " + formatPrice(getTotal()) + "*");
+    lines.push("", "*Tổng: " + totalLabel() + "*");
     lines.push("", "Hotline: 033 5652 832");
     return lines.join("\n");
   }
@@ -344,7 +352,7 @@
       phone: fields.phone,
       note: fields.note || "",
       text: fields.text,
-      total: formatPrice(getTotal()),
+      total: totalLabel(),
     };
   }
 
@@ -557,7 +565,7 @@
 
   function updateFooter() {
     const totalEl = document.querySelector("[data-cart-total]");
-    if (totalEl) totalEl.textContent = formatPrice(getTotal());
+    if (totalEl) totalEl.textContent = totalLabel();
 
     const hasItems = items.length > 0;
     const checkoutBtn = document.querySelector("[data-cart-show-checkout]");
@@ -657,6 +665,8 @@
     getItems,
     getCount,
     getTotal,
+    totalLabel,
+    buildOrderText,
     render,
     open,
     close,

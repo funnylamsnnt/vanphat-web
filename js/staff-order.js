@@ -30,6 +30,23 @@
     return (Number(n) || 0).toLocaleString("vi-VN") + " ₫";
   }
 
+  function hasListPrice(gia) {
+    return Number(gia) > 0;
+  }
+
+  function moneyOrQuote(gia) {
+    if (!hasListPrice(gia)) return "Liên hệ báo giá";
+    return formatPrice(gia);
+  }
+
+  function totalLabel(total) {
+    const quote = items.some((it) => !hasListPrice(it.gia));
+    const amount = Number(total) || 0;
+    if (!quote) return formatPrice(amount);
+    if (!(amount > 0)) return "Chưa gồm các món liên hệ báo giá";
+    return formatPrice(amount) + " (chưa gồm các món liên hệ báo giá)";
+  }
+
   function placeholder() {
     if (window.VanPhat && window.VanPhat.placeholderSvg) {
       return window.VanPhat.placeholderSvg();
@@ -286,12 +303,12 @@
           " " +
           (it.dvt || "") +
           " @ " +
-          formatPrice(it.gia) +
+          moneyOrQuote(it.gia) +
           " = " +
-          formatPrice(lineTotal)
+          moneyOrQuote(hasListPrice(it.gia) ? lineTotal : 0)
       );
     });
-    lines.push("", "TỔNG CỘNG: " + formatPrice(meta.total));
+    lines.push("", "TỔNG CỘNG: " + totalLabel(meta.total));
     lines.push(
       "",
       "— Hotline Vạn Phát: " + HOTLINE,
@@ -323,10 +340,10 @@
           (Number(it.qty) || 0) +
           "</td>" +
           "<td style='border:1px solid #333;padding:4px;text-align:right'>" +
-          formatPrice(it.gia) +
+          moneyOrQuote(it.gia) +
           "</td>" +
           "<td style='border:1px solid #333;padding:4px;text-align:right'>" +
-          formatPrice(line) +
+          moneyOrQuote(hasListPrice(it.gia) ? line : 0) +
           "</td>" +
           "</tr>"
         );
@@ -368,7 +385,7 @@
       "</tbody>" +
       "<tfoot><tr style='background:#0070C0;color:#fff'><td colspan='6' style='border:1px solid #333;padding:4px;text-align:right'><b>TỔNG CỘNG</b></td>" +
       "<td style='border:1px solid #333;padding:4px;text-align:right'><b>" +
-      formatPrice(meta.total) +
+      totalLabel(meta.total) +
       "</b></td></tr></tfoot></table>" +
       "<p style='font-size:12px;color:#333'><i>Phiếu PDF layout Excel «Đơn Đặt Hàng» là bản chính thức (nhân viên đã / sẽ Xuất PDF trên máy). Email này là tóm tắt bill — không kèm giá vốn.</i><br/>Hotline: " +
       HOTLINE +
@@ -626,7 +643,7 @@
       "Ma don": meta.orderId,
       "Nhan vien": meta.staff,
       "SDT khach": meta.phone,
-      Tong: formatPrice(meta.total),
+      Tong: totalLabel(meta.total),
       "Noi dung bill (text)": orderText,
       "Noi dung bill (HTML)": billHtml,
       "Ghi chu he thong":
@@ -762,7 +779,7 @@
         "Mã <strong>" +
         escapeHtml(meta.orderId) +
         "</strong> · Tổng <strong>" +
-        escapeHtml(formatPrice(meta.total)) +
+        escapeHtml(totalLabel(meta.total)) +
         "</strong>.<br/>File PDF đã tải (nếu được phép). Email bill là bản tóm tắt — PDF mới là phiếu chính thức.";
     }
     sheet.hidden = false;
@@ -784,7 +801,7 @@
 
   function cardHTML(p) {
     const img = p.anh ? p.anh : placeholder();
-    const price = formatPrice(p.gia);
+    const price = moneyOrQuote(p.gia);
     return `
       <article class="product-card"
         data-ma="${escapeAttr(p.ma)}"
@@ -881,7 +898,7 @@
     if (clearBtn) {
       clearBtn.hidden = items.length === 0;
     }
-    if (totalEl) totalEl.textContent = formatPrice(getTotal());
+    if (totalEl) totalEl.textContent = totalLabel(getTotal());
 
     if (!body) return;
     if (!items.length) {
@@ -906,8 +923,8 @@
               <button type="button" class="qty-btn" data-cart-plus data-ma="${escapeAttr(it.ma)}" aria-label="Tăng">+</button>
             </div>
           </td>
-          <td class="staff-td-num">${formatPrice(it.gia)}</td>
-          <td class="staff-td-num">${formatPrice(line)}</td>
+          <td class="staff-td-num">${moneyOrQuote(it.gia)}</td>
+          <td class="staff-td-num">${moneyOrQuote(hasListPrice(it.gia) ? line : 0)}</td>
           <td>
             <button type="button" class="cart-item-remove" data-cart-remove data-ma="${escapeAttr(it.ma)}" aria-label="Xóa">Xóa</button>
           </td>
@@ -1180,6 +1197,13 @@
     }
     return false;
   }
+
+  window.VanPhatStaffOrder = {
+    add,
+    cardHTML,
+    buildOrderText,
+    renderCart,
+  };
 
   document.addEventListener("DOMContentLoaded", () => {
     setupPinGate();
