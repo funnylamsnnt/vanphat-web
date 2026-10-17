@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101601"
+CSS_V = "2026101701"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101401"
 CHAT_V = "2026101309"
@@ -1750,6 +1750,38 @@ def assert_seo_helpers() -> None:
         raise SystemExit("hero lead pin is not idempotent")
     if pinned.count(", ") != 3:
         raise SystemExit("hero lead must keep one space after each comma")
+    assert_local_titles_do_not_collide()
+
+
+def assert_local_titles_do_not_collide() -> None:
+    """Title địa phương không trùng lĩnh vực hoặc nhóm, kể cả khác hoa thường.
+
+    Sync sau đọc data/local-pages.json rồi sinh lại HTML. Title trùng làm hai
+    canonical cạnh tranh trên Google.
+    """
+    keys: set[str] = set()
+    for path in (ROOT / "data" / "ia.json", ROOT / "data" / "products.json"):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for lv in data.get("linh_vuc") or []:
+            ten = re.sub(r"\s+", " ", str(lv.get("ten") or "")).strip()
+            if ten:
+                keys.add(linh_vuc_seo_title(ten).casefold())
+        for nhom in data.get("nhom") or []:
+            name = re.sub(r"\s+", " ", str(nhom.get("TenNhom") or "")).strip()
+            if name:
+                keys.add(group_seo_title(name).casefold())
+    seen: set[str] = set()
+    for spec in load_local_pages():
+        title = re.sub(r"\s+", " ", str(spec.get("title") or "")).strip()
+        slug = spec.get("slug") or "?"
+        if not title:
+            raise SystemExit(f"local page {slug} missing title")
+        if len(title) > TITLE_MAX:
+            raise SystemExit(f"local title too long ({len(title)} > {TITLE_MAX}): {title}")
+        key = title.casefold()
+        if key in keys or key in seen:
+            raise SystemExit(f"local title collides with another catalog title: {title}")
+        seen.add(key)
 
 
 def _product_node(doc: dict) -> dict:
