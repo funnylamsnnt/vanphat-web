@@ -77,6 +77,9 @@ function testChoose() {
     ["https://vanphatcompany.vn/js/chat-widget.js?v=2026101727", "chat-network-first"],
     ["https://vanphatcompany.vn/js/chat-widget.js?v=khac", "chat-network-first"],
     ["/js/chat-widget.js?v=1", "chat-network-first"],
+    ["https://vanphatcompany.vn/css/chat-widget.css", "chat-network-first"],
+    ["https://vanphatcompany.vn/css/chat-widget.css?v=batky", "chat-network-first"],
+    ["/css/chat-widget.css?v=1", "chat-network-first"],
     ["https://vanphatcompany.vn/css/styles.css?v=2026101728", "shell-cache-first"],
     ["https://vanphatcompany.vn/js/main.js?v=2026101728", "shell-cache-first"],
     ["https://vanphatcompany.vn/js/cart.js", "shell-cache-first"],
@@ -97,7 +100,10 @@ function testChoose() {
   if (api.CHAT_NETWORK_TIMEOUT_MS !== 3000) fail("timeout chat phải 3000ms, được " + api.CHAT_NETWORK_TIMEOUT_MS);
   const paths = api.CHAT_NETWORK_FIRST_PATHS || [];
   if (paths.indexOf("/js/chat-widget.js") === -1) fail("thiếu pathname chat-widget.js");
-  if (paths.some((item) => item.indexOf("styles.css") !== -1)) fail("không đưa styles.css dùng chung vào network-first");
+  if (paths.indexOf("/css/chat-widget.css") === -1) fail("thiếu pathname css/chat-widget.css");
+  if (paths.some((item) => item === "/css/styles.css" || item.indexOf("styles.css") !== -1)) {
+    fail("không đưa styles.css dùng chung vào network-first");
+  }
   const queried = new URL("https://vanphatcompany.vn/js/chat-widget.js?v=cu");
   if (strategyOf(api, queried) !== "chat-network-first") fail("URL object có query vẫn phải network-first");
 }
@@ -168,12 +174,28 @@ async function testOnlineStoresFresh() {
   if ((await textOf(saved.body)) !== "ban-moi") fail("cache pathname không phải bản mới");
 }
 
+async function testCssCacheSeparate() {
+  const { api, cache } = loadSw({
+    fetch(request) {
+      const path = new URL(request.url).pathname;
+      return Promise.resolve(new Response(path === "/css/chat-widget.css" ? "css-moi" : "js-moi", { status: 200 }));
+    },
+  });
+  await api.networkFirstChat(new Request("https://vanphatcompany.vn/js/chat-widget.js?v=1"), 40);
+  await api.networkFirstChat(new Request("https://vanphatcompany.vn/css/chat-widget.css?v=khac"), 40);
+  const js = cache.rows.find((row) => row.url === "https://vanphatcompany.vn/js/chat-widget.js");
+  const css = cache.rows.find((row) => row.url === "https://vanphatcompany.vn/css/chat-widget.css");
+  if (!js || (await textOf(js.body)) !== "js-moi") fail("cache js bị ghi đè khi lưu css");
+  if (!css || (await textOf(css.body)) !== "css-moi") fail("css chat không vào cache theo pathname");
+}
+
 async function main() {
   testChoose();
   if (!failures.length) {
     await testOfflineUsesCache();
     await testTimeoutFallsBack();
     await testOnlineStoresFresh();
+    await testCssCacheSeparate();
   }
   if (failures.length) {
     console.error("KHÔNG ĐẠT: " + failures.length + " lỗi");

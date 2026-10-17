@@ -7,7 +7,7 @@
   - Chỉ model suy luận, ví dụ `grok-4.7`, đi `POST https://api.x.ai/v1/responses` với `reasoning.effort` = `low`. `store` để `false` để không lưu hội thoại khách trên xAI.
 - Prompt kiểm soát: `content/chat-system-prompt.md` → Script Property `SYSTEM_PROMPT`. Thẻ `[[SP]]` và `[[LEAD]]` giữ trong prompt đó và trong câu mặc định của `Code.gs`.
 - API Cursor dùng cho phiên sửa repo. Không gắn API đó vào chat khách.
-- Cache widget trên web: service worker lấy `/js/chat-widget.js` theo pathname, bỏ qua `?v`, chiến lược network-first. Có mạng thì tải bản mới, timeout khoảng 3 giây rồi dùng cache; mất mạng mà đã có cache thì widget vẫn mở. Từ nay sửa `js/chat-widget.js` không cần tăng `?v` hay `CHAT_V`. CSS chat nằm trong `css/styles.css` dùng chung, không tách file, nên vẫn cache-first. Nút «Xóa nội dung chat» trên header xóa hội thoại và `sessionId`, giữ giỏ hàng và bill đã gửi.
+- Cache widget trên web: service worker lấy `/js/chat-widget.js` và `/css/chat-widget.css` theo pathname, bỏ qua `?v`, chiến lược network-first. Có mạng thì tải bản mới, timeout khoảng 3 giây rồi dùng cache; mất mạng mà đã có cache thì widget vẫn mở. `js/chat-widget.js` tự nạp CSS, không thêm thẻ link trên từng trang. Sửa hai file đó không cần tăng `?v` hay `CHAT_V`. `css/styles.css` dùng chung vẫn cache-first. Nút «Xóa nội dung chat» trên header xóa hội thoại và `sessionId`, giữ giỏ hàng và bill đã gửi.
 
 ## Quy tắc nghiệp vụ
 
