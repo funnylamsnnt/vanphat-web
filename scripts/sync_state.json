@@ -2,12 +2,12 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-17T13:52:32.538Z",
-  "previousModifiedTime": "2026-10-17T13:43:55.239Z",
+  "lastModifiedTime": "2026-10-18T05:24:06.731Z",
+  "previousModifiedTime": "2026-10-17T13:52:32.538Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-17T14:00:00Z",
+  "lastSyncAt": "2026-10-18T07:21:00Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 466,
@@ -146,20 +146,10 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-18T01:17:00Z",
-  "lastCheckResult": "Excel unchanged (2026-10-17T13:52:32.538Z); web not redeployed; bridge refresh blocked (OOM)",
+  "lastCheckAt": "2026-10-18T07:21:00Z",
+  "lastCheckResult": "Excel 2026-10-18T05:24Z synced to web (commit d70d41a) + bridge refreshed 500 rows 14:22 ICT",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "pendingBridge": {
-    "sourceModifiedTime": "2026-10-17T13:52:32.538Z",
-    "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "expectedRows": 495,
-    "reason": "Chrome tab crashes (box out of memory: ~16GB used, <600MB free, playwright runtime node ~4GB); Import→Replace not completed",
-    "lastAttempt": "2026-10-18 08:17 ICT: sheet opened signed-in, upload dialog reached, tab crashed twice before Replace",
-    "bridgeLiveModifiedTime": "2026-10-16T01:12:18.195Z",
-    "blockedSince": "2026-10-17 08:20 ICT",
-    "ownerNotified": "2026-10-18 08:17 ICT"
-  },
   "webSync_20261016_1414": {
     "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
     "commit": "ff2cb432e416a3f43d8274c5a8882cf71fd463a1",
@@ -325,5 +315,62 @@
     "withThuongHieu": 261,
     "withQuyCach": 34,
     "note": "Cột Thương Hiệu và Quy Cách. VP111-VP113 brand Pilot. VP456-VP459 cột Thương Hiệu trống, không ghi Pilot, bỏ brand Plastic đoán từ tên."
+  },
+  "webSync_20261018_1416": {
+    "sourceModifiedTime": "2026-10-18T05:24:06.731Z",
+    "md5": "bb04829d017692aca131b91afa3253a9",
+    "commit": "d70d41a90c893e39ba98bd3b742fac97ba8087d9",
+    "pages_run": 39107160177,
+    "pages_status": "success",
+    "count": 466,
+    "with_img": 380,
+    "source_count": 500,
+    "added": [
+      "VP496",
+      "VP498",
+      "VP499",
+      "VP500",
+      "VP497"
+    ],
+    "price_chg": [
+      [
+        "VP131",
+        8000,
+        8500
+      ],
+      [
+        "VP133",
+        8000,
+        8500
+      ]
+    ],
+    "slug_chg": [
+      {
+        "ma": "VP133",
+        "old": "Bút dạ quang TL HL03",
+        "new": "Bút dạ quang FO-HL01/VN"
+      },
+      {
+        "ma": "VP452",
+        "old": "Trà bí đao Wonderfarm Lon 310ml",
+        "new": "Trà bí đao Wonderfarm Lon 320ml"
+      },
+      {
+        "ma": "VP478",
+        "old": "Nước cam ép Splash lon 330ml (Lon)",
+        "new": "Nước cam ép Splash lon 320ml (Lon)"
+      }
+    ],
+    "zeroPrice_count": 21,
+    "live_check": "products.json live==local 466/380 img; VP496–VP500 + VP131/133/452/478 pages 200 + lightbox; old slugs VP133/VP452/VP478 404; VP415 not on site/sitemap; 3 linh-vuc + nhom-nuoc-uong 200; sitemap 494",
+    "images_checked": "new product images 200",
+    "bridge": "OK 14:22 ICT, 500 rows verified"
+  },
+  "bridge": {
+    "lastRefreshAt": "2026-10-18 14:22 ICT",
+    "sourceModifiedTime": "2026-10-18T05:24:06.731Z",
+    "bridgeLiveModifiedTime": "2026-10-18T07:21:54.039Z",
+    "rows_verified": "Drive export 500 == source 500, 0 cell mismatches A–F, VP500 last, VP415 kept, tab Chính Sách Đối Tác kept",
+    "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx"
   }
 }
