@@ -852,7 +852,7 @@
       "dvt": "Cái",
       "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1DFxbI3V-BdfJWBFxzvUbYkRUP2Hsu-y7",
-      "ton": 15,
+      "ton": 45,
       "thuongHieu": "PLUS"
     },
     {
@@ -878,7 +878,7 @@
       "dvt": "Cái",
       "gia": 64000,
       "anh": "https://lh3.googleusercontent.com/d/14eGkYHgb72IXkHgN7EW3074-O8rthe6o",
-      "ton": 40,
+      "ton": 60,
       "thuongHieu": "PLUS"
     },
     {
@@ -1480,7 +1480,7 @@
       "ten": "Bút bi TL Gel B-029",
       "dvt": "Cây",
       "gia": 0,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1fwPxfUc_zTe-3MV7VI12mRE9ctzkd3tv",
       "ton": 10,
       "thuongHieu": "Thiên Long"
     },
@@ -1623,7 +1623,7 @@
       "ten": "Bút chì Gỗ TL (GP01)",
       "dvt": "Cây",
       "gia": 5500,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1yhnv7QidRBFfsM3OYa5GVS8kWb52DVPB",
       "ton": 0,
       "thuongHieu": "Thiên Long"
     },
@@ -1637,7 +1637,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
-      "ton": 0,
+      "ton": 60,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -1648,7 +1648,7 @@
       "ma": "VP131",
       "ten": "Bút dạ quang FO-HL03",
       "dvt": "Cây",
-      "gia": 8000,
+      "gia": 8500,
       "anh": "https://lh3.googleusercontent.com/d/1pkSwtnBGwdbryCjlQ4DSr4n6djjUtM3Y",
       "ton": 50,
       "thuongHieu": "FlexOffice"
@@ -1672,11 +1672,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP133",
-      "ten": "Bút dạ quang TL HL03",
+      "ten": "Bút dạ quang FO-HL01/VN",
       "dvt": "Cây",
-      "gia": 8000,
-      "anh": "https://lh3.googleusercontent.com/d/1zPYBBaghBpvxXNCf2cJ3Fws_bsU2hiXd",
-      "ton": 0,
+      "gia": 8500,
+      "anh": "https://lh3.googleusercontent.com/d/1sRLd5zbzjzlt45EMpcPuzR4mT6YpICYU",
+      "ton": 150,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2012,7 +2012,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 0,
+      "ton": 30,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2025,7 +2025,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 0,
+      "ton": 30,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2038,7 +2038,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 0,
+      "ton": 36,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2090,7 +2090,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1DVNrtjU3r8olFWqv_gHb_7P_Kcstgs_r",
-      "ton": 0,
+      "ton": 60,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2103,7 +2103,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/18JMg6xxLST11yqLhoEW5nYsBGzLLKBUT",
-      "ton": 0,
+      "ton": 150,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2116,7 +2116,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/16wxMuND6FxNYkND17k4RLNbEbU5DU_BX",
-      "ton": 0,
+      "ton": 60,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -2142,6 +2142,54 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1MR0ojlzaFlp0kqx9vV6cZpIUOo1X_wcJ",
+      "ton": 15
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP496",
+      "ten": "Bút dạ quang FO-HL05",
+      "dvt": "Cây",
+      "gia": 7500,
+      "anh": "https://lh3.googleusercontent.com/d/1r5Ybs5AQMjWTakMffmuYDofJnfLCgSKD",
+      "ton": 120
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP498",
+      "ten": "Bút bi TL-097 (Xanh)",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1XJ-NB-DYaycJH2bD7Oy-0RYYdFC0BKmW",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP499",
+      "ten": "Bút bi TL-097 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1XJ-NB-DYaycJH2bD7Oy-0RYYdFC0BKmW",
+      "ton": 30
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP500",
+      "ten": "Bút bi TL-097 (Đen)",
+      "dvt": "Cây",
+      "gia": 4000,
+      "anh": "https://lh3.googleusercontent.com/d/1XJ-NB-DYaycJH2bD7Oy-0RYYdFC0BKmW",
       "ton": 0
     },
     {
@@ -2276,7 +2324,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1ePGemScJvBcWYEivvC78iWebfPfhav2w",
-      "ton": 0,
+      "ton": 8,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2616,7 +2664,7 @@
       "ten": "Bấm Kim Đại 395 Deli",
       "dvt": "Cái",
       "gia": 550000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1XB9ayMbJg7JjcFKfQ2KUhkmEAMOml1_G",
       "ton": 0,
       "thuongHieu": "Deli"
     },
@@ -2810,7 +2858,7 @@
       "ten": "Bấm lỗ 938 TriO",
       "dvt": "Cái",
       "gia": 1150000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1tAv4GoIUEs9Ivk3mz3nVE9v4wulMms2i",
       "ton": 0,
       "thuongHieu": "KW-triO"
     },
@@ -2836,7 +2884,7 @@
       "ten": "bấm lỗ Trio 09670",
       "dvt": "Cái",
       "gia": 560000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1suBojIOPkRBcL1e5l3EybLuWcq8ilvJj",
       "ton": 0,
       "thuongHieu": "KW-triO"
     },
@@ -2849,7 +2897,7 @@
       "ten": "Bâm lỗ Trio 952",
       "dvt": "Cái",
       "gia": 1650000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1ToNcerXHPlUBw7xyv_m-OezjoE4q3CSl",
       "ton": 0,
       "thuongHieu": "KW-triO"
     },
@@ -2862,7 +2910,7 @@
       "ten": "Bấm trung Deli 0414",
       "dvt": "Cái",
       "gia": 75000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1gS6hMgZsU1HOVbCF3MpZN9l5v_zhv9hq",
       "ton": 0,
       "thuongHieu": "Deli"
     },
@@ -3430,7 +3478,7 @@
       "ten": "Ghim giấy C62 tam giác FO-PAC01",
       "dvt": "Cái",
       "gia": 4500,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1RaaxtgGyJbXt784wbMxmu6-_cJ2ltw8J",
       "ton": 0,
       "thuongHieu": "FlexOffice"
     },
@@ -4281,7 +4329,7 @@
       "dvt": "Hủ",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1K3XgyzHA_e_jLfu2rFWOcm6u78ZnH3v8",
-      "ton": 0,
+      "ton": 12,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -5061,6 +5109,18 @@
       "ton": 50
     },
     {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP497",
+      "ten": "Bìa lá F4 CH02/FO",
+      "dvt": "Bìa",
+      "gia": 3500,
+      "anh": "https://lh3.googleusercontent.com/d/1LYWv9VqHdzwXs2NthOQWUmnn-F_Rb_25",
+      "ton": 120
+    },
+    {
       "nhom": "Điện",
       "nhomId": "dien",
       "linhVucId": "dien-gia-dung",
@@ -5070,7 +5130,7 @@
       "dvt": "m",
       "gia": 29000,
       "anh": "https://lh3.googleusercontent.com/d/1d28RMhmlhrRFc4fE4_32ZA1lGQxx2Vkb",
-      "ton": 58
+      "ton": 116
     },
     {
       "nhom": "Điện",
@@ -5205,7 +5265,7 @@
       "dvt": "Chai",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1fpz5d7436X8xpZexN_6GmBVhSJnt1zVN",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Aquafina"
     },
     {
@@ -5243,7 +5303,7 @@
       "ten": "Nước suối Sanna (330ml)",
       "dvt": "Chai",
       "gia": 3000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1OjZ8j9U0lVPPqwvUYbWNY8e7_CagtShm",
       "ton": 0,
       "thuongHieu": "Sanna"
     },
@@ -5256,7 +5316,7 @@
       "ten": "Nước suối Sanna (500ml)",
       "dvt": "Chai",
       "gia": 4000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1B8aYqmF9Ubn-zS0qixqBXxAMNtPc3uj1",
       "ton": 0,
       "thuongHieu": "Sanna"
     },
@@ -5270,7 +5330,7 @@
       "dvt": "Chai",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1WYNHupNdid6fpssYesEQ--qSjolrTUh8",
-      "ton": 0,
+      "ton": 240,
       "thuongHieu": "Vikoda"
     },
     {
@@ -5283,7 +5343,7 @@
       "dvt": "Chai",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1AmkLy1IiGeL9CpAbV5k4cD7OSByOJsii",
-      "ton": 0,
+      "ton": 240,
       "thuongHieu": "Vikoda"
     },
     {
@@ -5308,7 +5368,7 @@
       "dvt": "Lon",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1vTNKjybJNCMJT-d_dpRzv2LyAiE7Eb4Z",
-      "ton": 6,
+      "ton": 30,
       "thuongHieu": "Red Bull"
     },
     {
@@ -5360,7 +5420,7 @@
       "dvt": "Chai",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/15lx-F6QAH6eEkx7rEHu07NmUHwsD2wA6",
-      "ton": 6,
+      "ton": 30,
       "thuongHieu": "Nutriboost"
     },
     {
@@ -5373,7 +5433,7 @@
       "dvt": "Chai",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1TFyTyPOtjo6YYvXiKHmfwRQgJ-46Z4ox",
-      "ton": 6,
+      "ton": 30,
       "thuongHieu": "Nutriboost"
     },
     {
@@ -5386,7 +5446,7 @@
       "dvt": "Chai",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1PfCqHfgcmixmZqHHePVNZBAuPCsAGeWV",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Nutriboost"
     },
     {
@@ -5451,7 +5511,7 @@
       "dvt": "Lon",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1FmIRlKpxXxBVhQ2EyXsJ9xxizNqxKQnT",
-      "ton": 0,
+      "ton": 6,
       "thuongHieu": "Sting"
     },
     {
@@ -5503,7 +5563,7 @@
       "dvt": "Lon",
       "gia": 11000,
       "anh": "https://lh3.googleusercontent.com/d/1CgkSN2czVDmKf_9uhIHiYeuBNOmMFcxN",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Coca-Cola"
     },
     {
@@ -5516,7 +5576,7 @@
       "dvt": "Lon",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1V4W5DqJcisoHhY-38WL0HvdCF7V46UFe",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Coca-Cola"
     },
     {
@@ -5529,7 +5589,7 @@
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1QekQ-DpLM2hYM_S_itViepElY5uLxJE8",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Lipovitan"
     },
     {
@@ -5603,11 +5663,11 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP452",
-      "ten": "Trà bí đao Wonderfarm Lon 310ml",
+      "ten": "Trà bí đao Wonderfarm Lon 320ml",
       "dvt": "Lon",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1dJx3NCSPVCegR0HqyatY2u6IK7-1lQba",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Wonderfarm"
     },
     {
@@ -5633,7 +5693,7 @@
       "dvt": "Lon",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1dGAJd4pSIzCIBsfFT9b9ONVZLEZGBZdU",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Aquafina"
     },
     {
@@ -5659,7 +5719,7 @@
       "dvt": "Chai",
       "gia": 7000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/d8be0fe95184457d8976f691c740e849.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Fuze Tea"
     },
     {
@@ -5685,7 +5745,7 @@
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/686edcf9f46845c6be83d4ef38f6bbd9.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Sprite"
     },
     {
@@ -5698,7 +5758,7 @@
       "dvt": "Lon",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1iFYradtjY8EKIi6FIL7I80ON0OfZC8BY",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Sprite"
     },
     {
@@ -5711,7 +5771,7 @@
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1PUt9zirY59MTU5Db5_pUqjYdaOvtFsAq",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Coca-Cola"
     },
     {
@@ -5724,7 +5784,7 @@
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/d0d5001ae1c841e9abdaa8f5e5c5f431.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Fanta"
     },
     {
@@ -5737,7 +5797,7 @@
       "dvt": "Lon",
       "gia": 8000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/eab90a67fc504d2cbfd3f4b4b1e75dab.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Schweppes"
     },
     {
@@ -5750,7 +5810,7 @@
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/2eb4953451914d9fa76dcfd2562effa1.png",
-      "ton": 0,
+      "ton": 48,
       "thuongHieu": "Fanta"
     },
     {
@@ -5763,7 +5823,7 @@
       "dvt": "Chai",
       "gia": 5000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/27ab5fadd4a8447b9c9063fd7bcf197c.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Dasani"
     },
     {
@@ -5789,7 +5849,7 @@
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/0484d4c69ce343829899f9b60ba198d4.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Coca-Cola"
     },
     {
@@ -5798,11 +5858,11 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP478",
-      "ten": "Nước cam ép Splash lon 330ml (Lon)",
+      "ten": "Nước cam ép Splash lon 320ml (Lon)",
       "dvt": "Lon",
       "gia": 10000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/993b262a3c5c4dafb9a9d1f3029d2a50.png",
-      "ton": 0
+      "ton": 24
     },
     {
       "nhom": "Nước uống",
@@ -5827,7 +5887,7 @@
       "dvt": "Chai",
       "gia": 8000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/616dab014fd549f1b593c5db2cb903af.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Coca-Cola"
     },
     {
@@ -5840,7 +5900,7 @@
       "dvt": "Chai",
       "gia": 8000,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/a9d9d6013c3841c3a5d4ddf07b2f44a9.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Sprite"
     },
     {
@@ -5853,7 +5913,7 @@
       "dvt": "Chai",
       "gia": 0,
       "anh": "",
-      "ton": 0
+      "ton": 24
     },
     {
       "nhom": "Nước uống",
@@ -5865,7 +5925,7 @@
       "dvt": "Chai",
       "gia": 0,
       "anh": "",
-      "ton": 0
+      "ton": 24
     },
     {
       "nhom": "Nước uống",
@@ -5877,7 +5937,7 @@
       "dvt": "Chai",
       "gia": 0,
       "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/5f04eb88cef240c5b32d4bfc8462351e.png",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Fuze Tea"
     },
     {
@@ -5903,7 +5963,7 @@
       "dvt": "Chai",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1pjk_IpNRx5Qnl6scDi608EWqIA3ghvXM",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Coca-Cola"
     },
     {
@@ -5929,7 +5989,7 @@
       "dvt": "Lon",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1RUoVFplPnqKTPd-xluxr_lQj3rNqdfwH",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Fanta"
     },
     {
@@ -5942,7 +6002,7 @@
       "dvt": "Chai",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1rkfl-w9ihBTFF96BV79OJAjsB_vqdXLa",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Aquarius"
     },
     {
@@ -5955,10 +6015,10 @@
       "dvt": "Lon",
       "gia": 18000,
       "anh": "https://lh3.googleusercontent.com/d/1i9V3kPYjCq4YRj7j1xIMixmbGPKaRtbN",
-      "ton": 0,
+      "ton": 24,
       "thuongHieu": "Red Bull"
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "phieu-bao-gia.xlsx"
+  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
 }

@@ -146,17 +146,19 @@
     "code_reuse_note": "VP324: tên cũ 'Nhựa ép A4' → 'Khăn giấy' (mã cũ dùng lại cho SP khác); slug đổi, link cũ 404 — hỏi anh có muốn redirect."
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-17T14:00:00Z",
-  "lastCheckResult": "VP153-VP156 bút xóa kéo Nhóm Bút & Mực -> Dụng cụ VP (anh Hà duyệt 17/10); Excel v1102",
+  "lastCheckAt": "2026-10-18T01:17:00Z",
+  "lastCheckResult": "Excel unchanged (2026-10-17T13:52:32.538Z); web not redeployed; bridge refresh blocked (OOM)",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "pendingBridge": {
-    "sourceModifiedTime": "2026-10-17T02:22:10.498Z",
+    "sourceModifiedTime": "2026-10-17T13:52:32.538Z",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "expectedRows": 495,
-    "reason": "no browser / Google sign-in; Import→Replace not run",
-    "lastAttempt": "2026-10-17 08:20 ICT Chrome cannot load any page",
-    "bridgeLiveModifiedTime": "2026-10-16T01:12:18.195Z"
+    "reason": "Chrome tab crashes (box out of memory: ~16GB used, <600MB free, playwright runtime node ~4GB); Import→Replace not completed",
+    "lastAttempt": "2026-10-18 08:17 ICT: sheet opened signed-in, upload dialog reached, tab crashed twice before Replace",
+    "bridgeLiveModifiedTime": "2026-10-16T01:12:18.195Z",
+    "blockedSince": "2026-10-17 08:20 ICT",
+    "ownerNotified": "2026-10-18 08:17 ICT"
   },
   "webSync_20261016_1414": {
     "sourceModifiedTime": "2026-10-16T06:54:52.992Z",
