@@ -2,21 +2,21 @@
 name: sync-catalog
 description: >-
   Dùng khi đồng bộ giá và danh mục Vạn Phát từ Drive fileId
-  1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR (sheet Danh Mục Vật Tư) lên
+  1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (sheet Danh Mục Vật Tư) lên
   vanphatcompany.vn, hoặc khi sửa script sync. Chốt tên file nguồn trước,
   không đăng nhóm Không đưa lên web, giữ ba lĩnh vực trong data/ia.json.
 ---
 
 # Đồng bộ catalog Excel → web
 
-Nguồn duy nhất (anh Hà khóa 27/09/2026):
+Nguồn duy nhất (anh Hà đổi ngày 19/10/2026):
 
-- https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit
-- fileId `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`
-- tên chuẩn `PHIEU BAO GIA VAN PHAT - 2026.xlsx`
+- https://docs.google.com/spreadsheets/d/1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM/edit
+- fileId `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM`
+- tên chuẩn `PHIEU BAO GIA VAN PHAT - 2026` (Google Sheet; guard chấp nhận đuôi `.xlsx`)
 - sheet `Danh Mục Vật Tư`
 
-Không dùng catalog Drive khác, kể cả file tên `VanPhat_Web_Catalog_SOURCE.xlsx`. Không ghi fileId nguồn cũ vào repo.
+File xlsx `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` không còn là nguồn web. Không dùng catalog Drive khác, kể cả file tên `VanPhat_Web_Catalog_SOURCE.xlsx`. Không ghi fileId cầu nối hay fileId nguồn đã thôi dùng.
 
 Lịch 8:09 và 14:09 (Asia/Bangkok), bản Excel trên máy trợ lý, và refresh cầu nối LIVE thuộc trợ lý ngoài. Cursor không tự chạy lịch đó. Cả trợ lý ngoài và Cursor, khi có đổi, chỉ mở PR. Không push `main`. Khi anh nói `sync giá`, hoặc giao sync, làm trong repo này.
 

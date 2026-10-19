@@ -12,7 +12,7 @@ After a successful export this script regenerates indexable category, lĩnh vự
 and product HTML plus sitemap.xml and js/catalog-paths.js.
 
     python3 scripts/sync_products_from_excel.py path/to.xlsx \
-        --drive-title "<title from Drive get_file_metadata of 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR>"
+        --drive-title "<title from Drive get_file_metadata of 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM>"
 
 SOURCE TITLE GUARD (10/10/2026): --drive-title is required. If the Drive title
 ends with .tmp or is not "PHIEU BAO GIA VAN PHAT - 2026.xlsx" (normalised), the
@@ -596,7 +596,7 @@ def main():
     ap.add_argument("xlsx")
     ap.add_argument("-o", "--out", default=str(ROOT / "data" / "products.json"))
     ap.add_argument("--drive-title", required=True,
-                    help="Current Drive title of source fileId 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR")
+                    help="Current Drive title of source fileId 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM")
     args = ap.parse_args()
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from source_title_guard import check_title, ABORT_EXIT

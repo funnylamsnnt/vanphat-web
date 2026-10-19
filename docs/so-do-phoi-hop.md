@@ -4,7 +4,7 @@ Quy tắc áp mỗi lượt nằm ở `.cursor/rules/phoi-hop-bot.mdc`. Tài li�
 
 ## Luồng danh mục
 
-Excel gốc trên Drive là nguồn chuẩn duy nhất về mã, tên và giá: fileId `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`, sheet `Danh Mục Vật Tư`.
+Google Sheet trên Drive là nguồn chuẩn duy nhất về mã, tên và giá: fileId `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM`, tên `PHIEU BAO GIA VAN PHAT - 2026`, sheet `Danh Mục Vật Tư`. Anh Hà đổi từ file xlsx `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` ngày 19/10/2026.
 
 QL Kiot đồng bộ Excel với KiotViet theo cả hai chiều. Từ Excel, dữ liệu đi tiếp hai nhánh:
 

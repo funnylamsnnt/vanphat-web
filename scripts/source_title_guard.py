@@ -2,9 +2,11 @@
 """Pre-sync guard: refuse to sync when the Drive source title looks broken.
 
 Before every Excel→web sync, the agent must read Drive metadata for the
-official source fileId 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR (Drive connector
-get_file_metadata → "title") and pass it here (or to
-sync_products_from_excel.py --drive-title). If the title ends with ".tmp"
+official source fileId 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Drive
+connector get_file_metadata → "title") and pass it here (or to
+sync_products_from_excel.py --drive-title). Anh Hà switched the web source
+on 19/10/2026 from the xlsx fileId 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR to this
+Google Sheet. Read sheet Danh Mục Vật Tư only. If the title ends with ".tmp"
 (Excel/Drive-for-desktop save error, e.g. "FB1DA4E5.tmp" on 10/10/2026) or is
 not "PHIEU BAO GIA VAN PHAT - 2026.xlsx" after normalisation, the sync aborts
 WITHOUT touching the web or the LIVE bridge and anh Hà must be notified.
@@ -14,7 +16,7 @@ Exit 0 = OK, exit 3 = abort.
 """
 import re, sys, unicodedata
 
-SOURCE_FILE_ID = "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR"
+SOURCE_FILE_ID = "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM"
 EXPECTED_TITLE = "PHIEU BAO GIA VAN PHAT - 2026.xlsx"
 ABORT_EXIT = 3
 
