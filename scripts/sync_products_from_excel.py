@@ -68,6 +68,17 @@ def detect_columns(header) -> dict:
     return cols
 
 
+def product_code(v) -> str:
+    """Mã hàng. A barcode stored as a number must not become '8934....0'."""
+    if isinstance(v, bool):
+        return ""
+    if isinstance(v, int):
+        return str(v)
+    if isinstance(v, float) and v.is_integer():
+        return str(int(v))
+    return clean(v)
+
+
 def clean(v) -> str:
     if v is None:
         return ""
@@ -170,7 +181,13 @@ def is_hold_label(raw_nhom: str) -> bool:
     key = nhom_key(raw_nhom)
     if not key:
         return True
-    return key == "khac" or key.startswith("khac ") or key.startswith("khac(")
+    # «TP Khác» và các nhãn kết thúc bằng Khác cũng không chỉ một loại hàng.
+    return (
+        key == "khac"
+        or key.startswith("khac ")
+        or key.startswith("khac(")
+        or key.endswith(" khac")
+    )
 
 
 def classify_new_nhom(raw_nhom: str) -> tuple[str | None, str]:
@@ -299,6 +316,7 @@ def assert_placement_rules() -> None:
         "": None,
         "   ": None,
         "Khác": None,
+        "TP Khác": None,
         "  khác (nội bộ) ": None,
         "Trà đóng chai": "nuoc-banh",
         "Bánh quy": "nuoc-banh",
@@ -433,7 +451,7 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         if not row:
             continue
         cell = lambda k: row[col[k]] if col.get(k) is not None and col[k] < len(row) else None
-        ma = clean(cell("ma"))
+        ma = product_code(cell("ma"))
         if not ma:
             continue
         # Decide on the raw cell. Never rewrite a blank or an exclusion label to "Khác"
