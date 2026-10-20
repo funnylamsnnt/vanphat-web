@@ -2439,12 +2439,17 @@ def assert_generated_seo(products: list[dict]) -> None:
             raise SystemExit(f"{page.name} missing from sitemap")
     # Data-driven: the sitemap's SKU pages must be exactly the published SKUs.
     # (Excluded "Không đưa lên web" / held nhóm never reach products.json.)
-    published = {str(p.get("ma") or "").lower() for p in products}
-    in_sitemap = set(re.findall(r"/san-pham/(vp\d+)-", sitemap))
-    leaked = sorted(in_sitemap - published)
+    published = {str(p.get("ma") or "").lower() for p in products if p.get("ma")}
+    present = {
+        str(p.get("ma") or "").lower()
+        for p in products
+        if p.get("_file") and f"/san-pham/{p['_file']}" in sitemap
+    }
+    in_sitemap_vp = set(re.findall(r"/san-pham/(vp\d+)-", sitemap))
+    leaked = sorted(in_sitemap_vp - published)
     if leaked:
         raise SystemExit(f"unpublished SKUs leaked into the sitemap: {leaked}")
-    missing = sorted(published - in_sitemap)
+    missing = sorted(published - present)
     if missing:
         raise SystemExit(f"published SKUs missing from the sitemap: {missing[:10]}")
     paper_rec = _DESCRIPTION_BY_MA.get("VP204") or {}

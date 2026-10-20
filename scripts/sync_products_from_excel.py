@@ -12,7 +12,7 @@ After a successful export this script regenerates indexable category, lĩnh vự
 and product HTML plus sitemap.xml and js/catalog-paths.js.
 
     python3 scripts/sync_products_from_excel.py path/to.xlsx \
-        --drive-title "<title from Drive get_file_metadata of 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR>"
+        --drive-title "<title from Drive get_file_metadata of 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM>"
 
 SOURCE TITLE GUARD (10/10/2026): --drive-title is required. If the Drive title
 ends with .tmp or is not "PHIEU BAO GIA VAN PHAT - 2026.xlsx" (normalised), the
@@ -66,6 +66,17 @@ def detect_columns(header) -> dict:
         cols.pop(key, None)
     cols.update(optional)
     return cols
+
+
+def product_code(v) -> str:
+    """Mã hàng. A barcode stored as a number must not become '8934....0'."""
+    if isinstance(v, bool):
+        return ""
+    if isinstance(v, int):
+        return str(v)
+    if isinstance(v, float) and v.is_integer():
+        return str(int(v))
+    return clean(v)
 
 
 def clean(v) -> str:
@@ -170,7 +181,13 @@ def is_hold_label(raw_nhom: str) -> bool:
     key = nhom_key(raw_nhom)
     if not key:
         return True
-    return key == "khac" or key.startswith("khac ") or key.startswith("khac(")
+    # «TP Khác» và các nhãn kết thúc bằng Khác cũng không chỉ một loại hàng.
+    return (
+        key == "khac"
+        or key.startswith("khac ")
+        or key.startswith("khac(")
+        or key.endswith(" khac")
+    )
 
 
 def classify_new_nhom(raw_nhom: str) -> tuple[str | None, str]:
@@ -299,6 +316,7 @@ def assert_placement_rules() -> None:
         "": None,
         "   ": None,
         "Khác": None,
+        "TP Khác": None,
         "  khác (nội bộ) ": None,
         "Trà đóng chai": "nuoc-banh",
         "Bánh quy": "nuoc-banh",
@@ -433,7 +451,7 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         if not row:
             continue
         cell = lambda k: row[col[k]] if col.get(k) is not None and col[k] < len(row) else None
-        ma = clean(cell("ma"))
+        ma = product_code(cell("ma"))
         if not ma:
             continue
         # Decide on the raw cell. Never rewrite a blank or an exclusion label to "Khác"
@@ -596,7 +614,7 @@ def main():
     ap.add_argument("xlsx")
     ap.add_argument("-o", "--out", default=str(ROOT / "data" / "products.json"))
     ap.add_argument("--drive-title", required=True,
-                    help="Current Drive title of source fileId 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR")
+                    help="Current Drive title of source fileId 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM")
     args = ap.parse_args()
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from source_title_guard import check_title, ABORT_EXIT

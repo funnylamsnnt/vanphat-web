@@ -826,7 +826,7 @@
       "dvt": "Cái",
       "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1_RhuI5cowUorF-4ZCCK1TKM8ZswOaCb2",
-      "ton": 0,
+      "ton": 3,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -865,7 +865,7 @@
       "dvt": "Cái",
       "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1T9R61tmEmHa90JQ3_bK0fR1GjebfZ-0T",
-      "ton": 0,
+      "ton": 3,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -891,7 +891,7 @@
       "dvt": "Cái",
       "gia": 75000,
       "anh": "https://lh3.googleusercontent.com/d/1MYn6dugvmLXWoeABHpdmBz4wU_R6DkAJ",
-      "ton": 0,
+      "ton": 3,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1533,7 +1533,7 @@
       "dvt": "Cây",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
-      "ton": 374,
+      "ton": 389,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -3097,7 +3097,7 @@
       "ma": "VP164",
       "ten": "Cắm bút sắt tròn (đen)",
       "dvt": "Cái",
-      "gia": 38000,
+      "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1gASeQY1GuPPuagv1iw6WwnMwQzIJ_REk",
       "ton": 29
     },
@@ -3636,7 +3636,7 @@
       "dvt": "Viên",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1_gv_mCikMG-r-RNyi4XPvp4gDZiTXdhe",
-      "ton": 0,
+      "ton": 60,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -3956,7 +3956,7 @@
       "ma": "VP285",
       "ten": "Kẹp bướm 32mm Slecho",
       "dvt": "Hộp",
-      "gia": 17000,
+      "gia": 14000,
       "anh": "",
       "ton": 0
     },
@@ -5247,6 +5247,42 @@
       "nhomId": "nuoc-uong",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
+      "ma": "SP000015",
+      "ten": "Nước suối Lavie vị dịu nhẹ 500ml",
+      "dvt": "Chai",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "SP000016",
+      "ten": "Nước suối Lavie ion kiềm 500ml",
+      "dvt": "Chai",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "SP000020",
+      "ten": "Chanh muối Đảnh Thạnh chai 430ml",
+      "dvt": "Chai",
+      "gia": 8000,
+      "anh": "",
+      "ton": -1
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
       "ma": "VP330",
       "ten": "Nước suối Aquafina (355ml)",
       "dvt": "Chai",
@@ -6017,6 +6053,66 @@
       "anh": "https://lh3.googleusercontent.com/d/1i9V3kPYjCq4YRj7j1xIMixmbGPKaRtbN",
       "ton": 24,
       "thuongHieu": "Red Bull"
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "8934564620072",
+      "ten": "Nước sâm C2",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": -1
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "8934588243110",
+      "ten": "Nước sữa dâu Twister 320ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "8934588253119",
+      "ten": "Nước trái cây sữa juicy milk vị cam 330ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "8936127796019",
+      "ten": "TH True Tea trà xanh vị chanh Tự Nhiên ( Chai 350ml)",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "8936127796712",
+      "ten": "TH True Tea Trà ổi (Chai 350ml)",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "",
+      "ton": 0
     }
   ],
   "hotline": "033 5652 832",

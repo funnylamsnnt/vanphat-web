@@ -9,7 +9,7 @@ Repo này public và đang là site GitHub Pages. Chỉ commit thứ được ph
 
 Không ghi đè `CNAME`. Nội dung đúng là `vanphatcompany.vn`.
 
-Không commit bí mật: API key, token, mật khẩu, email cá nhân, tài khoản đăng nhập, fileId cầu nối LIVE, fileId sheet đơn nội bộ, số tài khoản, link hệ thống văn bản hành chính. FileId nguồn catalog công khai `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` được ghi vì đó là nguồn anh đã khóa. Không commit file Excel nguồn, file danh mục xuất cho khách, hay cache ảnh.
+Không commit bí mật: API key, token, mật khẩu, email cá nhân, tài khoản đăng nhập, fileId cầu nối LIVE, fileId sheet đơn nội bộ, số tài khoản, link hệ thống văn bản hành chính. FileId nguồn catalog công khai `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM` được ghi vì đó là nguồn anh khóa ngày 19/10/2026. Không commit file Excel nguồn, file danh mục xuất cho khách, hay cache ảnh.
 
 Không thêm lại lời kêu gọi «Đặt hàng online» và không gắn lại form Apps Script đặt hàng đã gỡ (PR #5 và #6). Giữ giỏ hàng (`js/cart.js`), nút Zalo, và hotline đang có trên site.
 

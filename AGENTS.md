@@ -27,12 +27,12 @@ Trang nhân viên (`nhan-vien.html`, `js/staff-order.js`) là sổ đơn nội b
 
 Giá và danh mục sản phẩm chỉ lấy từ Google Drive:
 
-- fileId `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`
-- tên chuẩn `PHIEU BAO GIA VAN PHAT - 2026.xlsx`
+- fileId `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM`
+- tên chuẩn `PHIEU BAO GIA VAN PHAT - 2026` (Google Sheet; guard vẫn chấp nhận đuôi `.xlsx`)
 - sheet `Danh Mục Vật Tư`
-- link https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit
+- link https://docs.google.com/spreadsheets/d/1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM/edit
 
-Anh Hà khóa nguồn này ngày 27/09/2026. Mọi file catalog Drive khác, kể cả file tên `VanPhat_Web_Catalog_SOURCE.xlsx`, không được dùng làm nguồn. Không ghi fileId nguồn cũ vào repo.
+Anh Hà đổi nguồn web ngày 19/10/2026. File xlsx `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` không còn là nguồn web. Mọi file catalog Drive khác, kể cả file tên `VanPhat_Web_Catalog_SOURCE.xlsx`, không được dùng làm nguồn. Không ghi fileId cầu nối hay fileId nguồn đã thôi dùng.
 
 State của lần sync gần nhất: `scripts/sync_state.json`.
 
@@ -77,7 +77,7 @@ Chi tiết nằm ở rule luôn áp dụng. Chỗ đã có file thì làm theo f
 
 1. Ba lĩnh vực, khách đi lĩnh vực → nhóm → sản phẩm, ô tìm chung: `.cursor/rules/ia-linh-vuc.mdc`. Văn phòng phẩm `vpp` (`group-images`), Nước uống & Bánh `nuoc-banh` (`product-images`), Điện gia dụng `dien-gia-dung` (`group-images`). Nguồn là `data/ia.json`, không hardcode số lượng trong HTML. Không mở lĩnh vực thứ tư. Không đổi slug cũ. Nhóm mới thì tự xếp vào lĩnh vực khớp nhất và ghi trong PR.
 2. Ảnh sản phẩm phía khách mở lightbox: `.cursor/rules/product-lightbox.mdc`. Ảnh lớn, số lượng, Thêm vào giỏ, đóng bằng nút X, phím Escape, hoặc click lớp phủ. Không gỡ số lượng và nút thêm giỏ trên thẻ. Sổ nhân viên không gắn lightbox khách.
-3. Nguồn giá và nhóm «Không đưa lên web»: `.cursor/rules/khong-dua-len-web.mdc` và mục «Nguồn dữ liệu duy nhất» ở trên. FileId Drive `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`, sheet `Danh Mục Vật Tư`. Mã đang có trên web mà bị gán nhóm này thì gỡ trong cùng lượt. Form Đơn Đặt Hàng LIVE vẫn giữ đủ mọi mã. Không ghi fileId cầu nối LIVE hay sheet đơn nội bộ vào repo.
+3. Nguồn giá và nhóm «Không đưa lên web»: `.cursor/rules/khong-dua-len-web.mdc` và mục «Nguồn dữ liệu duy nhất» ở trên. FileId Drive `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM`, sheet `Danh Mục Vật Tư`. Mã đang có trên web mà bị gán nhóm này thì gỡ trong cùng lượt. Form Đơn Đặt Hàng LIVE vẫn giữ đủ mọi mã. Không ghi fileId cầu nối LIVE hay sheet đơn nội bộ vào repo.
 4. Thông tin công ty (tên, địa chỉ Mỹ Gia, điện thoại 0335 652 832, tọa độ, LocalBusiness, Street View): `.cursor/rules/thong-tin-cong-ty.mdc`.
 5. Layout lọc: điện thoại là hàng chip cuộn ngang có nút thu gọn; PC là sidebar. `.cursor/rules/bo-loc-catalog.mdc`.
 6. SEO: đừng làm hỏng sitemap, schema ItemList, title và meta, thư mục noscript. `.cursor/rules/seo-ky-thuat.mdc`.

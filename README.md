@@ -42,7 +42,7 @@ Slug lấy từ mã (`VP063` → `vp063`) và tên đã bỏ dấu. Thẻ trên 
 
 ### Chốt an toàn tên file nguồn (từ 10/10/2026)
 
-Trước mỗi lượt sync, đọc metadata Drive của file nguồn `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` (connector Drive `get_file_metadata` → `title`) và truyền vào:
+Trước mỗi lượt sync, đọc metadata Drive của file nguồn `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM` (connector Drive `get_file_metadata` → `title`) và truyền vào:
 
 ```bash
 python3 scripts/sync_products_from_excel.py /workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx \
