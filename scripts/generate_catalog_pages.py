@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026102102"
+CSS_V = "2026102103"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.

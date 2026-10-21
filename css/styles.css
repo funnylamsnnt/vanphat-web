@@ -1443,6 +1443,8 @@ display: none; /* hide old VP mark */
 }
 .cart-drawer.open { transform: translateX(0); }
 body.cart-open { overflow: hidden; }
+/* Pill gọi nổi trên lớp mờ giỏ (200), panel giỏ (210) vẫn phủ pill nếu chồng. */
+body.cart-open .vp-reach { z-index: 205; }
 
 .cart-drawer-header {
   display: flex;
