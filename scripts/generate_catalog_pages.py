@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026102101"
+CSS_V = "2026102102"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
@@ -758,8 +758,9 @@ def chrome_header(prefix: str) -> str:
         <button type="button" class="cart-toggle" data-cart-open aria-label="Mở giỏ hàng">
           🛒<span class="cart-badge" data-cart-badge hidden>0</span>
         </button>
+        {nav_cskh_html()}
         <a class="btn btn-zalo btn-sm" href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a>
-        <a class="btn btn-outline-navy btn-sm" href="tel:{HOTLINE_TEL}">Gọi hotline</a>
+        <a class="btn btn-outline-navy btn-sm nav-hotline" href="tel:{HOTLINE_TEL}">Gọi hotline</a>
       </div>
     </div>
   </header>"""
@@ -810,10 +811,37 @@ def font_links(prefix: str = "") -> str:
     return f'  <link rel="preload" href="{prefix}{FONT_MAIN}" as="font" type="font/woff2" crossorigin />'
 
 
+def nav_cskh_html() -> str:
+    """Hai số CSKH trên thanh header, nhỏ hơn nút Gọi hotline."""
+    links = []
+    for row in cskh_rows():
+        links.append(
+            f'<a class="nav-cskh" href="tel:{row["tel"]}">'
+            f'<span class="nav-cskh-role">{esc(row["role"])}</span>'
+            f'<span class="nav-cskh-num">{esc(row["display"])}</span>'
+            "</a>"
+        )
+    return (
+        "<!-- vp-cskh-nav -->"
+        '<span class="nav-cskh-group" aria-label="Chăm sóc khách hàng">'
+        + "".join(links)
+        + "</span><!-- /vp-cskh-nav -->"
+    )
+
+
 def reach_html() -> str:
+    pills = []
+    for row in cskh_rows():
+        pills.append(
+            f'<a class="vp-reach-cskh" href="tel:{row["tel"]}">'
+            f'<span class="vp-reach-role">{esc(row["role"])}</span>'
+            f'<span class="vp-reach-num">{esc(row["display"])}</span>'
+            "</a>"
+        )
     return f"""<!-- vp-reach -->
   <nav class="vp-reach" aria-label="Liên hệ nhanh">
     <a class="vp-reach-call" href="tel:{HOTLINE_TEL}">☎ Gọi {esc(HOTLINE_DISPLAY)}</a>
+    {"".join(pills)}
     <a class="vp-reach-zalo" href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a>
   </nav>
 <!-- /vp-reach -->"""
@@ -2042,6 +2070,30 @@ def upsert_cskh_chrome(text: str) -> str:
     return text
 
 
+NAV_CSKH_RE = re.compile(r"<!-- vp-cskh-nav -->.*?<!-- /vp-cskh-nav -->", re.S)
+NAV_ZALO_BTN = (
+    f'<a class="btn btn-zalo btn-sm" href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a>'
+)
+NAV_HOTLINE_OLD = (
+    f'<a class="btn btn-outline-navy btn-sm" href="tel:{HOTLINE_TEL}">Gọi hotline</a>'
+)
+NAV_HOTLINE_NEW = (
+    f'<a class="btn btn-outline-navy btn-sm nav-hotline" href="tel:{HOTLINE_TEL}">Gọi hotline</a>'
+)
+
+
+def upsert_nav_cskh(text: str) -> str:
+    """Thanh header: hai số CSKH cạnh Zalo và nút Gọi hotline."""
+    block = nav_cskh_html()
+    if NAV_CSKH_RE.search(text):
+        text = NAV_CSKH_RE.sub(block, text, count=1)
+    elif NAV_ZALO_BTN in text:
+        text = text.replace(NAV_ZALO_BTN, block + "\n        " + NAV_ZALO_BTN, 1)
+    if NAV_HOTLINE_OLD in text:
+        text = text.replace(NAV_HOTLINE_OLD, NAV_HOTLINE_NEW, 1)
+    return text
+
+
 def upsert_schema_cskh(text: str) -> str:
     """Giữ telephone hotline. Thêm contactPoint nếu trang tĩnh chưa có."""
     if "contactPoint" in text and CSKH_1_E164 in text and CSKH_2_E164 in text:
@@ -2127,6 +2179,7 @@ def refresh_static_chrome(text: str, prefix: str = "") -> str:
     updated = defer_external_scripts(updated)
     updated = upsert_reach(updated)
     updated = upsert_cskh_chrome(updated)
+    updated = upsert_nav_cskh(updated)
     updated = upsert_schema_cskh(updated)
     updated = upsert_pwa_head(updated)
     return updated

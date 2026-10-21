@@ -31,7 +31,7 @@
   <link rel="preload" href="../assets/fonts/be-vietnam-pro-400.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" as="image" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%20viewBox%3D%220%200%20400%20400%22%3E%3Crect%20fill%3D%22%23EFE9DE%22%20width%3D%22400%22%20height%3D%22400%22%2F%3E%3Ctext%20x%3D%22200%22%20y%3D%22210%22%20text-anchor%3D%22middle%22%20fill%3D%22%235A6577%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%3EV%E1%BA%A1n%20Ph%C3%A1t%3C%2Ftext%3E%3C%2Fsvg%3E" fetchpriority="high" />
   <link rel="icon" type="image/png" href="../assets/favicon.png?v=20260925" />
-  <link rel="stylesheet" href="../css/styles.css?v=2026102101" />
+  <link rel="stylesheet" href="../css/styles.css?v=2026102102" />
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["LocalBusiness","Store","Organization"],"@id":"https://vanphatcompany.vn/#organization","name":"CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT","alternateName":"Vạn Phát","url":"https://vanphatcompany.vn/","logo":"https://vanphatcompany.vn/assets/og.jpg","image":"https://vanphatcompany.vn/assets/mat-tien-van-phat-van-phong-pham-my-gia-nha-trang.jpg","telephone":"+84335652832","contactPoint":[{"@type":"ContactPoint","telephone":"+84335652832","contactType":"customer service","name":"Hotline","areaServed":"VN","availableLanguage":"Vietnamese"},{"@type":"ContactPoint","telephone":"+84393268399","contactType":"customer service","name":"Trang","description":"CSKH 1 · Trang","areaServed":"VN","availableLanguage":"Vietnamese"},{"@type":"ContactPoint","telephone":"+84398269399","contactType":"customer service","name":"Hoàng Anh","description":"CSKH 2 · Hoàng Anh","areaServed":"VN","availableLanguage":"Vietnamese"}],"email":"congtytnhhvanphat999@gmail.com","address":{"@type":"PostalAddress","streetAddress":"LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang","addressLocality":"Nha Trang","addressRegion":"Khánh Hòa","addressCountry":"VN"},"areaServed":["Nam Nha Trang","KĐT Mỹ Gia","Nha Trang"],"hasMap":"https://www.google.com/maps/search/?api=1&query=12.237790072249387,109.16637827055754","geo":{"@type":"GeoCoordinates","latitude":"12.237790072249387","longitude":"109.16637827055754"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Trang chủ","item":"https://vanphatcompany.vn/"},{"@type":"ListItem","position":2,"name":"Sản phẩm","item":"https://vanphatcompany.vn/san-pham.html"},{"@type":"ListItem","position":3,"name":"Văn phòng phẩm","item":"https://vanphatcompany.vn/linh-vuc/vpp.html"},{"@type":"ListItem","position":4,"name":"Dụng cụ VP","item":"https://vanphatcompany.vn/san-pham/nhom-dung-cu-vp.html"},{"@type":"ListItem","position":5,"name":"Note vàng 3*5 UNC","item":"https://vanphatcompany.vn/san-pham/vp329-note-vang-3-5-unc.html"}]},{"@type":"Product","@id":"https://vanphatcompany.vn/san-pham/vp329-note-vang-3-5-unc.html#product","name":"Note vàng 3*5 UNC","sku":"VP329","url":"https://vanphatcompany.vn/san-pham/vp329-note-vang-3-5-unc.html","category":"Dụng cụ VP","description":"Note vàng 3*5 UNC. Nhóm Dụng cụ VP. Đơn vị tính Xấp. Giá: Liên hệ báo giá. Hotline 033 5652 832.","image":"https://vanphatcompany.vn/assets/og.jpg","additionalProperty":[{"@type":"PropertyValue","name":"Đơn vị tính","value":"Xấp"}]}]}</script>
 </head>
 <body>
@@ -69,8 +69,9 @@
         <button type="button" class="cart-toggle" data-cart-open aria-label="Mở giỏ hàng">
           🛒<span class="cart-badge" data-cart-badge hidden>0</span>
         </button>
+        <!-- vp-cskh-nav --><span class="nav-cskh-group" aria-label="Chăm sóc khách hàng"><a class="nav-cskh" href="tel:0393268399"><span class="nav-cskh-role">CSKH 1 · Trang</span><span class="nav-cskh-num">0393 268 399</span></a><a class="nav-cskh" href="tel:0398269399"><span class="nav-cskh-role">CSKH 2 · Hoàng Anh</span><span class="nav-cskh-num">0398 269 399</span></a></span><!-- /vp-cskh-nav -->
         <a class="btn btn-zalo btn-sm" href="https://zalo.me/0335652832" target="_blank" rel="noopener">Zalo</a>
-        <a class="btn btn-outline-navy btn-sm" href="tel:0335652832">Gọi hotline</a>
+        <a class="btn btn-outline-navy btn-sm nav-hotline" href="tel:0335652832">Gọi hotline</a>
       </div>
     </div>
   </header>
@@ -316,12 +317,13 @@
 <!-- vp-reach -->
   <nav class="vp-reach" aria-label="Liên hệ nhanh">
     <a class="vp-reach-call" href="tel:0335652832">☎ Gọi 033 5652 832</a>
+    <a class="vp-reach-cskh" href="tel:0393268399"><span class="vp-reach-role">CSKH 1 · Trang</span><span class="vp-reach-num">0393 268 399</span></a><a class="vp-reach-cskh" href="tel:0398269399"><span class="vp-reach-role">CSKH 2 · Hoàng Anh</span><span class="vp-reach-num">0398 269 399</span></a>
     <a class="vp-reach-zalo" href="https://zalo.me/0335652832" target="_blank" rel="noopener">Zalo</a>
   </nav>
 <!-- /vp-reach -->
-  <script defer src="../js/main.js?v=2026102101"></script>
+  <script defer src="../js/main.js?v=2026102102"></script>
   <script defer src="../js/cart.js"></script>
-  <script defer src="../js/catalog-paths.js?v=2026102101"></script>
+  <script defer src="../js/catalog-paths.js?v=2026102102"></script>
   <script defer src="../js/ia.js?v=2026101721"></script>
   <script defer src="../js/product-lightbox.js?v=2026101721"></script>
   <script defer src="../js/chat-widget.js?v=2026101727"></script>
