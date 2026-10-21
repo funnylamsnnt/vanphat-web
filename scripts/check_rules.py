@@ -8,7 +8,8 @@
    js/products.js, card_html trong generator) có data-product-zoom.
 3. CNAME đúng vanphatcompany.vn và chữ «Đặt hàng online» không trở lại HTML/JS.
 4. Hằng công ty trong generator: tên, địa chỉ Mỹ Gia (không Phước Hải),
-   số 0335652832, tọa độ 12.237790 / 109.166378, Street View đã chốt.
+   hotline 0335652832, hai số CSKH 0393268399 và 0398269399 trên bề mặt
+   liên hệ, tọa độ 12.237790 / 109.166378, Street View đã chốt.
 5. Tìm chat (`scripts/test_chat_search.js`) lọc từ hỏi còn dấu, không
    gợi ý món giá 0 (kể cả món đầu nhóm), và không báo khách 0đ.
    Giỏ và sổ đơn (`scripts/test_cart_quote.js`) hiện «Liên hệ báo giá»
@@ -297,6 +298,58 @@ def check_company(errors: list[str]) -> None:
         errors.append(f"GEO_LNG sai: {lng or 'trống'}")
     if "LocalBusiness" not in text:
         errors.append("generator thiếu schema LocalBusiness")
+    cskh = {
+        "CSKH_1_ROLE": "CSKH 1 · Trang",
+        "CSKH_1_DISPLAY": "0393 268 399",
+        "CSKH_1_TEL": "0393268399",
+        "CSKH_1_E164": "+84393268399",
+        "CSKH_2_ROLE": "CSKH 2 · Hoàng Anh",
+        "CSKH_2_DISPLAY": "0398 269 399",
+        "CSKH_2_TEL": "0398269399",
+        "CSKH_2_E164": "+84398269399",
+    }
+    for name, wanted in cskh.items():
+        got = assigned(text, name)
+        if got is None:
+            errors.append(f"generate_catalog_pages.py thiếu hằng {name}")
+        elif got != wanted:
+            errors.append(f"{name} sai: {got}")
+    if ' "telephone": HOTLINE_E164' not in text and '"telephone": HOTLINE_E164' not in text:
+        errors.append("schema LocalBusiness phải giữ telephone hotline")
+    if "contact_points()" not in text and "contactPoint" not in text:
+        errors.append("generator thiếu contactPoint cho số chăm sóc khách hàng")
+
+
+def check_cskh_surfaces(errors: list[str]) -> None:
+    """Hotline cũ vẫn bắt buộc. Hai số CSKH phải có ở trang khách đang in hotline."""
+    required = (
+        ("CSKH 1 · Trang", "0393 268 399", "tel:0393268399"),
+        ("CSKH 2 · Hoàng Anh", "0398 269 399", "tel:0398269399"),
+    )
+    hotline_bits = ("tel:0335652832", "033 5652 832")
+    for path in iter_html():
+        rel = path.relative_to(ROOT).as_posix()
+        if rel in STAFF_HTML:
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        if "tel:0335652832" not in text:
+            continue
+        for bit in hotline_bits:
+            if bit not in text:
+                errors.append(f"{rel}: mất hotline ({bit})")
+                break
+        for role, display, tel in required:
+            if role not in text or display not in text or tel not in text:
+                errors.append(f"{rel}: thiếu {role} ({display}, {tel})")
+                break
+    for rel in ("index.html", "lien-he.html"):
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        if '"telephone": "+84335652832"' not in text and '"telephone":"+84335652832"' not in text:
+            errors.append(f"{rel}: schema mất telephone hotline")
+        if "+84393268399" not in text or "+84398269399" not in text:
+            errors.append(f"{rel}: schema thiếu contactPoint CSKH")
+        if "phuoc hai" in fold_vn(text):
+            errors.append(f"{rel}: còn địa chỉ Phước Hải")
 
 
 def check_boundaries(errors: list[str]) -> None:
@@ -528,6 +581,7 @@ def main() -> None:
     cards = check_lightbox(errors)
     check_boundaries(errors)
     check_company(errors)
+    check_cskh_surfaces(errors)
     check_zero_price_pages(errors)
     check_product_descriptions(errors)
     check_chat_search(errors)
