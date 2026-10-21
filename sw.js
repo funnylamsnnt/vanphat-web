@@ -5,7 +5,7 @@
    chat-widget.js và css/chat-widget.css khớp theo pathname, bỏ qua ?v,
    network-first (timeout 3 giây). Sửa hai file đó không cần tăng ?v trên HTML.
    css/styles.css dùng chung vẫn cache-first. */
-const VERSION = "2026102101";
+const VERSION = "2026102102";
 const SHELL = "vp-shell-" + VERSION;
 const PAGES = "vp-pages-" + VERSION;
 const IMAGES = "vp-img-" + VERSION;

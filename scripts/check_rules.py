@@ -350,6 +350,28 @@ def check_cskh_surfaces(errors: list[str]) -> None:
             errors.append(f"{rel}: schema thiếu contactPoint CSKH")
         if "phuoc hai" in fold_vn(text):
             errors.append(f"{rel}: còn địa chỉ Phước Hải")
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    reach = re.search(r"<!-- vp-reach -->.*?<!-- /vp-reach -->", home, re.S)
+    reach_text = reach.group(0) if reach else ""
+    if (
+        "tel:0335652832" not in reach_text
+        or "tel:0393268399" not in reach_text
+        or "tel:0398269399" not in reach_text
+        or "CSKH 1 · Trang" not in reach_text
+        or "CSKH 2 · Hoàng Anh" not in reach_text
+    ):
+        errors.append("index.html: cụm gọi nổi thiếu hotline hoặc hai số CSKH")
+    nav = re.search(r"<!-- vp-cskh-nav -->.*?<!-- /vp-cskh-nav -->", home, re.S)
+    nav_text = nav.group(0) if nav else ""
+    if (
+        "tel:0393268399" not in nav_text
+        or "tel:0398269399" not in nav_text
+        or "CSKH 1 · Trang" not in nav_text
+        or "CSKH 2 · Hoàng Anh" not in nav_text
+    ):
+        errors.append("index.html: thanh header thiếu hai số CSKH")
+    if "Gọi hotline" not in home or "btn-zalo" not in home:
+        errors.append("index.html: mất nút Gọi hotline hoặc Zalo")
 
 
 def check_boundaries(errors: list[str]) -> None:
