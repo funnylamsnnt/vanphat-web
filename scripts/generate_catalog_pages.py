@@ -27,7 +27,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
-CSS_V = "2026101728"
+CSS_V = "2026102101"
 LOGO_NAV_V = "20260925"
 JS_V = "2026101721"
 # products.js passes thuongHieu / quyCach into the lightbox. Same cache key.
@@ -41,6 +41,15 @@ ADDRESS = "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam 
 HOTLINE_DISPLAY = "033 5652 832"
 HOTLINE_TEL = "0335652832"
 HOTLINE_E164 = "+84335652832"
+# Hai số chăm sóc khách hàng. Hotline phía trên vẫn là số chính.
+CSKH_1_ROLE = "CSKH 1 · Trang"
+CSKH_1_DISPLAY = "0393 268 399"
+CSKH_1_TEL = "0393268399"
+CSKH_1_E164 = "+84393268399"
+CSKH_2_ROLE = "CSKH 2 · Hoàng Anh"
+CSKH_2_DISPLAY = "0398 269 399"
+CSKH_2_TEL = "0398269399"
+CSKH_2_E164 = "+84398269399"
 EMAIL = "congtytnhhvanphat999@gmail.com"
 ZALO_URL = "https://zalo.me/0335652832"
 BANK_LINE = "Agribank · STK 4703201014329"
@@ -562,6 +571,81 @@ def ld_script(data) -> str:
     return f'  <script type="application/ld+json">{raw}</script>'
 
 
+def cskh_rows() -> tuple[dict[str, str], ...]:
+    return (
+        {
+            "role": CSKH_1_ROLE,
+            "display": CSKH_1_DISPLAY,
+            "tel": CSKH_1_TEL,
+            "e164": CSKH_1_E164,
+            "name": "Trang",
+        },
+        {
+            "role": CSKH_2_ROLE,
+            "display": CSKH_2_DISPLAY,
+            "tel": CSKH_2_TEL,
+            "e164": CSKH_2_E164,
+            "name": "Hoàng Anh",
+        },
+    )
+
+
+def contact_points() -> list[dict]:
+    """Hotline giữ telephone gốc. Hai CSKH là contactPoint cùng loại chăm sóc khách."""
+    points = [
+        {
+            "@type": "ContactPoint",
+            "telephone": HOTLINE_E164,
+            "contactType": "customer service",
+            "name": "Hotline",
+            "areaServed": "VN",
+            "availableLanguage": "Vietnamese",
+        }
+    ]
+    for row in cskh_rows():
+        points.append(
+            {
+                "@type": "ContactPoint",
+                "telephone": row["e164"],
+                "contactType": "customer service",
+                "name": row["name"],
+                "description": row["role"],
+                "areaServed": "VN",
+                "availableLanguage": "Vietnamese",
+            }
+        )
+    return points
+
+
+def cskh_links_html(kind: str) -> str:
+    """Khối bấm gọi. kind: top, foot, card, band. Không phải ô nhập liệu."""
+    links = []
+    for row in cskh_rows():
+        links.append(
+            f'<a class="vp-cskh-link" href="tel:{row["tel"]}">'
+            f'<span class="vp-cskh-role">{esc(row["role"])}</span>'
+            f'<span class="vp-cskh-num">{esc(row["display"])}</span>'
+            "</a>"
+        )
+    return (
+        f"<!-- vp-cskh-{kind} -->"
+        f'<div class="vp-cskh vp-cskh-{kind}" aria-label="Chăm sóc khách hàng">'
+        + "".join(links)
+        + "</div>"
+        f"<!-- /vp-cskh-{kind} -->"
+    )
+
+
+def contact_cskh_row() -> str:
+    return f"""            <div class="contact-row vp-cskh-row">
+              <div class="c-icon" aria-hidden="true">☎</div>
+              <div>
+                <h4>Chăm sóc khách hàng</h4>
+                {cskh_links_html("card")}
+              </div>
+            </div>"""
+
+
 def organization_node() -> dict:
     node = {
         "@type": ["LocalBusiness", "Store", "Organization"],
@@ -572,6 +656,7 @@ def organization_node() -> dict:
         "logo": OG_IMAGE,
         "image": STOREFRONT_IMAGE,
         "telephone": HOTLINE_E164,
+        "contactPoint": contact_points(),
         "email": EMAIL,
         "address": {
             "@type": "PostalAddress",
@@ -642,7 +727,10 @@ def chrome_header(prefix: str) -> str:
     return f"""  <div class="topbar">
     <div class="container">
       <span>📍 {esc(ADDRESS)}</span>
-      <span>☎ Hotline: <a href="tel:{HOTLINE_TEL}">{esc(HOTLINE_DISPLAY)}</a> · <a href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a></span>
+      <div class="topbar-phones">
+        <span class="topbar-hotline">☎ Hotline: <a href="tel:{HOTLINE_TEL}">{esc(HOTLINE_DISPLAY)}</a> · <a href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a></span>
+        {cskh_links_html("top")}
+      </div>
     </div>
   </div>
 
@@ -702,7 +790,8 @@ def chrome_footer(prefix: str) -> str:
           <h4>Liên hệ</h4>
           <p class="footer-nap-name">{esc(COMPANY)}</p>
           <p>{esc(ADDRESS)}</p>
-          <a href="tel:{HOTLINE_TEL}">☎ {esc(HOTLINE_DISPLAY)}</a>
+          <a class="footer-hotline" href="tel:{HOTLINE_TEL}">☎ {esc(HOTLINE_DISPLAY)}</a>
+          {cskh_links_html("foot")}
           <a href="{ZALO_URL}" target="_blank" rel="noopener">Chat Zalo</a>
           <a href="mailto:{EMAIL}">✉ {esc(EMAIL)}</a>
           <p>{esc(BANK_LINE)}</p>
@@ -1872,6 +1961,98 @@ def upsert_reach(text: str) -> str:
     return text.replace("</body>", block + "</body>", 1)
 
 
+CSKH_KIND_RE = {
+    kind: re.compile(rf"<!-- vp-cskh-{kind} -->.*?<!-- /vp-cskh-{kind} -->", re.S)
+    for kind in ("top", "foot", "card", "band")
+}
+TOPBAR_HOTLINE_OLD = (
+    f'<span>☎ Hotline: <a href="tel:{HOTLINE_TEL}">{HOTLINE_DISPLAY}</a>'
+    f' · <a href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a></span>'
+)
+TOPBAR_HOTLINE_NEW = (
+    f'<span class="topbar-hotline">☎ Hotline: <a href="tel:{HOTLINE_TEL}">{HOTLINE_DISPLAY}</a>'
+    f' · <a href="{ZALO_URL}" target="_blank" rel="noopener">Zalo</a></span>'
+)
+FOOTER_HOTLINE_OLD = f'<a href="tel:{HOTLINE_TEL}">☎ {HOTLINE_DISPLAY}</a>'
+FOOTER_HOTLINE_NEW = f'<a class="footer-hotline" href="tel:{HOTLINE_TEL}">☎ {HOTLINE_DISPLAY}</a>'
+CONTACT_HOTLINE_OLD = (
+    "<h4>Hotline</h4>\n"
+    f'                <a href="tel:{HOTLINE_TEL}">{HOTLINE_DISPLAY}</a>'
+)
+CONTACT_HOTLINE_NEW = (
+    "<h4>Hotline</h4>\n"
+    f'                <a class="hotline-num" href="tel:{HOTLINE_TEL}">{HOTLINE_DISPLAY}</a>'
+)
+INDEX_BAND_ANCHOR = (
+    '<a class="btn btn-ghost btn-lg" href="lien-he.html#bao-gia">Gửi yêu cầu báo giá</a>\n'
+    "        </div>"
+)
+
+
+def upsert_marked_block(text: str, kind: str, block: str) -> str:
+    pattern = CSKH_KIND_RE[kind]
+    if pattern.search(text):
+        return pattern.sub(block, text, count=1)
+    return text
+
+
+def topbar_phones_html() -> str:
+    return (
+        '<div class="topbar-phones">\n        '
+        + TOPBAR_HOTLINE_NEW
+        + "\n        "
+        + cskh_links_html("top")
+        + "\n      </div>"
+    )
+
+
+def upsert_cskh_chrome(text: str) -> str:
+    """Gắn khối CSKH vào topbar và cột liên hệ footer. Thanh gọi nhanh vẫn chỉ hotline."""
+    top = cskh_links_html("top")
+    foot = cskh_links_html("foot")
+    if CSKH_KIND_RE["top"].search(text):
+        text = upsert_marked_block(text, "top", top)
+    elif TOPBAR_HOTLINE_OLD in text:
+        text = text.replace(TOPBAR_HOTLINE_OLD, topbar_phones_html(), 1)
+    elif TOPBAR_HOTLINE_NEW in text and "vp-cskh-top" not in text:
+        text = text.replace(TOPBAR_HOTLINE_NEW, topbar_phones_html(), 1)
+
+    if CSKH_KIND_RE["foot"].search(text):
+        text = upsert_marked_block(text, "foot", foot)
+    elif FOOTER_HOTLINE_OLD in text:
+        text = text.replace(FOOTER_HOTLINE_OLD, FOOTER_HOTLINE_NEW + "\n          " + foot, 1)
+
+    if 'class="cta-band"' in text:
+        band = cskh_links_html("band")
+        if CSKH_KIND_RE["band"].search(text):
+            text = upsert_marked_block(text, "band", band)
+        elif INDEX_BAND_ANCHOR in text:
+            text = text.replace(INDEX_BAND_ANCHOR, INDEX_BAND_ANCHOR + "\n        " + band, 1)
+
+    if "<h4>Hotline</h4>" in text:
+        if CONTACT_HOTLINE_OLD in text:
+            text = text.replace(CONTACT_HOTLINE_OLD, CONTACT_HOTLINE_NEW, 1)
+        row = contact_cskh_row()
+        if CSKH_KIND_RE["card"].search(text):
+            text = upsert_marked_block(text, "card", cskh_links_html("card"))
+        elif "vp-cskh-card" not in text:
+            email_row = '            <div class="contact-row">\n              <div class="c-icon">✉</div>'
+            if email_row in text:
+                text = text.replace(email_row, row + "\n\n" + email_row, 1)
+    return text
+
+
+def upsert_schema_cskh(text: str) -> str:
+    """Giữ telephone hotline. Thêm contactPoint nếu trang tĩnh chưa có."""
+    if "contactPoint" in text and CSKH_1_E164 in text and CSKH_2_E164 in text:
+        return text
+    payload = json.dumps(contact_points(), ensure_ascii=False, separators=(",", ":"))
+    for needle in (f'"telephone": "{HOTLINE_E164}"', f'"telephone":"{HOTLINE_E164}"'):
+        if needle in text:
+            return text.replace(needle, needle + ',"contactPoint":' + payload, 1)
+    return text
+
+
 def strip_google_fonts(text: str) -> str:
     patterns = (
         r"[ \t]*<link rel=\"preconnect\" href=\"https://fonts\.(?:googleapis|gstatic)\.com\"[^>]*>\n",
@@ -1945,6 +2126,8 @@ def refresh_static_chrome(text: str, prefix: str = "") -> str:
     updated = pin_hero_lead(updated)
     updated = defer_external_scripts(updated)
     updated = upsert_reach(updated)
+    updated = upsert_cskh_chrome(updated)
+    updated = upsert_schema_cskh(updated)
     updated = upsert_pwa_head(updated)
     return updated
 
@@ -2356,6 +2539,13 @@ def assert_generated_seo(products: list[dict]) -> None:
         raise SystemExit("sitemap is missing the storefront image")
     if GEO_LAT not in (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8"):
         raise SystemExit("LocalBusiness is missing the Mỹ Gia pin")
+    sku_chrome = (ROOT / "san-pham" / by_ma["VP204"]["_file"]).read_text(encoding="utf-8")
+    if f"tel:{HOTLINE_TEL}" not in sku_chrome or HOTLINE_DISPLAY not in sku_chrome:
+        raise SystemExit("SKU chrome lost the hotline")
+    if CSKH_1_TEL not in sku_chrome or CSKH_2_TEL not in sku_chrome:
+        raise SystemExit("SKU chrome missing CSKH numbers")
+    if CSKH_1_E164 not in sku_chrome or CSKH_2_E164 not in sku_chrome:
+        raise SystemExit("SKU schema missing CSKH contactPoint")
     robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
     if f"Sitemap: {SITE}/sitemap.xml" not in robots:
         raise SystemExit("robots.txt lost the sitemap line")
@@ -2371,6 +2561,17 @@ def assert_generated_seo(products: list[dict]) -> None:
         or STREETVIEW_URL.replace("&", "&amp;") not in contact
     ):
         raise SystemExit("contact page lost the May 2025 Street View panorama")
+    for rel in ("index.html", "lien-he.html", "app/index.html"):
+        page = (ROOT / rel).read_text(encoding="utf-8")
+        if f"tel:{HOTLINE_TEL}" not in page or HOTLINE_DISPLAY not in page:
+            raise SystemExit(f"{rel} lost the hotline")
+        for row in cskh_rows():
+            if row["role"] not in page or row["display"] not in page or f'tel:{row["tel"]}' not in page:
+                raise SystemExit(f"{rel} missing {row['role']}")
+    if CSKH_1_E164 not in contact or CSKH_2_E164 not in contact:
+        raise SystemExit("contact schema missing CSKH contactPoint")
+    if f'"telephone": "{HOTLINE_E164}"' not in contact and f'"telephone":"{HOTLINE_E164}"' not in contact:
+        raise SystemExit("contact schema lost the hotline telephone")
     if "output=embed" not in contact or MAPS_DIR_URL.replace("&", "&amp;") not in contact:
         raise SystemExit("contact page lost the map or the directions link")
     token = str(GOOGLE_SITE_VERIFICATION or "").strip()
@@ -2808,7 +3009,7 @@ def install_page_ld() -> dict:
 def build_install_page() -> str:
     if len(INSTALL_DESC) > 220 or len(INSTALL_TITLE) > 90:
         raise SystemExit("install page title or description is too long")
-    body = """    <section class="page-hero">
+    body = f"""    <section class="page-hero">
       <div class="container">
         <nav class="breadcrumb breadcrumb-light" aria-label="Breadcrumb">
           <a href="/index.html">Trang chủ</a>
@@ -2838,7 +3039,8 @@ def build_install_page() -> str:
               <li>Chọn «Thêm vào Màn hình chính», rồi bấm «Thêm».</li>
             </ol>
           </article>
-          <p>Giỏ hàng nằm trên máy. Mất mạng vẫn mở lại trang đã xem. Khi có mạng, giá và danh mục được tải mới. Gọi <a href="tel:0335652832">033 5652 832</a> hoặc nhắn <a href="https://zalo.me/0335652832">Zalo</a>.</p>
+          <p>Giỏ hàng nằm trên máy. Mất mạng vẫn mở lại trang đã xem. Khi có mạng, giá và danh mục được tải mới. Gọi <a href="tel:{HOTLINE_TEL}">{esc(HOTLINE_DISPLAY)}</a> hoặc nhắn <a href="{ZALO_URL}">Zalo</a>.</p>
+          {cskh_links_html("card")}
           <p><button type="button" class="btn btn-outline-navy" onclick="window.print()">In mã QR</button></p>
         </div>
         <figure class="pwa-qr">
@@ -2874,6 +3076,7 @@ def build_offline_page() -> str:
       <div class="container pwa-offline">
         <p>Khi có mạng trở lại, danh mục và giá được tải mới từ cửa hàng. Lúc đang online, app không hiện giá cũ.</p>
         <p>{esc(COMPANY)} — {esc(ADDRESS)}. Hotline <a href="tel:{HOTLINE_TEL}">{esc(HOTLINE_DISPLAY)}</a> · <a href="{ZALO_URL}">Zalo</a>.</p>
+        {cskh_links_html("card")}
         <p class="pwa-offline-actions">
           <a class="btn btn-gold" href="/index.html">Thử mở lại trang chủ</a>
           <a class="btn btn-outline-navy" href="/san-pham.html">Xem danh mục đã lưu</a>

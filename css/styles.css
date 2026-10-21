@@ -1069,6 +1069,154 @@ display: none; /* hide old VP mark */
 }
 .footer-bottom a { color: var(--gold-light); }
 
+/* Hotline là số chính. CSKH cùng họ navy/vàng, nhỏ hơn một bậc, vẫn đọc được. */
+.topbar-phones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.2rem 0.85rem;
+}
+.topbar .topbar-hotline { font-weight: 600; }
+.topbar .topbar-hotline a[href^="tel:"] {
+  font-weight: 800;
+  font-size: 0.9375rem;
+}
+.vp-cskh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.75rem;
+}
+.vp-cskh-link {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.4rem;
+  padding: 0.15rem 0;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.vp-cskh-role { font-weight: 600; }
+.vp-cskh-num { font-weight: 700; font-variant-numeric: tabular-nums; }
+.topbar .vp-cskh-top .vp-cskh-link {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.topbar .vp-cskh-role {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.topbar .vp-cskh-num {
+  color: var(--gold-light);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.footer-col a.footer-hotline {
+  color: var(--gold-light);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.footer-col .vp-cskh-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  margin: 0.1rem 0 0.2rem;
+}
+.footer-col a.vp-cskh-link {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.footer-col .vp-cskh-role {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.footer-col .vp-cskh-num {
+  color: var(--gold-light);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.contact-row a.hotline-num {
+  display: inline-block;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.contact-row .vp-cskh-card,
+.pwa-steps .vp-cskh-card,
+.pwa-offline .vp-cskh-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+}
+.contact-row a.vp-cskh-link,
+.pwa-steps a.vp-cskh-link,
+.pwa-offline a.vp-cskh-link {
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.contact-row .vp-cskh-role,
+.pwa-steps .vp-cskh-role,
+.pwa-offline .vp-cskh-role {
+  color: var(--navy-dark);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.contact-row .vp-cskh-num,
+.pwa-steps .vp-cskh-num,
+.pwa-offline .vp-cskh-num {
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.cta-band .vp-cskh-band {
+  justify-content: center;
+  margin-top: 0.9rem;
+}
+.cta-band .vp-cskh-link {
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(232, 212, 138, 0.65);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+}
+.cta-band .vp-cskh-role { color: rgba(255, 255, 255, 0.92); font-weight: 600; }
+.cta-band .vp-cskh-num { color: var(--gold-light); font-weight: 700; }
+@media (max-width: 860px) {
+  .topbar .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+  .topbar-phones {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 0.15rem;
+  }
+  .vp-cskh-top { width: 100%; flex-direction: column; align-items: stretch; }
+  .vp-cskh-link { min-height: 44px; align-items: center; }
+  .footer-col a.vp-cskh-link,
+  .contact-row a.vp-cskh-link,
+  .pwa-steps a.vp-cskh-link,
+  .pwa-offline a.vp-cskh-link,
+  .cta-band .vp-cskh-link {
+    min-height: 44px;
+    align-items: center;
+  }
+  .cta-band .vp-cskh-band { flex-direction: column; align-items: stretch; }
+}
+
 /* ===== Mobile nav ===== */
 @media (max-width: 860px) {
   .nav-toggle { display: flex; }
