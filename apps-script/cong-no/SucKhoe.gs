@@ -57,7 +57,7 @@ function quetSucKhoe() {
     var lastRow = sh.getLastRow();
     var giuCat = [];
     if (lastRow > 2) {
-      giuCat = giuDongCatLuot_(sh.getRange(3, 1, lastRow - 2, 5).getValues());
+      giuCat = giuDongCatLuot_(sh.getRange(3, 1, lastRow - 2, 5).getValues(), bay);
       xoaVung_(sh, 3, 1, lastRow - 2, 5);
     }
     ghiO_(sh, 1, 1, 'Cập nhật');
@@ -111,13 +111,10 @@ function capNhatODem_(ss) {
   var last = sk.getLastRow();
   var soLoi = 0;
   if (last >= 3) {
-    var vals = sk.getRange(3, 3, last - 2, 1).getDisplayValues();
-    var i;
-    for (i = 0; i < vals.length; i++) {
-      if (String(vals[i][0]) === 'LỖI') soLoi++;
-    }
+    soLoi = demLoiMuc_(sk.getRange(3, 3, last - 2, 1).getDisplayValues());
   }
   if (sk.getRange(1, 3).getValue() !== 'Số lỗi') ghiO_(sk, 1, 3, 'Số lỗi');
+  // Mỗi lượt ghi lại số dòng mức đúng chữ LỖI vào CN_SucKhoe!D1, sau khi bảng sức khỏe và dòng QUET_CAT còn giữ đã nằm trên sheet.
   ghiO_(sk, 1, 4, soLoi);
   ghiO_(sk, 1, 26, '');
   return soLoi;

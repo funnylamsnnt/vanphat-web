@@ -192,13 +192,39 @@ function dongLoiCatQuet_(soDaXuLy, tong, mocMoi) {
   );
 }
 
-function giuDongCatLuot_(rows) {
+var HAN_CAT_LUOT_MS_ = 7 * 24 * 60 * 60 * 1000;
+
+function lucTuChuoiVn_(s) {
+  var m = String(s == null ? '' : s).trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})$/);
+  if (!m) return null;
+  var ms = Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6])) - 7 * 60 * 60 * 1000;
+  return isFinite(ms) ? ms : null;
+}
+
+function giuDongCatLuot_(rows, bayGio) {
+  var bay = bayGio instanceof Date ? bayGio.getTime() : Number(bayGio);
   var out = [];
   var i;
+  if (!isFinite(bay)) return out;
   for (i = 0; i < (rows || []).length; i++) {
-    if (rows[i] && String(rows[i][1] || '') === 'QUET_CAT') out.push(rows[i]);
+    var row = rows[i];
+    if (!row || String(row[1] || '') !== 'QUET_CAT') continue;
+    var luc = lucTuChuoiVn_(row[0]);
+    if (luc == null) continue;
+    if (bay - luc <= HAN_CAT_LUOT_MS_) out.push(row);
   }
   return out;
+}
+
+function demLoiMuc_(vals) {
+  var n = 0;
+  var i;
+  for (i = 0; i < (vals || []).length; i++) {
+    var o = vals[i];
+    var muc = o && typeof o === 'object' && typeof o.length === 'number' ? o[0] : o;
+    if (String(muc) === 'LỖI') n++;
+  }
+  return n;
 }
 
 function camGhiSheet_(ten) {
@@ -1459,59 +1485,42 @@ function tongDashboard_(grid) {
   return out;
 }
 
-function timCotDungTen_(headers, tenChuan) {
+function chuanTieuDe_(v) {
+  return String(v == null ? '' : v).replace(/[\u00a0\u202f]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function timCotDungChuoi_(headers, ten) {
+  var muc = chuanTieuDe_(ten);
+  if (!muc) return -1;
   var i;
   for (i = 0; i < (headers || []).length; i++) {
-    if (chuanHoa_(headers[i]) === tenChuan) return i;
+    if (chuanTieuDe_(headers[i]) === muc) return i;
   }
   return -1;
 }
 
-function timCotKhach_(headers) {
-  var a = timCotDungTen_(headers, 'khach');
-  if (a >= 0) return a;
-  return timCotDungTen_(headers, 'khach hang');
-}
-
-function timCotTienChoXuat_(headers) {
-  var uu = ['cho xuat hd', 'cho xuat', 'so tien', 'thanh tien'];
-  var i;
-  var j;
-  for (i = 0; i < uu.length; i++) {
-    j = timCotDungTen_(headers, uu[i]);
-    if (j >= 0) return j;
-  }
-  return -1;
-}
+var TIEU_DE_VIEW_NO_ = ['Mã KH', 'Khách', 'Còn nợ', 'Ngày đến hạn', 'Số ngày quá hạn'];
 
 function dongTieuDeNo_(grid) {
-  var mau = {
-    'ma kh': 1,
-    'khach': 1,
-    'khach hang': 1,
-    'con no': 1,
-    'den han': 1,
-    'qua han': 1,
-    'cho xuat hd': 1,
-    'cho xuat': 1,
-    'so tien': 1,
-    'thanh tien': 1
-  };
   var r;
   var c;
+  var k;
   var best = -1;
   var bestDiem = 0;
-  for (r = 0; r < Math.min((grid || []).length, 5); r++) {
+  for (r = 0; r < Math.min((grid || []).length, 8); r++) {
     var diem = 0;
     for (c = 0; c < (grid[r] || []).length; c++) {
-      if (mau[chuanHoa_(grid[r][c])]) diem++;
+      var chu = chuanTieuDe_(grid[r][c]);
+      for (k = 0; k < TIEU_DE_VIEW_NO_.length; k++) {
+        if (chu === chuanTieuDe_(TIEU_DE_VIEW_NO_[k])) diem++;
+      }
     }
     if (diem > bestDiem) {
       bestDiem = diem;
       best = r;
     }
   }
-  return bestDiem ? best : -1;
+  return bestDiem >= 2 ? best : -1;
 }
 
 function docViewNo_(nhom, grid, loai, gioiHan) {
@@ -1526,25 +1535,18 @@ function docViewNo_(nhom, grid, loai, gioiHan) {
     return {dong: out, tong: null};
   }
   var headers = grid[hr];
-  var cotMa = timCotDungTen_(headers, 'ma kh');
-  var cotKhach = timCotKhach_(headers);
-  var cotDen = timCotDungTen_(headers, 'den han');
-  var cotQua = timCotDungTen_(headers, 'qua han');
-  var cotTien = -1;
+  var cotMa = timCotDungChuoi_(headers, 'Mã KH');
+  var cotKhach = timCotDungChuoi_(headers, 'Khách');
+  var cotTien = timCotDungChuoi_(headers, 'Còn nợ');
+  var cotDen = timCotDungChuoi_(headers, 'Ngày đến hạn');
+  var cotQua = timCotDungChuoi_(headers, 'Số ngày quá hạn');
   var thieu = [];
   if (cotMa < 0) thieu.push('Mã KH');
   if (cotKhach < 0) thieu.push('Khách');
+  if (cotTien < 0) thieu.push('Còn nợ');
   if (loai === 'conNo') {
-    cotTien = timCotDungTen_(headers, 'con no');
-    if (cotTien < 0) thieu.push('Còn nợ');
-    if (cotDen < 0) thieu.push('Đến hạn');
-    if (cotQua < 0) thieu.push('Quá hạn');
-  } else if (loai === 'quaHan') {
-    cotTien = cotQua;
-    if (cotTien < 0) thieu.push('Quá hạn');
-  } else {
-    cotTien = timCotTienChoXuat_(headers);
-    if (cotTien < 0) thieu.push('Số tiền chờ xuất');
+    if (cotDen < 0) thieu.push('Ngày đến hạn');
+    if (cotQua < 0) thieu.push('Số ngày quá hạn');
   }
   if (thieu.length) {
     out.push({muc: 'LỖI', nhom: nhom, doiTuong: 'Tiêu đề', giaTri: '', ghiChu: 'Thiếu cột: ' + thieu.join(', ') + '. Không đọc cột F hay Loại CT.'});
@@ -1560,20 +1562,20 @@ function docViewNo_(nhom, grid, loai, gioiHan) {
     if (!ma && !ten && (row[cotTien] == null || row[cotTien] === '')) continue;
     var tien = soTuHienThi_(row[cotTien]);
     if (tien == null) {
-      out.push({muc: 'LỖI', nhom: nhom, doiTuong: ma || ten, giaTri: '', ghiChu: 'Ô tiền không phải số: ' + String(row[cotTien] == null ? '' : row[cotTien])});
+      out.push({muc: 'LỖI', nhom: nhom, doiTuong: ma || ten, giaTri: '', ghiChu: 'Ô Còn nợ không phải số: ' + String(row[cotTien] == null ? '' : row[cotTien])});
       continue;
     }
     if (!theoMa[ma]) {
-      theoMa[ma] = {ma: ma, ten: ten, tien: 0, den: 0, qua: 0};
+      theoMa[ma] = {ma: ma, ten: ten, tien: 0, den: [], qua: 0};
       thuTu.push(ma);
     }
     if (ten && !theoMa[ma].ten) theoMa[ma].ten = ten;
     theoMa[ma].tien += tien;
     if (cotDen >= 0) {
-      var den = soTuHienThi_(row[cotDen]);
-      if (den != null) theoMa[ma].den += den;
+      var denChuoi = String(row[cotDen] == null ? '' : row[cotDen]).trim();
+      if (denChuoi && theoMa[ma].den.indexOf(denChuoi) < 0 && theoMa[ma].den.length < 5) theoMa[ma].den.push(denChuoi);
     }
-    if (cotQua >= 0 && loai === 'conNo') {
+    if (cotQua >= 0) {
       var qua = soTuHienThi_(row[cotQua]);
       if (qua != null) theoMa[ma].qua += qua;
     }
@@ -1589,7 +1591,8 @@ function docViewNo_(nhom, grid, loai, gioiHan) {
     }
     var g = theoMa[thuTu[i]];
     var chu = '';
-    if (loai === 'conNo') chu = 'Đến hạn ' + g.den + '. Quá hạn ' + g.qua + '.';
+    if (loai === 'conNo') chu = 'Ngày đến hạn: ' + g.den.join(', ') + '. Số ngày quá hạn: ' + g.qua + '.';
+    else if (loai === 'quaHan' && cotQua >= 0) chu = 'Số ngày quá hạn: ' + g.qua + '.';
     out.push({
       muc: 'DONG',
       nhom: nhom,
@@ -2207,9 +2210,11 @@ function tuChayMau_() {
   headNo[2] = 'Mã KH';
   headNo[3] = 'Khách';
   headNo[5] = 'Loại CT';
-  headNo[7] = 'Còn nợ';
+  headNo[7] = '  CÒN NỢ ';
   headNo[8] = 'Đến hạn';
   headNo[9] = 'Quá hạn';
+  headNo[10] = 'Ngày  đến hạn';
+  headNo[11] = 'SỐ NGÀY QUÁ HẠN';
   var dongNo1 = [];
   dongNo1[2] = 'KH01';
   dongNo1[3] = 'CTY A';
@@ -2217,13 +2222,17 @@ function tuChayMau_() {
   dongNo1[7] = '20.000.000';
   dongNo1[8] = '1.000.000';
   dongNo1[9] = '500.000';
+  dongNo1[10] = '22/10/2026';
+  dongNo1[11] = 5;
   var dongNo2 = [];
   dongNo2[2] = 'KH01';
   dongNo2[3] = 'CTY A';
   dongNo2[5] = 'PG';
   dongNo2[7] = '5.000.000';
-  dongNo2[8] = '0';
-  dongNo2[9] = '0';
+  dongNo2[8] = '999999';
+  dongNo2[9] = '888888';
+  dongNo2[10] = '01/11/2026';
+  dongNo2[11] = 0;
   var dongNo3 = [];
   dongNo3[2] = 'KH02';
   dongNo3[3] = 'CTY B';
@@ -2231,28 +2240,56 @@ function tuChayMau_() {
   dongNo3[7] = '5.000.000';
   dongNo3[8] = '0';
   dongNo3[9] = '0';
+  dongNo3[10] = '15/11/2026';
+  dongNo3[11] = 2;
   var headHan = [];
   headHan[2] = 'Mã KH';
   headHan[3] = 'Khách';
   headHan[5] = 'Loại CT';
-  headHan[9] = 'Quá hạn';
-  var dongHan = [];
-  dongHan[2] = 'KH01';
-  dongHan[3] = 'CTY A';
-  dongHan[5] = 3;
-  dongHan[9] = '200000';
+  headHan[7] = 'Còn nợ';
+  headHan[9] = 'Số ngày quá hạn';
+  headHan[10] = 'Quá hạn';
+  var dongHan1 = [];
+  dongHan1[2] = 'KH01';
+  dongHan1[3] = 'CTY A';
+  dongHan1[5] = 3;
+  dongHan1[7] = '150.000';
+  dongHan1[9] = 12;
+  dongHan1[10] = 999999;
+  var dongHan2 = [];
+  dongHan2[2] = 'KH01';
+  dongHan2[3] = 'CTY A';
+  dongHan2[5] = 3;
+  dongHan2[7] = '50.000';
+  dongHan2[9] = 3;
+  dongHan2[10] = 1;
   var headCho = [];
   headCho[2] = 'Mã KH';
   headCho[3] = 'Khách';
   headCho[5] = 'Loại CT';
-  headCho[7] = 'Số tiền';
+  headCho[6] = 'Số tiền';
+  headCho[7] = 'Chờ xuất HĐ';
+  headCho[8] = 'Còn nợ';
   var dongCho = [];
   dongCho[2] = 'KH01';
   dongCho[3] = 'CTY A';
   dongCho[5] = 3;
-  dongCho[7] = '25.139.500';
+  dongCho[6] = 3;
+  dongCho[7] = 9;
+  dongCho[8] = '25.139.500';
   kiem('so 25139500', soTuHienThi_('25.139.500') === 25139500);
-  kiem('giu cat luot', giuDongCatLuot_([['t', 'QUET_CAT', 'LỖI', 'Drive', 'cắt'], ['t', 'HH_THIEU_KEY', 'LỖI', 'x', 'y']]).length === 1);
+  kiem('tieu de dung chuoi', chuanTieuDe_('  Ngày   đến hạn ') === 'ngày đến hạn' && chuanTieuDe_('Đến hạn') !== chuanTieuDe_('Ngày đến hạn') && chuanTieuDe_('Ngay den han') !== chuanTieuDe_('Ngày đến hạn'));
+  kiem('dem loi d1', demLoiMuc_([['OK'], ['LỖI'], ['CẢNH BÁO'], ['LỖI']]) === 2 && demLoiMuc_(['CẢNH BÁO', 'OK']) === 0);
+  var bayCat = new Date('2026-10-22T16:00:00.000Z');
+  var catGiu = giuDongCatLuot_([
+    ['2026-10-22 10:00:00', 'QUET_CAT', 'LỖI', 'Drive', 'moi'],
+    ['2026-10-15 23:00:00', 'QUET_CAT', 'LỖI', 'Drive', 'sat 7 ngay'],
+    ['2026-10-15 22:59:59', 'QUET_CAT', 'LỖI', 'Drive', 'cu hon 7 ngay'],
+    ['2026-10-22 10:00:00', 'HH_THIEU_KEY', 'LỖI', 'x', 'y'],
+    ['khong-phai-ngay', 'QUET_CAT', 'LỖI', 'Drive', 'hong']
+  ], bayCat);
+  kiem('giu cat 7 ngay', catGiu.length === 2 && catGiu[0][4] === 'moi' && catGiu[1][4] === 'sat 7 ngay');
+  kiem('giu cat thieu gio', giuDongCatLuot_([['t', 'QUET_CAT', 'LỖI', 'Drive', 'cắt']], null).length === 0);
   var doi = lapBaoCaoDoiSoat_({
     homNay: '2026-10-22',
     hangDoi: [
@@ -2262,7 +2299,7 @@ function tuChayMau_() {
       {thoiGian: '', ten: 'Dem.pdf', trangThai: 'Sửa file đã ghi', loai: 'HĐ', modifiedTime: '2026-10-21T17:30:00.000Z'}
     ],
     vConNo: [headNo, dongNo1, dongNo2, dongNo3],
-    vQuaHan: [headHan, dongHan],
+    vQuaHan: [headHan, dongHan1, dongHan2],
     vChoXuatHd: [headCho, dongCho],
     dashboard: dashV7,
     soLoi: 2
@@ -2280,7 +2317,8 @@ function tuChayMau_() {
   kiem('doi da', coMuc('CHUNG_TU', 'B.pdf') && coMuc('CHUNG_TU', 'B.pdf').ghiChu.indexOf('Đã vào sổ') >= 0);
   kiem('doi sua', coMuc('CHUNG_TU', 'Dem.pdf') && coMuc('CHUNG_TU', 'Dem.pdf').ghiChu.indexOf('file bị sửa') >= 0);
   kiem('doi cu', chuoiDoi.indexOf('Cu.xlsx') < 0);
-  kiem('doi no', coMuc('DONG', 'KH01') && coMuc('DONG', 'KH01').giaTri === '25000000' && coMuc('DONG', 'KH01').ghiChu.indexOf('Loại CT') < 0);
+  var dongNoKh = coMuc('DONG', 'KH01');
+  kiem('doi no', dongNoKh && dongNoKh.giaTri === '25000000' && dongNoKh.ghiChu.indexOf('Loại CT') < 0 && dongNoKh.ghiChu.indexOf('Ngày đến hạn') >= 0 && dongNoKh.ghiChu.indexOf('22/10/2026') >= 0 && dongNoKh.ghiChu.indexOf('Số ngày quá hạn: 5') >= 0 && dongNoKh.giaTri !== '1500000' && dongNoKh.giaTri !== '888888');
   kiem('doi han', coMuc('DONG', 'Nợ quá hạn') === null && chuoiDoi.indexOf('Nợ quá hạn') >= 0 && coMuc('DONG', 'KH01 | CTY A') && String(coMuc('DONG', 'KH01 | CTY A').giaTri) !== '3');
   var dongQua = null;
   var dongChoHd = null;
@@ -2289,8 +2327,8 @@ function tuChayMau_() {
     if (doi[ix].muc === 'DONG' && doi[ix].nhom === 'Nợ quá hạn') dongQua = doi[ix];
     if (doi[ix].muc === 'DONG' && doi[ix].nhom === 'Chờ xuất HĐ') dongChoHd = doi[ix];
   }
-  kiem('doi qua cot', dongQua && dongQua.giaTri === '200000');
-  kiem('doi cho cot', dongChoHd && dongChoHd.giaTri === '25139500');
+  kiem('doi qua cot', dongQua && dongQua.giaTri === '200000' && dongQua.giaTri !== '12' && dongQua.giaTri !== '15' && dongQua.giaTri !== '999999' && dongQua.ghiChu.indexOf('Số ngày quá hạn: 15') >= 0);
+  kiem('doi cho cot', dongChoHd && dongChoHd.giaTri === '25139500' && dongChoHd.giaTri !== '3' && dongChoHd.giaTri !== '9' && String(dongChoHd.ghiChu).indexOf('Loại CT') < 0);
   kiem('doi e30', coMuc('TONG', 'Tổng nợ') && coMuc('TONG', 'Tổng nợ').giaTri === '30.000.000');
   kiem('doi h30', coMuc('TONG', 'Quá hạn') && coMuc('TONG', 'Quá hạn').giaTri === '8.000.000');
   kiem('doi k30', coMuc('TONG', 'Chờ xuất HĐ') && coMuc('TONG', 'Chờ xuất HĐ').giaTri === '25.139.500');
@@ -2309,6 +2347,46 @@ function tuChayMau_() {
   dashSai[29][4] = '30.000.000';
   var saiNhan = tongDashboard_(dashSai);
   kiem('nhan e29', saiNhan[0].muc === 'LỖI' && saiNhan[0].giaTri === '' && saiNhan[0].ghiChu.indexOf('E29') >= 0);
+  var headNgan = [];
+  headNgan[2] = 'Mã KH';
+  headNgan[3] = 'Khách';
+  headNgan[7] = 'Còn nợ';
+  headNgan[8] = 'Đến hạn';
+  headNgan[9] = 'Quá hạn';
+  headNgan[10] = 'Ngay den han';
+  headNgan[11] = 'So ngay qua han';
+  var dongNgan = [];
+  dongNgan[2] = 'KH01';
+  dongNgan[3] = 'CTY A';
+  dongNgan[7] = '20.000.000';
+  dongNgan[8] = '1.000.000';
+  dongNgan[9] = '200000';
+  dongNgan[10] = '22/10/2026';
+  dongNgan[11] = 12;
+  var saiNgan = docViewNo_('Nợ theo khách', [headNgan, dongNgan], 'conNo', 40);
+  kiem('tieu de ngan', saiNgan.tong === null && saiNgan.dong[0].muc === 'LỖI' && saiNgan.dong[0].ghiChu.indexOf('Ngày đến hạn') >= 0 && saiNgan.dong[0].ghiChu.indexOf('Số ngày quá hạn') >= 0 && JSON.stringify(saiNgan).indexOf('20000000') < 0);
+  var headTienSai = [];
+  headTienSai[2] = 'Mã KH';
+  headTienSai[3] = 'Khách';
+  headTienSai[6] = 'Số tiền';
+  headTienSai[7] = 'Chờ xuất HĐ';
+  var dongTienSai = [];
+  dongTienSai[2] = 'KH01';
+  dongTienSai[3] = 'CTY A';
+  dongTienSai[6] = '25.139.500';
+  dongTienSai[7] = 9;
+  var saiCho = docViewNo_('Chờ xuất HĐ', [headTienSai, dongTienSai], 'choXuat', 40);
+  kiem('cho khong so tien', saiCho.tong === null && saiCho.dong[0].muc === 'LỖI' && saiCho.dong[0].ghiChu.indexOf('Còn nợ') >= 0 && JSON.stringify(saiCho).indexOf('25139500') < 0);
+  var headNgaySai = [];
+  headNgaySai[2] = 'Mã KH';
+  headNgaySai[3] = 'Khách';
+  headNgaySai[9] = 'Số ngày quá hạn';
+  var dongNgaySai = [];
+  dongNgaySai[2] = 'KH01';
+  dongNgaySai[3] = 'CTY A';
+  dongNgaySai[9] = 12;
+  var saiHan = docViewNo_('Nợ quá hạn', [headNgaySai, dongNgaySai], 'quaHan', 40);
+  kiem('qua han khong cong ngay', saiHan.tong === null && saiHan.dong[0].muc === 'LỖI' && saiHan.dong[0].ghiChu.indexOf('Còn nợ') >= 0);
 
   var text = fail.length ? ('FAIL ' + fail.length + '\n' + fail.join('\n')) : ('OK ' + 'logic mẫu chạy hết, không lỗi');
   return {ok: fail.length === 0, fail: fail, text: text};
