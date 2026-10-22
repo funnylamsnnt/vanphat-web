@@ -27,6 +27,104 @@ vm.runInContext(logic, context);
 var kq = context.tuChayMau_();
 console.log(kq.text);
 
+function luoiDash_(e30, h30, k30, b9) {
+  var g = [];
+  var u;
+  for (u = 0; u < 30; u++) g.push([]);
+  g[7][1] = 'Doanh thu';
+  g[8][1] = b9;
+  g[28][4] = 'Tổng nợ';
+  g[28][7] = 'Quá hạn';
+  g[28][10] = 'Chờ xuất HĐ';
+  g[29][4] = e30;
+  g[29][7] = h30;
+  g[29][10] = k30;
+  return g;
+}
+function headTien_() {
+  var h = [];
+  h[2] = 'Mã KH';
+  h[3] = 'Khách hàng';
+  h[7] = 'Còn nợ';
+  return h;
+}
+function headCon_() {
+  var h = headTien_();
+  h[10] = 'Ngày đến hạn';
+  h[11] = 'Số ngày quá hạn';
+  return h;
+}
+function timDong_(ds, muc, cum) {
+  var n;
+  for (n = 0; n < ds.length; n++) {
+    if (ds[n].muc === muc && (String(ds[n].doiTuong).indexOf(cum) >= 0 || String(ds[n].ghiChu).indexOf(cum) >= 0)) return ds[n];
+  }
+  return null;
+}
+var loiSoKhong = [];
+['-', '–', '—', '', '0đ', '0 đ', '0₫'].forEach(function (mau) {
+  if (context.soODashboard_(mau) !== 0) loiSoKhong.push('soODashboard không ra 0 với «' + mau + '»');
+  var bao = context.lapBaoCaoDoiSoat_({
+    homNay: '2026-10-22',
+    hangDoi: [],
+    vConNo: [headCon_()],
+    vQuaHan: [headTien_()],
+    vChoXuatHd: [headTien_()],
+    dashboard: luoiDash_(mau, mau, mau, mau),
+    soLoi: 0
+  });
+  ['E30', 'H30', 'K30'].forEach(function (o) {
+    var khop = timDong_(bao, 'TONG', 'Khớp Dashboard!' + o);
+    if (!khop) loiSoKhong.push('không khớp ' + o + ' khi ô là «' + mau + '»');
+    if (JSON.stringify(bao).indexOf(o + ' = -') >= 0) loiSoKhong.push('vẫn ghi lệch ' + o + ' = -');
+  });
+  var tong = context.tongDashboard_(luoiDash_(mau, mau, mau, mau));
+  ['Tổng nợ', 'Quá hạn', 'Chờ xuất HĐ', 'Doanh thu'].forEach(function (ten) {
+    var d = null;
+    var i;
+    for (i = 0; i < tong.length; i++) if (tong[i].doiTuong === ten) d = tong[i];
+    if (!d || d.muc !== 'TONG' || d.giaTri !== '0') loiSoKhong.push(ten + ' không thành 0 với «' + mau + '»');
+  });
+});
+if (context.soODashboard_('-1') !== -1) loiSoKhong.push('số âm bị nuốt thành 0');
+if (context.soODashboard_('48.964.500') !== 48964500) loiSoKhong.push('số Dashboard thật bị đổi');
+var dongLech = [];
+dongLech[2] = 'KH01';
+dongLech[3] = 'CTY A';
+dongLech[7] = 100;
+var baoLech = context.lapBaoCaoDoiSoat_({
+  homNay: '2026-10-22',
+  hangDoi: [],
+  vConNo: [headCon_()],
+  vQuaHan: [headTien_(), dongLech],
+  vChoXuatHd: [headTien_()],
+  dashboard: luoiDash_('0', '-', '0', '0'),
+  soLoi: 0
+});
+var lechH = timDong_(baoLech, 'LỖI', 'Lệch Dashboard!H30');
+if (!lechH || String(lechH.ghiChu).indexOf('H30 = 0') < 0 || String(lechH.ghiChu).indexOf('H30 = -') >= 0) {
+  loiSoKhong.push('lệch thật của H30 không ghi H30 = 0');
+}
+var luoiGach = luoiDash_('-', '-', '—', '');
+var luoiChuan = context.chuanLuoiDashboard_(luoiGach);
+if (luoiChuan[29][4] !== '0' || luoiChuan[29][7] !== '0' || luoiChuan[29][10] !== '0' || luoiChuan[8][1] !== '0') {
+  loiSoKhong.push('chuanLuoiDashboard_ không đổi bốn ô về 0');
+}
+if (luoiGach[29][7] !== '-') loiSoKhong.push('chuanLuoiDashboard_ sửa nhầm lưới gốc');
+var dongView = [];
+dongView[2] = 'KH01';
+dongView[3] = 'CTY A';
+dongView[7] = '-';
+var viewGach = context.docViewNo_('Nợ quá hạn', [headTien_(), dongView], 'quaHan', 40);
+if (!viewGach.dong[0] || viewGach.dong[0].muc !== 'LỖI' || String(viewGach.dong[0].ghiChu).indexOf('không phải số') < 0) {
+  loiSoKhong.push('cột Còn nợ vẫn nhận dấu gạch');
+}
+if (loiSoKhong.length) {
+  console.log('FAIL số 0 trên Dashboard\n' + loiSoKhong.join('\n'));
+  process.exit(1);
+}
+console.log('OK Dashboard: dấu gạch, ô trống và 0đ là 0');
+
 var writeRe = /\.(setValues|setValue|setFormula|setFormulas|appendRow|clearContent|insertSheet|deleteRows|insertRow)\s*\(/;
 var camLlm = /UrlFetchApp|openai|generativelanguage|chat\.completions/i;
 var files = fs.readdirSync(root).filter(function (name) { return name.endsWith('.gs'); });
@@ -77,6 +175,7 @@ if (trig.indexOf('capNhatGiaVon') >= 0) leak.push('Triggers.gs đụng trigger g
 if (trig.indexOf('atHour(lich.gio)') < 0 || trig.indexOf('nearMinute(lich.phut)') < 0) leak.push('thiếu lịch 19:45');
 var doi = fs.readFileSync(path.join(root, 'DoiSoat.gs'), 'utf8');
 if (doi.indexOf('Bill_Kiot') >= 0 || doi.indexOf('500k') >= 0) leak.push('DoiSoat đụng bill hoặc mốc 500k');
+if (doi.indexOf('chuanLuoiDashboard_') < 0) leak.push('DoiSoat không chuẩn hóa số Dashboard');
 var skSrc = fs.readFileSync(path.join(root, 'SucKhoe.gs'), 'utf8');
 if (skSrc.indexOf('ghiO_(sk, 1, 4, soLoi)') < 0) leak.push('capNhatODem_ không ghi CN_SucKhoe!D1');
 if (skSrc.indexOf('demLoiMuc_') < 0) leak.push('capNhatODem_ không đếm LỖI bằng demLoiMuc_');

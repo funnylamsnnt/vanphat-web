@@ -76,7 +76,7 @@ function doiSoatCuoiNgay() {
       vConNo: docLuoiDoiSoat_(ss, 'V_ConNo'),
       vQuaHan: docLuoiDoiSoat_(ss, 'V_QuaHan'),
       vChoXuatHd: docLuoiDoiSoat_(ss, 'V_ChoXuatHD'),
-      dashboard: docLuoiDoiSoat_(ss, 'Dashboard'),
+      dashboard: chuanLuoiDashboard_(docLuoiDoiSoat_(ss, 'Dashboard')),
       soLoi: soLoi
     });
     var sh = damBaoDoiSoat_(ss);
