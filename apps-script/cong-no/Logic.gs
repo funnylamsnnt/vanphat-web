@@ -4,7 +4,7 @@
  * Mọi hàm ghi sheet nằm ở Ghi.gs và chỉ được ghi CN_HangDoi, CN_SucKhoe, CONFIG.
  */
 
-var SHEET_DUOC_GHI = ['CN_HangDoi', 'CN_SucKhoe', 'CONFIG'];
+var SHEET_DUOC_GHI = ['CN_HangDoi', 'CN_SucKhoe', 'CONFIG', 'CN_DoiSoat'];
 
 var VUNG_CAM_AD = {
   sheet: 'DM_KhachHang',
@@ -192,6 +192,49 @@ function dongLoiCatQuet_(soDaXuLy, tong, mocMoi) {
   );
 }
 
+var HAN_CAT_LUOT_MS_ = 7 * 24 * 60 * 60 * 1000;
+
+function lucTuChuoiVn_(s) {
+  var m = String(s == null ? '' : s).trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})$/);
+  if (!m) return null;
+  var ms = Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6])) - 7 * 60 * 60 * 1000;
+  return isFinite(ms) ? ms : null;
+}
+
+function lucTuO_(v) {
+  if (v instanceof Date) {
+    var ms = v.getTime();
+    return isFinite(ms) ? ms : null;
+  }
+  return lucTuChuoiVn_(v);
+}
+
+function giuDongCatLuot_(rows, bayGio) {
+  var bay = bayGio instanceof Date ? bayGio.getTime() : Number(bayGio);
+  var out = [];
+  var i;
+  if (!isFinite(bay)) return out;
+  for (i = 0; i < (rows || []).length; i++) {
+    var row = rows[i];
+    if (!row || String(row[1] || '') !== 'QUET_CAT') continue;
+    var luc = lucTuO_(row[0]);
+    if (luc == null) continue;
+    if (bay - luc <= HAN_CAT_LUOT_MS_) out.push(row);
+  }
+  return out;
+}
+
+function demLoiMuc_(vals) {
+  var n = 0;
+  var i;
+  for (i = 0; i < (vals || []).length; i++) {
+    var o = vals[i];
+    var muc = o && typeof o === 'object' && typeof o.length === 'number' ? o[0] : o;
+    if (String(muc) === 'LỖI') n++;
+  }
+  return n;
+}
+
 function camGhiSheet_(ten) {
   if (SHEET_DUOC_GHI.indexOf(ten) === -1) {
     throw new Error('Cấm ghi sheet «' + ten + '». Chỉ được ghi: ' + SHEET_DUOC_GHI.join(', '));
@@ -314,8 +357,8 @@ function soHdTuTen_(ten, kyHieu) {
 function loaiTuChuoi_(s, kyHieu) {
   if (!s) return '';
   var t = chuanHoa_(s);
-  if (/phieu bao gia|\bbao gia\b|\bbg\b/.test(t)) return 'BG';
-  if (/phieu giao|\bpg\b/.test(t)) return 'PG';
+  if (/phieu bao gia|\bbao gia\b|\bbg\d{2}-\d+\b|\bbg\b/.test(t)) return 'BG';
+  if (/phieu giao|\bpg\d{2}-\d+\b|\bpg\b/.test(t)) return 'PG';
   if (coKyHieuHd_(t, kyHieu)) return 'HĐ';
   if (/hoa don|\bhddt\b|\bgtgt\b|\bhd\b/.test(t)) return 'HĐ?';
   return '';
@@ -571,6 +614,22 @@ function khoaTrung_(fileId, modifiedTime) {
   return String(fileId) + '\n' + String(modifiedTime);
 }
 
+function tachChuaCo_(files, dongCu) {
+  var co = {};
+  var i;
+  for (i = 0; i < (dongCu || []).length; i++) {
+    co[khoaTrung_(dongCu[i].fileId, dongCu[i].modifiedTime)] = true;
+    if (dongCu[i].fileIdPhu) co[khoaTrung_(dongCu[i].fileIdPhu, dongCu[i].modifiedTime)] = true;
+  }
+  var chua = [];
+  var da = [];
+  for (i = 0; i < (files || []).length; i++) {
+    if (co[khoaTrung_(files[i].fileId, files[i].modifiedTime)]) da.push(files[i]);
+    else chua.push(files[i]);
+  }
+  return {chua: chua, da: da};
+}
+
 function locTrung_(daCo, moi) {
   var set = {};
   var giu = [];
@@ -611,12 +670,33 @@ function dongHangDoi_(thoiGian, item) {
   ];
 }
 
-function congThucDemChoBot_() {
-  return '=COUNTIF(F:F,"' + TRANG_THAI_CHO + '")+COUNTIF(F:F,"' + TRANG_THAI_SUA + '")';
+function laTrangThaiCanBot_(trang) {
+  return trang === TRANG_THAI_CHO || trang === TRANG_THAI_SUA;
 }
 
-function congThucDemLoi_() {
-  return '=COUNTIF(C3:C,"LỖI")';
+function demCanBot_(trangThai) {
+  var n = 0;
+  var i;
+  for (i = 0; i < (trangThai || []).length; i++) {
+    if (laTrangThaiCanBot_(trangThai[i])) n++;
+  }
+  return n;
+}
+
+function dauNgayVnIso_(bayGio) {
+  var d = bayGio instanceof Date ? bayGio : new Date(bayGio);
+  var ms = d.getTime();
+  if (isNaN(ms)) return '';
+  var vn = new Date(ms + 7 * 3600000);
+  var startVn = Date.UTC(vn.getUTCFullYear(), vn.getUTCMonth(), vn.getUTCDate());
+  return new Date(startVn - 7 * 3600000).toISOString();
+}
+
+function mocQuetDrive_(mocCu, bayGioIso) {
+  var dau = dauNgayVnIso_(bayGioIso);
+  var cu = String(mocCu || '');
+  if (!cu) return {khoiTao: true, mocQuery: dau, mocLuu: bayGioIso};
+  return {khoiTao: false, mocQuery: cu < dau ? cu : dau, mocLuu: bayGioIso};
 }
 
 function truyVanGmail_(from, afterEpochSec) {
@@ -648,6 +728,35 @@ function headerPhieuGiaoHopLe_(a1, cauHinh) {
     if (t && h.indexOf(t) >= 0) return true;
   }
   return false;
+}
+
+var AN_HAN_HH_MS = 60 * 60 * 1000;
+
+function phanLoaiThieuKey_(thieu, truoc, bayGioMs) {
+  truoc = truoc || {daKhoiTao: false, moc: {}};
+  var daKhoiTao = !!truoc.daKhoiTao;
+  var cu = truoc.moc || {};
+  var moc = {};
+  var canhBao = [];
+  var loi = [];
+  var i;
+  for (i = 0; i < (thieu || []).length; i++) {
+    var key = thieu[i];
+    var lanDau = cu[key];
+    if (!daKhoiTao) {
+      lanDau = new Date(bayGioMs - AN_HAN_HH_MS).toISOString();
+      loi.push(key);
+    } else if (!lanDau) {
+      lanDau = new Date(bayGioMs).toISOString();
+      canhBao.push(key);
+    } else {
+      var tuoi = bayGioMs - new Date(lanDau).getTime();
+      if (tuoi >= AN_HAN_HH_MS) loi.push(key);
+      else canhBao.push(key);
+    }
+    moc[key] = lanDau;
+  }
+  return {daKhoiTao: true, moc: moc, canhBao: canhBao, loi: loi};
 }
 
 function khoaThieu_(dataRows, nhapRows) {
@@ -827,12 +936,28 @@ function lapBaoCaoSucKhoe_(inp) {
   ));
   if (sheets.HH_Data && sheets.HH_Nhap) {
     var thieu = khoaThieu_(sheets.HH_Data, sheets.HH_Nhap);
-    rows.push(dongBaoCao_(
-      'HH_THIEU_KEY',
-      thieu.length ? 'LỖI' : 'OK',
-      'HH_Data/HH_Nhap',
-      thieu.length ? ('Thiếu ' + thieu.length + ' khóa: ' + thieu.slice(0, 20).join(', ')) : 'Đủ khóa cột A'
-    ));
+    var bayMs = inp.bayGio ? new Date(inp.bayGio).getTime() : 0;
+    var phan = phanLoaiThieuKey_(thieu, inp.hhThieu, bayMs);
+    inp.hhThieuSau = phan;
+    if (!thieu.length) {
+      rows.push(dongBaoCao_('HH_THIEU_KEY', 'OK', 'HH_Data/HH_Nhap', 'Đủ khóa cột A'));
+    }
+    if (phan.canhBao.length) {
+      rows.push(dongBaoCao_(
+        'HH_THIEU_KEY',
+        'CẢNH BÁO',
+        'HH_Data/HH_Nhap',
+        'Key mới chưa tới 60 phút: ' + phan.canhBao.slice(0, 20).join(', ')
+      ));
+    }
+    if (phan.loi.length) {
+      rows.push(dongBaoCao_(
+        'HH_THIEU_KEY',
+        'LỖI',
+        'HH_Data/HH_Nhap',
+        'Thiếu quá 60 phút, ' + phan.loi.length + ' khóa: ' + phan.loi.slice(0, 20).join(', ')
+      ));
+    }
   }
   rows.push(danhGiaLog_(inp));
   if (sheets.DM_KhachHang) {
@@ -1265,6 +1390,316 @@ function quyTacGiaiDoanSau_() {
   ];
 }
 
+var COT_DOI_SOAT = ['Mục', 'Nhóm', 'Đối tượng', 'Giá trị', 'Ghi chú'];
+
+function lichDoiSoat_() {
+  return {gio: 19, phut: 45, tz: 'Asia/Ho_Chi_Minh', ham: 'doiSoatCuoiNgay'};
+}
+
+function cotGhiDanhMuc_() {
+  return {
+    docBang: 'SpreadsheetApp',
+    sheetId: CONFIG_MAC_DINH.GIA_VON_SHEET_ID,
+    ghiCot: 'C',
+    khongGhiCot: 'D',
+    cotDGiuNguyen: true,
+    khongDocExcel: true
+  };
+}
+
+function ngayVnTuIso_(iso) {
+  var d = new Date(iso);
+  if (!iso || isNaN(d.getTime())) return '';
+  var local = new Date(d.getTime() + 7 * 3600000);
+  return local.toISOString().slice(0, 10);
+}
+
+function homNayVn_(date) {
+  var d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return '';
+  return ngayVnTuIso_(d.toISOString());
+}
+
+function laChungTuTrongNgay_(dong, homNay) {
+  if (!dong || !homNay) return false;
+  var tg = String(dong.thoiGian || '');
+  if (tg.indexOf(homNay) === 0) return true;
+  return ngayVnTuIso_(dong.modifiedTime) === homNay;
+}
+
+function trangThaiVaoSo_(trang) {
+  if (trang === TRANG_THAI_CHO) return 'Chưa vào sổ';
+  if (trang === TRANG_THAI_DA_CO) return 'Đã vào sổ';
+  if (trang === TRANG_THAI_SUA) return 'Đã vào sổ, file bị sửa';
+  return String(trang || '');
+}
+
+function soTuHienThi_(v) {
+  if (typeof v === 'number' && isFinite(v)) return v;
+  var s = String(v == null ? '' : v).replace(/[\s\u00a0\u202f]/g, '').replace(/[₫đ]/gi, '');
+  if (!s) return null;
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) return Number(s.replace(/\./g, '').replace(',', '.'));
+  if (/^-?\d+(,\d+)?$/.test(s)) return Number(s.replace(',', '.'));
+  if (/^-?\d+(\.\d+)?$/.test(s)) return Number(s);
+  return null;
+}
+
+function cungSoTien_(a, b) {
+  var x = soTuHienThi_(a);
+  var y = soTuHienThi_(b);
+  if (x == null || y == null) return false;
+  return Math.abs(x - y) < 0.5;
+}
+
+function oTrongLuoi_(grid, dong, cot) {
+  if (!grid || dong < 0 || cot < 0 || dong >= grid.length) return '';
+  var row = grid[dong] || [];
+  if (cot >= row.length || row[cot] == null) return '';
+  return row[cot];
+}
+
+var COT_TONG_DASHBOARD_ = [
+  {ten: 'Tổng nợ', oNhan: 'E29', oSo: 'E30', dong: 28, cot: 4, khop: function (t) { return t.indexOf('tong') >= 0 && t.indexOf('no') >= 0 && t.indexOf('qua han') < 0; }},
+  {ten: 'Quá hạn', oNhan: 'H29', oSo: 'H30', dong: 28, cot: 7, khop: function (t) { return t.indexOf('qua han') >= 0; }},
+  {ten: 'Chờ xuất HĐ', oNhan: 'K29', oSo: 'K30', dong: 28, cot: 10, khop: function (t) { return t.indexOf('cho xuat') >= 0; }},
+  {ten: 'Doanh thu', oNhan: 'B8', oSo: 'B9', dong: 7, cot: 1, khop: function (t) { return t.indexOf('doanh thu') >= 0; }}
+];
+
+function tongDashboard_(grid) {
+  var out = [];
+  var i;
+  for (i = 0; i < COT_TONG_DASHBOARD_.length; i++) {
+    var c = COT_TONG_DASHBOARD_[i];
+    var nhan = oTrongLuoi_(grid, c.dong, c.cot);
+    var so = oTrongLuoi_(grid, c.dong + 1, c.cot);
+    if (!c.khop(chuanHoa_(nhan))) {
+      out.push({
+        muc: 'LỖI',
+        nhom: 'Dashboard',
+        doiTuong: c.ten,
+        giaTri: '',
+        ghiChu: 'Nhãn ' + c.oNhan + ' không khớp «' + c.ten + '». Ô đang ghi: ' + String(nhan) + '. Không lấy số ' + c.oSo + '.'
+      });
+      continue;
+    }
+    out.push({
+      muc: 'TONG',
+      nhom: 'Dashboard',
+      doiTuong: c.ten,
+      giaTri: String(so),
+      ghiChu: c.oNhan + ' | ' + c.oSo
+    });
+  }
+  return out;
+}
+
+function chuanTieuDe_(v) {
+  return String(v == null ? '' : v).replace(/[\u00a0\u202f]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function timCotDungChuoi_(headers, ten) {
+  var muc = chuanTieuDe_(ten);
+  if (!muc) return -1;
+  var i;
+  for (i = 0; i < (headers || []).length; i++) {
+    if (chuanTieuDe_(headers[i]) === muc) return i;
+  }
+  return -1;
+}
+
+var TIEU_DE_VIEW_NO_ = ['Mã KH', 'Khách hàng', 'Còn nợ', 'Ngày đến hạn', 'Số ngày quá hạn'];
+
+function dongTieuDeNo_(grid) {
+  var r;
+  var c;
+  var k;
+  var best = -1;
+  var bestDiem = 0;
+  for (r = 0; r < Math.min((grid || []).length, 8); r++) {
+    var diem = 0;
+    for (c = 0; c < (grid[r] || []).length; c++) {
+      var chu = chuanTieuDe_(grid[r][c]);
+      for (k = 0; k < TIEU_DE_VIEW_NO_.length; k++) {
+        if (chu === chuanTieuDe_(TIEU_DE_VIEW_NO_[k])) diem++;
+      }
+    }
+    if (diem > bestDiem) {
+      bestDiem = diem;
+      best = r;
+    }
+  }
+  return bestDiem >= 2 ? best : -1;
+}
+
+function docViewNo_(nhom, grid, loai, gioiHan) {
+  var out = [];
+  if (!grid || !grid.length) {
+    out.push({muc: 'KHONG_CO', nhom: nhom, doiTuong: '', giaTri: '', ghiChu: 'Không có sheet hoặc không có dòng'});
+    return {dong: out, tong: null};
+  }
+  var hr = dongTieuDeNo_(grid);
+  if (hr < 0) {
+    out.push({muc: 'LỖI', nhom: nhom, doiTuong: 'Tiêu đề', giaTri: '', ghiChu: 'Không thấy tên cột. Không đọc cột F hay Loại CT.'});
+    return {dong: out, tong: null};
+  }
+  var headers = grid[hr];
+  var cotMa = timCotDungChuoi_(headers, 'Mã KH');
+  var cotKhach = timCotDungChuoi_(headers, 'Khách hàng');
+  var cotTien = timCotDungChuoi_(headers, 'Còn nợ');
+  var cotDen = timCotDungChuoi_(headers, 'Ngày đến hạn');
+  var cotQua = timCotDungChuoi_(headers, 'Số ngày quá hạn');
+  var thieu = [];
+  if (cotMa < 0) thieu.push('Mã KH');
+  if (cotKhach < 0) thieu.push('Khách hàng');
+  if (cotTien < 0) thieu.push('Còn nợ');
+  if (loai === 'conNo') {
+    if (cotDen < 0) thieu.push('Ngày đến hạn');
+    if (cotQua < 0) thieu.push('Số ngày quá hạn');
+  }
+  if (thieu.length) {
+    out.push({muc: 'LỖI', nhom: nhom, doiTuong: 'Tiêu đề', giaTri: '', ghiChu: 'Thiếu cột: ' + thieu.join(', ') + '. Không đọc cột F hay Loại CT.'});
+    return {dong: out, tong: null};
+  }
+  var theoMa = {};
+  var thuTu = [];
+  var r;
+  for (r = hr + 1; r < grid.length; r++) {
+    var row = grid[r] || [];
+    var ma = String(row[cotMa] == null ? '' : row[cotMa]).trim();
+    var ten = String(row[cotKhach] == null ? '' : row[cotKhach]).trim();
+    if (!ma && !ten && (row[cotTien] == null || row[cotTien] === '')) continue;
+    var tien = soTuHienThi_(row[cotTien]);
+    if (tien == null) {
+      out.push({muc: 'LỖI', nhom: nhom, doiTuong: ma || ten, giaTri: '', ghiChu: 'Ô Còn nợ không phải số: ' + String(row[cotTien] == null ? '' : row[cotTien])});
+      continue;
+    }
+    if (!theoMa[ma]) {
+      theoMa[ma] = {ma: ma, ten: ten, tien: 0, den: [], qua: 0};
+      thuTu.push(ma);
+    }
+    if (ten && !theoMa[ma].ten) theoMa[ma].ten = ten;
+    theoMa[ma].tien += tien;
+    if (cotDen >= 0) {
+      var denChuoi = String(row[cotDen] == null ? '' : row[cotDen]).trim();
+      if (denChuoi && theoMa[ma].den.indexOf(denChuoi) < 0 && theoMa[ma].den.length < 5) theoMa[ma].den.push(denChuoi);
+    }
+    if (cotQua >= 0) {
+      var qua = soTuHienThi_(row[cotQua]);
+      if (qua != null) theoMa[ma].qua += qua;
+    }
+  }
+  var tong = 0;
+  var i;
+  for (i = 0; i < thuTu.length; i++) tong += theoMa[thuTu[i]].tien;
+  var gioi = gioiHan || 40;
+  for (i = 0; i < thuTu.length; i++) {
+    if (i === gioi) {
+      out.push({muc: 'CAT', nhom: nhom, doiTuong: '', giaTri: '', ghiChu: 'Còn mã KH chưa đưa vào báo cáo'});
+      break;
+    }
+    var g = theoMa[thuTu[i]];
+    var chu = '';
+    if (loai === 'conNo') chu = 'Ngày đến hạn: ' + g.den.join(', ') + '. Số ngày quá hạn: ' + g.qua + '.';
+    else if (loai === 'quaHan' && cotQua >= 0) chu = 'Số ngày quá hạn: ' + g.qua + '.';
+    out.push({
+      muc: 'DONG',
+      nhom: nhom,
+      doiTuong: (g.ma || '(trống)') + (g.ten ? ' | ' + g.ten : ''),
+      giaTri: String(g.tien),
+      ghiChu: chu
+    });
+  }
+  if (!thuTu.length && !out.length) {
+    out.push({muc: 'KHONG_CO', nhom: nhom, doiTuong: '', giaTri: '', ghiChu: 'Không có dòng dữ liệu'});
+  }
+  return {dong: out, tong: tong};
+}
+
+function doiChieuTong_(tong, dongDash, nhom, ten, oSo) {
+  var nhan = oSo === 'H30' ? 'H29' : (oSo === 'K30' ? 'K29' : 'E29');
+  if (tong == null) {
+    return {muc: 'LỖI', nhom: nhom, doiTuong: ten, giaTri: '', ghiChu: 'Không cộng được vì thiếu cột.'};
+  }
+  if (!dongDash || dongDash.muc !== 'TONG') {
+    return {muc: 'LỖI', nhom: nhom, doiTuong: ten, giaTri: String(tong), ghiChu: 'Không đối chiếu Dashboard!' + oSo + ' vì nhãn ' + nhan + ' không khớp.'};
+  }
+  if (cungSoTien_(tong, dongDash.giaTri)) {
+    return {muc: 'TONG', nhom: nhom, doiTuong: ten, giaTri: String(tong), ghiChu: 'Khớp Dashboard!' + oSo};
+  }
+  return {
+    muc: 'LỖI',
+    nhom: nhom,
+    doiTuong: ten,
+    giaTri: String(tong),
+    ghiChu: 'Lệch Dashboard!' + oSo + '. Tổng mã KH = ' + tong + '. ' + oSo + ' = ' + dongDash.giaTri + '.'
+  };
+}
+
+function doiChieuConNo_(tong, dongTongNo) {
+  return doiChieuTong_(tong, dongTongNo, 'Nợ theo khách', 'Tổng còn nợ', 'E30');
+}
+
+function lapBaoCaoDoiSoat_(inp) {
+  inp = inp || {};
+  var homNay = String(inp.homNay || '');
+  var rows = [];
+  var hang = inp.hangDoi || [];
+  var moi = 0;
+  var chua = 0;
+  var da = 0;
+  var i;
+  for (i = 0; i < hang.length; i++) {
+    var dong = hang[i];
+    if (!laChungTuTrongNgay_(dong, homNay)) continue;
+    var vao = trangThaiVaoSo_(dong.trangThai);
+    moi++;
+    if (dong.trangThai === TRANG_THAI_CHO) chua++;
+    else da++;
+    rows.push({
+      muc: 'CHUNG_TU',
+      nhom: 'Trong ngày',
+      doiTuong: (dong.ten || '') + (dong.khach ? ' | ' + dong.khach : ''),
+      giaTri: dong.loai || '',
+      ghiChu: vao + (dong.thoiGian ? ' | ' + dong.thoiGian : '')
+    });
+  }
+  rows.unshift({
+    muc: 'CHUNG_TU_DEM',
+    nhom: 'Trong ngày',
+    doiTuong: homNay,
+    giaTri: String(moi),
+    ghiChu: 'Chưa vào sổ: ' + chua + '. Đã vào sổ: ' + da + '.'
+  });
+  var no = docViewNo_('Nợ theo khách', inp.vConNo, 'conNo', 40);
+  var han = docViewNo_('Nợ quá hạn', inp.vQuaHan, 'quaHan', 40);
+  var cho = docViewNo_('Chờ xuất HĐ', inp.vChoXuatHd, 'choXuat', 40);
+  var tong = tongDashboard_(inp.dashboard);
+  var dongTongNo = null;
+  var dongQuaHan = null;
+  var dongChoXuat = null;
+  var j;
+  for (j = 0; j < tong.length; j++) {
+    if (tong[j].doiTuong === 'Tổng nợ') dongTongNo = tong[j];
+    if (tong[j].doiTuong === 'Quá hạn') dongQuaHan = tong[j];
+    if (tong[j].doiTuong === 'Chờ xuất HĐ') dongChoXuat = tong[j];
+  }
+  for (j = 0; j < no.dong.length; j++) rows.push(no.dong[j]);
+  rows.push(doiChieuConNo_(no.tong, dongTongNo));
+  for (j = 0; j < han.dong.length; j++) rows.push(han.dong[j]);
+  rows.push(doiChieuTong_(han.tong, dongQuaHan, 'Nợ quá hạn', 'Tổng quá hạn', 'H30'));
+  for (j = 0; j < cho.dong.length; j++) rows.push(cho.dong[j]);
+  rows.push(doiChieuTong_(cho.tong, dongChoXuat, 'Chờ xuất HĐ', 'Tổng chờ xuất', 'K30'));
+  for (j = 0; j < tong.length; j++) rows.push(tong[j]);
+  rows.push({
+    muc: 'SO_LOI',
+    nhom: 'CN_SucKhoe',
+    doiTuong: 'D1',
+    giaTri: String(inp.soLoi == null ? 0 : inp.soLoi),
+    ghiChu: 'Số lỗi trên CN_SucKhoe!D1'
+  });
+  return rows;
+}
+
 function deXuatHangChoFile_() {
   return {
     sheetCu: 'HangCho_File',
@@ -1274,8 +1709,8 @@ function deXuatHangChoFile_() {
     gop: false,
     chep: false,
     xoa: false,
-    songSong: true,
-    deXuat: 'Giữ nguyên HangCho_File vùng A1:K100. Không gộp, không chép, không xóa. Trigger v6 vẫn ghi vào HangCho_File. CN_HangDoi chạy song song trên bản sao khoảng 1 tuần.'
+    songSong: false,
+    deXuat: 'Giữ nguyên HangCho_File vùng A1:K100. Không gộp, không chép, không xóa. Gỡ 4 trigger capNhatTuDrive bằng tatTriggerV6Drive_. Không xoá code v6.'
   };
 }
 
@@ -1432,7 +1867,21 @@ function tuChayMau_() {
   kiem('dong dai', dong.length === COT_HANG_DOI.length, String(dong.length));
   kiem('trang thai', dong[5] === 'Chờ bot');
   kiem('ghep xlsx', dong[10] === 'chưa có PDF mộc đỏ');
-  kiem('z1', congThucDemChoBot_() === '=COUNTIF(F:F,"Chờ bot")+COUNTIF(F:F,"Sửa file đã ghi")');
+  kiem('z1', demCanBot_(['Chờ bot', 'Đã có trong sổ', 'Sửa file đã ghi', 'Chờ bot']) === 3);
+  kiem('pg ma', loaiTuChuoi_('PG26-029.xlsx') === 'PG' && loaiTuChuoi_('PG26-030.pdf') === 'PG');
+  kiem('bg ma', loaiTuChuoi_('BG26-001.xlsx') === 'BG');
+  kiem('dau ngay', dauNgayVnIso_('2026-10-22T16:12:00.000Z') === '2026-10-21T17:00:00.000Z');
+  var mocDrive = mocQuetDrive_('2026-10-22T16:12:00.000Z', '2026-10-22T16:12:00.000Z');
+  kiem('moc cung ngay', mocDrive.khoiTao === false && mocDrive.mocQuery === '2026-10-21T17:00:00.000Z' && '2026-10-22T04:33:35.835Z' > mocDrive.mocQuery);
+  var mocDau = mocQuetDrive_('', '2026-10-22T16:12:00.000Z');
+  kiem('moc drive dau', mocDau.khoiTao === true && mocDau.mocQuery === '2026-10-21T17:00:00.000Z');
+  var mocHomQua = mocQuetDrive_('2026-10-21T16:00:00.000Z', '2026-10-22T01:00:00.000Z');
+  kiem('moc giu hom qua', mocHomQua.mocQuery === '2026-10-21T16:00:00.000Z');
+  var tach = tachChuaCo_(
+    [{fileId: 'a', modifiedTime: '1'}, {fileId: 'b', modifiedTime: '2'}],
+    [{fileId: 'a', modifiedTime: '1'}]
+  );
+  kiem('tach chua', tach.chua.length === 1 && tach.chua[0].fileId === 'b' && tach.da.length === 1);
 
   var moc1 = quyetDinhMoc_('', '2026-10-22T08:00:00.000Z');
   kiem('moc dau', moc1.khoiTao === true && moc1.mocQuery === null);
@@ -1457,6 +1906,24 @@ function tuChayMau_() {
 
   var hhD = [['Key'], ['A'], ['B'], ['C']];
   var hhN = [['Key'], ['A'], ['C']];
+  function baoInpHh(daKhoiTao, moc, bay) {
+    var inpHh = {
+      phieuGiaoA1: 'Mã PG',
+      bayGio: bay || '2026-10-22T08:00:00.000Z',
+      hhThieu: {daKhoiTao: daKhoiTao, moc: moc || {}},
+      sheets: {HH_Data: hhD, HH_Nhap: hhN}
+    };
+    var rowsHh = lapBaoCaoSucKhoe_(inpHh);
+    var mucLoi = '';
+    var mucCanh = '';
+    var h;
+    for (h = 0; h < rowsHh.length; h++) {
+      if (rowsHh[h].ma !== 'HH_THIEU_KEY') continue;
+      if (rowsHh[h].muc === 'LỖI') mucLoi = 'LỖI';
+      if (rowsHh[h].muc === 'CẢNH BÁO') mucCanh = 'CẢNH BÁO';
+    }
+    return {mucLoi: mucLoi, mucCanh: mucCanh, canhBao: mucCanh ? 1 : 0, sau: inpHh.hhThieuSau};
+  }
   var thieu = khoaThieu_(hhD, hhN);
   kiem('hh thieu', thieu.length === 1 && thieu[0] === 'B', thieu.join(','));
 
@@ -1500,6 +1967,12 @@ function tuChayMau_() {
   }
   kiem('bao header', timMa('HEADER_PHIEU_GIAO', 'OK'));
   kiem('bao hh', timMa('HH_THIEU_KEY', 'LỖI'));
+  kiem('hh lan dau loi', baoInpHh(false, {}).mucLoi === 'LỖI' && baoInpHh(false, {}).canhBao === 0);
+  var moi = baoInpHh(true, {});
+  kiem('hh an han', moi.mucCanh === 'CẢNH BÁO' && moi.mucLoi === '' && moi.sau.daKhoiTao === true);
+  var sauMotGio = baoInpHh(true, moi.sau.moc, '2026-10-22T09:01:00.000Z');
+  kiem('hh qua 60', sauMotGio.mucLoi === 'LỖI' && sauMotGio.mucCanh === '');
+  kiem('d1 khong dem canh bao', demMuc_([{muc: 'CẢNH BÁO'}, {muc: 'LỖI'}, {muc: 'OK'}], 'LỖI') === 1);
   kiem('bao log', timMa('LOG_CAP_NHAT', 'CẢNH BÁO'));
   kiem('bao loi', timMa('LOI_CONG_THUC', 'LỖI'));
   kiem('bao ad dat', timMa('DM_AD_DAT', 'THÔNG TIN'));
@@ -1545,11 +2018,13 @@ function tuChayMau_() {
   try {
     assertGhiChoPhep_('CN_HangDoi', {row: 2, column: 1, numRows: 1, numColumns: 10});
     assertGhiChoPhep_('CN_SucKhoe', {row: 3, column: 1, numRows: 1, numColumns: 5});
+    assertGhiChoPhep_('CN_SucKhoe', {row: 1, column: 4, numRows: 1, numColumns: 1});
     assertGhiChoPhep_('CONFIG', {row: 2, column: 1, numRows: 1, numColumns: 3});
+    assertGhiChoPhep_('CN_DoiSoat', {row: 3, column: 1, numRows: 1, numColumns: 5});
   } catch (e4) {
     choPhep = false;
   }
-  kiem('ghi duoc 3 sheet', choPhep === true);
+  kiem('ghi duoc 4 sheet', choPhep === true);
 
   var headerDm = ['Nhóm Hàng', 'Mã SP', 'Tên Sản Phẩm', 'ĐVT', 'Đơn Giá'];
   var cot = tomTatDanhMuc_(headerDm);
@@ -1719,7 +2194,7 @@ function tuChayMau_() {
   var quy = quyTacGiaiDoanSau_().join(' ');
   kiem('quy sau', quy.indexOf('cùng tổng giá trị') >= 0 && quy.indexOf('Khách lẻ quen') >= 0 && quy.indexOf('KH007') >= 0);
   var deXuat = deXuatHangChoFile_();
-  kiem('hang cho', deXuat.sheetCu === 'HangCho_File' && deXuat.ghiSheetCu === false && deXuat.gop === false && deXuat.chep === false && deXuat.xoa === false && deXuat.songSong === true && deXuat.deXuat.indexOf('Không gộp') >= 0);
+  kiem('hang cho', deXuat.sheetCu === 'HangCho_File' && deXuat.ghiSheetCu === false && deXuat.gop === false && deXuat.chep === false && deXuat.xoa === false && deXuat.songSong === false && deXuat.deXuat.indexOf('Không gộp') >= 0 && deXuat.deXuat.indexOf('tatTriggerV6Drive_') >= 0);
   var nemHang = false;
   try {
     assertGhiChoPhep_('HangCho_File', {row: 2, column: 1, numRows: 1, numColumns: 1});
@@ -1727,6 +2202,259 @@ function tuChayMau_() {
     nemHang = true;
   }
   kiem('cam hang cho', nemHang === true);
+  var lich = lichDoiSoat_();
+  kiem('lich 1945', lich.gio === 19 && lich.phut === 45 && lich.ham === 'doiSoatCuoiNgay' && lich.tz === 'Asia/Ho_Chi_Minh');
+  var cotGv = cotGhiDanhMuc_();
+  kiem('gia von cot C', cotGv.ghiCot === 'C' && cotGv.khongGhiCot === 'D' && cotGv.cotDGiuNguyen === true && cotGv.docBang === 'SpreadsheetApp' && cotGv.khongDocExcel === true && cotGv.sheetId === '1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM');
+  kiem('ngay vn', ngayVnTuIso_('2026-10-21T17:30:00.000Z') === '2026-10-22');
+  kiem('ngay vn truoc', ngayVnTuIso_('2026-10-21T16:30:00.000Z') === '2026-10-21');
+  function luoiTrong_(n) {
+    var a = [];
+    var u;
+    for (u = 0; u < n; u++) a.push([]);
+    return a;
+  }
+  var dashV7 = luoiTrong_(30);
+  dashV7[0][0] = 'Chờ xuất HĐ';
+  dashV7[0][1] = 3;
+  dashV7[7][1] = 'Doanh thu';
+  dashV7[8][1] = '9.000.000';
+  dashV7[28][4] = 'Tổng nợ';
+  dashV7[28][7] = 'Quá hạn';
+  dashV7[28][10] = 'Chờ xuất HĐ';
+  dashV7[29][4] = '30.000.000';
+  dashV7[29][7] = '8.000.000';
+  dashV7[29][10] = '25.139.500';
+  var headNo = [];
+  headNo[2] = 'Mã KH';
+  headNo[3] = 'Khách hàng';
+  headNo[5] = 'Loại CT';
+  headNo[7] = '  CÒN NỢ ';
+  headNo[8] = 'Đến hạn';
+  headNo[9] = 'Quá hạn';
+  headNo[10] = 'Ngày  đến hạn';
+  headNo[11] = 'SỐ NGÀY QUÁ HẠN';
+  var dongNo1 = [];
+  dongNo1[2] = 'KH01';
+  dongNo1[3] = 'CTY A';
+  dongNo1[5] = 3;
+  dongNo1[7] = '20.000.000';
+  dongNo1[8] = '1.000.000';
+  dongNo1[9] = '500.000';
+  dongNo1[10] = '22/10/2026';
+  dongNo1[11] = 5;
+  var dongNo2 = [];
+  dongNo2[2] = 'KH01';
+  dongNo2[3] = 'CTY A';
+  dongNo2[5] = 'PG';
+  dongNo2[7] = '5.000.000';
+  dongNo2[8] = '999999';
+  dongNo2[9] = '888888';
+  dongNo2[10] = '01/11/2026';
+  dongNo2[11] = 0;
+  var dongNo3 = [];
+  dongNo3[2] = 'KH02';
+  dongNo3[3] = 'CTY B';
+  dongNo3[5] = 9;
+  dongNo3[7] = '5.000.000';
+  dongNo3[8] = '0';
+  dongNo3[9] = '0';
+  dongNo3[10] = '15/11/2026';
+  dongNo3[11] = 2;
+  var headHan = [];
+  headHan[2] = 'Mã KH';
+  headHan[3] = 'Khách hàng';
+  headHan[5] = 'Loại CT';
+  headHan[7] = 'Còn nợ';
+  headHan[9] = 'Số ngày quá hạn';
+  headHan[10] = 'Quá hạn';
+  var dongHan1 = [];
+  dongHan1[2] = 'KH01';
+  dongHan1[3] = 'CTY A';
+  dongHan1[5] = 3;
+  dongHan1[7] = '5.000.000';
+  dongHan1[9] = 12;
+  dongHan1[10] = 999999;
+  var dongHan2 = [];
+  dongHan2[2] = 'KH01';
+  dongHan2[3] = 'CTY A';
+  dongHan2[5] = 3;
+  dongHan2[7] = '3.000.000';
+  dongHan2[9] = 3;
+  dongHan2[10] = 1;
+  var headCho = [];
+  headCho[2] = 'Mã KH';
+  headCho[3] = 'Khách hàng';
+  headCho[5] = 'Loại CT';
+  headCho[6] = 'Số tiền';
+  headCho[7] = 'Chờ xuất HĐ';
+  headCho[8] = 'Còn nợ';
+  var dongCho = [];
+  dongCho[2] = 'KH01';
+  dongCho[3] = 'CTY A';
+  dongCho[5] = 3;
+  dongCho[6] = 3;
+  dongCho[7] = 9;
+  dongCho[8] = '25.139.500';
+  kiem('so 25139500', soTuHienThi_('25.139.500') === 25139500);
+  kiem('tieu de dung chuoi', chuanTieuDe_('  Ngày   đến hạn ') === 'ngày đến hạn' && chuanTieuDe_('Đến hạn') !== chuanTieuDe_('Ngày đến hạn') && chuanTieuDe_('Ngay den han') !== chuanTieuDe_('Ngày đến hạn') && chuanTieuDe_('Khách') !== chuanTieuDe_('Khách hàng'));
+  kiem('dem loi d1', demLoiMuc_([['OK'], ['LỖI'], ['CẢNH BÁO'], ['LỖI']]) === 2 && demLoiMuc_(['CẢNH BÁO', 'OK']) === 0);
+  var bayCat = new Date('2026-10-22T16:00:00.000Z');
+  var catGiu = giuDongCatLuot_([
+    ['2026-10-22 10:00:00', 'QUET_CAT', 'LỖI', 'Drive', 'moi'],
+    ['2026-10-15 23:00:00', 'QUET_CAT', 'LỖI', 'Drive', 'sat 7 ngay'],
+    ['2026-10-15 22:59:59', 'QUET_CAT', 'LỖI', 'Drive', 'cu hon 7 ngay'],
+    ['2026-10-22 10:00:00', 'HH_THIEU_KEY', 'LỖI', 'x', 'y'],
+    ['khong-phai-ngay', 'QUET_CAT', 'LỖI', 'Drive', 'hong']
+  ], bayCat);
+  kiem('giu cat 7 ngay', catGiu.length === 2 && catGiu[0][4] === 'moi' && catGiu[1][4] === 'sat 7 ngay');
+  kiem('giu cat thieu gio', giuDongCatLuot_([['t', 'QUET_CAT', 'LỖI', 'Drive', 'cắt']], null).length === 0);
+  var catDate = giuDongCatLuot_([
+    [new Date(bayCat.getTime() - 2 * 24 * 60 * 60 * 1000), 'QUET_CAT', 'LỖI', 'Drive', 'date trong'],
+    [new Date(bayCat.getTime() - HAN_CAT_LUOT_MS_), 'QUET_CAT', 'LỖI', 'Drive', 'date sat'],
+    [new Date(bayCat.getTime() - HAN_CAT_LUOT_MS_ - 1000), 'QUET_CAT', 'LỖI', 'Drive', 'date cu'],
+    [new Date(NaN), 'QUET_CAT', 'LỖI', 'Drive', 'date hong']
+  ], bayCat);
+  kiem('giu cat kieu date', catDate.length === 2 && catDate[0][0] instanceof Date && catDate[0][4] === 'date trong' && catDate[1][4] === 'date sat');
+  var doi = lapBaoCaoDoiSoat_({
+    homNay: '2026-10-22',
+    hangDoi: [
+      {thoiGian: '2026-10-22 10:00:00', ten: 'A.xlsx', khach: 'CTY MAU', trangThai: 'Chờ bot', loai: 'PG', modifiedTime: '2026-10-22T03:00:00.000Z'},
+      {thoiGian: '2026-10-21 10:00:00', ten: 'Cu.xlsx', trangThai: 'Đã có trong sổ', modifiedTime: '2026-10-21T03:00:00.000Z'},
+      {thoiGian: '2026-10-22 11:00:00', ten: 'B.pdf', khach: 'CTY MAU', trangThai: 'Đã có trong sổ', loai: 'HĐ'},
+      {thoiGian: '', ten: 'Dem.pdf', trangThai: 'Sửa file đã ghi', loai: 'HĐ', modifiedTime: '2026-10-21T17:30:00.000Z'}
+    ],
+    vConNo: [headNo, dongNo1, dongNo2, dongNo3],
+    vQuaHan: [headHan, dongHan1, dongHan2],
+    vChoXuatHd: [headCho, dongCho],
+    dashboard: dashV7,
+    soLoi: 2
+  });
+  var chuoiDoi = JSON.stringify(doi);
+  function coMuc(muc, doiTuong) {
+    var n;
+    for (n = 0; n < doi.length; n++) {
+      if (doi[n].muc === muc && (!doiTuong || String(doi[n].doiTuong).indexOf(doiTuong) >= 0 || String(doi[n].ghiChu).indexOf(doiTuong) >= 0)) return doi[n];
+    }
+    return null;
+  }
+  kiem('doi dem', coMuc('CHUNG_TU_DEM') && coMuc('CHUNG_TU_DEM').giaTri === '3');
+  kiem('doi chua', coMuc('CHUNG_TU', 'A.xlsx') && coMuc('CHUNG_TU', 'A.xlsx').ghiChu.indexOf('Chưa vào sổ') >= 0);
+  kiem('doi da', coMuc('CHUNG_TU', 'B.pdf') && coMuc('CHUNG_TU', 'B.pdf').ghiChu.indexOf('Đã vào sổ') >= 0);
+  kiem('doi sua', coMuc('CHUNG_TU', 'Dem.pdf') && coMuc('CHUNG_TU', 'Dem.pdf').ghiChu.indexOf('file bị sửa') >= 0);
+  kiem('doi cu', chuoiDoi.indexOf('Cu.xlsx') < 0);
+  var dongNoKh = coMuc('DONG', 'KH01');
+  kiem('doi no', dongNoKh && dongNoKh.giaTri === '25000000' && dongNoKh.ghiChu.indexOf('Loại CT') < 0 && dongNoKh.ghiChu.indexOf('Ngày đến hạn') >= 0 && dongNoKh.ghiChu.indexOf('22/10/2026') >= 0 && dongNoKh.ghiChu.indexOf('Số ngày quá hạn: 5') >= 0 && dongNoKh.giaTri !== '1500000' && dongNoKh.giaTri !== '888888');
+  kiem('doi han', coMuc('DONG', 'Nợ quá hạn') === null && chuoiDoi.indexOf('Nợ quá hạn') >= 0 && coMuc('DONG', 'KH01 | CTY A') && String(coMuc('DONG', 'KH01 | CTY A').giaTri) !== '3');
+  var dongQua = null;
+  var dongChoHd = null;
+  var ix;
+  for (ix = 0; ix < doi.length; ix++) {
+    if (doi[ix].muc === 'DONG' && doi[ix].nhom === 'Nợ quá hạn') dongQua = doi[ix];
+    if (doi[ix].muc === 'DONG' && doi[ix].nhom === 'Chờ xuất HĐ') dongChoHd = doi[ix];
+  }
+  kiem('doi qua cot', dongQua && dongQua.giaTri === '8000000' && dongQua.giaTri !== '12' && dongQua.giaTri !== '15' && dongQua.giaTri !== '999999' && dongQua.ghiChu.indexOf('Số ngày quá hạn: 15') >= 0);
+  kiem('doi cho cot', dongChoHd && dongChoHd.giaTri === '25139500' && dongChoHd.giaTri !== '3' && dongChoHd.giaTri !== '9' && String(dongChoHd.ghiChu).indexOf('Loại CT') < 0);
+  kiem('doi e30', coMuc('TONG', 'Tổng nợ') && coMuc('TONG', 'Tổng nợ').giaTri === '30.000.000');
+  var dongH30 = null;
+  for (ix = 0; ix < doi.length; ix++) {
+    if (doi[ix].muc === 'TONG' && doi[ix].nhom === 'Dashboard' && doi[ix].doiTuong === 'Quá hạn') dongH30 = doi[ix];
+  }
+  kiem('doi h30', dongH30 && dongH30.giaTri === '8.000.000');
+  kiem('doi k30', coMuc('TONG', 'Chờ xuất HĐ') && coMuc('TONG', 'Chờ xuất HĐ').giaTri === '25.139.500');
+  kiem('doi b9', coMuc('TONG', 'Doanh thu') && coMuc('TONG', 'Doanh thu').giaTri === '9.000.000');
+  kiem('doi khop e30', coMuc('TONG', 'Tổng còn nợ') && coMuc('TONG', 'Tổng còn nợ').ghiChu.indexOf('Khớp Dashboard!E30') >= 0);
+  kiem('doi khop h30', coMuc('TONG', 'Tổng quá hạn') && coMuc('TONG', 'Tổng quá hạn').giaTri === '8000000' && coMuc('TONG', 'Tổng quá hạn').ghiChu.indexOf('Khớp Dashboard!H30') >= 0);
+  kiem('doi khop k30', coMuc('TONG', 'Tổng chờ xuất') && coMuc('TONG', 'Tổng chờ xuất').giaTri === '25139500' && coMuc('TONG', 'Tổng chờ xuất').ghiChu.indexOf('Khớp Dashboard!K30') >= 0);
+  kiem('doi loi', coMuc('SO_LOI', 'D1') && coMuc('SO_LOI', 'D1').giaTri === '2');
+  var dashLech = luoiTrong_(30);
+  var p;
+  for (p = 0; p < 30; p++) dashLech[p] = dashV7[p].slice();
+  dashLech[29][4] = '1';
+  var lech = tongDashboard_(dashLech);
+  var doiLech = doiChieuConNo_(30000000, lech[0]);
+  kiem('doi lech e30', doiLech.muc === 'LỖI' && doiLech.ghiChu.indexOf('Lệch Dashboard!E30') >= 0);
+  var dashLechHK = luoiTrong_(30);
+  for (p = 0; p < 30; p++) dashLechHK[p] = dashV7[p].slice();
+  dashLechHK[29][7] = '1';
+  dashLechHK[29][10] = '1';
+  var doiLechHK = lapBaoCaoDoiSoat_({
+    homNay: '2026-10-22',
+    hangDoi: [],
+    vConNo: [headNo, dongNo1, dongNo2, dongNo3],
+    vQuaHan: [headHan, dongHan1, dongHan2],
+    vChoXuatHd: [headCho, dongCho],
+    dashboard: dashLechHK,
+    soLoi: 0
+  });
+  function timLech(ds, cum) {
+    var n;
+    for (n = 0; n < ds.length; n++) {
+      if (ds[n].muc === 'LỖI' && String(ds[n].ghiChu).indexOf(cum) >= 0) return ds[n];
+    }
+    return null;
+  }
+  kiem('lech h30', timLech(doiLechHK, 'Lệch Dashboard!H30') && timLech(doiLechHK, 'Lệch Dashboard!H30').giaTri === '8000000');
+  kiem('lech k30', timLech(doiLechHK, 'Lệch Dashboard!K30') && timLech(doiLechHK, 'Lệch Dashboard!K30').giaTri === '25139500');
+  var dashSai = luoiTrong_(30);
+  dashSai[28][4] = 'Ghi chú';
+  dashSai[29][4] = '30.000.000';
+  var saiNhan = tongDashboard_(dashSai);
+  kiem('nhan e29', saiNhan[0].muc === 'LỖI' && saiNhan[0].giaTri === '' && saiNhan[0].ghiChu.indexOf('E29') >= 0);
+  var headNgan = [];
+  headNgan[2] = 'Mã KH';
+  headNgan[3] = 'Khách hàng';
+  headNgan[7] = 'Còn nợ';
+  headNgan[8] = 'Đến hạn';
+  headNgan[9] = 'Quá hạn';
+  headNgan[10] = 'Ngay den han';
+  headNgan[11] = 'So ngay qua han';
+  var dongNgan = [];
+  dongNgan[2] = 'KH01';
+  dongNgan[3] = 'CTY A';
+  dongNgan[7] = '20.000.000';
+  dongNgan[8] = '1.000.000';
+  dongNgan[9] = '200000';
+  dongNgan[10] = '22/10/2026';
+  dongNgan[11] = 12;
+  var saiNgan = docViewNo_('Nợ theo khách', [headNgan, dongNgan], 'conNo', 40);
+  kiem('tieu de ngan', saiNgan.tong === null && saiNgan.dong[0].muc === 'LỖI' && saiNgan.dong[0].ghiChu.indexOf('Ngày đến hạn') >= 0 && saiNgan.dong[0].ghiChu.indexOf('Số ngày quá hạn') >= 0 && JSON.stringify(saiNgan).indexOf('20000000') < 0);
+  var headTienSai = [];
+  headTienSai[2] = 'Mã KH';
+  headTienSai[3] = 'Khách hàng';
+  headTienSai[6] = 'Số tiền';
+  headTienSai[7] = 'Chờ xuất HĐ';
+  var dongTienSai = [];
+  dongTienSai[2] = 'KH01';
+  dongTienSai[3] = 'CTY A';
+  dongTienSai[6] = '25.139.500';
+  dongTienSai[7] = 9;
+  var saiCho = docViewNo_('Chờ xuất HĐ', [headTienSai, dongTienSai], 'choXuat', 40);
+  kiem('cho khong so tien', saiCho.tong === null && saiCho.dong[0].muc === 'LỖI' && saiCho.dong[0].ghiChu.indexOf('Còn nợ') >= 0 && JSON.stringify(saiCho).indexOf('25139500') < 0);
+  var headNgaySai = [];
+  headNgaySai[2] = 'Mã KH';
+  headNgaySai[3] = 'Khách hàng';
+  headNgaySai[9] = 'Số ngày quá hạn';
+  var dongNgaySai = [];
+  dongNgaySai[2] = 'KH01';
+  dongNgaySai[3] = 'CTY A';
+  dongNgaySai[9] = 12;
+  var saiHan = docViewNo_('Nợ quá hạn', [headNgaySai, dongNgaySai], 'quaHan', 40);
+  kiem('qua han khong cong ngay', saiHan.tong === null && saiHan.dong[0].muc === 'LỖI' && saiHan.dong[0].ghiChu.indexOf('Còn nợ') >= 0);
+  var headKhachNgan = [];
+  headKhachNgan[2] = 'Mã KH';
+  headKhachNgan[3] = 'Khách';
+  headKhachNgan[7] = 'Còn nợ';
+  headKhachNgan[10] = 'Ngày đến hạn';
+  headKhachNgan[11] = 'Số ngày quá hạn';
+  var dongKhachNgan = [];
+  dongKhachNgan[2] = 'KH01';
+  dongKhachNgan[3] = 'CTY A';
+  dongKhachNgan[7] = '48.964.500';
+  dongKhachNgan[10] = '22/10/2026';
+  dongKhachNgan[11] = 0;
+  var saiKhach = docViewNo_('Nợ theo khách', [headKhachNgan, dongKhachNgan], 'conNo', 40);
+  kiem('khong nhan khach ngan', saiKhach.tong === null && saiKhach.dong[0].muc === 'LỖI' && saiKhach.dong[0].ghiChu.indexOf('Khách hàng') >= 0 && JSON.stringify(saiKhach).indexOf('48964500') < 0);
 
   var text = fail.length ? ('FAIL ' + fail.length + '\n' + fail.join('\n')) : ('OK ' + 'logic mẫu chạy hết, không lỗi');
   return {ok: fail.length === 0, fail: fail, text: text};
