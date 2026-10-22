@@ -4,7 +4,7 @@
  * Mọi hàm ghi sheet nằm ở Ghi.gs và chỉ được ghi CN_HangDoi, CN_SucKhoe, CONFIG.
  */
 
-var SHEET_DUOC_GHI = ['CN_HangDoi', 'CN_SucKhoe', 'CONFIG'];
+var SHEET_DUOC_GHI = ['CN_HangDoi', 'CN_SucKhoe', 'CONFIG', 'CN_DoiSoat'];
 
 var VUNG_CAM_AD = {
   sheet: 'DM_KhachHang',
@@ -612,7 +612,7 @@ function dongHangDoi_(thoiGian, item) {
 }
 
 function congThucDemChoBot_() {
-  return '=COUNTIF(F:F,"' + TRANG_THAI_CHO + '")+COUNTIF(F:F,"' + TRANG_THAI_SUA + '")';
+  return '=COUNTIF(F:F,"' + TRANG_THAI_CHO + '")';
 }
 
 function congThucDemLoi_() {
@@ -1265,6 +1265,201 @@ function quyTacGiaiDoanSau_() {
   ];
 }
 
+var COT_DOI_SOAT = ['Mục', 'Nhóm', 'Đối tượng', 'Giá trị', 'Ghi chú'];
+
+function lichDoiSoat_() {
+  return {gio: 19, phut: 45, tz: 'Asia/Ho_Chi_Minh', ham: 'doiSoatCuoiNgay'};
+}
+
+function cotGhiDanhMuc_() {
+  return {
+    docBang: 'SpreadsheetApp',
+    sheetId: CONFIG_MAC_DINH.GIA_VON_SHEET_ID,
+    ghiCot: 'C',
+    khongGhiCot: 'D',
+    cotDGiuNguyen: true,
+    khongDocExcel: true
+  };
+}
+
+function ngayVnTuIso_(iso) {
+  var d = new Date(iso);
+  if (!iso || isNaN(d.getTime())) return '';
+  var local = new Date(d.getTime() + 7 * 3600000);
+  return local.toISOString().slice(0, 10);
+}
+
+function homNayVn_(date) {
+  var d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return '';
+  return ngayVnTuIso_(d.toISOString());
+}
+
+function laChungTuTrongNgay_(dong, homNay) {
+  if (!dong || !homNay) return false;
+  var tg = String(dong.thoiGian || '');
+  if (tg.indexOf(homNay) === 0) return true;
+  return ngayVnTuIso_(dong.modifiedTime) === homNay;
+}
+
+function trangThaiVaoSo_(trang) {
+  if (trang === TRANG_THAI_CHO) return 'Chưa vào sổ';
+  if (trang === TRANG_THAI_DA_CO) return 'Đã vào sổ';
+  if (trang === TRANG_THAI_SUA) return 'Đã vào sổ, file bị sửa';
+  return String(trang || '');
+}
+
+function laDongBoQuaDoiSoat_(s) {
+  var t = chuanHoa_(s);
+  if (!t) return false;
+  if (t.indexOf('kiot') >= 0) return true;
+  if (t.indexOf('500k') >= 0) return true;
+  if (t.indexOf('bill') >= 0 && t.indexOf('500') >= 0) return true;
+  if (t.indexOf('canh bao') >= 0 && t.indexOf('500') >= 0) return true;
+  return false;
+}
+
+function laSoHienThi_(v) {
+  if (typeof v === 'number' && isFinite(v)) return true;
+  var s = String(v == null ? '' : v).replace(/\s/g, '');
+  if (!s) return false;
+  if (/^-?\d+(,\d+)?$/.test(s)) return true;
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) return true;
+  return false;
+}
+
+function tomTatLuoi_(nhom, grid, gioiHan) {
+  var out = [];
+  if (!grid || !grid.length) {
+    out.push({muc: 'KHONG_CO', nhom: nhom, doiTuong: '', giaTri: '', ghiChu: 'Không có sheet hoặc không có dòng'});
+    return out;
+  }
+  var gioi = gioiHan || 40;
+  var dem = 0;
+  var r;
+  for (r = 0; r < grid.length; r++) {
+    var row = grid[r] || [];
+    var cells = [];
+    var so = '';
+    var bo = false;
+    var c;
+    for (c = 0; c < row.length; c++) {
+      if (row[c] == null || row[c] === '') continue;
+      if (laDongBoQuaDoiSoat_(row[c])) {
+        bo = true;
+        break;
+      }
+      cells.push(String(row[c]));
+      if (!so && laSoHienThi_(row[c])) so = String(row[c]);
+    }
+    if (bo || !cells.length) continue;
+    if (dem >= gioi) {
+      out.push({muc: 'CAT', nhom: nhom, doiTuong: '', giaTri: '', ghiChu: 'Còn dòng chưa đưa vào báo cáo'});
+      break;
+    }
+    dem++;
+    out.push({
+      muc: r === 0 ? 'HEADER' : 'DONG',
+      nhom: nhom,
+      doiTuong: cells[0],
+      giaTri: so || (cells.length > 1 ? cells[cells.length - 1] : ''),
+      ghiChu: cells.join(' | ')
+    });
+  }
+  if (!out.length) {
+    out.push({muc: 'KHONG_CO', nhom: nhom, doiTuong: '', giaTri: '', ghiChu: 'Không có dòng dữ liệu'});
+  }
+  return out;
+}
+
+function tongDashboard_(grid) {
+  var out = [];
+  var da = {};
+  function them(nhan, giaTri, ghiChu) {
+    if (!nhan || giaTri === '' || giaTri == null) return;
+    if (laDongBoQuaDoiSoat_(String(nhan) + ' ' + String(ghiChu || ''))) return;
+    var k = chuanHoa_(nhan) + '\n' + String(giaTri);
+    if (da[k]) return;
+    da[k] = true;
+    out.push({muc: 'TONG', nhom: 'Dashboard', doiTuong: String(nhan), giaTri: String(giaTri), ghiChu: ghiChu || ''});
+  }
+  function quetDong(row, batBuocTuKhoa) {
+    var nhan = '';
+    var so = '';
+    var chuoi = [];
+    var c;
+    for (c = 0; c < (row || []).length; c++) {
+      if (row[c] == null || row[c] === '') continue;
+      chuoi.push(String(row[c]));
+      if (!nhan && !laSoHienThi_(row[c])) nhan = String(row[c]);
+      if (!so && laSoHienThi_(row[c])) so = String(row[c]);
+    }
+    if (!nhan || !so) return;
+    var khoa = chuanHoa_(nhan);
+    if (batBuocTuKhoa && !/tong|doanh|cong no|\bno\b|qua han|cho xuat|hoa don/.test(khoa)) return;
+    them(nhan, so, chuoi.join(' | '));
+  }
+  var r;
+  var dau = Math.min((grid || []).length, 12);
+  for (r = 0; r < dau; r++) quetDong(grid[r], false);
+  for (r = 0; r < (grid || []).length; r++) quetDong(grid[r], true);
+  if (!out.length) {
+    out.push({muc: 'TONG', nhom: 'Dashboard', doiTuong: '', giaTri: '', ghiChu: 'Không thấy tổng trên Dashboard'});
+  }
+  return out;
+}
+
+function lapBaoCaoDoiSoat_(inp) {
+  inp = inp || {};
+  var homNay = String(inp.homNay || '');
+  var rows = [];
+  var hang = inp.hangDoi || [];
+  var moi = 0;
+  var chua = 0;
+  var da = 0;
+  var i;
+  for (i = 0; i < hang.length; i++) {
+    var dong = hang[i];
+    if (!laChungTuTrongNgay_(dong, homNay)) continue;
+    if (laDongBoQuaDoiSoat_((dong.ten || '') + ' ' + (dong.loai || ''))) continue;
+    var vao = trangThaiVaoSo_(dong.trangThai);
+    moi++;
+    if (dong.trangThai === TRANG_THAI_CHO) chua++;
+    else da++;
+    rows.push({
+      muc: 'CHUNG_TU',
+      nhom: 'Trong ngày',
+      doiTuong: (dong.ten || '') + (dong.khach ? ' | ' + dong.khach : ''),
+      giaTri: dong.loai || '',
+      ghiChu: vao + (dong.thoiGian ? ' | ' + dong.thoiGian : '')
+    });
+  }
+  rows.unshift({
+    muc: 'CHUNG_TU_DEM',
+    nhom: 'Trong ngày',
+    doiTuong: homNay,
+    giaTri: String(moi),
+    ghiChu: 'Chưa vào sổ: ' + chua + '. Đã vào sổ: ' + da + '.'
+  });
+  var no = tomTatLuoi_('Nợ theo khách', inp.vConNo, 40);
+  var han = tomTatLuoi_('Nợ quá hạn', inp.vQuaHan, 40);
+  var cho = tomTatLuoi_('Chờ xuất HĐ', inp.vChoXuatHd, 40);
+  var tong = tongDashboard_(inp.dashboard);
+  var j;
+  for (j = 0; j < no.length; j++) rows.push(no[j]);
+  for (j = 0; j < han.length; j++) rows.push(han[j]);
+  for (j = 0; j < cho.length; j++) rows.push(cho[j]);
+  for (j = 0; j < tong.length; j++) rows.push(tong[j]);
+  rows.push({
+    muc: 'SO_LOI',
+    nhom: 'CN_SucKhoe',
+    doiTuong: 'D1',
+    giaTri: String(inp.soLoi == null ? 0 : inp.soLoi),
+    ghiChu: 'Số lỗi trên CN_SucKhoe!D1'
+  });
+  return rows;
+}
+
 function deXuatHangChoFile_() {
   return {
     sheetCu: 'HangCho_File',
@@ -1274,8 +1469,8 @@ function deXuatHangChoFile_() {
     gop: false,
     chep: false,
     xoa: false,
-    songSong: true,
-    deXuat: 'Giữ nguyên HangCho_File vùng A1:K100. Không gộp, không chép, không xóa. Trigger v6 vẫn ghi vào HangCho_File. CN_HangDoi chạy song song trên bản sao khoảng 1 tuần.'
+    songSong: false,
+    deXuat: 'Giữ nguyên HangCho_File vùng A1:K100. Không gộp, không chép, không xóa. Gỡ 4 trigger capNhatTuDrive bằng tatTriggerV6Drive_. Không xoá code v6.'
   };
 }
 
@@ -1432,7 +1627,7 @@ function tuChayMau_() {
   kiem('dong dai', dong.length === COT_HANG_DOI.length, String(dong.length));
   kiem('trang thai', dong[5] === 'Chờ bot');
   kiem('ghep xlsx', dong[10] === 'chưa có PDF mộc đỏ');
-  kiem('z1', congThucDemChoBot_() === '=COUNTIF(F:F,"Chờ bot")+COUNTIF(F:F,"Sửa file đã ghi")');
+  kiem('z1', congThucDemChoBot_() === '=COUNTIF(F:F,"Chờ bot")');
 
   var moc1 = quyetDinhMoc_('', '2026-10-22T08:00:00.000Z');
   kiem('moc dau', moc1.khoiTao === true && moc1.mocQuery === null);
@@ -1545,11 +1740,13 @@ function tuChayMau_() {
   try {
     assertGhiChoPhep_('CN_HangDoi', {row: 2, column: 1, numRows: 1, numColumns: 10});
     assertGhiChoPhep_('CN_SucKhoe', {row: 3, column: 1, numRows: 1, numColumns: 5});
+    assertGhiChoPhep_('CN_SucKhoe', {row: 1, column: 4, numRows: 1, numColumns: 1});
     assertGhiChoPhep_('CONFIG', {row: 2, column: 1, numRows: 1, numColumns: 3});
+    assertGhiChoPhep_('CN_DoiSoat', {row: 3, column: 1, numRows: 1, numColumns: 5});
   } catch (e4) {
     choPhep = false;
   }
-  kiem('ghi duoc 3 sheet', choPhep === true);
+  kiem('ghi duoc 4 sheet', choPhep === true);
 
   var headerDm = ['Nhóm Hàng', 'Mã SP', 'Tên Sản Phẩm', 'ĐVT', 'Đơn Giá'];
   var cot = tomTatDanhMuc_(headerDm);
@@ -1719,7 +1916,7 @@ function tuChayMau_() {
   var quy = quyTacGiaiDoanSau_().join(' ');
   kiem('quy sau', quy.indexOf('cùng tổng giá trị') >= 0 && quy.indexOf('Khách lẻ quen') >= 0 && quy.indexOf('KH007') >= 0);
   var deXuat = deXuatHangChoFile_();
-  kiem('hang cho', deXuat.sheetCu === 'HangCho_File' && deXuat.ghiSheetCu === false && deXuat.gop === false && deXuat.chep === false && deXuat.xoa === false && deXuat.songSong === true && deXuat.deXuat.indexOf('Không gộp') >= 0);
+  kiem('hang cho', deXuat.sheetCu === 'HangCho_File' && deXuat.ghiSheetCu === false && deXuat.gop === false && deXuat.chep === false && deXuat.xoa === false && deXuat.songSong === false && deXuat.deXuat.indexOf('Không gộp') >= 0 && deXuat.deXuat.indexOf('tatTriggerV6Drive_') >= 0);
   var nemHang = false;
   try {
     assertGhiChoPhep_('HangCho_File', {row: 2, column: 1, numRows: 1, numColumns: 1});
@@ -1727,6 +1924,50 @@ function tuChayMau_() {
     nemHang = true;
   }
   kiem('cam hang cho', nemHang === true);
+  var lich = lichDoiSoat_();
+  kiem('lich 1945', lich.gio === 19 && lich.phut === 45 && lich.ham === 'doiSoatCuoiNgay' && lich.tz === 'Asia/Ho_Chi_Minh');
+  var cotGv = cotGhiDanhMuc_();
+  kiem('gia von cot C', cotGv.ghiCot === 'C' && cotGv.khongGhiCot === 'D' && cotGv.cotDGiuNguyen === true && cotGv.docBang === 'SpreadsheetApp' && cotGv.khongDocExcel === true && cotGv.sheetId === '1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM');
+  kiem('ngay vn', ngayVnTuIso_('2026-10-21T17:30:00.000Z') === '2026-10-22');
+  kiem('ngay vn truoc', ngayVnTuIso_('2026-10-21T16:30:00.000Z') === '2026-10-21');
+  var doi = lapBaoCaoDoiSoat_({
+    homNay: '2026-10-22',
+    hangDoi: [
+      {thoiGian: '2026-10-22 10:00:00', ten: 'A.xlsx', khach: 'CTY MAU', trangThai: 'Chờ bot', loai: 'PG', modifiedTime: '2026-10-22T03:00:00.000Z'},
+      {thoiGian: '2026-10-21 10:00:00', ten: 'Cu.xlsx', trangThai: 'Đã có trong sổ', modifiedTime: '2026-10-21T03:00:00.000Z'},
+      {thoiGian: '2026-10-22 11:00:00', ten: 'B.pdf', khach: 'CTY MAU', trangThai: 'Đã có trong sổ', loai: 'HĐ'},
+      {thoiGian: '', ten: 'Dem.pdf', trangThai: 'Sửa file đã ghi', loai: 'HĐ', modifiedTime: '2026-10-21T17:30:00.000Z'}
+    ],
+    vConNo: [['Mã KH', 'Tên', 'Còn nợ'], ['KL12', 'CTY MAU', '1500000']],
+    vQuaHan: [['Mã KH', 'Tên', 'Quá hạn'], ['KH01', 'CTY MAU', '200000']],
+    vChoXuatHd: [['Mã KH', 'Chờ HĐ'], ['KH01', '2']],
+    dashboard: [
+      ['Tổng nợ', 5000000],
+      ['Cảnh báo bill 500k', 3],
+      ['Bill Kiot lệch', 1],
+      ['Doanh thu', 9000000]
+    ],
+    soLoi: 2
+  });
+  var chuoiDoi = JSON.stringify(doi);
+  function coMuc(muc, doiTuong) {
+    var n;
+    for (n = 0; n < doi.length; n++) {
+      if (doi[n].muc === muc && (!doiTuong || String(doi[n].doiTuong).indexOf(doiTuong) >= 0 || String(doi[n].ghiChu).indexOf(doiTuong) >= 0)) return doi[n];
+    }
+    return null;
+  }
+  kiem('doi dem', coMuc('CHUNG_TU_DEM') && coMuc('CHUNG_TU_DEM').giaTri === '3');
+  kiem('doi chua', coMuc('CHUNG_TU', 'A.xlsx') && coMuc('CHUNG_TU', 'A.xlsx').ghiChu.indexOf('Chưa vào sổ') >= 0);
+  kiem('doi da', coMuc('CHUNG_TU', 'B.pdf') && coMuc('CHUNG_TU', 'B.pdf').ghiChu.indexOf('Đã vào sổ') >= 0);
+  kiem('doi sua', coMuc('CHUNG_TU', 'Dem.pdf') && coMuc('CHUNG_TU', 'Dem.pdf').ghiChu.indexOf('file bị sửa') >= 0);
+  kiem('doi cu', chuoiDoi.indexOf('Cu.xlsx') < 0);
+  kiem('doi no', coMuc('DONG', 'CTY MAU') && chuoiDoi.indexOf('Nợ theo khách') >= 0);
+  kiem('doi han', chuoiDoi.indexOf('Nợ quá hạn') >= 0 && chuoiDoi.indexOf('200000') >= 0);
+  kiem('doi cho hd', chuoiDoi.indexOf('Chờ xuất HĐ') >= 0);
+  kiem('doi tong', coMuc('TONG', 'Tổng nợ') && coMuc('TONG', 'Doanh thu'));
+  kiem('doi khong bill', chuoiDoi.toLowerCase().indexOf('kiot') < 0 && chuoiDoi.indexOf('500k') < 0);
+  kiem('doi loi', coMuc('SO_LOI', 'D1') && coMuc('SO_LOI', 'D1').giaTri === '2');
 
   var text = fail.length ? ('FAIL ' + fail.length + '\n' + fail.join('\n')) : ('OK ' + 'logic mẫu chạy hết, không lỗi');
   return {ok: fail.length === 0, fail: fail, text: text};

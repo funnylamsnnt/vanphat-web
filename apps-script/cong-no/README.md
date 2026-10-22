@@ -2,13 +2,14 @@
 
 Script này gắn vào Google Sheet sổ công nợ v7 của Công ty Vạn Phát. Script không gọi LLM. Script chạy bằng quyền Google của chủ sổ. Repo không chứa token, mật khẩu hay file `.clasprc.json`.
 
-Script chỉ ghi ba sheet: `CN_HangDoi`, `CN_SucKhoe`, `CONFIG`. Mọi lệnh ghi đi qua `Ghi.gs`. Sheet khác, gồm `PhieuGiao`, `HoaDon`, `ChiTiet_LN`, `HangCho_File`, bị chặn. Vùng `DM_KhachHang!AD2:AD501` bị chặn riêng. `DM_KhachHang` chỉ được đọc để đoán mã KH/KL và khi kiểm tra sức khỏe.
+Script chỉ ghi bốn sheet: `CN_HangDoi`, `CN_SucKhoe`, `CONFIG`, `CN_DoiSoat`. Mọi lệnh ghi đi qua `Ghi.gs`. Sheet khác, gồm `PhieuGiao`, `HoaDon`, `ChiTiet_LN`, `DM_GiaVon`, `HangCho_File`, bị chặn. Vùng `DM_KhachHang!AD2:AD501` bị chặn riêng. `DM_KhachHang` chỉ được đọc để đoán mã KH/KL và khi kiểm tra sức khỏe.
 
 ## Việc script làm
 
 1. Mỗi 15 phút từ 07:00 đến 18:00 (giờ `Asia/Ho_Chi_Minh`), và một lần trong giờ 23:00: quét chứng từ mới trên Drive. Gmail tắt mặc định.
-2. Mỗi giờ: kiểm tra sức khỏe sổ theo logic `chk.py`, ghi `CN_SucKhoe`.
-3. Hàm `docDanhMucVatTu()` đọc Google Sheet danh mục, chỉ đọc. Hàm cấp Mã, Tên và Đơn giá cho `DM_GiaVon!C`. Không ghi cột D. Giá vốn nằm ở `DM_GiaVon!D` «Giá vốn BQ có VAT», do script «Cập nhật giá vốn» cập nhật mỗi giờ.
+2. Mỗi giờ: kiểm tra sức khỏe sổ theo logic `chk.py`, ghi `CN_SucKhoe`. `CN_SucKhoe!D1` là số lỗi, cập nhật cuối mỗi lượt quét.
+3. Hàm `docDanhMucVatTu()` nằm trong file `CN_GiaVon.gs`. Hàm đọc Google Sheet danh mục bằng `SpreadsheetApp`, không đọc Excel sao chép. Hàm cấp Mã, Tên và Đơn giá cho `DM_GiaVon!C` nhưng không ghi cột đó và không ghi cột D. Giá vốn cột D «Giá vốn BQ có VAT» giữ cách tính của script cũ.
+4. Mỗi ngày lúc 19:45 (giờ `Asia/Ho_Chi_Minh`): ghi `CN_DoiSoat`. Google có thể chạy lệch khoảng 15 phút quanh mốc `nearMinute(45)`.
 
 Lần quét đầu chưa có mốc trong Script Properties: script ghi mốc bằng thời điểm hiện tại và không kéo file cũ vào hàng đợi.
 
@@ -60,13 +61,13 @@ Trạng thái:
 - File đã có trong sổ thì ghi `Đã có trong sổ`. Khớp id trên URL, hoặc số phiếu BG/PG dài từ 4 ký tự nằm trong tên file. Với HĐ, lấy số ở cuối tên theo regex (bỏ số 0 đầu, `00000021` thành `21`) rồi so với `HoaDon` cột A sau cùng cách chuẩn hoá. Số HĐ hai chữ số vẫn khớp.
 - Dòng đã ghi, file bị sửa (`modifiedTime` mới hơn mốc đang lưu trên hàng đợi) và vẫn khớp sổ: sửa dòng đó thành `Sửa file đã ghi`.
 
-`CN_HangDoi!Z1` đếm `Chờ bot` và `Sửa file đã ghi`. `Đã có trong sổ` không cộng vào Z1. Ô `Y1` là mốc Drive. Ô `X1` ghi Gmail đang tắt, mốc Gmail, hoặc lỗi Gmail.
+`CN_HangDoi!Z1` chỉ đếm dòng `Chờ bot`. `Sửa file đã ghi` và `Đã có trong sổ` không cộng vào Z1. Ô này được ghi lại cuối mỗi lượt quét. Ô `Y1` là mốc Drive. Ô `X1` ghi Gmail đang tắt, mốc Gmail, hoặc lỗi Gmail.
 
-Script không ghi sheet `HangCho_File`. Tab đó trên v7 (vùng A1:K100) giữ nguyên: không gộp, không chép, không xóa. Trigger v6 vẫn ghi vào tab đó. `CN_HangDoi` chạy song song trên bản sao khoảng 1 tuần.
+Script không ghi sheet `HangCho_File`. Tab đó trên v7 (vùng A1:K100) giữ nguyên: không gộp, không chép, không xóa. Quét Drive chỉ còn một nơi là `CN_HangDoi`. Hàm `tatTriggerV6Drive_` gỡ đúng các trigger `capNhatTuDrive`. Code cũ không bị xoá.
 
 ## Sheet CN_SucKhoe
 
-Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `Z1` đếm dòng có mức `LỖI`. Các việc kiểm:
+Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `CN_SucKhoe!D1` là số lỗi, cập nhật cuối mỗi lượt quét chứng từ, quét sức khỏe và đối soát. `Z1` vẫn là công thức đếm mức `LỖI` để đối chiếu. Các việc kiểm:
 
 - Ô hiển thị bắt đầu bằng `#REF`, `#N/A`, `#VAL`, `#DIV`, `#NAM`, `#ERR` (đúng nhóm trong `chk.py`).
 - `PhieuGiao!A1` phải chứa «Mã PG (khóa)», «Mã PG» hoặc «Mã Phiếu». Header đang dùng trên v7 là «Mã PG (khóa)».
@@ -75,19 +76,35 @@ Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `Z1` đếm 
 - Vùng lỗi của `chk.py`: `LoiNhuan_Data` cột P–U, `LoiNhuan` cột W–AH, `DM_KhachHang` cột W–AD.
 - `DM_KhachHang!AD2:AD501`: ô chứa `#` là lỗi; ô chứa «Đạt» chỉ ghi mức thông tin. Không ghi vào vùng này.
 
+## Sheet CN_DoiSoat
+
+Mỗi ngày lúc 19:45, hàm `doiSoatCuoiNgay` xóa phần kết quả cũ và ghi bản mới. Chỉ sheet này nhận kết quả đối soát. Nội dung:
+
+- Chứng từ mới trong ngày trên `CN_HangDoi`, và đã vào sổ hay chưa. Ngày tính theo giờ `Asia/Ho_Chi_Minh`, dựa trên cột Thời gian hoặc `modifiedTime`.
+- Nợ theo khách, lấy từ `V_ConNo`.
+- Nợ quá hạn, lấy từ `V_QuaHan`.
+- Chờ xuất hóa đơn, lấy từ `V_ChoXuatHD`.
+- Các tổng trên `Dashboard`.
+- Số lỗi, lấy từ `CN_SucKhoe!D1`.
+
+Không đối soát bill Kiot. Không làm cảnh báo bill 500k. Dòng Dashboard có các chữ đó bị bỏ qua.
+
 ## Trigger
 
-`installTriggers` xóa trigger cũ của đúng ba hàm rồi tạo lại:
+`installTriggers` xóa trigger cũ của đúng bốn hàm của script này rồi tạo lại:
 
 - `quetChungTuMoi`: mỗi 15 phút. Ngoài khung 07:00–18:10 hàm thoát ngay, không gọi Drive. Mốc 18:00 được cộng 10 phút vì trigger Google có thể trễ.
 - `quetChungTu23h`: mỗi ngày, trong giờ 23, gần phút 0, theo múi `Asia/Ho_Chi_Minh`.
 - `quetSucKhoe`: mỗi giờ.
+- `doiSoatCuoiNgay`: mỗi ngày, giờ 19, gần phút 45.
 
-`removeTriggers` chỉ xóa ba hàm đó. Trigger «Cập nhật giá vốn» đang có trên v7 không bị xóa.
+`removeTriggers` chỉ xóa bốn hàm đó. Không gỡ `capNhatGiaVon` và không gỡ `capNhatTuDrive`.
+
+`tatTriggerV6Drive_` chỉ gỡ trigger có handler `capNhatTuDrive` (đang có 4 trigger). Chạy tay một lần khi anh muốn dừng quét Drive cũ. Không xoá code cũ, không xoá `HangCho_File`.
 
 ## Gắn vào sổ
 
-Chưa gắn script này vào sổ v7 thật. Bot Công Nợ duyệt PR trước.
+Bản PR #71 đã gắn trên sổ v7 thật. Bản này chưa dán đè lên project đó. Bot Công Nợ duyệt PR trước. Các bước dán lên v7 nằm ở mục «Cập nhật project đang gắn trên v7».
 
 Cách chạy trên bản sao:
 
@@ -95,7 +112,7 @@ Cách chạy trên bản sao:
 2. Mở bản sao → Tiện ích → Apps Script.
 3. Project Settings → Time zone: `(GMT+07:00) Ho Chi Minh`.
 4. Bật `appsscript.json` (Project Settings → Show appsscript.json) và dán file `appsscript.json` của thư mục này. Services phải có Drive API v3.
-5. Tạo các file `.gs` cùng tên với repo (`Logic.gs`, `Ghi.gs`, `Config.gs`, `HangDoi.gs`, `SucKhoe.gs`, `GiaVon.gs`, `Triggers.gs`) và dán nội dung. Xóa `Code.gs` trống nếu project mới tạo sẵn.
+5. Tạo các file `.gs` cùng tên với repo (`Logic.gs`, `Ghi.gs`, `Config.gs`, `HangDoi.gs`, `SucKhoe.gs`, `CN_GiaVon.gs`, `DoiSoat.gs`, `Triggers.gs`) và dán nội dung. Trên project v7 đang chạy, file giá vốn cũ vẫn tên `GiaVon.gs`. Không dán đè file đó. File đọc danh mục mới phải tên `CN_GiaVon.gs`. Xóa `Code.gs` trống nếu project mới tạo sẵn.
 6. Chọn hàm `caiDatSheet` → Run → cấp quyền bằng tài khoản chủ sheet.
 7. Trên bản sao, sửa `CONFIG!V7_SPREADSHEET_ID` thành id của bản sao. Id này nằm trên URL `/spreadsheets/d/<id>/edit`. Nếu chưa sửa, `quetSucKhoe` và `quetChungTu_` dừng, không ghi hàng đợi.
 8. Chọn `chayThuLogicMau` → Run. Nhật ký phải có dòng `OK logic mẫu chạy hết, không lỗi`. Hàm này không ghi sheet.
@@ -115,9 +132,11 @@ npx @google/clasp push
 
 ## Giá vốn
 
-«Đơn Giá» trên sheet `Danh Mục Vật Tư` là giá bán, không phải giá vốn. `docDanhMucVatTu()` chỉ đọc và cấp Mã, Tên, Đơn giá cho `DM_GiaVon!C`. Không ghi `DM_GiaVon`, không ghi cột D.
+File trong repo là `CN_GiaVon.gs`. Trên project v7, file này không được đặt tên `GiaVon.gs` vì tên đó đã là script giá vốn cũ.
 
-Giá vốn là `DM_GiaVon!D` «Giá vốn BQ có VAT». Script «Cập nhật giá vốn» đang chạy mỗi giờ trên v7 là chỗ ghi cột đó. Script này không thay script đó.
+«Đơn Giá» trên sheet `Danh Mục Vật Tư` là giá bán, không phải giá vốn. `docDanhMucVatTu()` mở Google Sheet `1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM` bằng `SpreadsheetApp`. Không đọc bản Excel sao chép. Hàm chỉ cấp Mã, Tên, Đơn giá cho `DM_GiaVon!C` và không ghi ô nào trên `DM_GiaVon`.
+
+Giá vốn là `DM_GiaVon!D` «Giá vốn BQ có VAT». Hàm cũ `capNhatGiaVon` và trigger của nó giữ nguyên cách tính cột D. Script này không thay hàm đó.
 
 `ChiTiet_LN!J` tra theo thứ tự: cột N nhập tay, rồi cột M tên ghép, rồi mã SP cột C. Script này không ghi `ChiTiet_LN`.
 
@@ -151,4 +170,17 @@ node apps-script/cong-no/test/chay_thu.js
 
 Kỳ vọng hai dòng: `OK logic mẫu chạy hết, không lỗi` và `OK cổng ghi: chỉ Ghi.gs được ghi sheet`.
 
-Phiên làm việc này đọc được tên sổ v7 và cây thư mục Drive, nhưng không tạo bản sao và không ghi vào v7 thật. Vì vậy chưa có kết quả `quetSucKhoe` trên dữ liệu sống. Kết quả mẫu nằm ở lệnh `node` ở trên.
+## Cập nhật project đang gắn trên v7
+
+Sổ đang chạy là `1jkmfMIJsoZrDlOxmkqbj44GOsNb1eh3UNk3Tyn0MaJs`. Project đó đã có code cũ. Làm đúng các bước sau, không xoá dữ liệu:
+
+1. Mở sổ v7 → Tiện ích → Apps Script.
+2. Dán đè các file đã có của script mới: `Logic.gs`, `Ghi.gs`, `Config.gs`, `HangDoi.gs`, `SucKhoe.gs`, `Triggers.gs`, `appsscript.json`.
+3. Thêm file mới `DoiSoat.gs` và `CN_GiaVon.gs`. Không đổi tên `CN_GiaVon.gs` thành `GiaVon.gs`. Không sửa và không xoá `GiaVon.gs` cũ hay các file code v6 khác.
+4. Chạy `caiDatSheet`. Hàm tạo hoặc bổ sung `CN_DoiSoat`. Không ghi sheet nghiệp vụ.
+5. Chạy `chayThuLogicMau`. Nhật ký phải có `OK logic mẫu chạy hết, không lỗi`.
+6. Chạy `installTriggers`. Lịch mới thêm mốc 19:45. Trigger `capNhatGiaVon` và `capNhatTuDrive` chưa bị gỡ ở bước này.
+7. Khi anh muốn chỉ còn một quét Drive: chạy `tatTriggerV6Drive_` một lần. Hàm gỡ đúng trigger `capNhatTuDrive`. Vào Triggers kiểm tra còn `capNhatGiaVon`, `quetChungTuMoi`, `quetChungTu23h`, `quetSucKhoe`, `doiSoatCuoiNgay`.
+8. Không xoá tab `HangCho_File`. Không xoá dòng công nợ, hóa đơn, phiếu giao.
+
+`guessKH_` của quét cũ tương ứng `doanKhach_` trên quét mới, đã đối chiếu `DM_KhachHang`. `dienMaTab` ghi mã vào tab cũ. Quét mới không làm việc đó vì không được ghi `HangCho_File` hay sổ nghiệp vụ. Mã KH nằm ở cột L của `CN_HangDoi` để bot dùng. `ngayTuTen_` lấy ngày trong tên file cho cột Ngày của tab cũ. Đối soát dùng ngày ghi nhận và `modifiedTime` theo giờ Việt Nam, chưa port `ngayTuTen_`.

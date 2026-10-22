@@ -283,6 +283,7 @@ function quetChungTu_() {
     var i;
     for (i = 0; i < loiQuet.length; i++) ghiLoiQuet_(ss, cfg, loiQuet[i]);
     ghiCongThuc_(sh, 1, 26, congThucDemChoBot_());
+    capNhatODem_(ss);
     ghiO_(sh, 1, 25, chuDrive);
     ghiO_(sh, 1, 24, gmailChu);
     prop.setProperty(KHOA_MOC_DRIVE, mocDriveMoi);

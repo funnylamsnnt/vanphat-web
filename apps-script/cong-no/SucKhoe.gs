@@ -58,9 +58,29 @@ function quetSucKhoe() {
     ghiBang_(sh, 2, 1, [['Thời điểm', 'Mã', 'Mức', 'Đối tượng', 'Chi tiết']]);
     if (bang.length) ghiBang_(sh, 3, 1, bang);
     ghiCongThuc_(sh, 1, 26, congThucDemLoi_());
+    capNhatODem_(ss);
   } finally {
     lock.releaseLock();
   }
+}
+
+function capNhatODem_(ss) {
+  var hang = ss.getSheetByName('CN_HangDoi');
+  if (hang) ghiCongThuc_(hang, 1, 26, congThucDemChoBot_());
+  var sk = ss.getSheetByName('CN_SucKhoe');
+  if (!sk) return 0;
+  var last = sk.getLastRow();
+  var soLoi = 0;
+  if (last >= 3) {
+    var vals = sk.getRange(3, 3, last - 2, 1).getDisplayValues();
+    var i;
+    for (i = 0; i < vals.length; i++) {
+      if (String(vals[i][0]) === 'LỖI') soLoi++;
+    }
+  }
+  if (sk.getRange(1, 3).getValue() !== 'Số lỗi') ghiO_(sk, 1, 3, 'Số lỗi');
+  ghiO_(sk, 1, 4, soLoi);
+  return soLoi;
 }
 
 function ghiLoiQuet_(ss, cfg, baoCao) {
