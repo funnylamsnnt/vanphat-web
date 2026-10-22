@@ -62,3 +62,21 @@ function quetSucKhoe() {
     lock.releaseLock();
   }
 }
+
+function ghiLoiQuet_(ss, cfg, baoCao) {
+  if (!baoCao) return;
+  var sh = taoSheetNeuThieu_(ss, 'CN_SucKhoe');
+  if (sh.getRange(1, 1).getValue() !== 'Cập nhật') {
+    ghiO_(sh, 1, 1, 'Cập nhật');
+    ghiO_(sh, 1, 3, 'Số lỗi');
+    ghiBang_(sh, 2, 1, [['Thời điểm', 'Mã', 'Mức', 'Đối tượng', 'Chi tiết']]);
+  }
+  var dong = Math.max(sh.getLastRow() + 1, 3);
+  ghiBang_(sh, dong, 1, [[
+    dinhDangLuc_(new Date(), cfg && cfg.TZ),
+    baoCao.ma,
+    baoCao.muc,
+    baoCao.doiTuong,
+    baoCao.chiTiet
+  ]]);
+}
