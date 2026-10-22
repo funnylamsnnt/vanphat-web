@@ -55,13 +55,17 @@ function quetSucKhoe() {
       bang.push([luc, bao[i].ma, bao[i].muc, bao[i].doiTuong, bao[i].chiTiet]);
     }
     var lastRow = sh.getLastRow();
-    if (lastRow > 2) xoaVung_(sh, 3, 1, lastRow - 2, 5);
+    var giuCat = [];
+    if (lastRow > 2) {
+      giuCat = giuDongCatLuot_(sh.getRange(3, 1, lastRow - 2, 5).getValues());
+      xoaVung_(sh, 3, 1, lastRow - 2, 5);
+    }
     ghiO_(sh, 1, 1, 'Cập nhật');
     ghiO_(sh, 1, 2, luc);
     ghiO_(sh, 1, 3, 'Số lỗi');
-    ghiO_(sh, 1, 4, demMuc_(bao, 'LỖI'));
     ghiBang_(sh, 2, 1, [['Thời điểm', 'Mã', 'Mức', 'Đối tượng', 'Chi tiết']]);
     if (bang.length) ghiBang_(sh, 3, 1, bang);
+    if (giuCat.length) ghiBang_(sh, 3 + bang.length, 1, giuCat);
     capNhatODem_(ss);
   } finally {
     lock.releaseLock();

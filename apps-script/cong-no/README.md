@@ -67,7 +67,7 @@ Script không ghi sheet `HangCho_File`. Tab đó trên v7 (vùng A1:K100) giữ 
 
 ## Sheet CN_SucKhoe
 
-Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `CN_SucKhoe!D1` là số dòng mức `LỖI`, cập nhật cuối mỗi lượt quét chứng từ, quét sức khỏe và đối soát. Dòng `CẢNH BÁO` không cộng vào D1. `CN_SucKhoe!Z1` được xóa trắng mỗi lượt để khỏi lẫn với D1 và khỏi `#ERROR!`. Các việc kiểm:
+Mỗi giờ script xóa phần kết quả sức khỏe cũ và ghi bản mới. Dòng mã `QUET_CAT` do `ghiLoiQuet_` ghi (cắt lượt) được giữ lại, không xóa sau một giờ. `CN_SucKhoe!D1` là số dòng mức `LỖI`, gồm cả dòng cắt lượt còn giữ, cập nhật cuối mỗi lượt quét chứng từ, quét sức khỏe và đối soát. Dòng `CẢNH BÁO` không cộng vào D1. `CN_SucKhoe!Z1` được xóa trắng mỗi lượt để khỏi lẫn với D1 và khỏi `#ERROR!`. Các việc kiểm:
 
 - Ô hiển thị bắt đầu bằng `#REF`, `#N/A`, `#VAL`, `#DIV`, `#NAM`, `#ERR` (đúng nhóm trong `chk.py`).
 - `PhieuGiao!A1` phải chứa «Mã PG (khóa)», «Mã PG» hoặc «Mã Phiếu». Header đang dùng trên v7 là «Mã PG (khóa)».
@@ -81,13 +81,13 @@ Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `CN_SucKhoe!
 Mỗi ngày lúc 19:45, hàm `doiSoatCuoiNgay` xóa phần kết quả cũ và ghi bản mới. Chỉ sheet này nhận kết quả đối soát. Nội dung:
 
 - Chứng từ mới trong ngày trên `CN_HangDoi`, và đã vào sổ hay chưa. Ngày tính theo giờ `Asia/Ho_Chi_Minh`, dựa trên cột Thời gian hoặc `modifiedTime`.
-- Nợ theo khách, lấy từ `V_ConNo`.
-- Nợ quá hạn, lấy từ `V_QuaHan`.
-- Chờ xuất hóa đơn, lấy từ `V_ChoXuatHD`.
-- Các tổng trên `Dashboard`.
+- Nợ theo khách, đọc `V_ConNo` theo tên cột: `Mã KH` (cột C), `Khách` (cột D), `Còn nợ` (cột H), `Đến hạn` (cột I), `Quá hạn` (cột J). Cộng `Còn nợ` theo mã KH rồi đối chiếu với `Dashboard!E30`. Lệch thì một dòng `LỖI` trên `CN_DoiSoat`.
+- Nợ quá hạn, đọc `V_QuaHan` theo tên cột `Mã KH`, `Khách`, `Quá hạn`.
+- Chờ xuất hóa đơn, đọc `V_ChoXuatHD` theo tên cột `Mã KH`, `Khách`, và cột tiền (`Số tiền`, `Chờ xuất HĐ` hoặc `Thành tiền`). Không đọc cột F và không đọc cột `Loại CT`.
+- Bốn số trên `Dashboard`, mỗi số một ô cố định. Nhãn ở dòng trên, số ở dòng dưới: `E30` tổng nợ (nhãn `E29`), `H30` quá hạn (nhãn `H29`), `K30` chờ xuất HĐ (nhãn `K29`), `B9` doanh thu (nhãn `B8`). Nhãn không khớp thì ghi `LỖI` và không lấy số.
 - Số lỗi, lấy từ `CN_SucKhoe!D1`.
 
-Không đối soát bill Kiot. Không làm cảnh báo bill 500k. Dòng Dashboard có các chữ đó bị bỏ qua.
+Không đối soát bill Kiot. Không làm cảnh báo bill 500k. Script không lọc bỏ dòng theo các chữ đó.
 
 ## Trigger
 
@@ -101,6 +101,11 @@ Không đối soát bill Kiot. Không làm cảnh báo bill 500k. Dòng Dashboar
 `removeTriggers` chỉ xóa bốn hàm đó. Không gỡ `capNhatGiaVon` và không gỡ `capNhatTuDrive`.
 
 `tatTriggerV6Drive_` chỉ gỡ trigger có handler `capNhatTuDrive` (đang có 4 trigger). Chạy tay một lần khi anh muốn dừng quét Drive cũ. Không xoá code cũ, không xoá `HangCho_File`.
+
+Hai rủi ro trước khi tắt quét Drive cũ:
+
+- Chạy lại `caiDatLich` của code v6 sẽ gắn lại trigger `capNhatTuDrive`. Hàm đó nằm trên project v7, không có trong repo này. `tatTriggerV6Drive_` không chặn lần gọi sau.
+- Phải mở `Dashboard!D4` trên sổ và xem công thức trước khi tắt `capNhatTuDrive`. Script trong repo không đọc và không ghi ô này. Source v6 không có trong repo, nên chưa kết luận ô đó có phụ thuộc quét Drive cũ hay không.
 
 ## Gắn vào sổ
 
@@ -180,9 +185,10 @@ Sổ đang chạy là `1jkmfMIJsoZrDlOxmkqbj44GOsNb1eh3UNk3Tyn0MaJs`. Project đ
 4. Chạy `caiDatSheet`. Hàm tạo hoặc bổ sung `CN_DoiSoat`. Không ghi sheet nghiệp vụ.
 5. Chạy `chayThuLogicMau`. Nhật ký phải có `OK logic mẫu chạy hết, không lỗi`.
 6. Chạy `installTriggers`. Lịch mới thêm mốc 19:45. Trigger `capNhatGiaVon` và `capNhatTuDrive` chưa bị gỡ ở bước này.
-7. Khi anh muốn chỉ còn một quét Drive: chạy `tatTriggerV6Drive_` một lần. Hàm gỡ đúng trigger `capNhatTuDrive`. Vào Triggers kiểm tra còn `capNhatGiaVon`, `quetChungTuMoi`, `quetChungTu23h`, `quetSucKhoe`, `doiSoatCuoiNgay`.
+7. Khi anh muốn chỉ còn một quét Drive: xem hai rủi ro ở mục Trigger, rồi chạy `tatTriggerV6Drive_` một lần. Hàm gỡ đúng trigger `capNhatTuDrive`. Vào Triggers kiểm tra còn `capNhatGiaVon`, `quetChungTuMoi`, `quetChungTu23h`, `quetSucKhoe`, `doiSoatCuoiNgay`. Không chạy lại `caiDatLich`.
 8. Không xoá tab `HangCho_File`. Không xoá dòng công nợ, hóa đơn, phiếu giao.
 9. Bản sửa ô đếm và mốc quét: dán lại `Logic.gs`, `HangDoi.gs`, `SucKhoe.gs`, `Triggers.gs`. Chạy `caiDatSheet` để ghi số vào `CN_HangDoi!Z1` và `CN_SucKhoe!D1`, đồng thời xóa công thức ở `CN_SucKhoe!Z1`.
-10. Chạy tay `quetChungTu_` một lần để lấy chứng từ trong ngày, gồm phiếu giao đã sửa trước mốc 23:12. Không đợi khung 07:00 hôm sau. Rồi chạy `quetSucKhoe` để chốt lại D1. Khóa `HH_Data` đang thiếu ở lượt này vẫn là `LỖI`.
+10. Chạy tay `quetChungTu_` một lần để lấy chứng từ trong ngày, gồm phiếu giao đã sửa trước mốc 23:12. Không đợi khung 07:00 hôm sau. Rồi chạy `quetSucKhoe` để chốt lại D1. Khóa `HH_Data` đang thiếu ở lượt này vẫn là `LỖI`. Dòng `QUET_CAT` nếu đang có sẽ được giữ.
+11. Bản sửa đối soát theo ô Dashboard: dán lại `Logic.gs` và `SucKhoe.gs`. Chạy `doiSoatCuoiNgay` một lần để ghi lại `CN_DoiSoat`. Kỳ vọng `Chờ xuất HĐ` lấy `K30`, không còn số 3.
 
 `guessKH_` của quét cũ tương ứng `doanKhach_` trên quét mới, đã đối chiếu `DM_KhachHang`. `dienMaTab` ghi mã vào tab cũ. Quét mới không làm việc đó vì không được ghi `HangCho_File` hay sổ nghiệp vụ. Mã KH nằm ở cột L của `CN_HangDoi` để bot dùng. `ngayTuTen_` lấy ngày trong tên file cho cột Ngày của tab cũ. Đối soát dùng ngày ghi nhận và `modifiedTime` theo giờ Việt Nam, chưa port `ngayTuTen_`.
