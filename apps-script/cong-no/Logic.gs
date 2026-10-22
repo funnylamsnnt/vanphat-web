@@ -1451,6 +1451,38 @@ function cungSoTien_(a, b) {
   return Math.abs(x - y) < 0.5;
 }
 
+function laKhongHienThiDashboard_(v) {
+  if (typeof v === 'number' && isFinite(v)) return false;
+  var tho = String(v == null ? '' : v).replace(/[\u00a0\u202f]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (tho === '' || tho === '-' || tho === '–' || tho === '—') return true;
+  var gon = tho.replace(/\s+/g, '').toLowerCase();
+  return gon === '0đ' || gon === '0₫';
+}
+
+function soODashboard_(v) {
+  if (laKhongHienThiDashboard_(v)) return 0;
+  return soTuHienThi_(v);
+}
+
+function chuSoDashboard_(raw) {
+  if (laKhongHienThiDashboard_(raw)) return '0';
+  return String(raw == null ? '' : raw);
+}
+
+function chuanLuoiDashboard_(grid) {
+  var out = [];
+  var r;
+  for (r = 0; r < (grid || []).length; r++) out.push((grid[r] || []).slice());
+  var i;
+  for (i = 0; i < COT_TONG_DASHBOARD_.length; i++) {
+    var c = COT_TONG_DASHBOARD_[i];
+    var dongSo = c.dong + 1;
+    if (dongSo >= out.length || !out[dongSo] || c.cot >= out[dongSo].length) continue;
+    if (laKhongHienThiDashboard_(out[dongSo][c.cot])) out[dongSo][c.cot] = '0';
+  }
+  return out;
+}
+
 function oTrongLuoi_(grid, dong, cot) {
   if (!grid || dong < 0 || cot < 0 || dong >= grid.length) return '';
   var row = grid[dong] || [];
@@ -1486,7 +1518,7 @@ function tongDashboard_(grid) {
       muc: 'TONG',
       nhom: 'Dashboard',
       doiTuong: c.ten,
-      giaTri: String(so),
+      giaTri: chuSoDashboard_(so),
       ghiChu: c.oNhan + ' | ' + c.oSo
     });
   }
@@ -1623,7 +1655,8 @@ function doiChieuTong_(tong, dongDash, nhom, ten, oSo) {
   if (!dongDash || dongDash.muc !== 'TONG') {
     return {muc: 'LỖI', nhom: nhom, doiTuong: ten, giaTri: String(tong), ghiChu: 'Không đối chiếu Dashboard!' + oSo + ' vì nhãn ' + nhan + ' không khớp.'};
   }
-  if (cungSoTien_(tong, dongDash.giaTri)) {
+  var soDash = soODashboard_(dongDash.giaTri);
+  if (soDash != null && cungSoTien_(tong, soDash)) {
     return {muc: 'TONG', nhom: nhom, doiTuong: ten, giaTri: String(tong), ghiChu: 'Khớp Dashboard!' + oSo};
   }
   return {
