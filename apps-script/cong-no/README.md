@@ -32,17 +32,17 @@ Sheet `CONFIG` được tạo với các khóa sau. Sửa trên sheet thì lần
 | `HEADER_PHIEU_GIAO` | `Mã PG (khóa)` và các cụm dự phòng `Mã PG`, `Mã Phiếu`, `Mã phiếu` |
 | `LOAI_TRU_FILE_ID` | `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`, `1W3h5ZMzZYReAyZT2Jp39tg-O4U8dZs81` |
 | `LOAI_TRU_TEN` | `backup`, `bản sao`, `Copy of`, `(v6)`, `_old` (không phân biệt hoa thường, bỏ dấu) |
-| `KY_HIEU_HD` | `1C26TNT` |
+| `KY_HIEU_HD` | `1?C26TNT_\d+`. Nếu ô này đã ghi `1C26TNT`, sửa thành regex này. Script không ghi đè ô đã có. |
 
 Cây Drive thực tế trong thư mục gốc: `2. DANH SACH KHACH HANG` là danh sách khách (mỗi khách một thư mục, bên trong có BG/PG xlsx, PDF và thư mục tháng). `9. HOA DON / 2. RA` là thư mục HĐ GTGT đầu ra. `9. HOA DON / 1. VAO` bị bỏ qua cả cây con.
 
 Script chỉ lấy file trong ba vùng đó:
 
 - Danh sách khách: PDF, ảnh, Excel, Google Sheet/Doc.
-- `2. RA`: cùng loại file. Có ký hiệu `1C26TNT` thì loại là `HĐ`. Không có ký hiệu thì loại là `HĐ?`. Không coi mọi file trong `2. RA` là HĐ.
+- `2. RA`: cùng loại file. Tên khớp regex `1?C26TNT_\d+` thì loại là `HĐ`, kể cả `C26TNT_00000021.pdf` (không có số 1 đầu) và `1C26TNT_00000021.pdf`. Không khớp thì loại là `HĐ?`. Không coi mọi file trong `2. RA` là HĐ.
 - `8. PHIẾU BÁO GIÁ`: chỉ file đoán được là BG.
 
-Tên file «phiếu báo giá» hoặc «phiếu giao» thì loại là `BG` hoặc `PG`, kể cả khi nằm trong `2. RA`. Tên có «hóa đơn» mà không có ký hiệu `1C26TNT` thì loại là `HĐ?`. Khách đoán từ thư mục ngay dưới danh sách khách hoặc dưới `2. RA`, bỏ số thứ tự đầu tên (`4. CTY ...` còn `CTY ...`). `doanKhach_` đối chiếu `DM_KhachHang` cột A với tên cột B hoặc C, chỉ đọc, để ra mã KH hoặc KL. File sổ v7, file danh mục giá, hai id trong `LOAI_TRU_FILE_ID`, và tên chứa cụm loại trừ không vào hàng đợi. Thư mục lương, nhà cung cấp, logo, web không được đi vào.
+Tên file «phiếu báo giá» hoặc «phiếu giao» thì loại là `BG` hoặc `PG`, kể cả khi nằm trong `2. RA`. Tên có «hóa đơn» mà không khớp regex `1?C26TNT_\d+` thì loại là `HĐ?`. Khách đoán từ thư mục ngay dưới danh sách khách hoặc dưới `2. RA`, bỏ số thứ tự đầu tên (`4. CTY ...` còn `CTY ...`). Lượt quét truyền thẳng lưới `DM_KhachHang` vào `doanKhach_` (chỉ đọc) để ra mã KH hoặc KL. File sổ v7, file danh mục giá, hai id trong `LOAI_TRU_FILE_ID`, và tên chứa cụm loại trừ không vào hàng đợi. Thư mục lương, nhà cung cấp, logo, web không được đi vào.
 
 Mốc quét Drive lấy file có `modifiedTime` sau mốc hoặc `createdTime` sau mốc. Một lượt xử lý tối đa 400 file cũ nhất. Còn dư thì `mocKeTiep_` dời mốc tới thời điểm file thứ 400 (cùng mốc thì giữ cả nhóm), ghi một dòng `LỖI` mã `QUET_CAT` lên `CN_SucKhoe`, không dừng bằng lỗi lặp. Lượt sau lấy phần còn lại.
 
@@ -57,12 +57,12 @@ File xlsx và PDF mộc đỏ cùng tên, cùng thư mục, thành một dòng. 
 Trạng thái:
 
 - File chưa có trong `BaoGia` (cột D số phiếu, cột I URL), `PhieuGiao` (cột D số phiếu, cột K URL) hoặc `HoaDon` (cột A số HĐ, cột K link): `Chờ bot`.
-- File đã có trong sổ (khớp id trên URL, hoặc số phiếu dài từ 4 ký tự nằm trong tên file): ghi `Đã có trong sổ`.
+- File đã có trong sổ thì ghi `Đã có trong sổ`. Khớp id trên URL, hoặc số phiếu BG/PG dài từ 4 ký tự nằm trong tên file. Với HĐ, lấy số ở cuối tên theo regex (bỏ số 0 đầu, `00000021` thành `21`) rồi so với `HoaDon` cột A sau cùng cách chuẩn hoá. Số HĐ hai chữ số vẫn khớp.
 - Dòng đã ghi, file bị sửa (`modifiedTime` mới hơn mốc đang lưu trên hàng đợi) và vẫn khớp sổ: sửa dòng đó thành `Sửa file đã ghi`.
 
 `CN_HangDoi!Z1` đếm `Chờ bot` và `Sửa file đã ghi`. `Đã có trong sổ` không cộng vào Z1. Ô `Y1` là mốc Drive. Ô `X1` ghi Gmail đang tắt, mốc Gmail, hoặc lỗi Gmail.
 
-Script không ghi sheet `HangCho_File`. Tab đó trên v7 đang là vùng A1:K100, trùng việc với `CN_HangDoi` (thời gian, file, tên, loại, mã KH, thư mục, URL, trạng thái). Cách gộp nằm trong mô tả PR, chờ bot Công Nợ chọn.
+Script không ghi sheet `HangCho_File`. Tab đó trên v7 (vùng A1:K100) giữ nguyên: không gộp, không chép, không xóa. Trigger v6 vẫn ghi vào tab đó. `CN_HangDoi` chạy song song trên bản sao khoảng 1 tuần.
 
 ## Sheet CN_SucKhoe
 
@@ -131,13 +131,13 @@ Ba quy tắc này chưa thực thi khi xếp hàng đợi. Giai đoạn sau mớ
 - Nhóm Khách lẻ quen (mã KL) có theo dõi nợ.
 - KH007 là khách vãng lai, không vào công nợ.
 
-`doanKhach_` đã đối chiếu `DM_KhachHang` để ra mã KH/KL và đánh dấu khách lẻ quen hoặc KH007. Hàng đợi giai đoạn này vẫn nhận cả KH007. Chưa loại khách vãng lai khỏi công nợ.
+Lượt quét truyền thẳng `DM_KhachHang` vào `doanKhach_` để ra mã KH/KL và đánh dấu khách lẻ quen hoặc KH007. Hàng đợi giai đoạn này vẫn nhận cả KH007. Chưa loại khách vãng lai khỏi công nợ.
 
 ## Gmail
 
 `appsscript.json` chưa xin `https://www.googleapis.com/auth/gmail.readonly`. `GMAIL_BAT` mặc định `FALSE`, lượt quét không gọi Gmail.
 
-Khi anh bật Gmail: thêm scope đó vào `oauthScopes`, đẩy lại script, cấp quyền, rồi đặt `GMAIL_BAT` = `TRUE`. Lần sau chỉ lấy thư có đính kèm gửi từ `congtytnhhvanphat999@gmail.com`. Thư nhà cung cấp gửi đến hộp thư không được lấy. Lần đầu bật cũng chỉ đặt mốc, không kéo thư cũ. File đính kèm không có ký hiệu `1C26TNT` thì loại là `HĐ?`. Có ký hiệu thì `HĐ`. Tên phiếu giao hoặc báo giá giữ `PG` hoặc `BG`.
+Khi anh bật Gmail: thêm scope đó vào `oauthScopes`, đẩy lại script, cấp quyền, rồi đặt `GMAIL_BAT` = `TRUE`. Lần sau chỉ lấy thư có đính kèm gửi từ `congtytnhhvanphat999@gmail.com`. Thư nhà cung cấp gửi đến hộp thư không được lấy. Lần đầu bật cũng chỉ đặt mốc, không kéo thư cũ. File đính kèm khớp `1?C26TNT_\d+` thì loại là `HĐ`, ví dụ `C26TNT_00000021.pdf`. Không khớp thì `HĐ?`. Tên phiếu giao hoặc báo giá giữ `PG` hoặc `BG`.
 
 Nếu `GMAIL_BAT` bật mà chưa có quyền, script ghi `LỖI` lên `CN_SucKhoe` và vẫn lưu mốc Drive. Quá 100 thư một lượt thì dời mốc Gmail từng phần, không chặn mốc Drive.
 

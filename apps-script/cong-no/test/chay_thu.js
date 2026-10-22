@@ -57,7 +57,7 @@ files.forEach(function (name) {
   if (text.indexOf('HangCho_File') >= 0) leak.push(name + ' nhắc HangCho_File ngoài đề xuất ở Logic.gs');
 });
 var readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
-['Mã PG (khóa)', 'chưa có PDF mộc đỏ', '1C26TNT', 'Khách lẻ quen', 'KH007', 'Giá vốn BQ có VAT', 'createdTime', 'HangCho_File'].forEach(function (cum) {
+['Mã PG (khóa)', 'chưa có PDF mộc đỏ', '1?C26TNT_\\d+', 'C26TNT_00000021.pdf', 'Khách lẻ quen', 'KH007', 'Giá vốn BQ có VAT', 'createdTime', 'HangCho_File', 'không gộp', 'song song'].forEach(function (cum) {
   if (readme.indexOf(cum) < 0) leak.push('README thiếu «' + cum + '»');
 });
 if (leak.length) {

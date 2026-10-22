@@ -119,7 +119,7 @@ function quetDriveTheoCay_(cfg, mocIso) {
       pathNames: pathNames,
       trongCay: true,
       boQua: false
-    }, cfg);
+    }, cfg, cfg.dmKhachHang);
     if (item.duaVao) hang.push(item);
   }
 
@@ -277,7 +277,7 @@ function quetChungTu_() {
       PhieuGiao: docLuoiHienThi_(ss, 'PhieuGiao'),
       HoaDon: docLuoiHienThi_(ss, 'HoaDon')
     });
-    var dot = xuLyDotQuet_(docHangDoi_(sh), driveChon.concat(gmailChon), chiMuc);
+    var dot = xuLyDotQuet_(docHangDoi_(sh), driveChon.concat(gmailChon), chiMuc, cfg);
     capNhatHang_(sh, dot.sua, hien);
     ghiHangMoi_(sh, dot.them, hien);
     var i;

@@ -56,7 +56,7 @@ var TRANG_THAI_DA_CO = 'Đã có trong sổ';
 var TRANG_THAI_SUA = 'Sửa file đã ghi';
 var GHEP_CHUA_PDF = 'chưa có PDF mộc đỏ';
 var GHEP_DA_PDF = 'đã ghép PDF mộc đỏ';
-var KY_HIEU_HD_MAC_DINH = '1C26TNT';
+var KY_HIEU_HD_MAC_DINH = '1?C26TNT_\\d+';
 
 var CONFIG_MAC_DINH = {
   DRIVE_FOLDER_ID: '1KAyFZVJJCqu92Swk5JgX15YY0fZDpdrl',
@@ -73,7 +73,7 @@ var CONFIG_MAC_DINH = {
   HEADER_PHIEU_GIAO: 'Mã PG (khóa)|Mã PG|Mã Phiếu|Mã phiếu',
   LOAI_TRU_FILE_ID: '1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR,1W3h5ZMzZYReAyZT2Jp39tg-O4U8dZs81',
   LOAI_TRU_TEN: 'backup|bản sao|Copy of|(v6)|_old',
-  KY_HIEU_HD: '1C26TNT',
+  KY_HIEU_HD: '1?C26TNT_\\d+',
   TZ: 'Asia/Ho_Chi_Minh',
   LOG_STALE_GIO: 26,
   GIO_BAT_DAU: 7,
@@ -96,7 +96,7 @@ var GHI_CHU_CONFIG = {
   HEADER_PHIEU_GIAO: 'PhieuGiao!A1 hợp lệ nếu chứa một cụm. Header đang dùng: Mã PG (khóa)',
   LOAI_TRU_FILE_ID: 'Id file loại trừ, cách nhau bởi dấu phẩy',
   LOAI_TRU_TEN: 'Tên chứa một cụm thì bỏ qua. Cách nhau bởi |',
-  KY_HIEU_HD: 'Ký hiệu HĐ GTGT. Không có ký hiệu thì loại là HĐ?',
+  KY_HIEU_HD: 'Regex HĐ GTGT. Khớp C26TNT_00000021.pdf và 1C26TNT_00000021.pdf. Không khớp thì HĐ?',
   TZ: 'Múi giờ trigger',
   LOG_STALE_GIO: 'Cảnh báo nếu Log_CapNhat lâu hơn số giờ này',
   GIO_BAT_DAU: 'Giờ bắt đầu quét 15 phút',
@@ -281,10 +281,34 @@ function lamSachTenKh_(name) {
   return String(name || '').replace(/^\d+\.\s*/, '').trim();
 }
 
+function mauKyHieuHd_(kyHieu) {
+  var mau = String(kyHieu == null || kyHieu === '' ? KY_HIEU_HD_MAC_DINH : kyHieu);
+  try {
+    return new RegExp(mau, 'i');
+  } catch (e) {
+    return null;
+  }
+}
+
 function coKyHieuHd_(s, kyHieu) {
-  var ky = chuanHoa_(kyHieu || KY_HIEU_HD_MAC_DINH);
-  if (!ky) return false;
-  return chuanHoa_(s).indexOf(ky) >= 0;
+  var re = mauKyHieuHd_(kyHieu);
+  if (!re) return false;
+  return re.test(String(s || ''));
+}
+
+function boSo0Dau_(s) {
+  var d = String(s == null ? '' : s).replace(/[^\d]/g, '');
+  return d.replace(/^0+/, '');
+}
+
+function soHdTuTen_(ten, kyHieu) {
+  var re = mauKyHieuHd_(kyHieu);
+  if (!re) return '';
+  var m = String(ten || '').match(re);
+  if (!m) return '';
+  var so = m[0].match(/(\d+)$/);
+  if (!so) return '';
+  return boSo0Dau_(so[1]);
 }
 
 function loaiTuChuoi_(s, kyHieu) {
@@ -482,7 +506,7 @@ function cayCuaFile_(file, rootId, cfg, cache, layThuMuc) {
   return {trongCay: false, boQua: false, pathNames: []};
 }
 
-function nhanDienFile_(file, cfg) {
+function nhanDienFile_(file, cfg, dmKhachHang) {
   cfg = cfg || CONFIG_MAC_DINH;
   var pathNames = file.pathNames || [];
   var trongCay = !!file.trongCay;
@@ -496,7 +520,7 @@ function nhanDienFile_(file, cfg) {
   if (trongCay && !boQua) {
     vung = vungChungTu_(pathNames, cfg);
     loai = doanLoai_(pathNames, file.name, vung, cfg);
-    var doan = doanKhach_(pathNames, cfg);
+    var doan = doanKhach_(pathNames, cfg, dmKhachHang || (cfg && cfg.dmKhachHang));
     if (doan && typeof doan === 'object') {
       khach = doan.ten || '';
       maKh = doan.ma || '';
@@ -529,7 +553,7 @@ function nhanDienFile_(file, cfg) {
   return item;
 }
 
-function nhanDienTuCay_(file, rootId, cfg, cache, layThuMuc) {
+function nhanDienTuCay_(file, rootId, cfg, cache, layThuMuc, dmKhachHang) {
   var cay = cayCuaFile_(file, rootId, cfg, cache, layThuMuc);
   return nhanDienFile_({
     id: file.id,
@@ -540,7 +564,7 @@ function nhanDienTuCay_(file, rootId, cfg, cache, layThuMuc) {
     pathNames: cay.pathNames,
     trongCay: cay.trongCay,
     boQua: cay.boQua
-  }, cfg);
+  }, cfg, dmKhachHang);
 }
 
 function khoaTrung_(fileId, modifiedTime) {
@@ -1004,6 +1028,7 @@ var COT_SO_CHUNG_TU = {
 function chiMucSo_(sheets) {
   var ids = {};
   var dsSo = [];
+  var soHd = {};
   var ten;
   for (ten in COT_SO_CHUNG_TU) {
     if (!COT_SO_CHUNG_TU.hasOwnProperty(ten)) continue;
@@ -1017,12 +1042,16 @@ function chiMucSo_(sheets) {
       var url = String(row[cot.url] == null ? '' : row[cot.url]);
       var id = idTuUrl_(url);
       if (id && !ids[id]) ids[id] = {sheet: ten, so: so};
+      if (ten === 'HoaDon') {
+        var soChuan = boSo0Dau_(so);
+        if (soChuan && !soHd[soChuan]) soHd[soChuan] = {sheet: 'HoaDon', so: soChuan, soGoc: so};
+      }
       var key = chuanSo_(so);
       if (key.length >= 4) dsSo.push({key: key, sheet: ten, so: so});
     }
   }
   dsSo.sort(function(a, b) { return b.key.length - a.key.length; });
-  return {ids: ids, dsSo: dsSo};
+  return {ids: ids, dsSo: dsSo, soHd: soHd};
 }
 
 function idsCuaItem_(item) {
@@ -1050,14 +1079,19 @@ function idsCuaItem_(item) {
   return ids;
 }
 
-function fileDaCoTrongSo_(item, chiMuc) {
+function fileDaCoTrongSo_(item, chiMuc, cfg) {
   if (!item || !chiMuc) return null;
+  cfg = cfg || CONFIG_MAC_DINH;
   var ids = idsCuaItem_(item);
   var i;
   for (i = 0; i < ids.length; i++) {
     if (chiMuc.ids[ids[i]]) {
       return {cach: 'fileId', sheet: chiMuc.ids[ids[i]].sheet, so: chiMuc.ids[ids[i]].so || ''};
     }
+  }
+  var soTen = soHdTuTen_(item.ten, cfg.KY_HIEU_HD);
+  if (soTen && chiMuc.soHd && chiMuc.soHd[soTen]) {
+    return {cach: 'soHd', sheet: 'HoaDon', so: chiMuc.soHd[soTen].so};
   }
   var ten = chuanSo_(item.ten || '');
   var ds = chiMuc.dsSo || [];
@@ -1097,7 +1131,7 @@ function cungBan_(cu, it) {
   return a === b;
 }
 
-function xuLyDotQuet_(dongCu, items, chiMuc) {
+function xuLyDotQuet_(dongCu, items, chiMuc, cfg) {
   var theoId = {};
   var theoGhep = {};
   var i;
@@ -1124,7 +1158,7 @@ function xuLyDotQuet_(dongCu, items, chiMuc) {
       if (khoa && theoGhep[khoa]) cu = theoGhep[khoa];
     }
     if (cu) it = hopVoiDongCu_(cu, it);
-    var khop = fileDaCoTrongSo_(it, chiMuc);
+    var khop = fileDaCoTrongSo_(it, chiMuc, cfg);
     if (cu && cungBan_(cu, it)) {
       if (khop && cu.trangThai === TRANG_THAI_CHO) {
         var cap = banSaoItem_(it);
@@ -1237,7 +1271,11 @@ function deXuatHangChoFile_() {
     sheetMoi: 'CN_HangDoi',
     trungViec: true,
     ghiSheetCu: false,
-    deXuat: 'HangCho_File trên v7 vùng A1:K100 (Thời, File, Tên, Loại, Mã KH, Thư mục, Ngày, URL, Trạng thái và hai cột cuối) trùng việc với CN_HangDoi. Script này không ghi HangCho_File. Gộp sau khi bot Công Nợ đọc một hàng đợi: copy một lần từ HangCho_File sang CN_HangDoi rồi ngưng sheet cũ, hoặc để bot chỉ đọc CN_HangDoi.'
+    gop: false,
+    chep: false,
+    xoa: false,
+    songSong: true,
+    deXuat: 'Giữ nguyên HangCho_File vùng A1:K100. Không gộp, không chép, không xóa. Trigger v6 vẫn ghi vào HangCho_File. CN_HangDoi chạy song song trên bản sao khoảng 1 tuần.'
   };
 }
 
@@ -1315,12 +1353,21 @@ function tuChayMau_() {
   kiem('hd loai', hd.loai === 'HĐ?', hd.loai);
   var hdKy = nhanDienTuCay_({
     id: 'f-hdky',
-    name: '1C26TNT-0001234.pdf',
+    name: 'C26TNT_00000021.pdf',
     mime: 'application/pdf',
     modifiedTime: '2026-10-22T04:10:00.000Z',
     parents: ['C2']
   }, 'R', cfg, cache, lay);
   kiem('hd ky hieu', hdKy.loai === 'HĐ', hdKy.loai);
+  var hdKy1 = nhanDienTuCay_({
+    id: 'f-hdky1',
+    name: '1C26TNT_00000021.pdf',
+    mime: 'application/pdf',
+    modifiedTime: '2026-10-22T04:12:00.000Z',
+    parents: ['C2']
+  }, 'R', cfg, cache, lay);
+  kiem('hd ky hieu co 1', hdKy1.loai === 'HĐ', hdKy1.loai);
+  kiem('regex config', cfg.KY_HIEU_HD === '1?C26TNT_\\d+' && mauKyHieuHd_(cfg.KY_HIEU_HD).test('C26TNT_00000021.pdf') === true);
   kiem('hd khach', hd.khach === 'CTY MAU', hd.khach);
   kiem('hd vao', hd.duaVao === true);
 
@@ -1466,7 +1513,7 @@ function tuChayMau_() {
   kiem('thu cong ty', thuGuiTu_('Van Phat <congtytnhhvanphat999@gmail.com>', cfg.GMAIL_FROM) === true);
   kiem('thu ncc', thuGuiTu_('NCC <ncc@supplier.example>', cfg.GMAIL_FROM) === false);
   kiem('loai gmail', loaiGmail_('hoa-don-dien-tu.pdf') === 'HĐ?', loaiGmail_('hoa-don-dien-tu.pdf'));
-  kiem('loai gmail ky', loaiGmail_('HD 1C26TNT.pdf') === 'HĐ');
+  kiem('loai gmail ky', loaiGmail_('C26TNT_00000021.pdf') === 'HĐ');
   kiem('loai gmail pg', loaiGmail_('phieu giao.pdf') === 'PG');
 
   var sheetsCam = ['PhieuGiao', 'HoaDon', 'ChiTiet_LN', 'DM_KhachHang', 'BaoGia', 'HH_Data', 'Log_CapNhat'];
@@ -1586,6 +1633,32 @@ function tuChayMau_() {
   kiem('so hoa don', khopHd && khopHd.sheet === 'HoaDon');
   var khopNgan = fileDaCoTrongSo_({fileId: 'moi10', ten: 'phieu 10.xlsx'}, soMau);
   kiem('so ngan', khopNgan === null);
+  var soHdNgan = chiMucSo_({
+    HoaDon: [
+      ['Số HĐ', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'Link'],
+      ['21', '', '', '', '', '', '', '', '', '', ''],
+      ['00000022', '', '', '', '', '', '', '', '', '', '']
+    ]
+  });
+  kiem('chi muc 21', soHdNgan.soHd['21'] && soHdNgan.soHd['21'].so === '21' && soHdNgan.soHd['22'].so === '22');
+  var coKhoa21 = false;
+  var ix;
+  for (ix = 0; ix < soHdNgan.dsSo.length; ix++) if (soHdNgan.dsSo[ix].key === '21') coKhoa21 = true;
+  kiem('so 2 ky tu khong vao ds dai', coKhoa21 === false);
+  var khop21 = fileDaCoTrongSo_({fileId: 'moi21', ten: 'C26TNT_00000021.pdf'}, soHdNgan, cfg);
+  kiem('hd so 21', khop21 && khop21.cach === 'soHd' && khop21.so === '21' && khop21.sheet === 'HoaDon');
+  var khop21a = fileDaCoTrongSo_({fileId: 'moi21a', ten: '1C26TNT_00000021.pdf'}, soHdNgan, cfg);
+  kiem('hd so co 1', khop21a && khop21a.so === '21');
+  var khop22 = fileDaCoTrongSo_({fileId: 'moi22', ten: 'C26TNT_00000022.pdf'}, soHdNgan, cfg);
+  kiem('hd so 22', khop22 && khop22.so === '22');
+  var khong21 = fileDaCoTrongSo_({fileId: 'khac21', ten: 'phieu 21.xlsx'}, soHdNgan, cfg);
+  kiem('hd khong nham 21', khong21 === null);
+  var dotHd = xuLyDotQuet_([], [{
+    nguon: 'Drive', fileId: 'hd21', ten: 'C26TNT_00000021.pdf', mime: 'application/pdf',
+    thuMuc: '9. HOA DON / 2. RA / 3. CTY MAU', url: 'https://drive.google.com/file/d/hd21/view',
+    modifiedTime: '2026-10-22T04:00:00.000Z', loai: 'HĐ'
+  }], soHdNgan, cfg);
+  kiem('hd da co theo so', dotHd.them.length === 1 && dotHd.them[0].trangThai === 'Đã có trong sổ');
 
   var thu = '2. DANH SACH KHACH HANG / 4. CTY MAU';
   var xlsx = {
@@ -1635,10 +1708,18 @@ function tuChayMau_() {
   kiem('ma kl', maKl.ma === 'KL12' && maKl.leQuen === true && maKl.vangLai === false);
   var maVang = doanKhach_(['2. DANH SACH KHACH HANG', 'Khách vãng lai'], cfg, dm);
   kiem('ma kh007', maVang.ma === 'KH007' && maVang.vangLai === true && maVang.leQuen === false);
+  var quetDm = nhanDienTuCay_({
+    id: 'f-dm',
+    name: 'PHIEU GIAO dm.xlsx',
+    mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    modifiedTime: '2026-10-22T12:00:00.000Z',
+    parents: ['T']
+  }, 'R', cfg, cache, lay, dm);
+  kiem('quet truyen dm', quetDm.maKh === 'KL12' && quetDm.khach === 'CTY MAU' && quetDm.leQuen === true);
   var quy = quyTacGiaiDoanSau_().join(' ');
   kiem('quy sau', quy.indexOf('cùng tổng giá trị') >= 0 && quy.indexOf('Khách lẻ quen') >= 0 && quy.indexOf('KH007') >= 0);
   var deXuat = deXuatHangChoFile_();
-  kiem('hang cho', deXuat.sheetCu === 'HangCho_File' && deXuat.ghiSheetCu === false && deXuat.trungViec === true && deXuat.deXuat.indexOf('A1:K100') >= 0);
+  kiem('hang cho', deXuat.sheetCu === 'HangCho_File' && deXuat.ghiSheetCu === false && deXuat.gop === false && deXuat.chep === false && deXuat.xoa === false && deXuat.songSong === true && deXuat.deXuat.indexOf('Không gộp') >= 0);
   var nemHang = false;
   try {
     assertGhiChoPhep_('HangCho_File', {row: 2, column: 1, numRows: 1, numColumns: 1});
