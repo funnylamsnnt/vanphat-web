@@ -16,8 +16,8 @@ function caiDatSheet() {
     ghiO_(sh, 1, 3, 'Số lỗi');
     ghiO_(sh, 1, 4, 0);
     ghiBang_(sh, 2, 1, [['Thời điểm', 'Mã', 'Mức', 'Đối tượng', 'Chi tiết']]);
-    ghiCongThuc_(sh, 1, 26, congThucDemLoi_());
   }
+  capNhatODem_(ss);
   return 'Đã chuẩn bị CONFIG, CN_HangDoi, CN_SucKhoe, CN_DoiSoat trên sổ ' + ss.getId();
 }
 

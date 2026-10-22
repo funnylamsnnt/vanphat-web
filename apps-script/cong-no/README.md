@@ -11,7 +11,7 @@ Script chỉ ghi bốn sheet: `CN_HangDoi`, `CN_SucKhoe`, `CONFIG`, `CN_DoiSoat`
 3. Hàm `docDanhMucVatTu()` nằm trong file `CN_GiaVon.gs`. Hàm đọc Google Sheet danh mục bằng `SpreadsheetApp`, không đọc Excel sao chép. Hàm cấp Mã, Tên và Đơn giá cho `DM_GiaVon!C` nhưng không ghi cột đó và không ghi cột D. Giá vốn cột D «Giá vốn BQ có VAT» giữ cách tính của script cũ.
 4. Mỗi ngày lúc 19:45 (giờ `Asia/Ho_Chi_Minh`): ghi `CN_DoiSoat`. Google có thể chạy lệch khoảng 15 phút quanh mốc `nearMinute(45)`.
 
-Lần quét đầu chưa có mốc trong Script Properties: script ghi mốc bằng thời điểm hiện tại và không kéo file cũ vào hàng đợi.
+Quét Drive lấy mốc truy vấn là thời điểm sớm hơn giữa mốc đã lưu và đầu ngày theo giờ Việt Nam. Lần đầu chưa có mốc cũng quét từ đầu ngày, không kéo chứng từ của các ngày trước. Gmail lần đầu vẫn chỉ đặt mốc, không kéo thư cũ.
 
 ## Cấu hình đã điền
 
@@ -43,7 +43,7 @@ Script chỉ lấy file trong ba vùng đó:
 - `2. RA`: cùng loại file. Tên khớp regex `1?C26TNT_\d+` thì loại là `HĐ`, kể cả `C26TNT_00000021.pdf` (không có số 1 đầu) và `1C26TNT_00000021.pdf`. Không khớp thì loại là `HĐ?`. Không coi mọi file trong `2. RA` là HĐ.
 - `8. PHIẾU BÁO GIÁ`: chỉ file đoán được là BG.
 
-Tên file «phiếu báo giá» hoặc «phiếu giao» thì loại là `BG` hoặc `PG`, kể cả khi nằm trong `2. RA`. Tên có «hóa đơn» mà không khớp regex `1?C26TNT_\d+` thì loại là `HĐ?`. Khách đoán từ thư mục ngay dưới danh sách khách hoặc dưới `2. RA`, bỏ số thứ tự đầu tên (`4. CTY ...` còn `CTY ...`). Lượt quét truyền thẳng lưới `DM_KhachHang` vào `doanKhach_` (chỉ đọc) để ra mã KH hoặc KL. File sổ v7, file danh mục giá, hai id trong `LOAI_TRU_FILE_ID`, và tên chứa cụm loại trừ không vào hàng đợi. Thư mục lương, nhà cung cấp, logo, web không được đi vào.
+Tên file «phiếu báo giá», «phiếu giao», hoặc mã dạng `BG26-001` / `PG26-029` thì loại là `BG` hoặc `PG`, kể cả khi nằm trong `2. RA`. Tên có «hóa đơn» mà không khớp regex `1?C26TNT_\d+` thì loại là `HĐ?`. Khách đoán từ thư mục ngay dưới danh sách khách hoặc dưới `2. RA`, bỏ số thứ tự đầu tên (`4. CTY ...` còn `CTY ...`). Lượt quét truyền thẳng lưới `DM_KhachHang` vào `doanKhach_` (chỉ đọc) để ra mã KH hoặc KL. File sổ v7, file danh mục giá, hai id trong `LOAI_TRU_FILE_ID`, và tên chứa cụm loại trừ không vào hàng đợi. Thư mục lương, nhà cung cấp, logo, web không được đi vào.
 
 Mốc quét Drive lấy file có `modifiedTime` sau mốc hoặc `createdTime` sau mốc. Một lượt xử lý tối đa 400 file cũ nhất. Còn dư thì `mocKeTiep_` dời mốc tới thời điểm file thứ 400 (cùng mốc thì giữ cả nhóm), ghi một dòng `LỖI` mã `QUET_CAT` lên `CN_SucKhoe`, không dừng bằng lỗi lặp. Lượt sau lấy phần còn lại.
 
@@ -61,17 +61,17 @@ Trạng thái:
 - File đã có trong sổ thì ghi `Đã có trong sổ`. Khớp id trên URL, hoặc số phiếu BG/PG dài từ 4 ký tự nằm trong tên file. Với HĐ, lấy số ở cuối tên theo regex (bỏ số 0 đầu, `00000021` thành `21`) rồi so với `HoaDon` cột A sau cùng cách chuẩn hoá. Số HĐ hai chữ số vẫn khớp.
 - Dòng đã ghi, file bị sửa (`modifiedTime` mới hơn mốc đang lưu trên hàng đợi) và vẫn khớp sổ: sửa dòng đó thành `Sửa file đã ghi`.
 
-`CN_HangDoi!Z1` chỉ đếm dòng `Chờ bot`. `Sửa file đã ghi` và `Đã có trong sổ` không cộng vào Z1. Ô này được ghi lại cuối mỗi lượt quét. Ô `Y1` là mốc Drive. Ô `X1` ghi Gmail đang tắt, mốc Gmail, hoặc lỗi Gmail.
+`CN_HangDoi!Z1` là số, do script đếm rồi ghi bằng `setValue`. Đếm cả `Chờ bot` và `Sửa file đã ghi`, vì cả hai đều còn việc cho bot. `Đã có trong sổ` không cộng. Không ghi công thức `COUNTIF`: sổ locale Việt Nam tách đối số bằng `;`, công thức dấu phẩy ra `#ERROR!`. Ô này được ghi lại cuối mỗi lượt quét. Ô `Y1` là mốc Drive. Ô `X1` ghi Gmail đang tắt, mốc Gmail, hoặc lỗi Gmail.
 
 Script không ghi sheet `HangCho_File`. Tab đó trên v7 (vùng A1:K100) giữ nguyên: không gộp, không chép, không xóa. Quét Drive chỉ còn một nơi là `CN_HangDoi`. Hàm `tatTriggerV6Drive_` gỡ đúng các trigger `capNhatTuDrive`. Code cũ không bị xoá.
 
 ## Sheet CN_SucKhoe
 
-Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `CN_SucKhoe!D1` là số lỗi, cập nhật cuối mỗi lượt quét chứng từ, quét sức khỏe và đối soát. `Z1` vẫn là công thức đếm mức `LỖI` để đối chiếu. Các việc kiểm:
+Mỗi giờ script xóa phần kết quả cũ và ghi bản mới. `CN_SucKhoe!D1` là số dòng mức `LỖI`, cập nhật cuối mỗi lượt quét chứng từ, quét sức khỏe và đối soát. Dòng `CẢNH BÁO` không cộng vào D1. `CN_SucKhoe!Z1` được xóa trắng mỗi lượt để khỏi lẫn với D1 và khỏi `#ERROR!`. Các việc kiểm:
 
 - Ô hiển thị bắt đầu bằng `#REF`, `#N/A`, `#VAL`, `#DIV`, `#NAM`, `#ERR` (đúng nhóm trong `chk.py`).
 - `PhieuGiao!A1` phải chứa «Mã PG (khóa)», «Mã PG» hoặc «Mã Phiếu». Header đang dùng trên v7 là «Mã PG (khóa)».
-- Khóa cột A của `HH_Data` còn thiếu trong `HH_Nhap`.
+- Khóa cột A của `HH_Data` còn thiếu trong `HH_Nhap`. Luật không tắt. Lần đầu script ghi nhận các khóa đang thiếu thì coi là đã quá 60 phút và ghi `LỖI` (đúng như lượt 23:00). Khóa mới xuất hiện sau đó: chưa tới 60 phút thì `CẢNH BÁO`, đủ 60 phút vẫn thiếu thì `LỖI`. Mốc nằm trong Script Properties, không ghi vào sổ nghiệp vụ.
 - `Log_CapNhat`: có sheet, header cột A bắt đầu bằng «Thời», ba dòng cuối, cảnh báo nếu lần cuối cũ hơn 26 giờ.
 - Vùng lỗi của `chk.py`: `LoiNhuan_Data` cột P–U, `LoiNhuan` cột W–AH, `DM_KhachHang` cột W–AD.
 - `DM_KhachHang!AD2:AD501`: ô chứa `#` là lỗi; ô chứa «Đạt» chỉ ghi mức thông tin. Không ghi vào vùng này.
@@ -182,5 +182,7 @@ Sổ đang chạy là `1jkmfMIJsoZrDlOxmkqbj44GOsNb1eh3UNk3Tyn0MaJs`. Project đ
 6. Chạy `installTriggers`. Lịch mới thêm mốc 19:45. Trigger `capNhatGiaVon` và `capNhatTuDrive` chưa bị gỡ ở bước này.
 7. Khi anh muốn chỉ còn một quét Drive: chạy `tatTriggerV6Drive_` một lần. Hàm gỡ đúng trigger `capNhatTuDrive`. Vào Triggers kiểm tra còn `capNhatGiaVon`, `quetChungTuMoi`, `quetChungTu23h`, `quetSucKhoe`, `doiSoatCuoiNgay`.
 8. Không xoá tab `HangCho_File`. Không xoá dòng công nợ, hóa đơn, phiếu giao.
+9. Bản sửa ô đếm và mốc quét: dán lại `Logic.gs`, `HangDoi.gs`, `SucKhoe.gs`, `Triggers.gs`. Chạy `caiDatSheet` để ghi số vào `CN_HangDoi!Z1` và `CN_SucKhoe!D1`, đồng thời xóa công thức ở `CN_SucKhoe!Z1`.
+10. Chạy tay `quetChungTu_` một lần để lấy chứng từ trong ngày, gồm phiếu giao đã sửa trước mốc 23:12. Không đợi khung 07:00 hôm sau. Rồi chạy `quetSucKhoe` để chốt lại D1. Khóa `HH_Data` đang thiếu ở lượt này vẫn là `LỖI`.
 
 `guessKH_` của quét cũ tương ứng `doanKhach_` trên quét mới, đã đối chiếu `DM_KhachHang`. `dienMaTab` ghi mã vào tab cũ. Quét mới không làm việc đó vì không được ghi `HangCho_File` hay sổ nghiệp vụ. Mã KH nằm ở cột L của `CN_HangDoi` để bot dùng. `ngayTuTen_` lấy ngày trong tên file cho cột Ngày của tab cũ. Đối soát dùng ngày ghi nhận và `modifiedTime` theo giờ Việt Nam, chưa port `ngayTuTen_`.

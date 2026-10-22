@@ -36,6 +36,8 @@ files.forEach(function (name) {
   if (camLlm.test(text)) leak.push(name + ' có lời gọi mạng hoặc LLM');
   if (name === 'Ghi.gs') return;
   if (writeRe.test(text)) leak.push(name + ' ghi sheet ngoài Ghi.gs');
+  if (text.indexOf('COUNTIF') >= 0) leak.push(name + ' còn công thức COUNTIF');
+  if (name !== 'Ghi.gs' && text.indexOf('ghiCongThuc_') >= 0) leak.push(name + ' còn ghi công thức');
 });
 if (!writeRe.test(fs.readFileSync(path.join(root, 'Ghi.gs'), 'utf8'))) {
   leak.push('Ghi.gs không còn cổng ghi');

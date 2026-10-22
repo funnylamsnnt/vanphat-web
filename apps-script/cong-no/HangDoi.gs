@@ -1,6 +1,7 @@
 /**
  * Quét Drive / Gmail rồi chỉ nối hoặc sửa dòng trên CN_HangDoi.
- * Lần đầu chưa có mốc: ghi mốc hiện tại, không kéo lịch sử.
+ * Chưa có mốc, hoặc mốc đã nằm trong ngày: quét từ đầu ngày giờ Việt Nam, không kéo các ngày trước.
+ * Gmail lần đầu vẫn chỉ đặt mốc.
  * Quá 400 file: xử lý phần cũ nhất, dời mốc bằng mocKeTiep_, ghi LỖI lên CN_SucKhoe.
  */
 
@@ -22,7 +23,6 @@ function damBaoHangDoi_(ss) {
       ghiBang_(sh, 1, tu + 1, [COT_HANG_DOI.slice(tu, den + 1)]);
     }
   }
-  ghiCongThuc_(sh, 1, 26, congThucDemChoBot_());
   return sh;
 }
 
@@ -213,22 +213,22 @@ function quetChungTu_() {
     var prop = PropertiesService.getScriptProperties();
     var loiQuet = [];
 
-    var qdDrive = quyetDinhMoc_(prop.getProperty(KHOA_MOC_DRIVE) || '', iso);
+    var qdDrive = mocQuetDrive_(prop.getProperty(KHOA_MOC_DRIVE) || '', iso);
     var driveChon = [];
     var mocDriveMoi = qdDrive.mocLuu;
     var chuDrive = 'Mốc Drive ' + mocDriveMoi;
-    if (!qdDrive.khoiTao) {
-      var ketDrive = quetDriveTheoCay_(cfg, qdDrive.mocQuery);
-      var cat = catLuotQuet_(ketDrive.items, 400);
-      driveChon = cat.giu;
-      if (cat.biCat) {
-        mocDriveMoi = mocKeTiep_(iso, cat.daXet, true);
-        loiQuet.push(dongLoiCatQuet_(cat.giu.length, cat.tong, mocDriveMoi));
-        chuDrive = 'Mốc Drive ' + mocDriveMoi + ' | LỖI cắt lượt, còn ' + (cat.tong - cat.giu.length) + ' file';
-      } else {
-        mocDriveMoi = iso;
-        chuDrive = 'Mốc Drive ' + mocDriveMoi;
-      }
+    var hangCu = docHangDoi_(sh);
+    var ketDrive = quetDriveTheoCay_(cfg, qdDrive.mocQuery);
+    var tach = tachChuaCo_(ketDrive.items, hangCu);
+    var cat = catLuotQuet_(tach.chua, 400);
+    driveChon = cat.giu.concat(tach.da);
+    if (cat.biCat) {
+      mocDriveMoi = mocKeTiep_(iso, cat.daXet, true);
+      loiQuet.push(dongLoiCatQuet_(cat.giu.length, cat.tong, mocDriveMoi));
+      chuDrive = 'Mốc Drive ' + mocDriveMoi + ' | LỖI cắt lượt, còn ' + (cat.tong - cat.giu.length) + ' file';
+    } else {
+      mocDriveMoi = iso;
+      chuDrive = (qdDrive.khoiTao ? 'Mốc Drive đầu ngày ' : 'Mốc Drive ') + mocDriveMoi;
     }
 
     var gmailChon = [];
@@ -277,12 +277,11 @@ function quetChungTu_() {
       PhieuGiao: docLuoiHienThi_(ss, 'PhieuGiao'),
       HoaDon: docLuoiHienThi_(ss, 'HoaDon')
     });
-    var dot = xuLyDotQuet_(docHangDoi_(sh), driveChon.concat(gmailChon), chiMuc, cfg);
+    var dot = xuLyDotQuet_(hangCu, driveChon.concat(gmailChon), chiMuc, cfg);
     capNhatHang_(sh, dot.sua, hien);
     ghiHangMoi_(sh, dot.them, hien);
     var i;
     for (i = 0; i < loiQuet.length; i++) ghiLoiQuet_(ss, cfg, loiQuet[i]);
-    ghiCongThuc_(sh, 1, 26, congThucDemChoBot_());
     capNhatODem_(ss);
     ghiO_(sh, 1, 25, chuDrive);
     ghiO_(sh, 1, 24, gmailChu);
