@@ -1,8 +1,9 @@
 /**
- * Đọc danh mục giá từ Google Sheet. Chỉ đọc.
- * Repo không có mã script «Cập nhật giá vốn» đang gắn trên v7
- * (script đó đọc Excel 1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR và ghi Log_CapNhat).
- * Hàm này là nguồn đọc thay thế. Không ghi DM_GiaVon, không ghi file danh mục.
+ * Đọc danh mục vật tư. Chỉ đọc.
+ * «Đơn Giá» trên sheet Danh Mục Vật Tư là giá bán. Hàm này chỉ cấp Mã, Tên và Đơn giá
+ * để điền DM_GiaVon!C. Không ghi DM_GiaVon và không ghi cột D.
+ * Giá vốn là DM_GiaVon!D «Giá vốn BQ có VAT», do script «Cập nhật giá vốn» ghi mỗi giờ.
+ * ChiTiet_LN!J tra theo cột N nhập tay, rồi cột M tên ghép, rồi mã SP cột C. Không ghi J.
  */
 
 function docDanhMucVatTu() {
@@ -18,7 +19,8 @@ function docDanhMucVatTu() {
     headers: headers,
     rows: values.slice(1),
     soDong: Math.max(0, values.length - 1),
-    cot: tomTatDanhMuc_(headers)
+    cot: tomTatDanhMuc_(headers),
+    giaiThich: giaiThichGiaVon_()
   };
 }
 
@@ -29,8 +31,9 @@ function kiemTraNguonGiaVon() {
   khoaSoDung_(ss, cfg);
   var sh = taoSheetNeuThieu_(ss, 'CN_SucKhoe');
   var chu = 'Đọc ' + doc.soDong + ' dòng từ «' + doc.sheetName +
-    '». Cột mã=' + doc.cot.cotMa + ', đơn giá=' + doc.cot.cotDonGia +
-    ', giá vốn=' + doc.cot.cotGiaVon + '. Không ghi giá vào sổ.';
+    '». Cấp Mã/Tên/Đơn giá cho DM_GiaVon!C (cột mã=' + doc.cot.cotMa +
+    ', tên=' + doc.cot.cotTen + ', đơn giá=' + doc.cot.cotDonGia +
+    '). Đơn Giá là giá bán, không phải giá vốn. Giá vốn = DM_GiaVon!D «Giá vốn BQ có VAT», script Cập nhật giá vốn ghi mỗi giờ. Hàm này không ghi cột D.';
   var dong = Math.max(sh.getLastRow() + 1, 3);
   ghiBang_(sh, dong, 1, [[dinhDangLuc_(new Date(), cfg.TZ), 'GIA_VON_DOC', 'OK', doc.sheetName, chu]]);
   return chu;
