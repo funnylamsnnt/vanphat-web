@@ -37,13 +37,13 @@ Sheet `CONFIG` được tạo với các khóa sau. Sửa trên sheet thì lần
 
 Cây Drive thực tế trong thư mục gốc: `2. DANH SACH KHACH HANG` là danh sách khách (mỗi khách một thư mục, bên trong có BG/PG xlsx, PDF và thư mục tháng). `9. HOA DON / 2. RA` là thư mục HĐ GTGT đầu ra. `9. HOA DON / 1. VAO` bị bỏ qua cả cây con.
 
-Script chỉ lấy file trong ba vùng đó:
+Script chỉ lấy file chứng từ thật trong ba vùng đó. Định dạng nhận: PDF, Excel (`.xlsx`, `.xls`), Word (`.doc`, `.docx`), CSV và ảnh (`jpg`, `jpeg`, `png`, `webp`, `heic`, `tif`, `tiff`). File Google gốc (Sheet, Doc, trang trình bày) không phải chứng từ.
 
-- Danh sách khách: PDF, ảnh, Excel, Google Sheet/Doc.
+- Danh sách khách: các định dạng trên.
 - `2. RA`: cùng loại file. Tên khớp regex `1?C26TNT_\d+` thì loại là `HĐ`, kể cả `C26TNT_00000021.pdf` (không có số 1 đầu) và `1C26TNT_00000021.pdf`. Không khớp thì loại là `HĐ?`. Không coi mọi file trong `2. RA` là HĐ.
-- `8. PHIẾU BÁO GIÁ`: chỉ file đoán được là BG.
+- `8. PHIẾU BÁO GIÁ`: chỉ file đoán được là BG và đúng định dạng chứng từ.
 
-Tên file «phiếu báo giá», «phiếu giao», hoặc mã dạng `BG26-001` / `PG26-029` thì loại là `BG` hoặc `PG`, kể cả khi nằm trong `2. RA`. Tên có «hóa đơn» mà không khớp regex `1?C26TNT_\d+` thì loại là `HĐ?`. Khách đoán từ thư mục ngay dưới danh sách khách hoặc dưới `2. RA`, bỏ số thứ tự đầu tên (`4. CTY ...` còn `CTY ...`). Lượt quét truyền thẳng lưới `DM_KhachHang` vào `doanKhach_` (chỉ đọc) để ra mã KH hoặc KL. File sổ v7, file danh mục giá, hai id trong `LOAI_TRU_FILE_ID`, và tên chứa cụm loại trừ không vào hàng đợi. Thư mục lương, nhà cung cấp, logo, web không được đi vào.
+Tên file «phiếu báo giá», «phiếu giao», hoặc mã dạng `BG26-001` / `PG26-029` thì loại là `BG` hoặc `PG`, kể cả khi nằm trong `2. RA`. Tên có «hóa đơn» mà không khớp regex `1?C26TNT_\d+` thì loại là `HĐ?`. Khách đoán từ thư mục ngay dưới danh sách khách hoặc dưới `2. RA`, bỏ số thứ tự đầu tên (`4. CTY ...` còn `CTY ...`). Lượt quét truyền thẳng lưới `DM_KhachHang` vào `doanKhach_` (chỉ đọc) để ra mã KH hoặc KL. File sổ v7, file danh mục giá, hai id trong `LOAI_TRU_FILE_ID`, tên chứa cụm `LOAI_TRU_TEN`, và tên chứa cụm trong mảng `TEN_FILE_KHONG_PHAI_CHUNG_TU` không vào hàng đợi. Mảng này đang có `LIVE_BRIDGE` và `DanhMuc`. Khớp không phân biệt hoa thường, dấu, khoảng trắng, gạch dưới hay gạch nối. Thêm cụm bằng cách sửa mảng trong `Logic.gs`, không cần sửa ô CONFIG đang có. Thư mục lương, nhà cung cấp, logo, web không được đi vào. Sheet cầu nối catalog nằm trong thư mục phiếu báo giá nên bị bỏ qua theo tên này, không phải báo giá khách.
 
 Mốc quét Drive lấy file có `modifiedTime` sau mốc hoặc `createdTime` sau mốc. Một lượt xử lý tối đa 400 file cũ nhất. Còn dư thì `mocKeTiep_` dời mốc tới thời điểm file thứ 400 (cùng mốc thì giữ cả nhóm), ghi một dòng `LỖI` mã `QUET_CAT` lên `CN_SucKhoe`, không dừng bằng lỗi lặp. Lượt sau lấy phần còn lại.
 
@@ -62,6 +62,8 @@ Trạng thái:
 - Dòng đã ghi, file bị sửa (`modifiedTime` mới hơn mốc đang lưu trên hàng đợi) và vẫn khớp sổ: sửa dòng đó thành `Sửa file đã ghi`.
 
 `CN_HangDoi!Z1` là số, do script đếm rồi ghi bằng `setValue`. Đếm cả `Chờ bot` và `Sửa file đã ghi`, vì cả hai đều còn việc cho bot. `Đã có trong sổ` không cộng. Không ghi công thức `COUNTIF`: sổ locale Việt Nam tách đối số bằng `;`, công thức dấu phẩy ra `#ERROR!`. Ô này được ghi lại cuối mỗi lượt quét. Ô `Y1` là mốc Drive. Ô `X1` ghi Gmail đang tắt, mốc Gmail, hoặc lỗi Gmail.
+
+Cuối lượt quét, dòng đã có trên `CN_HangDoi` mà tên khớp `TEN_FILE_KHONG_PHAI_CHUNG_TU` bị xóa bằng `xoaCacDong_`, rồi Z1 đếm lại. Dòng sheet cầu nối đang để trạng thái `Chờ bot` sẽ ra khỏi hàng đợi ở lượt kế. Nếu không còn chứng từ `Chờ bot` hoặc `Sửa file đã ghi`, Z1 về 0.
 
 Script không ghi sheet `HangCho_File`. Tab đó trên v7 (vùng A1:K100) giữ nguyên: không gộp, không chép, không xóa. Quét Drive chỉ còn một nơi là `CN_HangDoi`. Hàm `tatTriggerV6Drive_` gỡ đúng các trigger `capNhatTuDrive`. Code cũ không bị xoá.
 
@@ -192,5 +194,6 @@ Sổ đang chạy là `1jkmfMIJsoZrDlOxmkqbj44GOsNb1eh3UNk3Tyn0MaJs`. Project đ
 11. Bản sửa đối soát theo ô Dashboard: dán lại `Logic.gs` và `SucKhoe.gs`. Chạy `doiSoatCuoiNgay` một lần để ghi lại `CN_DoiSoat`. Kỳ vọng `Chờ xuất HĐ` lấy `K30`, không còn số 3.
 12. Bản sửa tiêu đề `Khách hàng`: dán lại `Logic.gs`. Chạy `doiSoatCuoiNgay` một lần, rồi `quetSucKhoe` một lần. Ba view phải hết `LỖI` thiếu cột. `V_ConNo` cộng `Còn nợ` và đối chiếu `E30`. `V_QuaHan` đối chiếu `H30`. `V_ChoXuatHD` đối chiếu `K30`. Lệch thì một dòng `LỖI`. `CN_SucKhoe!D1` được ghi lại số `LỖI`. Dòng `QUET_CAT` cũ hơn 7 ngày sẽ rời sheet ở lượt `quetSucKhoe` này, kể cả ô mốc đang là kiểu ngày giờ. Không ghi `Log_CapNhat`. Không sửa `Dashboard!B4` hay `L4`.
 13. Bản sửa dấu gạch trên Dashboard: dán lại `Logic.gs` và `DoiSoat.gs`. Chạy `doiSoatCuoiNgay` một lần. `H30` đang là `-` và tổng quá hạn bằng 0 thì dòng đối chiếu là khớp, không còn `LỖI` giả. `E30`, `K30`, `B9` cùng quy tắc.
+14. Bản bỏ sheet cầu nối khỏi hàng đợi: dán lại `Logic.gs`, `HangDoi.gs`, `Ghi.gs`. Chạy `chayThuLogicMau`. Nhật ký phải có `OK logic mẫu chạy hết, không lỗi`. Rồi chạy `quetChungTu_` một lần. Dòng tên chứa `LIVE_BRIDGE` hoặc `DanhMuc` biến mất. `CN_HangDoi!Z1` về 0 nếu không còn việc cho bot. Không sửa CONFIG.
 
 `guessKH_` của quét cũ tương ứng `doanKhach_` trên quét mới, đã đối chiếu `DM_KhachHang`. `dienMaTab` ghi mã vào tab cũ. Quét mới không làm việc đó vì không được ghi `HangCho_File` hay sổ nghiệp vụ. Mã KH nằm ở cột L của `CN_HangDoi` để bot dùng. `ngayTuTen_` lấy ngày trong tên file cho cột Ngày của tab cũ. Đối soát dùng ngày ghi nhận và `modifiedTime` theo giờ Việt Nam, chưa port `ngayTuTen_`.

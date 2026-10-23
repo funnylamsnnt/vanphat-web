@@ -58,6 +58,13 @@ var GHEP_CHUA_PDF = 'chưa có PDF mộc đỏ';
 var GHEP_DA_PDF = 'đã ghép PDF mộc đỏ';
 var KY_HIEU_HD_MAC_DINH = '1?C26TNT_\\d+';
 
+// Tên file nội bộ không phải chứng từ khách. Thêm cụm vào mảng này là đủ, không cần sửa CONFIG.
+// Khớp không phân biệt hoa thường, dấu, khoảng trắng, gạch dưới hay gạch nối.
+var TEN_FILE_KHONG_PHAI_CHUNG_TU = [
+  'LIVE_BRIDGE',
+  'DanhMuc'
+];
+
 var CONFIG_MAC_DINH = {
   DRIVE_FOLDER_ID: '1KAyFZVJJCqu92Swk5JgX15YY0fZDpdrl',
   V7_SPREADSHEET_ID: '1jkmfMIJsoZrDlOxmkqbj44GOsNb1eh3UNk3Tyn0MaJs',
@@ -459,11 +466,14 @@ function doanLoai_(pathNames, fileName, vung, cfg) {
   return '';
 }
 
+function laMimeGoogleNative_(mime) {
+  return String(mime || '').indexOf('application/vnd.google-apps.') === 0;
+}
+
 function laMimeBoQua_(mime) {
   var m = String(mime || '');
   if (!m) return false;
-  if (m === 'application/vnd.google-apps.folder') return true;
-  if (m === 'application/vnd.google-apps.shortcut') return true;
+  if (laMimeGoogleNative_(m)) return true;
   if (m.indexOf('video/') === 0) return true;
   if (m.indexOf('audio/') === 0) return true;
   return false;
@@ -471,12 +481,28 @@ function laMimeBoQua_(mime) {
 
 function laMimeChungTu_(mime, name) {
   var m = String(mime || '');
+  if (laMimeGoogleNative_(m)) return false;
   if (m === 'application/pdf') return true;
   if (m.indexOf('image/') === 0) return true;
   if (m.indexOf('spreadsheet') >= 0 || m.indexOf('excel') >= 0 || m.indexOf('officedocument.spreadsheet') >= 0) return true;
   if (m.indexOf('word') >= 0 || m.indexOf('document') >= 0 || m.indexOf('pdf') >= 0) return true;
   var n = chuanHoa_(name);
   return /\.(pdf|xlsx|xls|csv|jpg|jpeg|png|webp|heic|tif|tiff|doc|docx)$/.test(n);
+}
+
+function gonTenFile_(s) {
+  return chuanHoa_(s).replace(/[^a-z0-9]/g, '');
+}
+
+function laTenKhongPhaiChungTu_(ten) {
+  var n = gonTenFile_(ten);
+  if (!n) return false;
+  var i;
+  for (i = 0; i < TEN_FILE_KHONG_PHAI_CHUNG_TU.length; i++) {
+    var cum = gonTenFile_(TEN_FILE_KHONG_PHAI_CHUNG_TU[i]);
+    if (cum && n.indexOf(cum) >= 0) return true;
+  }
+  return false;
 }
 
 function tachDanhSach_(s, sep) {
@@ -500,6 +526,7 @@ function biLoaiTru_(item, cfg) {
   for (i = 0; i < ids.length; i++) {
     if (id && id === ids[i]) return true;
   }
+  if (laTenKhongPhaiChungTu_(item.ten) || laTenKhongPhaiChungTu_(item.name)) return true;
   var chuoi = chuanHoa_([item.ten, item.name, item.thuMuc, (item.pathNames || []).join(' ')].join(' '));
   var maus = tachDanhSach_(cfg.LOAI_TRU_TEN, '|');
   for (i = 0; i < maus.length; i++) {
@@ -516,8 +543,21 @@ function nenDuaVaoHangDoi_(item, cfg) {
   if (laMimeBoQua_(item.mime)) return false;
   var vung = item.vung || vungChungTu_(item.pathNames || [], cfg);
   if (!vung) return false;
+  if (!laMimeChungTu_(item.mime, item.ten || item.name)) return false;
   if (vung === 'BG_CHUNG') return item.loai === 'BG';
-  return laMimeChungTu_(item.mime, item.ten);
+  return true;
+}
+
+function tachDongKhongPhaiChungTu_(dongCu) {
+  var giu = [];
+  var xoa = [];
+  var i;
+  for (i = 0; i < (dongCu || []).length; i++) {
+    var d = dongCu[i];
+    if (laTenKhongPhaiChungTu_(d && (d.ten || d.name))) xoa.push(d);
+    else giu.push(d);
+  }
+  return {giu: giu, xoa: xoa};
 }
 
 function cayCuaFile_(file, rootId, cfg, cache, layThuMuc) {
@@ -1011,6 +1051,7 @@ function tomTatDanhMuc_(headers) {
 function laXlsx_(item) {
   if (!item) return false;
   var m = String(item.mime || '');
+  if (laMimeGoogleNative_(m)) return false;
   var n = chuanHoa_(item.ten || item.name || '');
   if (m.indexOf('spreadsheet') >= 0 || m.indexOf('excel') >= 0 || m.indexOf('officedocument.spreadsheet') >= 0) return true;
   return /\.xlsx$|\.xls$/.test(n);
@@ -2103,6 +2144,105 @@ function tuChayMau_() {
     }, 'R', cfg, cache, lay);
     kiem('loai tru id ' + t, boId.duaVao === false);
   }
+
+  var mimeXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  var mimeSheet = 'application/vnd.google-apps.spreadsheet';
+  kiem('ten live bridge', laTenKhongPhaiChungTu_('VP_DanhMuc_LIVE_BRIDGE') === true);
+  kiem('ten danh muc', laTenKhongPhaiChungTu_('VP_DanhMuc_ban_nhap.xlsx') === true && laTenKhongPhaiChungTu_('Danh Mục giá.xlsx') === true);
+  kiem('ten live cach', laTenKhongPhaiChungTu_('note LIVE-BRIDGE.pdf') === true && laTenKhongPhaiChungTu_('LIVE BRIDGE') === true);
+  kiem('ten phieu that', laTenKhongPhaiChungTu_('PHIEU BAO GIA 02-10.xlsx') === false && laTenKhongPhaiChungTu_('scan-moc.pdf') === false);
+  TEN_FILE_KHONG_PHAI_CHUNG_TU.push('MAU_NOI_BO');
+  var moRong = laTenKhongPhaiChungTu_('file MAU_NOI_BO.xlsx');
+  TEN_FILE_KHONG_PHAI_CHUNG_TU.pop();
+  kiem('mo rong danh sach', moRong === true && laTenKhongPhaiChungTu_('file MAU_NOI_BO.xlsx') === false && TEN_FILE_KHONG_PHAI_CHUNG_TU.length === 2);
+
+  var bridge = nhanDienTuCay_({
+    id: 'f-bridge',
+    name: 'VP_DanhMuc_LIVE_BRIDGE',
+    mime: mimeSheet,
+    modifiedTime: '2026-10-22T07:30:00.000Z',
+    parents: ['BG']
+  }, 'R', cfg, cache, lay);
+  kiem('bo bridge', bridge.duaVao === false && bridge.loai === 'BG');
+  kiem('sheet khong phai xlsx', laXlsx_(bridge) === false && laMimeChungTu_(mimeSheet, bridge.ten) === false && laMimeBoQua_(mimeSheet) === true);
+
+  var sheetLa = nhanDienTuCay_({
+    id: 'f-sheet-la',
+    name: 'PHIEU BAO GIA noi bo',
+    mime: mimeSheet,
+    modifiedTime: '2026-10-22T07:35:00.000Z',
+    parents: ['BG']
+  }, 'R', cfg, cache, lay);
+  kiem('sheet bg bo', sheetLa.duaVao === false);
+
+  var xlsxDm = nhanDienTuCay_({
+    id: 'f-dm-xlsx',
+    name: 'VP_DanhMuc_ban_nhap.xlsx',
+    mime: mimeXlsx,
+    modifiedTime: '2026-10-22T07:36:00.000Z',
+    parents: ['BG']
+  }, 'R', cfg, cache, lay);
+  kiem('xlsx danh muc bo', xlsxDm.duaVao === false);
+
+  var bgThat = nhanDienTuCay_({
+    id: 'f-bg-that',
+    name: 'PHIEU BAO GIA 03-10.xlsx',
+    mime: mimeXlsx,
+    modifiedTime: '2026-10-22T07:40:00.000Z',
+    parents: ['BG']
+  }, 'R', cfg, cache, lay);
+  kiem('bg xlsx van vao', bgThat.duaVao === true && bgThat.loai === 'BG');
+  var pdfBg = nhanDienTuCay_({
+    id: 'f-bg-pdf',
+    name: 'PHIEU BAO GIA 03-10.pdf',
+    mime: 'application/pdf',
+    modifiedTime: '2026-10-22T07:41:00.000Z',
+    parents: ['BG']
+  }, 'R', cfg, cache, lay);
+  kiem('bg pdf van vao', pdfBg.duaVao === true && pdfBg.loai === 'BG');
+  var anh = nhanDienTuCay_({
+    id: 'f-anh',
+    name: 'scan-phieu.jpg',
+    mime: 'image/jpeg',
+    modifiedTime: '2026-10-22T07:42:00.000Z',
+    parents: ['C']
+  }, 'R', cfg, cache, lay);
+  kiem('anh van la chung tu', anh.duaVao === true);
+  var docx = nhanDienTuCay_({
+    id: 'f-docx',
+    name: 'phieu.docx',
+    mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    modifiedTime: '2026-10-22T07:43:00.000Z',
+    parents: ['T']
+  }, 'R', cfg, cache, lay);
+  kiem('docx van la chung tu', docx.duaVao === true && laMimeChungTu_(docx.mime, docx.ten) === true);
+  var gdoc = nhanDienTuCay_({
+    id: 'f-gdoc',
+    name: 'PHIEU GIAO online',
+    mime: 'application/vnd.google-apps.document',
+    modifiedTime: '2026-10-22T07:44:00.000Z',
+    parents: ['T']
+  }, 'R', cfg, cache, lay);
+  kiem('google doc bo', gdoc.duaVao === false);
+
+  var hangBridge = [
+    {row: 2, ten: 'VP_DanhMuc_LIVE_BRIDGE', trangThai: 'Chờ bot', fileId: 'bridge', loai: 'BG', thuMuc: '8. PHIẾU BÁO GIÁ'},
+    {row: 4, ten: 'PHIEU GIAO PG0710.xlsx', trangThai: 'Đã có trong sổ', fileId: 'x1', loai: 'PG'},
+    {row: 3, ten: 'bang DanhMuc.xlsx', trangThai: 'Sửa file đã ghi', fileId: 'dm2', loai: 'BG'}
+  ];
+  var donBridge = tachDongKhongPhaiChungTu_(hangBridge);
+  var trangCon = [];
+  var ib;
+  for (ib = 0; ib < donBridge.giu.length; ib++) trangCon.push(donBridge.giu[ib].trangThai);
+  kiem('xoa bridge', donBridge.xoa.length === 2 && donBridge.xoa[0].row === 2 && donBridge.xoa[1].row === 3 && donBridge.giu.length === 1 && donBridge.giu[0].fileId === 'x1');
+  kiem('z1 ve 0', demCanBot_(trangCon) === 0);
+  var hangCo = hangBridge.concat([{row: 5, ten: 'BG26-002.xlsx', trangThai: 'Chờ bot', fileId: 'b2', loai: 'BG'}]);
+  var donCo = tachDongKhongPhaiChungTu_(hangCo);
+  var trangCo = [];
+  for (ib = 0; ib < donCo.giu.length; ib++) trangCo.push(donCo.giu[ib].trangThai);
+  kiem('z1 con chung tu', demCanBot_(trangCo) === 1 && donCo.giu.length === 2);
+  var dotSau = xuLyDotQuet_(donBridge.giu, bridge.duaVao ? [bridge] : [], null);
+  kiem('khong them lai bridge', bridge.duaVao === false && dotSau.them.length === 0 && dotSau.sua.length === 0);
 
   var qMoi = truyVanFileMoi_('folderA', '2026-10-22T00:00:00.000Z');
   kiem('query or', qMoi.indexOf("modifiedTime > '2026-10-22T00:00:00.000Z'") >= 0 && qMoi.indexOf("createdTime > '2026-10-22T00:00:00.000Z'") >= 0 && qMoi.indexOf(' or ') >= 0);

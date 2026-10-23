@@ -3,6 +3,7 @@
  * Chưa có mốc, hoặc mốc đã nằm trong ngày: quét từ đầu ngày giờ Việt Nam, không kéo các ngày trước.
  * Gmail lần đầu vẫn chỉ đặt mốc.
  * Quá 400 file: xử lý phần cũ nhất, dời mốc bằng mocKeTiep_, ghi LỖI lên CN_SucKhoe.
+ * Cuối lượt xóa dòng tên thuộc TEN_FILE_KHONG_PHAI_CHUNG_TU rồi đếm lại Z1.
  */
 
 function damBaoHangDoi_(ss) {
@@ -217,7 +218,9 @@ function quetChungTu_() {
     var driveChon = [];
     var mocDriveMoi = qdDrive.mocLuu;
     var chuDrive = 'Mốc Drive ' + mocDriveMoi;
-    var hangCu = docHangDoi_(sh);
+    var hangDay = docHangDoi_(sh);
+    var donRac = tachDongKhongPhaiChungTu_(hangDay);
+    var hangCu = donRac.giu;
     var ketDrive = quetDriveTheoCay_(cfg, qdDrive.mocQuery);
     var tach = tachChuaCo_(ketDrive.items, hangCu);
     var cat = catLuotQuet_(tach.chua, 400);
@@ -280,6 +283,7 @@ function quetChungTu_() {
     var dot = xuLyDotQuet_(hangCu, driveChon.concat(gmailChon), chiMuc, cfg);
     capNhatHang_(sh, dot.sua, hien);
     ghiHangMoi_(sh, dot.them, hien);
+    xoaCacDong_(sh, donRac.xoa);
     var i;
     for (i = 0; i < loiQuet.length; i++) ghiLoiQuet_(ss, cfg, loiQuet[i]);
     capNhatODem_(ss);
