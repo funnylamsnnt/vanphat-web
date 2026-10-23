@@ -38,7 +38,8 @@
       "emptyMessage": "Bánh đang cập nhật — liên hệ để đặt trước",
       "nhomIds": [
         "nuoc-uong",
-        "banh"
+        "banh",
+        "tp-khac"
       ]
     },
     {
@@ -128,6 +129,16 @@
       "visible": true,
       "placeholder": true,
       "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    },
+    {
+      "id": "tp-khac",
+      "STT": 1000,
+      "TenNhom": "TP Khác",
+      "slug": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "moTa": "Thực phẩm khác: kẹo, snack, mì/phở gói.",
+      "autoPlaced": true
     }
   ],
   "sanpham": [
@@ -256,7 +267,7 @@
       "dvt": "Ram",
       "gia": 69000,
       "anh": "https://lh3.googleusercontent.com/d/16OVwFlUO-TrYTNHbAqiBvffc9gfPhyDd",
-      "ton": 483,
+      "ton": 603,
       "thuongHieu": "IK Plus"
     },
     {
@@ -319,7 +330,7 @@
       "dvt": "Ram",
       "gia": 69000,
       "anh": "https://lh3.googleusercontent.com/d/1dJmTpg1hEnahXy5jyJktYmWB4DCs7nkA",
-      "ton": 140,
+      "ton": 200,
       "thuongHieu": "Supreme"
     },
     {
@@ -826,7 +837,7 @@
       "dvt": "Cái",
       "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1_RhuI5cowUorF-4ZCCK1TKM8ZswOaCb2",
-      "ton": 0,
+      "ton": 3,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -865,7 +876,7 @@
       "dvt": "Cái",
       "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1T9R61tmEmHa90JQ3_bK0fR1GjebfZ-0T",
-      "ton": 0,
+      "ton": 3,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -878,7 +889,7 @@
       "dvt": "Cái",
       "gia": 64000,
       "anh": "https://lh3.googleusercontent.com/d/14eGkYHgb72IXkHgN7EW3074-O8rthe6o",
-      "ton": 60,
+      "ton": 180,
       "thuongHieu": "PLUS"
     },
     {
@@ -891,7 +902,7 @@
       "dvt": "Cái",
       "gia": 75000,
       "anh": "https://lh3.googleusercontent.com/d/1MYn6dugvmLXWoeABHpdmBz4wU_R6DkAJ",
-      "ton": 0,
+      "ton": 3,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1094,7 +1105,7 @@
       "dvt": "Xấp",
       "gia": 39000,
       "anh": "https://lh3.googleusercontent.com/d/1kz1k9PMThs5vw5nzM5gIiQAnzhRckqAQ",
-      "ton": 40,
+      "ton": 50,
       "quyCach": "100 cái/xấp"
     },
     {
@@ -1206,7 +1217,7 @@
       "dvt": "Cái",
       "gia": 3500,
       "anh": "https://lh3.googleusercontent.com/d/1paK6cPDuPLiQ4wHMPrwKwCpmkI3ZN-Km",
-      "ton": 960
+      "ton": 1560
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1494,7 +1505,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
-      "ton": 60,
+      "ton": 160,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1533,7 +1544,7 @@
       "dvt": "Cây",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
-      "ton": 374,
+      "ton": 389,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1648,7 +1659,7 @@
       "ma": "VP131",
       "ten": "Bút dạ quang FO-HL03",
       "dvt": "Cây",
-      "gia": 8500,
+      "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1pkSwtnBGwdbryCjlQ4DSr4n6djjUtM3Y",
       "ton": 50,
       "thuongHieu": "FlexOffice"
@@ -1674,7 +1685,7 @@
       "ma": "VP133",
       "ten": "Bút dạ quang FO-HL01/VN",
       "dvt": "Cây",
-      "gia": 8500,
+      "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1sRLd5zbzjzlt45EMpcPuzR4mT6YpICYU",
       "ton": 150,
       "thuongHieu": "Thiên Long"
@@ -1781,7 +1792,7 @@
       "dvt": "Cây",
       "gia": 8500,
       "anh": "https://lh3.googleusercontent.com/d/10H8aDbzBpEjQHX46LU7SiQlI83za-sdN",
-      "ton": 100,
+      "ton": 200,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1807,7 +1818,7 @@
       "dvt": "Cây",
       "gia": 8500,
       "anh": "https://lh3.googleusercontent.com/d/1jPvamqc_maSvhdhR4xA8kkh34SV-Tfi7",
-      "ton": 210,
+      "ton": 930,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1832,7 +1843,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
-      "ton": 100,
+      "ton": 820,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1871,7 +1882,7 @@
       "dvt": "Cây",
       "gia": 9500,
       "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
-      "ton": 150,
+      "ton": 870,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1962,7 +1973,7 @@
       "dvt": "Cây",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1uKutKE8xEsFxMGyjZMOgqZw57yfE41WZ",
-      "ton": 100,
+      "ton": 480,
       "thuongHieu": "Thiên Long",
       "quyCach": "10 cây/hộp"
     },
@@ -2190,6 +2201,66 @@
       "dvt": "Cây",
       "gia": 4000,
       "anh": "https://lh3.googleusercontent.com/d/1XJ-NB-DYaycJH2bD7Oy-0RYYdFC0BKmW",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP525",
+      "ten": "Bút lông bảng TP-WB016-DO (Xanh hộp 10)",
+      "dvt": "Cây",
+      "gia": 8500,
+      "anh": "https://lh3.googleusercontent.com/d/1PT_faGMNTIPdn-gAGsb0gUWSSMxwzB_d",
+      "ton": 100
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP526",
+      "ten": "Bút lông dầu TL PM04 (Đen)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
+      "ton": 100
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP527",
+      "ten": "Bút bi Thiên Long TL-105 (Xanh)",
+      "dvt": "Cây",
+      "gia": 5500,
+      "anh": "https://lh3.googleusercontent.com/d/1rJbwVPdvjk1GMidZutvX1MFTd8KYNmMq",
+      "ton": 300
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP528",
+      "ten": "Bút bi Thiên Long TL-105 (Đỏ)",
+      "dvt": "Cây",
+      "gia": 5500,
+      "anh": "https://lh3.googleusercontent.com/d/16rZHqGjl5cYGZomguSDfGxTUdq1N2SCW",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP529",
+      "ten": "Bút bi Thiên Long TL-105 (Đen)",
+      "dvt": "Cây",
+      "gia": 5500,
+      "anh": "https://lh3.googleusercontent.com/d/1D9uD3lXNjOSb7_vmy3G7RsTWihx2BPYR",
       "ton": 0
     },
     {
@@ -3097,7 +3168,7 @@
       "ma": "VP164",
       "ten": "Cắm bút sắt tròn (đen)",
       "dvt": "Cái",
-      "gia": 38000,
+      "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1gASeQY1GuPPuagv1iw6WwnMwQzIJ_REk",
       "ton": 29
     },
@@ -3636,7 +3707,7 @@
       "dvt": "Viên",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1_gv_mCikMG-r-RNyi4XPvp4gDZiTXdhe",
-      "ton": 0,
+      "ton": 60,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -3956,7 +4027,7 @@
       "ma": "VP285",
       "ten": "Kẹp bướm 32mm Slecho",
       "dvt": "Hộp",
-      "gia": 17000,
+      "gia": 14000,
       "anh": "",
       "ton": 0
     },
@@ -5042,7 +5113,7 @@
       "dvt": "Xấp",
       "gia": 128000,
       "anh": "https://lh3.googleusercontent.com/d/1nybnDrXtSbbajpB33g6JNrYzTypvXCR6",
-      "ton": 0,
+      "ton": 3,
       "quyCach": "100 tờ/xấp"
     },
     {
@@ -5055,7 +5126,7 @@
       "dvt": "Xấp",
       "gia": 235000,
       "anh": "https://lh3.googleusercontent.com/d/1kB7bBHw2L4olJANZwuZZNRvnFw3NHRae",
-      "ton": 0,
+      "ton": 2,
       "quyCach": "100 tờ/xấp"
     },
     {
@@ -6017,6 +6088,294 @@
       "anh": "https://lh3.googleusercontent.com/d/1i9V3kPYjCq4YRj7j1xIMixmbGPKaRtbN",
       "ton": 24,
       "thuongHieu": "Red Bull"
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP501",
+      "ten": "Nước sâm C2",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": -1
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP502",
+      "ten": "Nước sữa dâu Twister 320ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP503",
+      "ten": "Nước trái cây sữa juicy milk vị cam 330ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP512",
+      "ten": "TH True Tea trà xanh vị chanh Tự Nhiên ( Chai 350ml)",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP513",
+      "ten": "TH True Tea Trà ổi (Chai 350ml)",
+      "dvt": "Chai",
+      "gia": 9000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP519",
+      "ten": "Nước suối Lavie vị dịu nhẹ 500ml",
+      "dvt": "Chai",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP520",
+      "ten": "Nước suối Lavie ion kiềm 500ml",
+      "dvt": "Chai",
+      "gia": 6000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP524",
+      "ten": "Chanh muối Đảnh Thạnh chai 430ml",
+      "dvt": "Chai",
+      "gia": 8000,
+      "anh": "",
+      "ton": -1
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP504",
+      "ten": "Kẹo gum Xylitol (Hương Lime Mint)",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP505",
+      "ten": "Kẹo cao su Xylitol dâu 58GR",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP506",
+      "ten": "Kẹo gum không đường Lotte Xylitol Super Cool",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP507",
+      "ten": "Bánh Lát khoai Tây Slide (Vị Potato Crisps)",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP508",
+      "ten": "Bánh Lát khoai Tây Slide (Vị nguyên bản)",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP509",
+      "ten": "Khoai Tây Lát Slide sour vị hành 75GR",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP510",
+      "ten": "Oishi tôm cay nồng 70g",
+      "dvt": "Bịch",
+      "gia": 0,
+      "anh": "",
+      "ton": -1
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP511",
+      "ten": "Kẹo ngậm Mentos đào Bạc Hà",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP514",
+      "ten": "Phở bò Đệ Nhất",
+      "dvt": "Gói",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP515",
+      "ten": "Phở trộn Đệ Nhất vị thập cẩm cay 82g",
+      "dvt": "Gói",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP516",
+      "ten": "Vifon phở trộn hải sản long triều 75g",
+      "dvt": "Gói",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP517",
+      "ten": "Mì trôn Koreno tokboki",
+      "dvt": "Gói",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP518",
+      "ten": "Phở bò Gấu Đỏ",
+      "dvt": "Gói",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP521",
+      "ten": "Bánh gạo An vị tảo biển",
+      "dvt": "Bịch",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP522",
+      "ten": "Khoai Tây chiên Pringles Original 42g",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP523",
+      "ten": "Kẹo ngậm Mentos Hương đào Bạc Hà 17,5g",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
     }
   ],
   "hotline": "033 5652 832",

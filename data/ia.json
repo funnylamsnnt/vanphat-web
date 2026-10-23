@@ -1,5 +1,7 @@
 {
-  "excludeGroups": ["Không đưa lên web"],
+  "excludeGroups": [
+    "Không đưa lên web"
+  ],
   "excludeGroupsNote": "Nhóm Hàng trong Excel nguồn khớp (không phân biệt hoa/thường, dấu, khoảng trắng) với một mục ở đây sẽ KHÔNG bao giờ lên web (products.json, trang SP, trang nhóm/lĩnh vực, tìm kiếm, sitemap). Form Đơn Đặt Hàng LIVE không áp dụng.",
   "holdUnmappedGroups": true,
   "holdUnmappedGroupsNote": "Chỉ giữ ngoài web ô Nhóm trống và nhãn Khác. Nhóm có tên chưa có trong file này do script sync tự xếp vào lĩnh vực khớp nhất, ghi vào đây, và phát hành. Không nhét vào Dụng cụ VP.",
@@ -15,7 +17,13 @@
       "visible": true,
       "browseMode": "group-images",
       "moTa": "Giấy, bìa, bút mực, băng keo và dụng cụ văn phòng",
-      "nhomIds": ["giay", "bia-ho-so", "but-muc", "bang-keo", "dung-cu-vp"]
+      "nhomIds": [
+        "giay",
+        "bia-ho-so",
+        "but-muc",
+        "bang-keo",
+        "dung-cu-vp"
+      ]
     },
     {
       "id": "nuoc-banh",
@@ -27,7 +35,11 @@
       "browseMode": "product-images",
       "moTa": "Nước suối, nước ngọt và bánh cho văn phòng",
       "emptyMessage": "Bánh đang cập nhật — liên hệ để đặt trước",
-      "nhomIds": ["nuoc-uong", "banh"]
+      "nhomIds": [
+        "nuoc-uong",
+        "banh",
+        "tp-khac"
+      ]
     },
     {
       "id": "dien-gia-dung",
@@ -38,7 +50,9 @@
       "visible": true,
       "browseMode": "group-images",
       "moTa": "Ổ cắm, dây điện và thiết bị điện văn phòng",
-      "nhomIds": ["dien"]
+      "nhomIds": [
+        "dien"
+      ]
     }
   ],
   "nhom": [
@@ -114,6 +128,16 @@
       "visible": true,
       "placeholder": true,
       "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    },
+    {
+      "id": "tp-khac",
+      "STT": 1000,
+      "TenNhom": "TP Khác",
+      "slug": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "moTa": "Thực phẩm khác: kẹo, snack, mì/phở gói.",
+      "autoPlaced": true
     }
   ]
 }
