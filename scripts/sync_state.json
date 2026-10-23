@@ -2,12 +2,12 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-19T08:09:17.071Z",
-  "previousModifiedTime": "2026-10-18T05:24:06.731Z",
+  "lastModifiedTime": "2026-10-22T14:13:51.468Z",
+  "previousModifiedTime": "2026-10-19T08:09:17.071Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-19T23:25:00Z",
+  "lastSyncAt": "2026-10-23T01:20:00Z",
   "lastSyncResult": {
     "changed": true,
     "source_count": 500,
@@ -153,8 +153,8 @@
     "excluded_note": "34 mã nhóm Không đưa lên web, không mã nào mới bị gỡ khỏi web"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-19T23:25:00Z",
-  "lastCheckResult": "Excel 2026-10-19T08:09Z: 10 giá đổi, 0 mã thêm/gỡ, 0 slug đổi. Cầu nối chưa refresh.",
+  "lastCheckAt": "2026-10-23T01:20:00Z",
+  "lastCheckResult": "Excel 2026-10-22T14:13Z synced to web (commit 6799999) + bridge refreshed 529 rows 08:15 ICT",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "webSync_20261016_1414": {
@@ -374,10 +374,10 @@
     "bridge": "OK 14:22 ICT, 500 rows verified"
   },
   "bridge": {
-    "lastRefreshAt": "2026-10-18 14:22 ICT",
-    "sourceModifiedTime": "2026-10-18T05:24:06.731Z",
-    "bridgeLiveModifiedTime": "2026-10-18T07:21:54.039Z",
-    "rows_verified": "Drive export 500 == source 500, 0 cell mismatches A–F, VP500 last, VP415 kept, tab Chính Sách Đối Tác kept",
+    "lastRefreshAt": "2026-10-23 08:15 ICT",
+    "sourceModifiedTime": "2026-10-22T14:13:51.468Z",
+    "bridgeLiveModifiedTime": "2026-10-23T01:15:42.319Z",
+    "rows_verified": "Drive export 529 == source 529, 0 cell mismatches A–F, VP529 last, tab Chính Sách Đối Tác kept",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx"
   },
   "webSync_20261019": {
@@ -467,5 +467,43 @@
     "heldUnmappedGroups": {},
     "excluded": "VP415–VP448 (34)",
     "bridge": "not refreshed by Cursor"
+  },
+  "webSync_20261023_0810": {
+    "sourceModifiedTime": "2026-10-22T14:13:51.468Z",
+    "commit": "6799999be8e1fcf8d1e427c08844ca5da3dd3175",
+    "pages_run": 39882658776,
+    "pages_status": "success",
+    "count": 495,
+    "with_img": 385,
+    "source_count": 529,
+    "added": "VP501–VP529",
+    "price_chg": [
+      [
+        "VP131",
+        8500,
+        8000
+      ],
+      [
+        "VP133",
+        8500,
+        8000
+      ],
+      [
+        "VP164",
+        38000,
+        48000
+      ],
+      [
+        "VP285",
+        17000,
+        14000
+      ]
+    ],
+    "slug_chg": [],
+    "newGroup": "TP Khác (16 mã VP504–VP511,VP514–VP518,VP521–VP523) script tự xếp vpp → bot chuyển sang nuoc-banh trong data/ia.json",
+    "zeroPrice_count": 38,
+    "broken_images": [],
+    "live_check": "products.json 495; / san-pham 3 linh-vuc nhom-tp-khac 200; VP501/504/525/529/131/164/285 200+lightbox; VP415 404; sitemap 524, 0 excluded; 385 images all 200",
+    "bridge": "OK 08:15 ICT, 529 rows verified"
   }
 }
