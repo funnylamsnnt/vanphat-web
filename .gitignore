@@ -1,1 +1,7 @@
 __pycache__/
+
+# Chuông QLVB: baseline và cookie không vào git
+/qlvb-bell-baseline.json
+qlvb-bell-baseline.json
+tools/qlvb-chuong/*.cookie
+tools/qlvb-chuong/cookies.txt
