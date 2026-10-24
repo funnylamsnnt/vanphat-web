@@ -208,31 +208,55 @@ function apDungKeHoach_(ss, keHoach) {
       dem.xoa++;
     });
     theo[ten].them.forEach(function (dong) {
-      var last = sh.getLastRow();
-      var dest = last + 1;
+      var soCot = sh.getLastColumn ? sh.getLastColumn() : 20;
+      if (soCot < 1) soCot = 1;
+      var header = sh.getRange(1, 1, 1, soCot).getValues()[0];
+      function idxCot(tenCot) {
+        var c;
+        for (c = 0; c < header.length; c++) if (chuanTieuDe_(header[c]) === chuanTieuDe_(tenCot)) return c;
+        return -1;
+      }
+      var khoaIdx = (cfg.khoa || []).map(idxCot).filter(function (x) { return x >= 0; });
+      var dest = dongTrongDauTien_(sh, Object.keys(dong.cells || {}).map(Number).concat(khoaIdx));
+      var last = dest - 1;
       Object.keys(dong.cells || {}).forEach(function (ck) {
         sh.getRange(dest, (+ck) + 1).setValue(dong.cells[ck]);
       });
-      if (cfg.cotCongThuc && last >= 2) {
-        var soCot = sh.getLastColumn ? sh.getLastColumn() : 20;
-        if (soCot < 1) soCot = 1;
-        var header = sh.getRange(1, 1, 1, soCot).getValues()[0];
-        cfg.cotCongThuc.forEach(function (tenCot) {
-          var idx = -1;
-          var c;
-          for (c = 0; c < header.length; c++) {
-            if (chuanTieuDe_(header[c]) === chuanTieuDe_(tenCot)) idx = c;
-          }
+      if (last >= 2) {
+        (cfg.cotCongThuc || []).concat(cfg.khoa || []).forEach(function (tenCot) {
+          var idx = idxCot(tenCot);
           if (idx < 0) return;
+          var oDich = sh.getRange(dest, idx + 1);
+          if (oDich.getFormula()) return;
           var f2 = sh.getRange(last, idx + 1).getFormula ? sh.getRange(last, idx + 1).getFormula() : '';
-          if (!f2) return;
-          sh.getRange(dest, idx + 1).setFormula(dieuChinhCongThuc_(f2, last, dest));
+          if (f2) { oDich.setFormula(dieuChinhCongThuc_(f2, last, dest)); return; }
+          if ((cfg.khoa || []).indexOf(tenCot) >= 0 && dong.khoa && (oDich.getValue() === '' || oDich.getValue() == null)) {
+            oDich.setValue(String(dong.khoa).split('#')[0]);
+          }
         });
       }
       dem.them++;
     });
   });
   return dem;
+}
+
+// Dòng trống đầu tiên sau dòng cuối có GIÁ TRỊ ở các cột dữ liệu (bỏ qua cột chỉ có
+// công thức kéo sẵn). Không dùng getLastRow(): tab Danh Mục có công thức G–M kéo tới
+// ~9985 nên getLastRow() trả 9985 và dòng mới rơi xuống cuối, mất Mã SP (lỗi 24/10).
+function dongTrongDauTien_(sh, cols) {
+  var lastR = sh.getLastRow();
+  if (lastR < 1) return 1;
+  var ds = (cols || []).filter(function (c) { return c >= 0; });
+  if (!ds.length) return lastR + 1;
+  var maxC = Math.max.apply(null, ds) + 1;
+  var vals = sh.getRange(1, 1, lastR, maxC).getValues();
+  var r;
+  for (r = vals.length - 1; r >= 0; r--) {
+    var co = ds.some(function (c) { var v = vals[r][c]; return v !== '' && v != null; });
+    if (co) return r + 2;
+  }
+  return 2;
 }
 
 function damBaoTab_(ss, ten, cot) {
@@ -474,8 +498,8 @@ function chayDongBo() {
 
 function caiTriggerDongBo() {
   goTriggerDongBo();
-  ScriptApp.newTrigger(HANDLER_DONG_BO).timeBased().everyMinutes(15).create();
-  return 'Đã gắn 1 trigger ' + HANDLER_DONG_BO + ' mỗi 15 phút. Gỡ trigger xuatBaoGiaTheoGio trong project VanPhat Xuat Excel trước khi để lịch này chạy.';
+  ScriptApp.newTrigger(HANDLER_DONG_BO).timeBased().everyMinutes(30).create();
+  return 'Đã gắn 1 trigger ' + HANDLER_DONG_BO + ' mỗi 30 phút. Gỡ trigger xuatBaoGiaTheoGio trong project VanPhat Xuat Excel trước khi để lịch này chạy.';
 }
 
 function goTriggerDongBo() {

@@ -894,6 +894,36 @@ test('áp dụng bỏ ô công thức và chép công thức sang dòng mới', 
   assert.deepEqual(xoa._deleted, [4, 2]);
 });
 
+test('thêm dòng từ Excel vào dòng trống sau dữ liệu, không xuống cuối vùng công thức (VP530/531)', function () {
+  var tieuDe = context.timCauHinh_(DM).tieuDe.slice();
+  var n = tieuDe.length;
+  function hang(vals) { var r = []; var i; for (i = 0; i < n; i++) r.push(vals[i] == null ? '' : vals[i]); return r; }
+  function fHang(rr, coMa) {
+    var f = []; var i; for (i = 0; i < n; i++) f.push('');
+    if (coMa) f[1] = '=IF(C' + rr + '="","","VP"&TEXT(ROW()-1,"000"))';
+    f[6] = '=IF($B' + rr + '="","",1)';
+    return f;
+  }
+  var data = [tieuDe, hang(['Bút', 'VP001', 'But', 'Cây', 5500]), hang([]), hang([]), hang([]), hang([])];
+  var forms = [tieuDe.map(function () { return ''; }), fHang(2, true), fHang(3, true), fHang(4, false), fHang(5, false), fHang(6, false)];
+  var sh = taoSheetNho(DM, data, forms);
+  assert.equal(sh.getLastRow(), 6);
+  var ss = { getSheetByName: function (ten) { return ten === DM ? sh : null; } };
+  context.apDungKeHoach_(ss, {
+    ghiSheet: [],
+    themDong: [
+      { tab: DM, khoa: 'VP002', cells: { 0: 'Dụng cụ VP', 2: 'Dập ghim', 3: 'Cái', 4: 500000 } },
+      { tab: DM, khoa: 'VP003', cells: { 0: 'Không đưa lên web', 2: 'Phụ thu', 3: 'PT', 4: 500000 } }
+    ],
+    xoaDong: []
+  });
+  assert.equal(sh.getRange(3, 3).getValue(), 'Dập ghim');
+  assert.match(sh._forms[2][1], /ROW\(\)-1/);
+  assert.equal(sh.getRange(4, 3).getValue(), 'Phụ thu');
+  assert.match(sh._forms[3][1], /C4/);
+  assert.equal(sh.getRange(7, 3).getValue(), '');
+});
+
 test('nhật ký bỏ tab Gemini và trigger chỉ gỡ handler đồng bộ', function () {
   var tabs = {};
   var ss = {
@@ -943,7 +973,7 @@ test('nhật ký bỏ tab Gemini và trigger chỉ gỡ handler đồng bộ', f
   context.goTriggerDongBo();
   assert.deepEqual(deleted, ['dongBoHaiChieu']);
   context.caiTriggerDongBo();
-  assert.deepEqual(created, ['dongBoHaiChieu:15']);
+  assert.deepEqual(created, ['dongBoHaiChieu:30']);
   assert.equal(deleted.includes('viecKhac'), false);
 });
 
