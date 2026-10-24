@@ -321,7 +321,8 @@ function capNhatSnapshotThat_(blob, snapId) {
 
 function tepBlob_(blob) {
   var nguon = blob && typeof blob.getBlob === 'function' ? blob.getBlob() : blob;
-  var parts = Utilities.unzip(nguon);
+  // Utilities.unzip chỉ nhận blob kiểu application/zip; dùng bản sao để không đổi blob gốc.
+  var parts = Utilities.unzip(nguon.copyBlob().setContentType('application/zip'));
   var map = {};
   var i;
   for (i = 0; i < parts.length; i++) map[parts[i].getName()] = parts[i];
