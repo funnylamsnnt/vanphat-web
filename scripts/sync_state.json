@@ -2,8 +2,8 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-22T14:13:51.468Z",
-  "previousModifiedTime": "2026-10-19T08:09:17.071Z",
+  "lastModifiedTime": "2026-10-24T01:19:46.631Z",
+  "previousModifiedTime": "2026-10-22T14:13:51.468Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
@@ -153,8 +153,8 @@
     "excluded_note": "34 mã nhóm Không đưa lên web, không mã nào mới bị gỡ khỏi web"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-23T01:20:00Z",
-  "lastCheckResult": "Excel 2026-10-22T14:13Z synced to web (commit 6799999) + bridge refreshed 529 rows 08:15 ICT",
+  "lastCheckAt": "2026-10-24T01:25:00Z",
+  "lastCheckResult": "08:2x ICT 24/10: Sheet 01:13Z newer than export -> ran server export (Excel v1229, md5 05c75b59). Sync script: changed=false (495 SKU, 385 img, 38 gia 0, 0 price/slug change). No commit/deploy. LIVE bridge compared via Drive export: 529==529 rows, 0 mismatches A-F, no import needed.",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "webSync_20261016_1414": {
@@ -375,10 +375,11 @@
   },
   "bridge": {
     "lastRefreshAt": "2026-10-23 08:15 ICT",
-    "sourceModifiedTime": "2026-10-22T14:13:51.468Z",
+    "sourceModifiedTime": "2026-10-24T01:19:46.631Z",
     "bridgeLiveModifiedTime": "2026-10-23T01:15:42.319Z",
-    "rows_verified": "Drive export 529 == source 529, 0 cell mismatches A–F, VP529 last, tab Chính Sách Đối Tác kept",
-    "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx"
+    "rows_verified": "529 == 529, 0 mismatches A–F (verified, no import needed 24/10 08:25)",
+    "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
+    "lastVerifiedAt": "2026-10-24 08:25 ICT"
   },
   "webSync_20261019": {
     "sourceModifiedTime": "2026-10-19T08:09:17.071Z",

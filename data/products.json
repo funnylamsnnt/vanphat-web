@@ -978,7 +978,7 @@
       "ma": "VP079",
       "ten": "Bìa hộp A4 150mm FO-BF05",
       "dvt": "Cái",
-      "gia": 88000,
+      "gia": 96000,
       "anh": "https://lh3.googleusercontent.com/d/1P96_uWNRN5bsdSbkCpEJeJEDHKJl38lE",
       "ton": 10,
       "thuongHieu": "FlexOffice"
@@ -989,10 +989,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP080",
-      "ten": "Bìa hộp si 10F Thành Phát",
+      "ten": "Bìa hộp A4 100mm FO-BF03",
       "dvt": "Cái",
-      "gia": 60000,
-      "anh": "",
+      "gia": 88000,
+      "anh": "https://lh3.googleusercontent.com/d/1LvB_VjcJ8ODkRMuIRIG1MMKNjBve6p_d",
       "ton": 0
     },
     {
@@ -1201,10 +1201,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP097",
-      "ten": "Bìa nút",
-      "dvt": "Cái",
-      "gia": 4000,
-      "anh": "",
+      "ten": "Bìa phân trang nhựa A4 (12 màu 12 số)",
+      "dvt": "Xấp",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1qDKswYt1FNMnSFKyn0DhvKCagzRGtpp3",
       "ton": 0
     },
     {
@@ -1239,8 +1239,8 @@
       "ma": "VP100",
       "ten": "Bìa thái A3 Màu",
       "dvt": "Xấp",
-      "gia": 75000,
-      "anh": "",
+      "gia": 79000,
+      "anh": "https://lh3.googleusercontent.com/d/1-prUgea3hrlKn1NH6cMDb4ckFTXnF18u",
       "ton": 0
     },
     {
@@ -2965,9 +2965,9 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP023",
-      "ten": "Bâm lỗ Trio 952",
+      "ten": "Bấm lỗ Trio 952",
       "dvt": "Cái",
-      "gia": 1650000,
+      "gia": 1330000,
       "anh": "https://lh3.googleusercontent.com/d/1ToNcerXHPlUBw7xyv_m-OezjoE4q3CSl",
       "ton": 0,
       "thuongHieu": "KW-triO"
@@ -5190,6 +5190,18 @@
       "gia": 3500,
       "anh": "https://lh3.googleusercontent.com/d/1LYWv9VqHdzwXs2NthOQWUmnn-F_Rb_25",
       "ton": 120
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP530",
+      "ten": "Dập Ghim Đại - Deli 0394 (80 Tờ-100pcs)",
+      "dvt": "Cái",
+      "gia": 500000,
+      "anh": "https://lh3.googleusercontent.com/d/1efeAUW09i-SYKznANX2scRm37VifYm1p",
+      "ton": 0
     },
     {
       "nhom": "Điện",
