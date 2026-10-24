@@ -59,11 +59,17 @@ var GHEP_DA_PDF = 'đã ghép PDF mộc đỏ';
 var KY_HIEU_HD_MAC_DINH = '1?C26TNT_\\d+';
 
 // Tên file nội bộ không phải chứng từ khách. Thêm cụm vào mảng này là đủ, không cần sửa CONFIG.
-// Khớp không phân biệt hoa thường, dấu, khoảng trắng, gạch dưới hay gạch nối.
+// Cụm thường: khớp mọi chỗ trong tên, không phân biệt hoa thường, dấu, khoảng trắng hay gạch.
+// Cụm kết thúc bằng _: tiền tố, ví dụ TMP_ chỉ khớp tên bắt đầu bằng TMP_.
 var TEN_FILE_KHONG_PHAI_CHUNG_TU = [
   'LIVE_BRIDGE',
-  'DanhMuc'
+  'DanhMuc',
+  'TMP_'
 ];
+
+var THU_MUC_TAM_GIA_VON = 'CN_TMP_GiaVon';
+var TIEN_TO_FILE_TAM_GIA_VON = 'TMP_GiaVon_';
+var HAN_GIU_FILE_TAM_MS = 2 * 60 * 1000;
 
 var CONFIG_MAC_DINH = {
   DRIVE_FOLDER_ID: '1KAyFZVJJCqu92Swk5JgX15YY0fZDpdrl',
@@ -495,14 +501,73 @@ function gonTenFile_(s) {
 }
 
 function laTenKhongPhaiChungTu_(ten) {
-  var n = gonTenFile_(ten);
-  if (!n) return false;
+  var gon = gonTenFile_(ten);
+  var thuong = chuanHoa_(ten);
+  if (!gon && !thuong) return false;
   var i;
   for (i = 0; i < TEN_FILE_KHONG_PHAI_CHUNG_TU.length; i++) {
-    var cum = gonTenFile_(TEN_FILE_KHONG_PHAI_CHUNG_TU[i]);
-    if (cum && n.indexOf(cum) >= 0) return true;
+    var goc = String(TEN_FILE_KHONG_PHAI_CHUNG_TU[i] || '');
+    if (/_$/.test(goc)) {
+      var tien = chuanHoa_(goc);
+      if (tien && thuong.indexOf(tien) === 0) return true;
+      continue;
+    }
+    var cum = gonTenFile_(goc);
+    if (cum && gon.indexOf(cum) >= 0) return true;
   }
   return false;
+}
+
+function tenFileTamGiaVon_(luc) {
+  return TIEN_TO_FILE_TAM_GIA_VON + String(luc == null ? '' : luc);
+}
+
+function laFileTamGiaVon_(ten) {
+  var n = chuanHoa_(ten);
+  var tien = chuanHoa_(TIEN_TO_FILE_TAM_GIA_VON);
+  return !!tien && n.indexOf(tien) === 0;
+}
+
+function thuMucFileTamGiaVon_() {
+  return THU_MUC_TAM_GIA_VON;
+}
+
+function laThuMucTamGiaVonHopLe_(ten, cfg) {
+  cfg = cfg || CONFIG_MAC_DINH;
+  return chuanHoa_(ten) === chuanHoa_(THU_MUC_TAM_GIA_VON) && !laThuMucBg_(ten, cfg);
+}
+
+function danhSachFileTamCanBo_(files, bayMs, hanMs) {
+  var han = hanMs == null ? HAN_GIU_FILE_TAM_MS : hanMs;
+  var bay = Number(bayMs);
+  var ra = [];
+  var i;
+  for (i = 0; i < (files || []).length; i++) {
+    var f = files[i];
+    if (!f || !laFileTamGiaVon_(f.name || f.ten)) continue;
+    var tao = new Date(f.createdTime || 0).getTime();
+    if (!(bay - tao >= han)) continue;
+    ra.push(f);
+  }
+  return ra;
+}
+
+function vongDoiFileTamGiaVon_(viec) {
+  var file = {
+    ten: tenFileTamGiaVon_(Date.now()),
+    thuMuc: thuMucFileTamGiaVon_(),
+    rac: false
+  };
+  var loi = '';
+  var ket = null;
+  try {
+    ket = viec(file);
+  } catch (e) {
+    loi = String(e && e.message ? e.message : e);
+  } finally {
+    file.rac = true;
+  }
+  return {file: file, loi: loi, ket: ket};
 }
 
 function tachDanhSach_(s, sep) {
@@ -2151,10 +2216,12 @@ function tuChayMau_() {
   kiem('ten danh muc', laTenKhongPhaiChungTu_('VP_DanhMuc_ban_nhap.xlsx') === true && laTenKhongPhaiChungTu_('Danh Mục giá.xlsx') === true);
   kiem('ten live cach', laTenKhongPhaiChungTu_('note LIVE-BRIDGE.pdf') === true && laTenKhongPhaiChungTu_('LIVE BRIDGE') === true);
   kiem('ten phieu that', laTenKhongPhaiChungTu_('PHIEU BAO GIA 02-10.xlsx') === false && laTenKhongPhaiChungTu_('scan-moc.pdf') === false);
+  kiem('tien to tmp', laTenKhongPhaiChungTu_('TMP_GiaVon_1792771240780') === true && laTenKhongPhaiChungTu_('tmp_giavon_1.xlsx') === true && laFileTamGiaVon_('TMP_GiaVon_1792771240780') === true);
+  kiem('khong nham tmp', laTenKhongPhaiChungTu_('PHIEU TMP_GiaVon.xlsx') === false && laTenKhongPhaiChungTu_('tempting.xlsx') === false && laFileTamGiaVon_('PHIEU GIAO PG0710.xlsx') === false);
   TEN_FILE_KHONG_PHAI_CHUNG_TU.push('MAU_NOI_BO');
   var moRong = laTenKhongPhaiChungTu_('file MAU_NOI_BO.xlsx');
   TEN_FILE_KHONG_PHAI_CHUNG_TU.pop();
-  kiem('mo rong danh sach', moRong === true && laTenKhongPhaiChungTu_('file MAU_NOI_BO.xlsx') === false && TEN_FILE_KHONG_PHAI_CHUNG_TU.length === 2);
+  kiem('mo rong danh sach', moRong === true && laTenKhongPhaiChungTu_('file MAU_NOI_BO.xlsx') === false && TEN_FILE_KHONG_PHAI_CHUNG_TU.length === 3);
 
   var bridge = nhanDienTuCay_({
     id: 'f-bridge',
@@ -2243,6 +2310,43 @@ function tuChayMau_() {
   kiem('z1 con chung tu', demCanBot_(trangCo) === 1 && donCo.giu.length === 2);
   var dotSau = xuLyDotQuet_(donBridge.giu, bridge.duaVao ? [bridge] : [], null);
   kiem('khong them lai bridge', bridge.duaVao === false && dotSau.them.length === 0 && dotSau.sua.length === 0);
+
+  var tmpSheet = nhanDienTuCay_({
+    id: 'f-tmp-gv',
+    name: 'TMP_GiaVon_1792771240780',
+    mime: mimeSheet,
+    modifiedTime: '2026-10-23T16:01:00.000Z',
+    parents: ['BG']
+  }, 'R', cfg, cache, lay);
+  kiem('bo tmp giavon', tmpSheet.duaVao === false);
+  var tmpXlsx = nhanDienTuCay_({
+    id: 'f-tmp-xlsx',
+    name: 'TMP_GiaVon_1792771240780.xlsx',
+    mime: mimeXlsx,
+    modifiedTime: '2026-10-23T16:02:00.000Z',
+    parents: ['T']
+  }, 'R', cfg, cache, lay);
+  kiem('xlsx tmp bo', tmpXlsx.duaVao === false);
+  var hangTmp = [
+    {row: 2, ten: 'TMP_GiaVon_1792771240780', trangThai: 'Chờ bot', fileId: 'tmp1', loai: 'BG', thuMuc: '8. PHIẾU BÁO GIÁ'},
+    {row: 3, ten: 'PHIEU GIAO PG0710.xlsx', trangThai: 'Đã có trong sổ', fileId: 'x1', loai: 'PG'}
+  ];
+  var donTmp = tachDongKhongPhaiChungTu_(hangTmp);
+  var trangTmp = [];
+  for (ib = 0; ib < donTmp.giu.length; ib++) trangTmp.push(donTmp.giu[ib].trangThai);
+  kiem('xoa tmp', donTmp.xoa.length === 1 && donTmp.xoa[0].row === 2 && donTmp.giu.length === 1 && demCanBot_(trangTmp) === 0);
+  var bayTmp = Date.parse('2026-10-23T16:05:00.000Z');
+  var dsTam = danhSachFileTamCanBo_([
+    {id: 'cu', name: 'TMP_GiaVon_1', createdTime: '2026-10-23T16:01:00.000Z'},
+    {id: 'moi', name: 'TMP_GiaVon_2', createdTime: '2026-10-23T16:04:30.000Z'},
+    {id: 'phieu', name: 'PHIEU GIAO PG0710.xlsx', createdTime: '2026-10-23T16:00:00.000Z'}
+  ], bayTmp, HAN_GIU_FILE_TAM_MS);
+  kiem('chi file tam cu', dsTam.length === 1 && dsTam[0].id === 'cu');
+  var tamXong = vongDoiFileTamGiaVon_(function() { return 'doc-xong'; });
+  var tamLoi = vongDoiFileTamGiaVon_(function() { throw new Error('dut giua chung'); });
+  kiem('tam thu muc', laThuMucTamGiaVonHopLe_(tamXong.file.thuMuc, cfg) === true && laThuMucBg_(tamXong.file.thuMuc, cfg) === false && tamXong.file.thuMuc !== cfg.TEN_BG);
+  kiem('tam xong rac', tamXong.file.rac === true && tamXong.ket === 'doc-xong' && tamXong.loi === '' && laFileTamGiaVon_(tamXong.file.ten) === true);
+  kiem('tam loi van rac', tamLoi.file.rac === true && tamLoi.loi === 'dut giua chung' && laThuMucBg_(tamLoi.file.thuMuc, cfg) === false);
 
   var qMoi = truyVanFileMoi_('folderA', '2026-10-22T00:00:00.000Z');
   kiem('query or', qMoi.indexOf("modifiedTime > '2026-10-22T00:00:00.000Z'") >= 0 && qMoi.indexOf("createdTime > '2026-10-22T00:00:00.000Z'") >= 0 && qMoi.indexOf(' or ') >= 0);

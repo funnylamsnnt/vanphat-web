@@ -213,6 +213,11 @@ function quetChungTu_() {
     var hien = dinhDangLuc_(bay, cfg.TZ);
     var prop = PropertiesService.getScriptProperties();
     var loiQuet = [];
+    try {
+      donFileTamGiaVonLech_(bay.getTime());
+    } catch (eTam) {
+      loiQuet.push(dongBaoCao_('TMP_GIA_VON', 'CẢNH BÁO', 'Drive', String(eTam.message || eTam)));
+    }
 
     var qdDrive = mocQuetDrive_(prop.getProperty(KHOA_MOC_DRIVE) || '', iso);
     var driveChon = [];

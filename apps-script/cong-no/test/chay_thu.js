@@ -197,7 +197,11 @@ if (thanChung.indexOf('tachDongKhongPhaiChungTu_') > thanChung.indexOf('xuLyDotQ
 if (thanChung.lastIndexOf('xoaCacDong_') > thanChung.lastIndexOf('capNhatODem_(ss)')) leak.push('Z1 được đếm trước khi xóa dòng bridge');
 var ghiSrc = fs.readFileSync(path.join(root, 'Ghi.gs'), 'utf8');
 if (ghiSrc.indexOf('function xoaCacDong_') < 0 || ghiSrc.indexOf('.deleteRows(') < 0) leak.push('Ghi.gs thiếu xoaCacDong_');
-if (logic.indexOf('TEN_FILE_KHONG_PHAI_CHUNG_TU') < 0 || logic.indexOf('LIVE_BRIDGE') < 0 || logic.indexOf('DanhMuc') < 0) leak.push('Logic.gs thiếu danh sách loại trừ tên file');
+if (logic.indexOf('TEN_FILE_KHONG_PHAI_CHUNG_TU') < 0 || logic.indexOf('LIVE_BRIDGE') < 0 || logic.indexOf('DanhMuc') < 0 || logic.indexOf("'TMP_'") < 0) leak.push('Logic.gs thiếu danh sách loại trừ tên file');
+if (thanChung.indexOf('donFileTamGiaVonLech_') < 0) leak.push('quetChungTu_ không dọn file tạm giá vốn');
+if (gia.indexOf('function chayVoiFileTamGiaVon_') < 0 || gia.indexOf('finally') < 0 || gia.indexOf('trashed: true') < 0) leak.push('CN_GiaVon không trash file tạm trong finally');
+if (gia.indexOf('CN_TMP_GiaVon') < 0 && gia.indexOf('thuMucFileTamGiaVon_') < 0) leak.push('CN_GiaVon không tạo file tạm ở thư mục riêng');
+if (gia.indexOf("'root' in parents") < 0) leak.push('thư mục tạm không bị buộc nằm ở gốc Drive');
 var readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 ['Mã PG (khóa)', 'chưa có PDF mộc đỏ', '1?C26TNT_\\d+', 'C26TNT_00000021.pdf', 'Khách lẻ quen', 'KH007', 'Giá vốn BQ có VAT', 'createdTime', 'HangCho_File', 'không gộp', 'tatTriggerV6Drive_', 'CN_DoiSoat', '19:45', 'CN_GiaVon.gs', 'CN_HangDoi!Z1', 'CN_SucKhoe!D1'].forEach(function (cum) {
   if (readme.indexOf(cum) < 0) leak.push('README thiếu «' + cum + '»');
