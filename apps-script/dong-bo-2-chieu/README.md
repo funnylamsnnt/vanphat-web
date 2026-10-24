@@ -1,6 +1,6 @@
 # Apps Script đồng bộ hai chiều Excel ↔ Sheet giá
 
-Project độc lập, không gắn vào web `vanphatcompany.vn` và không phải web app. Script đối chiếu file Excel giá với Google Sheet giá mỗi 15 phút. Có sửa thì ghi Sheet trước, rồi xuất lại đúng file Excel đang có.
+Project độc lập, không gắn vào web `vanphatcompany.vn` và không phải web app. Script đối chiếu file Excel giá với Google Sheet giá mỗi 30 phút (trigger), trong khung lịch cho phép. Có sửa thì ghi Sheet trước, rồi xuất lại đúng file Excel đang có.
 
 Không gọi KiotViet. Chiều đẩy sang KiotViet, khi có, vẫn chỉ đọc Sheet. Không đụng API Kiot.
 
@@ -177,7 +177,7 @@ Advanced service: **Drive API**, phiên bản **v3**, mã định danh `Drive`.
 6. Chọn hàm `chayDryRun` → **Chạy** → xem lại quyền → cho phép. Đọc `LAST_RUN_JSON` như mục lượt chạy đầu. Không có revision Excel mới, không có sổ nhật ký mới.
 7. Khi tóm tắt đúng và anh muốn ghi thật: `DRY_RUN` = `false`, chạy `chayDongBo` một lần. Kiểm tra Excel vẫn đúng id và tên. Sổ `VanPhat SYNC Nhat Ky` có dòng log.
 8. Mở project **VanPhat Xuat Excel**, chạy `goTriggerXuatBaoGia`.
-9. Quay lại project này, chạy `caiTriggerDongBo`. Trigger: một dòng `dongBoHaiChieu`, mỗi 15 phút.
+9. Quay lại project này, chạy `caiTriggerDongBo`. Trigger: một dòng `dongBoHaiChieu`, mỗi 30 phút.
 
 Sửa code sau này: dán bản mới rồi lưu. Trigger giữ nguyên. Project này không triển khai dạng ứng dụng web.
 
