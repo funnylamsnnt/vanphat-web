@@ -1,5 +1,7 @@
 # Apps Script xuất Excel và khung hàng đợi KV
 
+> Từ 24/10/2026, lịch xuất giờ của project này được thay bằng đồng bộ hai chiều trong [`apps-script/dong-bo-2-chieu/`](../dong-bo-2-chieu/README.md). Trước khi gắn trigger mới, mở project **VanPhat Xuat Excel** và chạy `goTriggerXuatBaoGia`. Không để hai lịch cùng chạy. Phần KV_Queue giữ nguyên ở project này và vẫn chưa gọi KiotViet.
+
 Project độc lập, không gắn vào web `vanphatcompany.vn` và không phải web app. Có hai phần trong cùng một project Apps Script:
 
 - **A.** Tự xuất Google Sheet giá chính ra Excel bằng trigger thời gian, ghi revision mới vào đúng file đang có.
