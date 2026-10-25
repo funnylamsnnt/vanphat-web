@@ -26,11 +26,11 @@ function dinhDangSaigon_(date) {
 }
 
 function trongKhungLoaiTru_(gio, phut) {
-  if (phut < 5 || phut > 25) return false;
+  if (phut < 5 || phut > 40) return false;
   return gio === 8 || gio === 14;
 }
 
-/** Trigger mỗi 15 phút. Chỉ dừng trong 8:05–8:25 và 14:05–14:25 (giờ Việt Nam). */
+/** Trigger mỗi 15 phút. Chỉ dừng trong 8:05–8:40 và 14:05–14:40 (giờ Việt Nam). */
 function quyetDinhLich15_(date) {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
     return { chay: false, lyDo: 'mốc giờ không hợp lệ' };
@@ -38,7 +38,7 @@ function quyetDinhLich15_(date) {
   var hm = gioPhutSaigon_(date);
   var chu = hm.gio + ':' + haiSo_(hm.phut);
   if (trongKhungLoaiTru_(hm.gio, hm.phut)) {
-    var khung = hm.gio === 8 ? '8:05–8:25' : '14:05–14:25';
+    var khung = hm.gio === 8 ? '8:05–8:40' : '14:05–14:40';
     return { chay: false, lyDo: 'bỏ qua khung đồng bộ ' + khung + ' (giờ Việt Nam ' + chu + ')', gio: hm.gio, phut: hm.phut };
   }
   return { chay: true, lyDo: 'chạy lúc ' + chu, gio: hm.gio, phut: hm.phut };
