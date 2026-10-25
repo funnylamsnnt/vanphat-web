@@ -663,8 +663,8 @@
       "ma": "VP237",
       "ten": "Giấy ghi chú Bitex 3x5/SN04 (100 tờ/xấp)",
       "dvt": "Xấp",
-      "gia": 18000,
-      "anh": "https://lh3.googleusercontent.com/d/1rzkZUgwvb2vLamy0povUo_nnKw8RcHvZ",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1M5gfhwr9uBNBWqt4UGJQSXu3wJeEI3ys",
       "ton": 12,
       "thuongHieu": "Bitex",
       "quyCach": "100 tờ/xấp"
@@ -759,11 +759,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP245",
-      "ten": "Giấy Supreme A3",
-      "dvt": "Ram",
-      "gia": 134259,
-      "anh": "",
-      "ton": 0,
+      "ten": "Kim bấm 23/10 (Việt Đức - 70 tờ)",
+      "dvt": "Hộp",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1M5gfhwr9uBNBWqt4UGJQSXu3wJeEI3ys",
+      "ton": 20,
       "thuongHieu": "Supreme"
     },
     {
@@ -1239,9 +1239,9 @@
       "ma": "VP100",
       "ten": "Bìa thái A3 Màu",
       "dvt": "Xấp",
-      "gia": 79000,
+      "gia": 75000,
       "anh": "https://lh3.googleusercontent.com/d/1-prUgea3hrlKn1NH6cMDb4ckFTXnF18u",
-      "ton": 0
+      "ton": 10
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -2357,7 +2357,7 @@
       "dvt": "Cuộn",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
-      "ton": 96,
+      "ton": 112,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2370,7 +2370,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
-      "ton": 0,
+      "ton": 72,
       "quyCach": "6 cuộn/cây"
     },
     {
@@ -2395,7 +2395,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1ePGemScJvBcWYEivvC78iWebfPfhav2w",
-      "ton": 8,
+      "ton": 24,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2698,7 +2698,7 @@
       "dvt": "Cái",
       "gia": 130000,
       "anh": "https://lh3.googleusercontent.com/d/14-bACIqdS_OvXPk0cNdOr8BdeZhVTpom",
-      "ton": 0,
+      "ton": 1,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4600,7 +4600,7 @@
       "dvt": "Cặp",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
-      "ton": 160,
+      "ton": 760,
       "thuongHieu": "Maxell"
     },
     {
@@ -5992,10 +5992,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP482",
-      "ten": "Trà bí đao la hán (Chai)",
+      "ten": "Trà bí đao la hán quả (Chai 450 ML)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1Q-7n6wgvZggEikBvIolUm5zpY0ZSwacG",
       "ton": 24
     },
     {
@@ -6004,10 +6004,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP483",
-      "ten": "Trà vải mật ong Hương hoa nhài (Chai)",
+      "ten": "Trà vải mật ong Hương hoa nhài (Chai 450 ML)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1jg3VPFmnac_D6AbjZa8BvsVOkoPXBohd",
       "ton": 24
     },
     {
@@ -6016,10 +6016,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP484",
-      "ten": "Trà Chanh Dây và hạt chia FuzeTea+ (Chai)",
+      "ten": "Trà Chanh Dây và hạt chia (Chai 350 ML)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/5f04eb88cef240c5b32d4bfc8462351e.png",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1jlV1-Qq5E2Oitt1vNPoDsYa4o2GjX52R",
       "ton": 24,
       "thuongHieu": "Fuze Tea"
     },
@@ -6107,10 +6107,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP501",
-      "ten": "Nước sâm C2",
+      "ten": "Nước sâm C2 Cool hoa cúc thảo mộc (chai 280ml )",
       "dvt": "",
-      "gia": 0,
-      "anh": "",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1dnk2wpMubSgoK8wjO8H15wmq5n3CWrTH",
       "ton": -1
     },
     {
@@ -6119,10 +6119,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP502",
-      "ten": "Nước sữa dâu Twister 320ml",
+      "ten": "Nước sữa dâu Twister (Chai 320ml)",
       "dvt": "Chai",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1hG_cPKMQoWsY9bCoscKcGlDIh4Xg6LWU",
       "ton": 0
     },
     {
@@ -6131,10 +6131,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP503",
-      "ten": "Nước trái cây sữa juicy milk vị cam 330ml",
+      "ten": "Sữa trái cây Twister hương cam (Chai 320ml)",
       "dvt": "Chai",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1RPrS5iH8hgJdWugVXyQ5o2SQ9X5cCaUy",
       "ton": 0
     },
     {
@@ -6145,8 +6145,8 @@
       "ma": "VP512",
       "ten": "TH True Tea trà xanh vị chanh Tự Nhiên ( Chai 350ml)",
       "dvt": "Chai",
-      "gia": 9000,
-      "anh": "",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1WL9F1OlLXU8SaQJn0jAx8rxVFW6VNFRW",
       "ton": 0
     },
     {
@@ -6157,8 +6157,8 @@
       "ma": "VP513",
       "ten": "TH True Tea Trà ổi (Chai 350ml)",
       "dvt": "Chai",
-      "gia": 9000,
-      "anh": "",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1t-jkXUNo4-kwc3AVT2gcf8tZM9FvuYSK",
       "ton": 0
     },
     {
@@ -6170,7 +6170,7 @@
       "ten": "Nước suối Lavie vị dịu nhẹ 500ml",
       "dvt": "Chai",
       "gia": 6000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1rduRHKAf-3ZlmRsuQCHDcqYsut_6nXWB",
       "ton": 0
     },
     {
@@ -6182,7 +6182,7 @@
       "ten": "Nước suối Lavie ion kiềm 500ml",
       "dvt": "Chai",
       "gia": 6000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1UhSTU670UcpV5EqCWTuia5ejFZyZvECs",
       "ton": 0
     },
     {
@@ -6194,8 +6194,20 @@
       "ten": "Chanh muối Đảnh Thạnh chai 430ml",
       "dvt": "Chai",
       "gia": 8000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1dnk2wpMubSgoK8wjO8H15wmq5n3CWrTH",
       "ton": -1
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP532",
+      "ten": "Nước tăng lực Redbull chai 150ml",
+      "dvt": "Chai",
+      "gia": 14000,
+      "anh": "https://lh3.googleusercontent.com/d/1xH9Jry50pMcGTAnLHRR1ZjB4Voyxmg8n",
+      "ton": 0
     },
     {
       "nhom": "TP Khác",
@@ -6205,8 +6217,8 @@
       "ma": "VP504",
       "ten": "Kẹo gum Xylitol (Hương Lime Mint)",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/19QLaCMvbRbV12uyOjvpJ_2xaqvmkSj5m",
       "ton": 0
     },
     {
@@ -6215,10 +6227,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP505",
-      "ten": "Kẹo cao su Xylitol dâu 58GR",
+      "ten": "Kẹo gum không đường Lotte Xylitol Cool hũ 55.1g",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1SVWWzSWMcQqQJL7ik25_vn944RyvDLOR",
       "ton": 0
     },
     {
@@ -6227,10 +6239,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP506",
-      "ten": "Kẹo gum không đường Lotte Xylitol Super Cool",
+      "ten": "Lotte Xylitol hương Blueberry Mint (hũ 55.1g)",
       "dvt": "",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1r_-u_Q6iaY-dw6ewDkjGJDZ3V43uidqv",
       "ton": 0
     },
     {
@@ -6241,8 +6253,8 @@
       "ma": "VP507",
       "ten": "Bánh Lát khoai Tây Slide (Vị Potato Crisps)",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1GJS4gEZAdbRMYDhYW6AFcDZV8v8-Gsdi",
       "ton": 0
     },
     {
@@ -6253,8 +6265,8 @@
       "ma": "VP508",
       "ten": "Bánh Lát khoai Tây Slide (Vị nguyên bản)",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1kMr6PwwbrztlR0K3ZSM7kGJLO7FrzDJF",
       "ton": 0
     },
     {
@@ -6263,10 +6275,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP509",
-      "ten": "Khoai Tây Lát Slide sour vị hành 75GR",
+      "ten": "Khoai Tây Lát Slide sour vị hành 60Gr",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1L5k0qVSxGhyxPWxgdwm_FVn5Aax3wbL3",
       "ton": 0
     },
     {
@@ -6287,10 +6299,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP511",
-      "ten": "Kẹo ngậm Mentos đào Bạc Hà",
-      "dvt": "",
-      "gia": 0,
-      "anh": "",
+      "ten": "Kẹo ngậm Mentos đào Bạc Hà (17,5 g)",
+      "dvt": "Hủ",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1zmdF_sgDxLyA2ynpfxM2ukYytkg8apaM",
       "ton": 0
     },
     {
@@ -6360,9 +6372,9 @@
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP521",
       "ten": "Bánh gạo An vị tảo biển",
-      "dvt": "Bịch",
-      "gia": 0,
-      "anh": "",
+      "dvt": "Gói",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1gCIftz98VU-gYXfsxIAakdW73KeOkiFV",
       "ton": 0
     },
     {
@@ -6373,8 +6385,8 @@
       "ma": "VP522",
       "ten": "Khoai Tây chiên Pringles Original 42g",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1H-uievs6Q85ZQYWFyJ98pBWhHuDGr13y",
       "ton": 0
     },
     {
@@ -6385,11 +6397,11 @@
       "ma": "VP523",
       "ten": "Kẹo ngậm Mentos Hương đào Bạc Hà 17,5g",
       "dvt": "",
-      "gia": 0,
-      "anh": "",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1dVZ0J6t-ThBNnNghJGi4YMIikdHKPx-c",
       "ton": 0
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
+  "syncedFrom": "source_sheet_20261025_1446.xlsx"
 }
