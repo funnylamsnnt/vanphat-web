@@ -419,16 +419,18 @@ test('lịch 15 phút bỏ đúng hai khung, chạy ngoài 7–21h', function ()
   assert.equal(chay(8, 5), false);
   assert.equal(chay(8, 15), false);
   assert.equal(chay(8, 25), false);
-  assert.equal(chay(8, 26), true);
-  assert.equal(chay(8, 30), true);
+  assert.equal(chay(8, 40), false);
+  assert.equal(chay(8, 41), true);
+  assert.equal(chay(8, 30), false);
   assert.equal(chay(9, 0), true);
   assert.equal(chay(14, 5), false);
   assert.equal(chay(14, 20), false);
   assert.equal(chay(14, 25), false);
-  assert.equal(chay(14, 26), true);
+  assert.equal(chay(14, 40), false);
+  assert.equal(chay(14, 41), true);
   assert.equal(chay(23, 0), true);
-  assert.match(context.quyetDinhLich15_(lucSaigon(2026, 10, 24, 8, 15)).lyDo, /8:05–8:25/);
-  assert.match(context.quyetDinhLich15_(lucSaigon(2026, 10, 24, 14, 20)).lyDo, /14:05–14:25/);
+  assert.match(context.quyetDinhLich15_(lucSaigon(2026, 10, 24, 8, 15)).lyDo, /8:05–8:40/);
+  assert.match(context.quyetDinhLich15_(lucSaigon(2026, 10, 24, 14, 20)).lyDo, /14:05–14:40/);
 });
 
 test('mô hình đủ 13 tab, khóa MST giữ số 0, chính sách lấy header dòng 3', function () {
@@ -756,7 +758,7 @@ test('vòng: khóa, khung cấm, dry-run, thứ tự ghi, không đè snapshot n
   den.excelMeta = function () { throw new Error('khong duoc goi Drive'); };
   kq = context.dongBoVong_(den, { now: lucSaigon(2026, 10, 24, 8, 15) });
   assert.equal(kq.skipped, true);
-  assert.match(kq.lyDo, /8:05–8:25/);
+  assert.match(kq.lyDo, /8:05–8:40/);
   assert.equal(den.calls.includes('tryLock'), false);
 
   var toi = depsCoBan({
