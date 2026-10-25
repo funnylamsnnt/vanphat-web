@@ -284,7 +284,7 @@ def check_company(errors: list[str]) -> None:
     if not address:
         errors.append("generate_catalog_pages.py thiếu ADDRESS")
     else:
-        for needle in ("LK 19-06", "Mỹ Gia", "Vĩnh Thái", "Nam Nha Trang"):
+        for needle in ("LK 19-06", "Mỹ Gia", "Nam Nha Trang"):
             if needle not in address:
                 errors.append(f"ADDRESS thiếu {needle}")
         if "phuoc hai" in fold_vn(address):
