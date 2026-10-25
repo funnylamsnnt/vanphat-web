@@ -51,7 +51,7 @@ Không chép lại. Làm đúng file sau:
 - Ba lĩnh vực L1 → L2 → L3, `data/ia.json`: `.cursor/rules/ia-linh-vuc.mdc`
 - Lightbox mọi ảnh sản phẩm phía khách: `.cursor/rules/product-lightbox.mdc`
 - Nhóm «Không đưa lên web»: `.cursor/rules/khong-dua-len-web.mdc`
-- Tên công ty và địa chỉ LK 19-06 Đường số 20, KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang: `.cursor/rules/thong-tin-cong-ty.mdc`
+- Tên công ty và địa chỉ LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang: `.cursor/rules/thong-tin-cong-ty.mdc`
 - Layout điện thoại và PC: `.cursor/rules/bo-loc-catalog.mdc`
 - SEO kỹ thuật: `.cursor/rules/seo-ky-thuat.mdc`
 - Ranh giới repo: `.cursor/rules/ranh-gioi-repo.mdc`

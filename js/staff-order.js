@@ -444,7 +444,7 @@
           <img class="slip-logo" src="assets/logo-excel-slip.png" alt="Vạn Phát" width="72" height="72" />
           <div class="slip-company-text">
             <div class="slip-company-name">CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT</div>
-            <div>Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang</div>
+            <div>Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang</div>
             <div>Website: http://vanphatcompany.vn &nbsp;|&nbsp; Email: congtytnhhvanphat999@gmail.com</div>
             <div>Hotline: ${HOTLINE} &nbsp;|&nbsp; STK Ngân hàng NN&PTNT (Agribank): 4703201014329</div>
           </div>

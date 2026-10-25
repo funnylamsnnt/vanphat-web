@@ -8,7 +8,7 @@ alwaysApply: true
 Giữ đúng các mục dưới đây trên web, schema và bản đồ. Chữ in trên trang sinh tự động lấy từ hằng trong `scripts/generate_catalog_pages.py`. Sửa hằng đó rồi sinh lại, đừng sửa tay hàng trăm HTML. `scripts/check_rules.py` giữ các hằng này.
 
 - Tên: CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT
-- Địa chỉ: LK 19-06 Đường số 20, KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang. Không dùng địa chỉ Phước Hải. Dòng đang in có thể không có dấu phẩy ngay sau «Đường số 20»; vẫn là địa chỉ Mỹ Gia này.
+- Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang. Không dùng địa chỉ Phước Hải. Dòng đang in có thể không có dấu phẩy ngay sau «Đường số 20»; vẫn là địa chỉ Mỹ Gia này.
 - Điện thoại: 0335 652 832 (máy `0335652832`, `tel:0335652832`). Dòng đang in `033 5652 832` là cùng số, từ `HOTLINE_DISPLAY`. Đừng đổi hotline sang số khác, đừng giấu hotline.
 - CSKH 1: 0393 268 399 (Trang), nhãn «CSKH 1 · Trang», `tel:0393268399`.
 - CSKH 2: 0398 269 399 (Hoàng Anh), nhãn «CSKH 2 · Hoàng Anh», `tel:0398269399`. Hai số này là số gọi thêm, nhỏ hơn hotline, cùng họ màu.
