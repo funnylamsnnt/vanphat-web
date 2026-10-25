@@ -121,6 +121,8 @@ def iter_html() -> list[Path]:
     for path in ROOT.rglob("*.html"):
         if any(part in SKIP_DIRS for part in path.parts):
             continue
+        if "vp-generated-redirect" in path.read_text(encoding="utf-8", errors="ignore")[:200]:
+            continue
         found.append(path)
     return found
 
@@ -595,6 +597,43 @@ def check_chat_widget_cache(errors: list[str]) -> None:
         errors.append("css/chat-widget.css thiếu khung chat")
 
 
+def check_redirects(errors: list[str]) -> int:
+    """Old product slugs in data/redirects.json must be redirect stubs to the live page of the same mã."""
+    path = ROOT / "data" / "redirects.json"
+    if not path.is_file():
+        return 0
+    entries = json.loads(path.read_text(encoding="utf-8")).get("redirects") or []
+    paths_js = (ROOT / "js" / "catalog-paths.js").read_text(encoding="utf-8")
+    product_map = json.loads(paths_js.split("=", 1)[1].strip().rstrip(";"))["product"]
+    sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+    for item in entries:
+        old = str(item.get("old") or "")
+        code = str(item.get("ma") or "").upper()
+        target = product_map.get(code)
+        stub = ROOT / old
+        if not target or not (ROOT / target).is_file():
+            errors.append(f"redirect {old}: mã {code} không có trang hiện tại")
+            continue
+        if not stub.is_file():
+            errors.append(f"redirect {old}: thiếu trang chuyển hướng (404)")
+            continue
+        text = stub.read_text(encoding="utf-8")
+        url = "/" + target
+        need = [
+            "vp-generated-redirect",
+            f'http-equiv="refresh" content="0; url={url}"',
+            f'rel="canonical" href="https://vanphatcompany.vn{url}"',
+            f'location.replace("{url}"',
+            'name="robots" content="noindex',
+        ]
+        for n in need:
+            if n not in text:
+                errors.append(f"redirect {old}: thiếu {n!r}")
+        if f"/{old}<" in sitemap:
+            errors.append(f"redirect {old}: không được có trong sitemap")
+    return len(entries)
+
+
 def main() -> None:
     self_test()
     errors: list[str] = []
@@ -608,11 +647,12 @@ def main() -> None:
     check_product_descriptions(errors)
     check_chat_search(errors)
     check_chat_widget_cache(errors)
+    redirects = check_redirects(errors)
     if errors:
         fail(errors)
     print(
         f"OK: {product_count} sản phẩm trên web, {len(skus)} mã loại trừ không xuất hiện, "
-        f"{cards} thẻ có lightbox."
+        f"{cards} thẻ có lightbox, {redirects} trang chuyển hướng."
     )
 
 

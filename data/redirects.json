@@ -1,0 +1,13 @@
+{
+  "_note": "Slug cũ → mã SP. Trang cũ chuyển hướng tới trang hiện tại của cùng mã (meta refresh + location.replace + canonical), do scripts/generate_catalog_pages.py sinh ra.",
+  "redirects": [
+    {
+      "old": "san-pham/vp080-bia-hop-si-10f-thanh-phat.html",
+      "ma": "VP080"
+    },
+    {
+      "old": "san-pham/vp097-bia-nut.html",
+      "ma": "VP097"
+    }
+  ]
+}

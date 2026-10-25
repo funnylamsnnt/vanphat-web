@@ -1726,6 +1726,63 @@ def load_products(path: Path) -> dict:
     return data
 
 
+REDIRECT_MARKER = "vp-generated-redirect"
+
+
+def load_redirects() -> list[dict]:
+    path = ROOT / "data" / "redirects.json"
+    if not path.is_file():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return list(data.get("redirects") or [])
+
+
+def build_redirect_page(target: str, name: str) -> str:
+    url = "/" + target.lstrip("/")
+    safe = html.escape(name)
+    return f"""<!DOCTYPE html>
+<!-- {REDIRECT_MARKER} -->
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{safe} | Vạn Phát</title>
+  <meta name="robots" content="noindex, follow" />
+  <meta http-equiv="refresh" content="0; url={url}" />
+  <link rel="canonical" href="{SITE}{url}" />
+  <script>location.replace("{url}" + location.search + location.hash);</script>
+</head>
+<body>
+  <p>Trang đã chuyển tới <a href="{url}">{safe}</a>…</p>
+</body>
+</html>
+"""
+
+
+def write_redirects(products: list[dict], out_dir: Path, expected: set[str]) -> list[str]:
+    """Old product slugs (data/redirects.json) → current page of the same mã."""
+    by_code = {str(p.get("ma") or "").upper(): p for p in products}
+    done = []
+    for item in load_redirects():
+        old = str(item.get("old") or "")
+        code = str(item.get("ma") or "").upper()
+        product = by_code.get(code)
+        if not old.startswith("san-pham/") or "/" in old[len("san-pham/"):] or not product:
+            raise SystemExit(f"redirects.json: bad entry {item!r}")
+        name = old[len("san-pham/"):]
+        if name == product["_file"]:
+            continue
+        if name in expected:
+            raise SystemExit(f"redirects.json: {old} is a live page")
+        write_text(out_dir / name, build_redirect_page(f"san-pham/{product['_file']}", str(product.get("ten") or code)))
+        expected.add(name)
+        done.append(old)
+    for html_path in out_dir.glob("*.html"):
+        if html_path.name not in expected and REDIRECT_MARKER in html_path.read_text(encoding="utf-8", errors="ignore")[:200]:
+            html_path.unlink()
+    return done
+
+
 def purge_generated(directory: Path, expected: set[str]) -> int:
     removed = 0
     if not directory.exists():
@@ -2440,6 +2497,8 @@ def assert_generated_seo(products: list[dict]) -> None:
     zero_price = '"price":"0"'
     for html_path in (ROOT / "san-pham").glob("vp*.html"):
         text = html_path.read_text(encoding="utf-8")
+        if REDIRECT_MARKER in text[:200]:
+            continue
         if false_brand in text or zero_price in text:
             raise SystemExit(f"{html_path.name} still emits a false brand or zero price")
         if "Nha Trang" not in text.split("</title>", 1)[0]:
@@ -3225,6 +3284,7 @@ def main() -> None:
         if write_text(out_dir / product["_file"], page):
             written += 1
 
+    redirects_written = write_redirects(products, out_dir, expected)
     removed = purge_generated(out_dir, expected)
 
     lv_expected: set[str] = set()
@@ -3295,6 +3355,7 @@ def main() -> None:
                 "linh_vuc": [lv.get("slug") for lv in ia["linh_vuc"]],
                 "html_written": written,
                 "html_removed": removed,
+                "redirects": redirects_written,
                 "paths_js": paths_changed,
                 "sitemap": sitemap_changed,
                 "robots": robots_changed,
