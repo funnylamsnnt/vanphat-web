@@ -124,8 +124,8 @@
     "groupMoves": "VP541–VP550 TP Khác→Kem; nhóm mới Kem (26 mã) bot chuyển sang nuoc-banh trong data/ia.json"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-26T07:47:00Z",
-  "lastCheckResult": "14:4x ICT 26/10: nguồn Google Sheet 07:21Z -> commit 7ab7231 (18 mã mới VP533–VP550, 0 giá đổi, 0 slug đổi), Pages success, live OK. Bridge pending.",
+  "lastCheckAt": "2026-10-27T07:48:00Z",
+  "lastCheckResult": "14:4x ICT 27/10: Sheet 07:33Z -> commit fde9a4fa (17 mã mới VP551–VP567, nhóm Kem), Pages success, live OK, bridge OK.",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "webSync_20261016_1414": {
@@ -345,10 +345,10 @@
     "bridge": "OK 14:22 ICT, 500 rows verified"
   },
   "bridge": {
-    "lastRefreshAt": "2026-10-26 14:50 ICT",
-    "sourceModifiedTime": "2026-10-26T07:21:56.761Z",
+    "lastRefreshAt": "2026-10-27 14:48 ICT",
+    "sourceModifiedTime": "2026-10-27T07:33:53.012Z",
     "bridgeLiveModifiedTime": "2026-10-23T01:15:42.319Z",
-    "rows_verified": "531 == 531, 0 mismatches A–F (Drive export verify 14:2x)",
+    "rows_verified": "568 rows (567 SKU), B568=VP567",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "lastVerifiedAt": "2026-10-24 14:22 ICT"
   },
@@ -703,9 +703,9 @@
   },
   "bridgeRefresh": {
     "status": "done",
-    "at": "2026-10-26T14:50:00+07:00",
-    "rows": 551,
-    "lastMa": "VP550",
+    "at": "2026-10-27T14:48:00+07:00",
+    "rows": 568,
+    "lastMa": "VP567",
     "method": "Import insert new sheet + swap tab Danh Mục Vật Tư; Chính Sách Đối Tác kept"
   },
   "webSync_20261026_1443": {
@@ -831,6 +831,11 @@
     "slug_chg": [],
     "newGroup": "Kem (VP541–VP566) script tự xếp vpp → bot chuyển sang nuoc-banh",
     "zeroPrice_count": 44,
-    "note": "Không xuất Sheet→Excel."
+    "note": "Không xuất Sheet→Excel.",
+    "commit": "fde9a4fa",
+    "pages_run": 40468803994,
+    "pages_status": "success",
+    "live_check": "products.json live 532/419 img all 200; / san-pham 3 linh-vuc 200; VP551/555/567 200 + lightbox; Kem ở nuoc-banh; VP415 404, 0 trong sitemap (562 URL); redirect VP080 200",
+    "bridge": "OK 14:48 ICT, 568 dòng"
   }
 }
