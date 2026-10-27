@@ -38,7 +38,8 @@
       "nhomIds": [
         "nuoc-uong",
         "banh",
-        "tp-khac"
+        "tp-khac",
+        "kem"
       ]
     },
     {
@@ -128,6 +129,16 @@
       "visible": true,
       "placeholder": true,
       "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    },
+    {
+      "id": "kem",
+      "STT": 1000,
+      "TenNhom": "Kem",
+      "slug": "kem",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "moTa": "Kem các loại cho văn phòng và cửa hàng ở Nam Nha Trang.",
+      "autoPlaced": true
     },
     {
       "id": "tp-khac",
