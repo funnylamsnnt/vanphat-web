@@ -7,7 +7,7 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-27T07:45:00Z",
+  "lastSyncAt": "2026-10-28T07:55:00Z",
   "lastSyncResult": {
     "changed": true,
     "count": 532,
@@ -125,7 +125,7 @@
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "lastCheckAt": "2026-10-27T07:48:00Z",
-  "lastCheckResult": "14:4x ICT 27/10: Sheet 07:33Z -> commit fde9a4fa (17 mã mới VP551–VP567, nhóm Kem), Pages success, live OK, bridge OK.",
+  "lastCheckResult": "10:3x ICT 28/10 (routine Kiểm tra web): Sheet đổi giá 24 mã Kem VP543–VP566, tên VP543/VP549 -> commit f56cf8c0 + chuyển hướng 2 slug cũ; bridge LIVE CHƯA refresh (cần trình duyệt) — lượt 14:35 làm bridge.",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "webSync_20261016_1414": {
@@ -345,10 +345,10 @@
     "bridge": "OK 14:22 ICT, 500 rows verified"
   },
   "bridge": {
-    "lastRefreshAt": "2026-10-27 14:48 ICT",
-    "sourceModifiedTime": "2026-10-27T07:33:53.012Z",
+    "lastRefreshAt": "2026-10-28 14:49 ICT",
+    "sourceModifiedTime": "2026-10-28T06:53:23.728Z",
     "bridgeLiveModifiedTime": "2026-10-23T01:15:42.319Z",
-    "rows_verified": "568 rows (567 SKU), B568=VP567",
+    "rows_verified": "572 rows (571 SKU), B572=VP571",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
     "lastVerifiedAt": "2026-10-24 14:22 ICT"
   },
@@ -699,13 +699,14 @@
   "lastSource": {
     "type": "google_sheet",
     "fileId": "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM",
-    "title": "PHIEU BAO GIA VAN PHAT - 2026"
+    "title": "PHIEU BAO GIA VAN PHAT - 2026",
+    "modifiedTime": "2026-10-28T06:53:23.728Z"
   },
   "bridgeRefresh": {
     "status": "done",
-    "at": "2026-10-27T14:48:00+07:00",
-    "rows": 568,
-    "lastMa": "VP567",
+    "at": "2026-10-28T14:49:00+07:00",
+    "rows": 572,
+    "lastMa": "VP571",
     "method": "Import insert new sheet + swap tab Danh Mục Vật Tư; Chính Sách Đối Tác kept"
   },
   "webSync_20261026_1443": {
@@ -837,5 +838,35 @@
     "pages_status": "success",
     "live_check": "products.json live 532/419 img all 200; / san-pham 3 linh-vuc 200; VP551/555/567 200 + lightbox; Kem ở nuoc-banh; VP415 404, 0 trong sitemap (562 URL); redirect VP080 200",
     "bridge": "OK 14:48 ICT, 568 dòng"
+  },
+  "webSync_20261028_1444": {
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư), tải xlsx qua Drive connector (chỉ đọc)",
+    "sourceModifiedTime": "2026-10-28T06:53:23.728Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261028_1444.xlsx",
+    "commit": "4a8f8db7",
+    "pages_run": 40652166989,
+    "pages_status": "success",
+    "count": 535,
+    "with_img": 429,
+    "source_count": 571,
+    "added": [
+      "VP568",
+      "VP569",
+      "VP570"
+    ],
+    "price_chg": "VP265 80000→148000, VP267 32000→53000, VP301 37000→36000, VP382 0→19000, Kem VP543–VP558,VP563–VP566 13000→8000/10000",
+    "slug_chg": [
+      "VP265 (redirect)",
+      "VP267 (redirect)",
+      "VP382 (mã dùng lại, slug cũ 404)"
+    ],
+    "zeroPrice_count": 28,
+    "zeroPriceNew": [
+      "VP570"
+    ],
+    "broken_images": [],
+    "live_check": "products.json live 535; / san-pham 3 linh-vuc 200; VP568–570, VP265/267/382 mới 200 + lightbox; redirect VP265/267 200; VP415 404, 0 trong sitemap; ảnh mới 200",
+    "note": "Không xuất Sheet→Excel.",
+    "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
   }
 }
