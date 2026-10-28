@@ -1216,7 +1216,7 @@
       "dvt": "Cái",
       "gia": 11000,
       "anh": "https://lh3.googleusercontent.com/d/1qDKswYt1FNMnSFKyn0DhvKCagzRGtpp3",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1300,7 +1300,7 @@
       "dvt": "Cái",
       "gia": 23000,
       "anh": "https://lh3.googleusercontent.com/d/1acH_l1QXJcYw00AvnDNBoGvPo_q_94xO",
-      "ton": 40
+      "ton": 60
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1361,7 +1361,7 @@
       "dvt": "Cái",
       "gia": 26000,
       "anh": "https://lh3.googleusercontent.com/d/1LobjFvbrygt2Mdf-TN9jzyVOpaE1DZOn",
-      "ton": 10
+      "ton": 30
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1659,7 +1659,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
-      "ton": 60,
+      "ton": 140,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -3787,11 +3787,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP265",
-      "ten": "Kệ nhựa 3 tầng",
+      "ten": "Kệ nhựa 3 tầng (trượt 206-3)",
       "dvt": "Cái",
-      "gia": 80000,
-      "anh": "",
-      "ton": 0
+      "gia": 148000,
+      "anh": "https://lh3.googleusercontent.com/d/1WktCbo6LEtigNXv_Ui7FCux4q-9L6Lg1",
+      "ton": 6
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3811,11 +3811,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP267",
-      "ten": "Kệ xéo nhựa 3 ngăn",
+      "ten": "Kệ rổ nhựa 3 ngăn đứng (194)",
       "dvt": "Cái",
-      "gia": 32000,
-      "anh": "",
-      "ton": 0
+      "gia": 53000,
+      "anh": "https://lh3.googleusercontent.com/d/1XEN5T0LVxqdPd9r4qlOOCTDZcz_yWkCh",
+      "ton": 12
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4207,7 +4207,7 @@
       "dvt": "Hộp",
       "gia": 21000,
       "anh": "https://lh3.googleusercontent.com/d/1lKSlkvd4ogS73aGiC_vkwNpUrR71zZ_u",
-      "ton": 5,
+      "ton": 20,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4231,9 +4231,9 @@
       "ma": "VP301",
       "ten": "Kim bấm 23/23 (TriO - 200 tờ)",
       "dvt": "Hộp",
-      "gia": 37000,
+      "gia": 36000,
       "anh": "https://lh3.googleusercontent.com/d/1HdXrwwjTAkLDsHB-77KNJPMeG8B_ZD1_",
-      "ton": 0,
+      "ton": 20,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4246,7 +4246,7 @@
       "dvt": "Hộp",
       "gia": 19000,
       "anh": "https://lh3.googleusercontent.com/d/1FJ_X5YlhzIqDYFborttpKHGeegR0mBvm",
-      "ton": 0,
+      "ton": 10,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4986,11 +4986,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP382",
-      "ten": "Tệp hồ sơ có dây (10cm)",
-      "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
-      "ton": 0
+      "ten": "Kim bấm 23/6 (TriO)",
+      "dvt": "Hộp",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1zcjLkx8Az1Zr1UovlhIi9fBX-Th4Jn8Z",
+      "ton": 10
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5212,6 +5212,42 @@
       "dvt": "Cái",
       "gia": 500000,
       "anh": "https://lh3.googleusercontent.com/d/1efeAUW09i-SYKznANX2scRm37VifYm1p",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP568",
+      "ten": "Thước cuộn 50m",
+      "dvt": "Cái",
+      "gia": 98000,
+      "anh": "https://lh3.googleusercontent.com/d/1DtBfKxRLk9mnNGGKABY3UAh3sY2MwwcJ",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP569",
+      "ten": "Tập Sinh Viên 200 trang Campus",
+      "dvt": "Quyển",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/1lUkZAv_5xtCbs_1igVi35uJMuQk2utlE",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP570",
+      "ten": "Tập học sinh 200 trang",
+      "dvt": "Quyển",
+      "gia": 0,
+      "anh": "",
       "ton": 0
     },
     {
@@ -6509,8 +6545,8 @@
       "ton": 0
     },
     {
-      "nhom": "Kem",
-      "nhomId": "kem",
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP541",
@@ -6521,8 +6557,8 @@
       "ton": 0
     },
     {
-      "nhom": "Kem",
-      "nhomId": "kem",
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP542",
@@ -6540,7 +6576,7 @@
       "ma": "VP543",
       "ten": "Snow baby kem dưa hấu",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 8000,
       "anh": "",
       "ton": 20
     },
@@ -6552,7 +6588,7 @@
       "ma": "VP544",
       "ten": "Kem xoài",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 8000,
       "anh": "",
       "ton": 20
     },
@@ -6564,7 +6600,7 @@
       "ma": "VP545",
       "ten": "Kem sữa bắp snow",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1ShH0rPNjjiIk98QYNOL9WV5jM2YUvXYN",
       "ton": 24
     },
@@ -6576,7 +6612,7 @@
       "ma": "VP546",
       "ten": "Kem snow baby sữa dừa yến mạch",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6588,7 +6624,7 @@
       "ma": "VP547",
       "ten": "Kem đậu đỏ yến mạch snowbaby",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1VVcHIO8xs2mm9yGABntjyckPlUuhUUDt",
       "ton": 20
     },
@@ -6600,7 +6636,7 @@
       "ma": "VP548",
       "ten": "Kem ốc quế socola hương vani",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1OXAxNDr7bJwshTUGRdz1R80N7SP5LZdX",
       "ton": 20
     },
@@ -6612,7 +6648,7 @@
       "ma": "VP549",
       "ten": "Kem ốc quế Matcha Socola",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1yTSb04pfSibl_HqThFH5sxgIVBcE720o",
       "ton": 0
     },
@@ -6624,7 +6660,7 @@
       "ma": "VP550",
       "ten": "Kem bàn tay gấu",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6636,7 +6672,7 @@
       "ma": "VP551",
       "ten": "Kem snow baby đậu xanh yến mạch x",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6648,7 +6684,7 @@
       "ma": "VP552",
       "ten": "Kem hũ snow socola",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 0
     },
@@ -6660,7 +6696,7 @@
       "ma": "VP553",
       "ten": "Kem dâu ly",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 12
     },
@@ -6672,7 +6708,7 @@
       "ma": "VP554",
       "ten": "Kem trà sữa Trân Châu",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 0
     },
@@ -6684,7 +6720,7 @@
       "ma": "VP555",
       "ten": "Kem vani socola hạnh nhân T20",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1NLwsISDUg0eHQxG45EgdHZxZFhsHd9j6",
       "ton": 20
     },
@@ -6696,7 +6732,7 @@
       "ma": "VP556",
       "ten": "Kem scl chuối hạnh nhân",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1hCEI_GP8xw2Ugst8YxAQHJHZdYZ0tekY",
       "ton": 20
     },
@@ -6708,7 +6744,7 @@
       "ma": "VP557",
       "ten": "Kem scl hạnh nhân Hương Bạc Hà",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1_sMzkxESIOi2OrH_-24J8E71AOC42xen",
       "ton": 20
     },
@@ -6720,7 +6756,7 @@
       "ma": "VP558",
       "ten": "Kem cá dâu",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1yiqhL44yNfUmMPWX5TKuL-Hl2QvoVk3B",
       "ton": 0
     },
@@ -6780,7 +6816,7 @@
       "ma": "VP563",
       "ten": "Kem que snow x socola nhân mứt dâu",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6792,7 +6828,7 @@
       "ma": "VP564",
       "ten": "Kem snowbaby ốc quế vani socola",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6804,7 +6840,7 @@
       "ma": "VP565",
       "ten": "Kem ốc quế vani snow baby",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6816,7 +6852,7 @@
       "ma": "VP566",
       "ten": "Kem bàn tay gấu socola",
       "dvt": "Cái",
-      "gia": 13000,
+      "gia": 10000,
       "anh": "",
       "ton": 20
     },
@@ -6834,5 +6870,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261028_1030.xlsx"
+  "syncedFrom": "source_sheet_20261028_1444.xlsx"
 }
