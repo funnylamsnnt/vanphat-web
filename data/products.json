@@ -6538,11 +6538,11 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP543",
-      "ten": "Snow baby kem dưa hấu thùng 20 chiếc * 60ml",
+      "ten": "Snow baby kem dưa hấu",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6552,9 +6552,9 @@
       "ma": "VP544",
       "ten": "Kem xoài",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6564,8 +6564,8 @@
       "ma": "VP545",
       "ten": "Kem sữa bắp snow",
       "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1ShH0rPNjjiIk98QYNOL9WV5jM2YUvXYN",
       "ton": 24
     },
     {
@@ -6576,9 +6576,9 @@
       "ma": "VP546",
       "ten": "Kem snow baby sữa dừa yến mạch",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6588,9 +6588,9 @@
       "ma": "VP547",
       "ten": "Kem đậu đỏ yến mạch snowbaby",
       "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
-      "ton": 0
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1VVcHIO8xs2mm9yGABntjyckPlUuhUUDt",
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6600,9 +6600,9 @@
       "ma": "VP548",
       "ten": "Kem ốc quế socola hương vani",
       "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
-      "ton": 0
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1OXAxNDr7bJwshTUGRdz1R80N7SP5LZdX",
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6610,10 +6610,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP549",
-      "ten": "Kem ốc quế Matcha",
+      "ten": "Kem ốc quế Matcha Socola",
       "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
+      "gia": 13000,
+      "anh": "https://lh3.googleusercontent.com/d/1yTSb04pfSibl_HqThFH5sxgIVBcE720o",
       "ton": 0
     },
     {
@@ -6624,7 +6624,7 @@
       "ma": "VP550",
       "ten": "Kem bàn tay gấu",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
       "ton": 20
     },
@@ -6636,9 +6636,9 @@
       "ma": "VP551",
       "ten": "Kem snow baby đậu xanh yến mạch x",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6648,7 +6648,7 @@
       "ma": "VP552",
       "ten": "Kem hũ snow socola",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
       "ton": 0
     },
@@ -6660,9 +6660,9 @@
       "ma": "VP553",
       "ten": "Kem dâu ly",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 12
     },
     {
       "nhom": "Kem",
@@ -6672,7 +6672,7 @@
       "ma": "VP554",
       "ten": "Kem trà sữa Trân Châu",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
       "ton": 0
     },
@@ -6684,7 +6684,7 @@
       "ma": "VP555",
       "ten": "Kem vani socola hạnh nhân T20",
       "dvt": "Cái",
-      "gia": 15000,
+      "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1NLwsISDUg0eHQxG45EgdHZxZFhsHd9j6",
       "ton": 20
     },
@@ -6696,7 +6696,7 @@
       "ma": "VP556",
       "ten": "Kem scl chuối hạnh nhân",
       "dvt": "Cái",
-      "gia": 15000,
+      "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1hCEI_GP8xw2Ugst8YxAQHJHZdYZ0tekY",
       "ton": 20
     },
@@ -6708,7 +6708,7 @@
       "ma": "VP557",
       "ten": "Kem scl hạnh nhân Hương Bạc Hà",
       "dvt": "Cái",
-      "gia": 15000,
+      "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1_sMzkxESIOi2OrH_-24J8E71AOC42xen",
       "ton": 20
     },
@@ -6720,7 +6720,7 @@
       "ma": "VP558",
       "ten": "Kem cá dâu",
       "dvt": "Cái",
-      "gia": 16000,
+      "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1yiqhL44yNfUmMPWX5TKuL-Hl2QvoVk3B",
       "ton": 0
     },
@@ -6732,7 +6732,7 @@
       "ma": "VP559",
       "ten": "Kem bánh cá vị phomai dâu",
       "dvt": "Cái",
-      "gia": 16000,
+      "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1CbXZWekdQGgKZMwzyEwkoYnkKlgB7i6Q",
       "ton": 24
     },
@@ -6744,7 +6744,7 @@
       "ma": "VP560",
       "ten": "Kem bánh cá trà sữa chân châu snow",
       "dvt": "Cái",
-      "gia": 16000,
+      "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1_sMzkxESIOi2OrH_-24J8E71AOC42xen",
       "ton": 12
     },
@@ -6756,7 +6756,7 @@
       "ma": "VP561",
       "ten": "Kem bánh cá vị Matcha Trân Châu",
       "dvt": "Cái",
-      "gia": 16000,
+      "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1ysSE9J4AhuyVUQYuwXbUoRKP4ad-3Dbr",
       "ton": 12
     },
@@ -6768,7 +6768,7 @@
       "ma": "VP562",
       "ten": "Kem cá vị đậu đỏ",
       "dvt": "Cái",
-      "gia": 16000,
+      "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1LUYZQsGlbBnnU19A99BBKopLujDOMm6m",
       "ton": 12
     },
@@ -6780,7 +6780,7 @@
       "ma": "VP563",
       "ten": "Kem que snow x socola nhân mứt dâu",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
       "ton": 20
     },
@@ -6792,9 +6792,9 @@
       "ma": "VP564",
       "ten": "Kem snowbaby ốc quế vani socola",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6804,9 +6804,9 @@
       "ma": "VP565",
       "ten": "Kem ốc quế vani snow baby",
       "dvt": "Cái",
-      "gia": 0,
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "Kem",
@@ -6815,10 +6815,10 @@
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP566",
       "ten": "Kem bàn tay gấu socola",
-      "dvt": "",
-      "gia": 0,
+      "dvt": "Cái",
+      "gia": 13000,
       "anh": "",
-      "ton": 0
+      "ton": 20
     },
     {
       "nhom": "TP Khác",
@@ -6829,10 +6829,10 @@
       "ten": "Kẹo sing gum Doublemint 58,4g",
       "dvt": "Hủ",
       "gia": 30000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/11-wLBYXGMV7yROiCnmNXl7JALADXsdRH",
       "ton": 0
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261027_1441.xlsx"
+  "syncedFrom": "source_sheet_20261028_1030.xlsx"
 }
