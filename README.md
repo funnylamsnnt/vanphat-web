@@ -51,6 +51,47 @@ python3 scripts/sync_products_from_excel.py /workspace/vanphat-sync/PHIEU_BAO_GI
 
 Nếu tên kết thúc bằng `.tmp` (lỗi lưu Excel/Drive for desktop, như `FB1DA4E5.tmp` ngày 10/10/2026) hoặc khác `PHIEU BAO GIA VAN PHAT - 2026.xlsx` (đã chuẩn hóa hoa/thường, dấu, khoảng trắng, đuôi), script thoát mã **3** trước khi ghi gì: không deploy web, không refresh cầu nối LIVE, báo anh Hà. Logic nằm ở `scripts/source_title_guard.py`.
 
+### Action đồng bộ catalog 14:35
+
+Workflow [`.github/workflows/sync-catalog.yml`](.github/workflows/sync-catalog.yml) chạy lúc **14:35 giờ Việt Nam**, cron UTC `35 7 * * *`. Có thể bấm chạy tay bằng `workflow_dispatch`.
+
+Việc làm, theo thứ tự:
+
+1. Đọc metadata Drive của file `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` bằng service account.
+2. Tên file sai hoặc kết thúc bằng `.tmp` thì dừng (thoát 3). Không ghi web, không đụng cầu nối.
+3. `modifiedTime` trùng `scripts/sync_state.json` và cầu nối của mốc đó đã `ok` thì dừng. Không commit.
+4. `modifiedTime` đổi thì tải Excel (chỉ GET, không convert file gốc), chạy `scripts/sync_products_from_excel.py`, rồi `check_rules.py` và `check_seo.py`.
+5. Commit các file catalog được phép, push `main` bằng `GH_PUSH_TOKEN`, đợi workflow `pages-build-deployment` xanh.
+6. Sau Pages, thay tab `Danh Mục Vật Tư` trên spreadsheet cầu nối LIVE: ghi đủ dòng nguồn, kể cả nhóm «Không đưa lên web», xóa tab cũ, đổi tên tab mới. Tab `Chính Sách Đối Tác` giữ nguyên. Số mã trên cầu nối phải bằng số mã nguồn, lệch 0.
+7. Nếu cầu nối lỗi sau khi catalog đã lên `main`, lần sau chỉ làm lại cầu nối (trạng thái `pending`), không sync lại từ đầu.
+
+File Excel tải về nằm ở thư mục tạm của runner, không commit. Id cầu nối không ghi vào repo.
+
+#### Tạo secret
+
+Repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**. Ba secret:
+
+| Secret | Nội dung |
+|---|---|
+| `GDRIVE_SA_JSON` | Nguyên file JSON của service account |
+| `LIVE_BRIDGE_SHEET_ID` | Id spreadsheet cầu nối LIVE, đoạn giữa URL `/spreadsheets/d/<id>/edit` |
+| `GH_PUSH_TOKEN` | PAT được push nhánh `main` |
+
+Service account:
+
+1. Vào Google Cloud Console, chọn hoặc tạo một project.
+2. Bật **Google Drive API** và **Google Sheets API**.
+3. **IAM & Admin** → **Service accounts** → **Create service account**. Không cần role trên project.
+4. Mở account đó → **Keys** → **Add key** → **JSON**. Tải file về.
+5. Share file Excel `PHIEU BAO GIA VAN PHAT - 2026.xlsx` (fileId `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`) cho `client_email` trong JSON, quyền **Viewer**.
+6. Share spreadsheet cầu nối LIVE cho cùng email, quyền **Editor**. Không dán id này vào git, README, hay log commit.
+
+`GH_PUSH_TOKEN`: fine-grained PAT của tài khoản được ghi `main`, quyền **Contents: Read and write** và **Actions: Read**. Classic PAT thì scope `repo`. Push bằng `GITHUB_TOKEN` mặc định không kích hoạt build GitHub Pages (nguồn đang là nhánh `main`). Nếu `main` chặn push thẳng, cho PAT này được bypass rule của lịch sync.
+
+Dán JSON vào `GDRIVE_SA_JSON` cả khối, kể cả nhiều dòng. Không commit file key.
+
+Khi lượt 14:35 đã xanh, dừng lịch 14:35 của bot ngoài để khỏi làm mới cầu nối hai lần. Lịch 8:09 vẫn là bot ngoài, mở PR nếu có đổi. Workflow này không sửa Apps Script.
+
 Sau khi Excel cập nhật `data/products.json`, `scripts/sync_products_from_excel.py` tự gọi generator. Nếu chỉ sửa JSON:
 
 ```bash

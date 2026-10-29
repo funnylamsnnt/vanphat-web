@@ -30,7 +30,7 @@ Văn mô tả sản phẩm: `.cursor/rules/mo-ta-san-pham.mdc`.
 
 ## Mỗi việc một PR
 
-Một việc, một PR. Cursor không push thẳng `main` và không tự merge. Ranh giới còn lại (bí mật, `CNAME`, form đặt hàng đã gỡ) ở `.cursor/rules/ranh-gioi-repo.mdc`.
+Một việc, một PR. Cursor không push thẳng `main` và không tự merge. Ngoại lệ đã giao là workflow `sync-catalog` lúc 14:35: commit catalog lên `main`, đợi GitHub Pages, rồi làm mới cầu nối LIVE. Ranh giới còn lại (bí mật, `CNAME`, form đặt hàng đã gỡ) ở `.cursor/rules/ranh-gioi-repo.mdc`.
 
 PR không conflict và CI xanh thì bot giao việc squash-merge. Anh Hà cho phép thường trực việc này từ 14/10/2026. CI đỏ thì Cursor sửa tiếp. Không merge PR đỏ.
 

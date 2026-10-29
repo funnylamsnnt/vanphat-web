@@ -38,9 +38,9 @@ State của lần sync gần nhất: `scripts/sync_state.json`.
 
 ## Phân vai
 
-Trợ lý bên ngoài đọc Drive và lo vận hành: lịch đối chiếu nguồn (8:09 và 14:09, giờ Asia/Bangkok), tải Excel, refresh cầu nối LIVE Đơn Đặt Hàng. Cầu nối là Google Sheet native vì IMPORTRANGE không đọc được file master `.xlsx`. Script refresh và bản Excel mirror nằm trên máy trợ lý, không có trong repo này. Không commit fileId cầu nối, fileId sheet đơn, hay file Excel nguồn.
+Trợ lý bên ngoài đọc Drive lúc 8:09 (giờ Asia/Bangkok). Có đổi thì mở PR catalog. Lúc 14:35, workflow `.github/workflows/sync-catalog.yml` tải Excel bằng service account, sync nếu `modifiedTime` đổi, commit catalog lên `main`, đợi GitHub Pages, rồi làm mới cầu nối LIVE. Cầu nối là Google Sheet native vì IMPORTRANGE không đọc được file master `.xlsx`. Không commit fileId cầu nối, fileId sheet đơn, hay file Excel nguồn. Cách tạo secret nằm ở README, mục «Action đồng bộ catalog 14:35».
 
-Cursor lo code, SEO kỹ thuật và script trong repo này. Mọi thay đổi đi bằng nhánh và pull request để anh Hà duyệt. Không push thẳng lên `main`, không tự merge. Trợ lý ngoài cũng chỉ được mở PR, không push `main`.
+Cursor lo code, SEO kỹ thuật và script trong repo này. Mọi thay đổi code đi bằng nhánh và pull request để anh Hà duyệt. Agent không push thẳng lên `main`, không tự merge. Workflow 14:35 là ngoại lệ đã giao cho catalog.
 
 Khi anh giao cho Cursor chạy sync, dùng script trong repo này (`scripts/sync_products_from_excel.py`, có đọc `data/ia.json`). Bản script cũ nằm ngoài repo, nếu không đọc `ia.json`, thì bỏ. Vẫn không đưa fileId cầu nối vào commit. Refresh cầu nối vẫn là việc của trợ lý ngoài, trừ khi anh giao rõ từng lần.
 
@@ -48,12 +48,12 @@ Khi anh giao cho Cursor chạy sync, dùng script trong repo này (`scripts/sync
 
 Một chiều, một người được ghi `main`: anh, khi bấm merge. Trên GitHub, nhánh `main` nên bật bắt buộc pull request. Việc đó là cài đặt của repo, không nằm trong file.
 
-1. 8:09 hoặc 14:09, trợ lý ngoài đọc Drive. Tên file sai thì dừng. File không đổi thì không nhắn.
-2. Có đổi thì chạy `scripts/sync_products_from_excel.py` trong repo này và mở PR. Không push `main`. Script tự xếp nhóm có tên mới vào lĩnh vực khớp nhất, ghi vào `data/ia.json`, và phát hành. Ô Nhóm trống và nhãn `Khác` ở ngoài web.
-3. PR điền mẫu `.github/PULL_REQUEST_TEMPLATE.md` từ JSON của script: mã thêm, mã gỡ, giá đổi, slug đổi, giá trống hoặc bằng 0, nhóm mới đã xếp, nhóm giữ ngoài web.
-4. `check-rules` và `check-seo` phải xanh.
-5. Anh merge. GitHub Pages phát hành.
-6. Trợ lý ngoài refresh cầu nối, đối soát số dòng bằng số SKU nguồn, rồi gửi một tin.
+1. 8:09, trợ lý ngoài đọc Drive và mở PR nếu có đổi. 14:35, workflow `sync-catalog` đọc metadata. Tên file sai thì dừng. `modifiedTime` không đổi thì dừng, không commit.
+2. Có đổi lúc 14:35 thì workflow chạy `scripts/sync_products_from_excel.py`. Script tự xếp nhóm có tên mới vào lĩnh vực khớp nhất, ghi vào `data/ia.json`, và phát hành. Ô Nhóm trống và nhãn `Khác` ở ngoài web. Lượt 8:09 vẫn mở PR, không push `main`.
+3. JSON của script có mã thêm, mã gỡ, giá đổi, slug đổi, giá trống hoặc bằng 0, nhóm mới đã xếp, nhóm giữ ngoài web. PR tay điền mẫu `.github/PULL_REQUEST_TEMPLATE.md`.
+4. `check-rules` và `check-seo` phải xanh trước khi workflow commit.
+5. Workflow push `main`. GitHub Pages build từ nhánh đó.
+6. Sau Pages, workflow làm mới cầu nối LIVE, đối soát số mã bằng số SKU nguồn, lệch 0. Id cầu nối chỉ nằm trong secret.
 
 ## Codeword
 
@@ -82,7 +82,7 @@ Chi tiết nằm ở rule luôn áp dụng. Chỗ đã có file thì làm theo f
 5. Layout lọc: điện thoại là hàng chip cuộn ngang có nút thu gọn; PC là sidebar. `.cursor/rules/bo-loc-catalog.mdc`.
 6. SEO: đừng làm hỏng sitemap, schema ItemList, title và meta, thư mục noscript. `.cursor/rules/seo-ky-thuat.mdc`.
 7. Không ghi đè `CNAME`. Không commit bí mật, email cá nhân, tài khoản, fileId cầu nối hay đơn nội bộ, link hệ thống QLVB. Không thêm lại nút hoặc form «Đặt hàng online» / Apps Script đã gỡ. Giữ giỏ hàng, Zalo, hotline. Chi tiết: `.cursor/rules/ranh-gioi-repo.mdc`.
-8. Sửa trên nhánh, mở PR, chờ anh duyệt. Không push thẳng `main`.
+8. Sửa code trên nhánh, mở PR, chờ anh duyệt. Agent không push thẳng `main`. Workflow `sync-catalog` lúc 14:35 là ngoại lệ commit catalog.
 9. Mô tả sản phẩm, anh Hà chốt ngày 17/10/2026: `.cursor/rules/mo-ta-san-pham.mdc`. Văn tự viết, không chép nguyên văn web khác. Thông số, chất liệu, xuất xứ, công dụng và tiêu chuẩn chỉ lấy từ web chính hãng, bao bì hoặc catalog hãng, và Excel gốc hoặc KiotViet. Chưa có nguồn hãng thì chỉ hiện dữ liệu Excel hoặc Kiot, để trống mô tả dài và gắn cờ chờ xác minh. Cursor ghi nguồn từng mã trong mô tả PR; bot Web & SEO Vạn Phát đối chiếu trước khi merge.
 10. Widget chat: `.cursor/rules/chat-widget-cache.mdc`. Style nằm ở `css/chat-widget.css`, do `js/chat-widget.js` nạp. Sửa hai file đó không cần tăng `?v`. Service worker lấy cả hai network-first theo pathname.
 
