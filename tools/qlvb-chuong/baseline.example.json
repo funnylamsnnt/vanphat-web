@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-23T07:00:00+07:00",
+  "items": [
+    {
+      "id": "notification-count",
+      "kind": "badge",
+      "count": 2
+    },
+    {
+      "id": "notice-vi-du",
+      "kind": "notice",
+      "title": "Ví dụ, không phải thông báo thật"
+    }
+  ]
+}
