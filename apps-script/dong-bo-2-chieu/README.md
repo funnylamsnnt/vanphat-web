@@ -95,7 +95,7 @@ Khi bảng tóm tắt đúng: đặt `DRY_RUN` = `false`, chạy `chayDongBo` m�
 
 Giờ Việt Nam (UTC+7). Project để timezone `Asia/Ho_Chi_Minh`.
 
-- Một trigger `dongBoHaiChieu`, `everyMinutes(15)`, cả ngày.
+- Một trigger `dongBoHaiChieu`, `everyMinutes(30)`, cả ngày.
 - Vẫn bỏ **8:05–8:40** và **14:05–14:40** (tính cả hai đầu). Hai khung đó routine bên ngoài đang xuất. Lúc bỏ qua, script không gọi Drive và không lấy khóa.
 - `chayDryRun` và `chayDongBo` chạy tay, không xét lịch. Trigger vẫn tôn trọng `DRY_RUN`.
 

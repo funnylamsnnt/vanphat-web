@@ -21,6 +21,8 @@
 6. Trang HTML không chứa «0đ» hay schema price 0.
 7. Mô tả dài trong data/descriptions.json chỉ khi trang_thai là da_xac_minh
    và nguon_url là http(s). Câu đệm không nguồn không được vào file hay trang SKU.
+8. Lịch sync 14:35 (`scripts/test_sync_schedule.py`): chỉ chạy khi modifiedTime
+   đổi, không commit Apps Script, không ghi id cầu nối.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
 nằm trong hạng mục 2. Chạy: python3 scripts/check_rules.py
@@ -516,6 +518,32 @@ def check_node_script(errors: list[str], name: str, label: str) -> None:
         errors.append(f"{label} lỗi:\n" + (detail or f"exit {proc.returncode}"))
 
 
+def check_py_script(errors: list[str], name: str, label: str) -> None:
+    script = ROOT / "scripts" / name
+    if not script.is_file():
+        errors.append(f"thiếu scripts/{name}")
+        return
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(script)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        errors.append(f"scripts/{name} quá thời gian")
+        return
+    if proc.returncode != 0:
+        detail = ((proc.stdout or "") + (proc.stderr or "")).strip()
+        errors.append(f"{label} lỗi:\n" + (detail or f"exit {proc.returncode}"))
+
+
+def check_sync_schedule(errors: list[str]) -> None:
+    check_py_script(errors, "test_sync_schedule.py", "test lịch sync")
+
+
 def check_chat_search(errors: list[str]) -> None:
     check_node_script(errors, "test_chat_search.js", "test tìm chat")
     check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
@@ -646,6 +674,7 @@ def main() -> None:
     check_zero_price_pages(errors)
     check_product_descriptions(errors)
     check_chat_search(errors)
+    check_sync_schedule(errors)
     check_chat_widget_cache(errors)
     redirects = check_redirects(errors)
     if errors:
