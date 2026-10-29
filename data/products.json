@@ -1516,7 +1516,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
-      "ton": 160,
+      "ton": 360,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1555,7 +1555,7 @@
       "dvt": "Cây",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
-      "ton": 389,
+      "ton": 1589,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1568,7 +1568,7 @@
       "dvt": "Cây",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/18w2z1oUUCaUdrbOIlCSqm4K-GiRpqaJI",
-      "ton": 200,
+      "ton": 300,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1854,7 +1854,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
-      "ton": 820,
+      "ton": 1540,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1893,7 +1893,7 @@
       "dvt": "Cây",
       "gia": 9500,
       "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
-      "ton": 870,
+      "ton": 1590,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1984,7 +1984,7 @@
       "dvt": "Cây",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1uKutKE8xEsFxMGyjZMOgqZw57yfE41WZ",
-      "ton": 480,
+      "ton": 960,
       "thuongHieu": "Thiên Long",
       "quyCach": "10 cây/hộp"
     },
@@ -2248,7 +2248,7 @@
       "dvt": "Cây",
       "gia": 5500,
       "anh": "https://lh3.googleusercontent.com/d/1rJbwVPdvjk1GMidZutvX1MFTd8KYNmMq",
-      "ton": 300
+      "ton": 400
     },
     {
       "nhom": "Bút & Mực",
@@ -2272,6 +2272,126 @@
       "dvt": "Cây",
       "gia": 5500,
       "anh": "https://lh3.googleusercontent.com/d/1D9uD3lXNjOSb7_vmy3G7RsTWihx2BPYR",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP572",
+      "ten": "Bút Bi Thiên Long TL-08 (Xanh - Hộp 20)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1--igZd3C_RWa0ZjEZR0861CiZf9HnbMT",
+      "ton": 400
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP573",
+      "ten": "Bút Bi Thiên Long TL-08 (Đỏ - Hộp 20)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1--igZd3C_RWa0ZjEZR0861CiZf9HnbMT",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP574",
+      "ten": "Bút Bi Thiên Long TL-08 (Đen - Hộp 20)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1--igZd3C_RWa0ZjEZR0861CiZf9HnbMT",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP576",
+      "ten": "Bút gel TP-GelE01 (xanh hộp 20 - xóa được)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1xjcguxHFo9uhJlmf1jjBrr9yMNmv92Zs",
+      "ton": 400
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP577",
+      "ten": "Bút gel TP-GelE01 (Đỏ hộp 20 - xóa được)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1xjcguxHFo9uhJlmf1jjBrr9yMNmv92Zs",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP578",
+      "ten": "Bút gel TP-GelE01 (Đen hộp 20 - xóa được)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1xjcguxHFo9uhJlmf1jjBrr9yMNmv92Zs",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP579",
+      "ten": "Bút gel GEL-068 (Xanh - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 200
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP580",
+      "ten": "Bút gel GEL-068 (Đỏ - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP581",
+      "ten": "Bút gel GEL-068 (Đen - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP582",
+      "ten": "Bút gel GEL-068 (Tím - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
       "ton": 0
     },
     {
@@ -4611,7 +4731,7 @@
       "dvt": "Cặp",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
-      "ton": 760,
+      "ton": 460,
       "thuongHieu": "Maxell"
     },
     {
@@ -5249,6 +5369,30 @@
       "gia": 0,
       "anh": "",
       "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP575",
+      "ten": "Pin Carbon AA (tiểu) lốc 4 BAC-R6/4",
+      "dvt": "Cặp",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1YRP8cvIaCZ3md00jzebzHjG7lb3EYCw7",
+      "ton": 60
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP583",
+      "ten": "Bìa nút F4 in (ô vuông) FO CBF01",
+      "dvt": "Cái",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1bDwa8Ex8OSgOCv2N4iNo8nSAdgz02EdT",
+      "ton": 100
     },
     {
       "nhom": "Điện",
@@ -6264,7 +6408,7 @@
       "ma": "VP537",
       "ten": "Nước cam ép Twister 450ml",
       "dvt": "Chai",
-      "gia": 0,
+      "gia": 12000,
       "anh": "",
       "ton": 0
     },
@@ -6289,6 +6433,66 @@
       "ten": "Nước cam có tép Teppy 327ml",
       "dvt": "Chai",
       "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP584",
+      "ten": "Nước tăng lực Rockstar lon 250ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP585",
+      "ten": "Nước tăng lực Carabao lon 250ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP586",
+      "ten": "Lon Sting Thái tăng lực Warrior 325ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP587",
+      "ten": "Nước uống tăng lực mật nhân Lipovitan lon 250ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP588",
+      "ten": "Nước tăng lực Warrior nho lon 325ml",
+      "dvt": "",
+      "gia": 0,
       "anh": "",
       "ton": 0
     },
@@ -6870,5 +7074,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261028_1444.xlsx"
+  "syncedFrom": "source_sheet_20261029_1030.xlsx"
 }
