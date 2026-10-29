@@ -7,7 +7,7 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-10-28T07:55:00Z",
+  "lastSyncAt": "2026-10-29T03:40:00Z",
   "lastSyncResult": {
     "changed": true,
     "count": 532,
@@ -868,5 +868,6 @@
     "live_check": "products.json live 535; / san-pham 3 linh-vuc 200; VP568–570, VP265/267/382 mới 200 + lightbox; redirect VP265/267 200; VP415 404, 0 trong sitemap; ảnh mới 200",
     "note": "Không xuất Sheet→Excel.",
     "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
-  }
+  },
+  "lastSyncNote": "29/10 10:40 ICT: web 35583d8f từ Google Sheet; +17 mã VP572–VP588, VP537 0→12000; bridge LIVE pending (không có trình duyệt CDP), file _UPLOAD_BRIDGE.xlsx 588 dòng sẵn"
 }
