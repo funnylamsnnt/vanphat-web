@@ -534,6 +534,140 @@ def product_seo_description(product: dict, group: str) -> str:
     return clip(body)
 
 
+# Nước uống các hãng này: title/meta nêu dung tích, giá niêm yết và giao tại Nha Trang.
+# Chỉ nhóm Nước uống. Bấm kim KW-triO / Trio thuộc Dụng cụ VP, không đi vào đây.
+LOCAL_DRINK_BRANDS = ("sting", "aquarius", "trio")
+DRINK_TITLE_FLOOR = 58
+DRINK_DESC_WITH_STORE = 162
+DRINK_DESC_WITH_ADDRESS = 165
+
+
+def _folded_has_word(folded: str, word: str) -> bool:
+    return re.search(rf"(?<![a-z0-9]){re.escape(word)}(?![a-z0-9])", folded) is not None
+
+
+def is_local_delivery_drink(product: dict) -> bool:
+    """Sting, Aquarius, Trio trong nhóm Nước uống. Không đụng dụng cụ KW-triO."""
+    if str((product or {}).get("nhom") or "") != "Nước uống":
+        return False
+    brand = fold_text(stated_brand(product) or "")
+    name = fold_text((product or {}).get("ten") or "")
+    blob = f"{brand} {name}".strip()
+    return any(_folded_has_word(blob, key) for key in LOCAL_DRINK_BRANDS)
+
+
+def volume_ml_label(product: dict) -> str:
+    """Dung tích ml có trong tên hoặc cột quy cách. Không suy ra số khác."""
+    blob = f"{(product or {}).get('quyCach') or ''} {(product or {}).get('ten') or ''}"
+    match = re.search(r"(\d+(?:[.,]\d+)?)\s*ml\b", blob, re.I)
+    if not match:
+        return ""
+    return match.group(1).replace(",", ".") + "ml"
+
+
+def _clip_words(text: str, limit: int) -> str:
+    text = re.sub(r"\s+", " ", str(text or "")).strip()
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0].strip()
+    return cut or text[:limit].strip()
+
+
+def drink_short_heading(product: dict) -> str:
+    """Tên ngắn cho title: giữ biến thể trong tên, không thêm từ ngoài dữ liệu."""
+    raw = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
+    folded = fold_text(raw)
+    less_sugar = "it duong" in folded
+    zero = "zero calorie" in folded
+    mineral = _folded_has_word(folded, "khoang")
+    sport = "van dong" in folded
+    container = ""
+    if _folded_has_word(folded, "lon"):
+        container = "lon"
+    elif _folded_has_word(folded, "chai"):
+        container = "chai"
+    core = re.sub(r"\([^)]*\)", " ", raw)
+    core = re.sub(r"(?i)\d+(?:[.,]\d+)?\s*ml\b", " ", core)
+    core = re.sub(
+        r"(?i)^nước(?:\s+(?:ngọt|khoáng|uống vận động|tinh khiết|tăng lực))?\s+",
+        "",
+        core,
+    )
+    core = re.sub(r"(?i)\b(lon|chai)\b", " ", core)
+    core = re.sub(r"[/|]+", " ", core)
+    core = re.sub(r"\s+", " ", core).strip(" -/|")
+    low = fold_text(core)
+    bits = [core] if core else []
+    if less_sugar and "it duong" not in low:
+        bits.append("ít đường")
+    if zero and "zero calorie" not in low:
+        bits.append("Zero Calorie")
+    if mineral and "khoang" not in low:
+        bits.append("khoáng")
+    if sport and "van dong" not in low:
+        bits.append("vận động")
+    joined = fold_text(" ".join(bits))
+    if container and container not in joined:
+        bits.append(container)
+    vol = volume_ml_label(product)
+    if vol:
+        bits.append(vol)
+    heading = re.sub(r"\s+", " ", " ".join(bit for bit in bits if bit)).strip()
+    return heading or raw
+
+
+def drink_delivery_title(product: dict) -> str:
+    """Title ~60 ký tự: dung tích, giá nếu có, và «giao tận nơi Nha Trang»."""
+    if not is_local_delivery_drink(product):
+        return ""
+    head = drink_short_heading(product)
+    amount = price_amount(product.get("gia"))
+    price = format_price(amount) if amount is not None else ""
+    tail = "giao tận nơi Nha Trang"
+
+    def build(heading: str) -> str:
+        if price:
+            return f"{heading}, {price}, {tail}"
+        return f"{heading}, {tail}"
+
+    title = build(head)
+    if len(title) < DRINK_TITLE_FLOOR and not fold_text(head).startswith("nuoc "):
+        candidate = build(f"Nước {head}")
+        if len(candidate) <= 66:
+            title = candidate
+    if len(title) > TITLE_MAX:
+        used = title.split(",", 1)[0]
+        room = TITLE_MAX - (len(title) - len(used))
+        title = build(_clip_words(used, max(room, 8)))
+    return title
+
+
+def drink_delivery_description(product: dict) -> str:
+    """Meta ~155 ký tự. Thiếu giá thì bỏ phần giá. Không bịa dung tích."""
+    if not is_local_delivery_drink(product):
+        return ""
+    name = re.sub(r"\s+", " ", str(product.get("ten") or "Sản phẩm")).strip()
+    vol = volume_ml_label(product)
+    amount = price_amount(product.get("gia"))
+    bits = [name + "."]
+    facts: list[str] = []
+    if vol:
+        facts.append(f"Dung tích {vol}")
+    if amount is not None:
+        facts.append(f"giá {format_price(amount)}")
+    if facts:
+        bits.append(", ".join(facts) + ".")
+    bits.append("Vạn Phát giao tận nơi Nha Trang.")
+    base = " ".join(bits)
+    with_store = f"{base} Cửa hàng {ADDRESS}."
+    if len(with_store) <= DRINK_DESC_WITH_STORE:
+        return with_store
+    with_address = f"{base} {ADDRESS}."
+    if len(with_address) <= DRINK_DESC_WITH_ADDRESS:
+        return with_address
+    return base
+
+
 def offer_node(product: dict, canonical: str) -> dict | None:
     amount = price_amount(product.get("gia"))
     if amount is None:
@@ -1169,6 +1303,27 @@ def placeholder_block(meta: dict, lv: dict) -> str:
         </section>"""
 
 
+def sku_text_links(products: list[dict], href_for) -> str:
+    """Danh sách chữ tới trang SKU. Anchor là tên hàng, không nhồi từ khóa địa phương."""
+    rows = [p for p in products if p.get("_file") and (p.get("ten") or p.get("ma"))]
+    if not rows:
+        return ""
+    rows.sort(key=lambda product: str(product.get("ma") or ""))
+    items = []
+    for product in rows:
+        label = product.get("ten") or product.get("ma")
+        items.append(f'            <li><a href="{esc(href_for(product))}">{esc(label)}</a></li>')
+    joined = "\n".join(items)
+    return f"""        <nav class="sku-anchor-nav" aria-label="Trang sản phẩm chi tiết">
+          <h2>Xem trang từng sản phẩm</h2>
+          <p>Chọn đúng tên để mở trang chi tiết, xem đơn vị tính và giá đang niêm yết.</p>
+          <ul>
+{joined}
+          </ul>
+        </nav>
+"""
+
+
 def build_category_page(nhom: str, products: list[dict], groups: list[str], files: dict, ia: dict) -> str:
     filename = files[nhom]
     canonical = f"{SITE}/san-pham/{filename}"
@@ -1238,6 +1393,7 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
     else:
         grid = placeholder_block(meta or {"TenNhom": nhom, "slug": slugify(nhom)}, lv or {"ten": lv_name})
         lead = "Sắp có hàng — liên hệ đặt trước qua Zalo hoặc hotline."
+    sku_nav = sku_text_links(products, lambda product: product["_file"])
     catalog_filter = "../san-pham.html?nhom=" + quote(nhom)
     if lv:
         catalog_filter += "&lv=" + quote(lv.get("id") or "")
@@ -1256,7 +1412,7 @@ def build_category_page(nhom: str, products: list[dict], groups: list[str], file
     <section class="catalog-section">
       <div class="container">
         {grid}
-        {cta_row()}
+{sku_nav}        {cta_row()}
         <div class="text-center mt-2">
           <a class="btn btn-outline-navy" href="{esc(catalog_filter)}">Lọc nhóm này trong catalog</a>
         </div>
@@ -1514,12 +1670,12 @@ def build_product_page(
     lv = ia["lv_by_id"].get(product.get("linhVucId") or "") or lv_for_nhom(nhom, ia)
     priced = price_amount(product.get("gia")) is not None
     price = format_price_line(product)
-    description = product_seo_description(product, nhom)
+    description = drink_delivery_description(product) or product_seo_description(product, nhom)
     ten = str(product.get("ten") or product.get("ma") or "Sản phẩm")
     code = None
     if source_name_key(product.get("ten") or "") in (duplicate_names or set()):
         code = str(product.get("ma") or "").strip().upper() or None
-    title = product_seo_title(ten, nhom, code)
+    title = drink_delivery_title(product) or product_seo_title(ten, nhom, code)
     crumbs = [
         ("Trang chủ", "../index.html"),
         ("Sản phẩm", "../san-pham.html"),
@@ -2021,8 +2177,8 @@ FOOTER_BLURB_OLD = "văn phòng phẩm và photocopy tại KĐT Mỹ Gia, Phư�
 FOOTER_BLURB_NEW = "văn phòng phẩm, nước uống và điện gia dụng tại KĐT Mỹ Gia, Phường Nam Nha Trang."
 # Visible homepage hero under the H1. Meta description stays separate.
 HERO_LEAD = (
-    "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT cung cấp văn phòng phẩm, "
-    "nước uống, điện gia dụng, photocopy và in màu khổ A5\u2013A3."
+    "Văn phòng phẩm Nha Trang do CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT cung cấp, "
+    "cùng nước uống, điện gia dụng, photocopy và in màu khổ A5\u2013A3."
 )
 HERO_LEAD_RE = re.compile(r'(<p class="hero-lead">)\s*.*?\s*(</p>)', re.DOTALL)
 
@@ -2418,6 +2574,54 @@ def assert_seo_helpers() -> None:
         raise SystemExit("hero lead pin is not idempotent")
     if pinned.count(", ") != 3:
         raise SystemExit("hero lead must keep one space after each comma")
+    if "Văn phòng phẩm Nha Trang" not in HERO_LEAD:
+        raise SystemExit("hero lead must lead with văn phòng phẩm Nha Trang")
+    stapler = {
+        "nhom": "Dụng cụ VP",
+        "ten": "Bấm kim Trio (30 tờ)",
+        "thuongHieu": "KW-triO",
+        "gia": 145000,
+        "dvt": "Cái",
+    }
+    if is_local_delivery_drink(stapler) or drink_delivery_title(stapler) or drink_delivery_description(stapler):
+        raise SystemExit("KW-triO stationery must not use the drink delivery title")
+    sting = {
+        "nhom": "Nước uống",
+        "ten": "Nước Sting Gold (Lon 320ml)",
+        "thuongHieu": "Sting",
+        "gia": 12000,
+        "dvt": "Lon",
+    }
+    sting_title = drink_delivery_title(sting)
+    sting_desc = drink_delivery_description(sting)
+    if "320ml" not in sting_title or "12.000 ₫" not in sting_title or "giao tận nơi Nha Trang" not in sting_title:
+        raise SystemExit(f"Sting title missing volume, price, or delivery phrase: {sting_title!r}")
+    if not (50 <= len(sting_title) <= TITLE_MAX):
+        raise SystemExit(f"Sting title length {len(sting_title)}: {sting_title!r}")
+    if "320ml" not in sting_desc or "12.000 ₫" not in sting_desc or "giao tận nơi Nha Trang" not in sting_desc:
+        raise SystemExit(f"Sting description missing facts: {sting_desc!r}")
+    if len(sting_desc) > DRINK_DESC_WITH_ADDRESS:
+        raise SystemExit(f"Sting description too long ({len(sting_desc)}): {sting_desc!r}")
+    unpriced = {
+        "nhom": "Nước uống",
+        "ten": "Lon Sting Thái tăng lực Warrior 325ml",
+        "gia": 0,
+        "dvt": "",
+    }
+    unpriced_title = drink_delivery_title(unpriced)
+    unpriced_desc = drink_delivery_description(unpriced)
+    if "325ml" not in unpriced_title or "giao tận nơi Nha Trang" not in unpriced_title or "₫" in unpriced_title:
+        raise SystemExit(f"unpriced Sting title should keep volume and drop price: {unpriced_title!r}")
+    if "giá" in unpriced_desc or "325ml" not in unpriced_desc or "giao tận nơi Nha Trang" not in unpriced_desc:
+        raise SystemExit(f"unpriced Sting description should omit price: {unpriced_desc!r}")
+    links = sku_text_links(
+        [{"ma": "VP204", "ten": "Giấy A4", "_file": "vp204-giay-a4.html"}],
+        lambda product: product["_file"],
+    )
+    if 'href="vp204-giay-a4.html"' not in links or ">Giấy A4</a>" not in links:
+        raise SystemExit("sku text link lost the product name anchor")
+    if "văn phòng phẩm nha trang" in links.casefold():
+        raise SystemExit("sku text links must not stuff the local keyword into every anchor")
     quy_cach_cases = {
         "Bấm 1 lổ Kwtrio 97A0 (8 tờ)": ["8 tờ"],
         "Phiếu thu 2 liên 13x19cm": ["13x19cm"],
@@ -2667,6 +2871,82 @@ def assert_generated_seo(products: list[dict]) -> None:
     home = (ROOT / "index.html").read_text(encoding="utf-8")
     if HERO_LEAD not in home:
         raise SystemExit("homepage hero lead drifted from the pinned sentence")
+    home_title = home.split("</title>", 1)[0]
+    if "Văn phòng phẩm Nha Trang" not in home_title:
+        raise SystemExit("homepage title is missing văn phòng phẩm Nha Trang")
+    if 'class="hero-address"' not in home or ADDRESS not in home:
+        raise SystemExit("homepage is missing the visible Mỹ Gia address")
+    if f"Văn phòng phẩm Nha Trang. Cửa hàng tại {ADDRESS}." not in home:
+        raise SystemExit("homepage LocalBusiness description drifted")
+    wholesale = (ROOT / "dia-phuong" / "van-phong-pham-gia-si-nha-trang.html").read_text(encoding="utf-8")
+    if "Văn phòng phẩm Nha Trang giá niêm yết | Vạn Phát" not in wholesale:
+        raise SystemExit("wholesale page title drifted")
+    if "<h1>Văn phòng phẩm Nha Trang cho cơ quan và cửa hàng</h1>" not in wholesale:
+        raise SystemExit("wholesale page H1 drifted")
+    if "<h2>Địa chỉ cửa hàng văn phòng phẩm Nha Trang</h2>" not in wholesale:
+        raise SystemExit("wholesale page H2 drifted")
+    if ADDRESS not in wholesale or f"Văn phòng phẩm Nha Trang. Cửa hàng tại {ADDRESS}." not in wholesale:
+        raise SystemExit("wholesale page lost the address or LocalBusiness description")
+    drink_titles: set[str] = set()
+    for product in products:
+        if not is_local_delivery_drink(product):
+            continue
+        page = (ROOT / "san-pham" / product["_file"]).read_text(encoding="utf-8")
+        title = page.split("<title>", 1)[1].split("</title>", 1)[0]
+        desc_match = re.search(r'name="description" content="([^"]*)"', page)
+        desc = html.unescape(desc_match.group(1)) if desc_match else ""
+        vol = volume_ml_label(product)
+        amount = price_amount(product.get("gia"))
+        if "giao tận nơi Nha Trang" not in title or "giao tận nơi Nha Trang" not in desc:
+            raise SystemExit(f"{product.get('ma')} lost giao tận nơi Nha Trang")
+        if vol and (vol not in title or vol not in desc):
+            raise SystemExit(f"{product.get('ma')} lost volume {vol}: {title!r}")
+        if amount is None:
+            if "₫" in title or "giá" in desc:
+                raise SystemExit(f"{product.get('ma')} invented a price: {title!r} / {desc!r}")
+        elif format_price(amount) not in title or format_price(amount) not in desc:
+            raise SystemExit(f"{product.get('ma')} lost its list price")
+        if len(title) > TITLE_MAX or len(desc) > 170:
+            raise SystemExit(f"{product.get('ma')} title/description too long ({len(title)}/{len(desc)})")
+        key = title.casefold()
+        if key in drink_titles:
+            raise SystemExit(f"drink title collision: {title}")
+        drink_titles.add(key)
+    if len(drink_titles) < 8:
+        raise SystemExit(f"expected Sting and Aquarius drink titles, got {len(drink_titles)}")
+    stapler_page = (ROOT / "san-pham" / by_ma["VP014"]["_file"]).read_text(encoding="utf-8")
+    if "giao tận nơi Nha Trang" in stapler_page.split("</title>", 1)[0]:
+        raise SystemExit("stapler Trio page picked up the drink title")
+    grouped: dict[str, list[dict]] = {}
+    for product in products:
+        grouped.setdefault(product.get("nhom") or "", []).append(product)
+    for nhom, items in grouped.items():
+        if not nhom or not items:
+            continue
+        page = (ROOT / "san-pham" / category_filename(nhom)).read_text(encoding="utf-8")
+        if 'class="sku-anchor-nav"' not in page:
+            raise SystemExit(f"group {nhom} is missing the product text links")
+        nav = page.split('class="sku-anchor-nav"', 1)[1].split("</nav>", 1)[0]
+        for item in items:
+            if f'href="{item["_file"]}"' not in nav:
+                raise SystemExit(f"{nhom} text links missing {item.get('ma')}")
+            anchor = f">{html.escape(str(item.get('ten') or item.get('ma')))}</a>"
+            if anchor not in nav:
+                raise SystemExit(f"{nhom} anchor is not the product name for {item.get('ma')}")
+    if 'class="sku-anchor-nav"' in banh:
+        raise SystemExit("empty nhóm Bánh should not list product links")
+    heavy = ROOT / "san-pham" / "nhom-dung-cu-vp.html"
+    if heavy.stat().st_size > 500_000:
+        raise SystemExit(f"nhom-dung-cu-vp.html is {heavy.stat().st_size} bytes")
+    for spec in load_local_pages():
+        matched = select_local_products(products, {**spec, "limit": 10000})
+        local_page = (ROOT / "dia-phuong" / f"{spec['slug']}.html").read_text(encoding="utf-8")
+        if 'class="sku-anchor-nav"' not in local_page:
+            raise SystemExit(f"{spec['slug']} is missing product text links")
+        local_nav = local_page.split('class="sku-anchor-nav"', 1)[1].split("</nav>", 1)[0]
+        for item in matched:
+            if f'href="../san-pham/{item["_file"]}"' not in local_nav:
+                raise SystemExit(f"{spec['slug']} missing link to {item.get('ma')}")
     contact = (ROOT / "lien-he.html").read_text(encoding="utf-8")
     if (
         STREETVIEW_EMBED_SRC.replace("&", "&amp;") not in contact
@@ -2958,8 +3238,9 @@ def select_local_products(products: list[dict], spec: dict) -> list[dict]:
     return matched[:limit]
 
 
-def build_local_page(spec: dict, picked: list[dict], total: int, ia: dict) -> str:
+def build_local_page(spec: dict, picked: list[dict], matched_all: list[dict], ia: dict) -> str:
     slug = spec["slug"]
+    total = len(matched_all)
     canonical = f"{SITE}/dia-phuong/{slug}.html"
     title = str(spec.get("title") or spec.get("h1") or slug)
     description = str(spec.get("description") or "")
@@ -2976,6 +3257,9 @@ def build_local_page(spec: dict, picked: list[dict], total: int, ia: dict) -> st
     )
     grid = f'<div class="product-grid">\n{cards}\n        </div>' if cards else ""
     intro = "\n".join(f"        <p>{esc(para)}</p>" for para in (spec.get("intro") or []))
+    section_heading = str(spec.get("h2") or "").strip()
+    h2_html = f"        <h2>{esc(section_heading)}</h2>\n" if section_heading else ""
+    sku_nav = sku_text_links(matched_all, lambda product: "../san-pham/" + product["_file"])
     link_bits = []
     for link in spec.get("links") or []:
         href = str(link.get("href") or "").lstrip("/")
@@ -3003,10 +3287,13 @@ def build_local_page(spec: dict, picked: list[dict], total: int, ia: dict) -> st
             if item.get("q") and item.get("a")
         ],
     }
+    org = organization_node()
+    if slug == "van-phong-pham-gia-si-nha-trang":
+        org["description"] = f"Văn phòng phẩm Nha Trang. Cửa hàng tại {ADDRESS}."
     graph = {
         "@context": "https://schema.org",
         "@graph": [
-            organization_node(),
+            org,
             breadcrumb_ld(crumbs_ld),
             {
                 "@type": "CollectionPage",
@@ -3032,10 +3319,10 @@ def build_local_page(spec: dict, picked: list[dict], total: int, ia: dict) -> st
     <section class="section">
       <div class="container">
 {intro}
-        <p>{esc(served)}</p>
+{h2_html}        <p>{esc(served)}</p>
         <p>Đang hiển thị {len(picked)} / {total} sản phẩm khớp trang này. Giá lấy từ danh mục hiện tại.</p>
         {grid}
-        <div class="local-links">{''.join(link_bits)}</div>
+{sku_nav}        <div class="local-links">{''.join(link_bits)}</div>
         <h2>Câu hỏi thường gặp</h2>
 {faq_html}
         {cta_row()}
@@ -3067,7 +3354,7 @@ def write_local_pages(products: list[dict], ia: dict) -> list[str]:
         picked = matched_all[:limit]
         filename = f"{spec['slug']}.html"
         expected.add(filename)
-        page = build_local_page(spec, picked, len(matched_all), ia)
+        page = build_local_page(spec, picked, matched_all, ia)
         write_text(directory / filename, page)
         urls.append(f"/dia-phuong/{filename}")
     purge_generated(directory, expected)

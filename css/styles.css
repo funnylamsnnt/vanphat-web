@@ -338,8 +338,15 @@ display: none; /* hide old VP mark */
 .hero-lead {
   font-size: 1.0625rem;
   color: rgba(255,255,255,0.82);
-  max-width: 34rem;
+  max-width: 36rem;
   margin-bottom: 1.1rem;
+}
+.hero-address {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  max-width: 36rem;
+  margin: -0.45rem 0 1.1rem;
 }
 .hero .hero-search.nav-search {
   max-width: none;
@@ -2861,6 +2868,22 @@ body.lightbox-open { overflow: hidden; }
 }
 .local-links a { color: var(--navy); font-weight: 700; }
 .local-links a:hover { text-decoration: underline; }
+.sku-anchor-nav { margin: 1.5rem 0 0.25rem; }
+.sku-anchor-nav h2 { font-size: 1.2rem; margin-bottom: 0.35rem; }
+.sku-anchor-nav p { margin: 0 0 0.75rem; }
+.sku-anchor-nav ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  columns: 1;
+}
+.sku-anchor-nav li { break-inside: avoid; margin: 0 0 0.28rem; }
+.sku-anchor-nav a { color: var(--navy); font-weight: 600; }
+@media (min-width: 769px) {
+  .sku-anchor-nav ul { columns: 2; column-gap: 1.5rem; }
+}
+@media (min-width: 1100px) {
+  .sku-anchor-nav ul { columns: 3; }
+}
 .faq-item { border-top: 1px solid #e4ddd2; padding: 0.75rem 0; }
 .faq-item summary { cursor: pointer; font-weight: 700; }
 .faq-item p { margin: 0.45rem 0 0; }
