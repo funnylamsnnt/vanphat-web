@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-"""Kiểm tra chuông QLVB qua HTTP, chỉ đọc, không mở trình duyệt.
+"""Kiểm tra chuông QLVB, chỉ đọc.
 
-Phiên do người vận hành cấp trong file cookie (QLVB_COOKIE_FILE hoặc
---cookie-file). Script không đăng nhập, không chứa mật khẩu, không đọc
-profile Chrome, không POST, không bấm chuông.
+Cách khuyến nghị: nối Chrome đang đăng nhập qua DevTools (--cdp, mặc định
+cổng 9222). Script reload tab main.zul rồi đọc DOM. Không bấm, không đăng nhập.
+
+Cách cookie (QLVB_TRANSPORT=cookie) giữ lại để thử fixture. GET kèm cookie
+không đủ với ZK vì server còn gắn phiên với bước JS trong trình duyệt.
+
+Script không chứa mật khẩu, không đọc profile Chrome, không POST, không in cookie.
 
 Mã thoát:
   0   không có việc mới — một dòng JSON {"status":"ok",...}
   10  có thông báo mới, số chuông tăng, hoặc một nhóm Văn bản đến > 0
   3   hết phiên — {"status":"session_expired"}
   4   HTTP 403 hoặc lỗi mạng — {"status":"forbidden"|"network",...}
-  30  thiếu cấu hình, cookie sai quyền, trang không đọc được, baseline hỏng
+  30  thiếu cấu hình, cookie sai quyền, trang không đọc được, baseline hỏng,
+      hoặc không có Chrome ở cổng CDP — {"status":"no_browser"}
 
 Xem README.md cùng thư mục.
 """
@@ -18,12 +23,15 @@ Xem README.md cùng thư mục.
 from __future__ import annotations
 
 import argparse
+import base64
+import hashlib
 import html
 import json
 import os
 import re
 import socket
 import stat
+import struct
 import sys
 import time
 import unicodedata
@@ -45,6 +53,9 @@ EXIT_ERROR = 30
 USER_AGENT = "VanPhat-QLVB-BellCheck/1.0"
 DEFAULT_BASELINE = "/workspace/qlvb-bell-baseline.json"
 DEFAULT_TIMEOUT = 20
+DEFAULT_CDP_PORT = 9222
+WS_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+CDP_POLL_SECONDS = 0.25
 DEFAULT_BACKOFF = 1.0
 BACKOFF_CAP = 5.0
 MAX_BODY = 5_000_000
@@ -1275,8 +1286,738 @@ def _failure_result(
     return _finish(EXIT_DENIED, _json_line(payload), err, header)
 
 
-def execute(env: dict[str, str], fetch, sleep=time.sleep) -> tuple[int, str, str]:
+DOM_EXPR = r"""(function () {
+  function vis(el) {
+    if (!el || el.nodeType !== 1) return false;
+    try {
+      var s = window.getComputedStyle(el);
+      if (!s || s.display === "none" || s.visibility === "hidden") return false;
+    } catch (e) {
+      return false;
+    }
+    if (el.getClientRects && el.getClientRects().length === 0) return false;
+    return true;
+  }
+  function txt(el) {
+    if (!el) return "";
+    return String(el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+  }
+  var href = String(location.href || "");
+  var path = String(location.pathname || "");
+  var loginUrl = /login\.zul$/i.test(path);
+  var body = document.body;
+  var bodyText = body ? txt(body) : "";
+  var loginWord = /đăng\s*nhập/i.test(bodyText);
+  var pw = false;
+  var inputs = document.querySelectorAll("input[type='password']");
+  for (var i = 0; i < inputs.length; i++) {
+    if (vis(inputs[i])) { pw = true; break; }
+  }
+  var sawBell = !!document.querySelector(".notification-bell, .notification-count, .notification-item");
+  var badge = null;
+  var badgeEl = document.querySelector(".notification-count");
+  if (badgeEl) {
+    var bm = txt(badgeEl).match(/\d+/);
+    if (bm) badge = parseInt(bm[0], 10);
+  }
+  var notices = [];
+  var nodes = document.querySelectorAll(".notification-item");
+  for (var j = 0; j < nodes.length && notices.length < 100; j++) {
+    var el = nodes[j];
+    if (!vis(el)) continue;
+    var titleEl = el.querySelector(".notification-title");
+    var timeEl = el.querySelector(".notification-time");
+    var linkEl = el.querySelector("a[href]");
+    notices.push({
+      id: String(el.id || ""),
+      title: titleEl ? txt(titleEl) : "",
+      time: timeEl ? txt(timeEl) : "",
+      klass: String(el.className || ""),
+      text: txt(el).slice(0, 500),
+      link: linkEl ? String(linkEl.getAttribute("href") || "") : ""
+    });
+  }
+  return JSON.stringify({
+    href: href,
+    loginUrl: loginUrl,
+    loginForm: !!(pw && loginWord),
+    sawBell: sawBell,
+    badge: badge,
+    notices: notices,
+    text: bodyText.slice(0, 30000)
+  });
+})()"""
+
+
+class CdpUnreachable(Exception):
+    pass
+
+
+class CdpNotReady(Exception):
+    pass
+
+
+class CdpProtocolError(Exception):
+    pass
+
+
+def ws_accept_value(key: str) -> str:
+    digest = hashlib.sha1((key + WS_GUID).encode("ascii")).digest()
+    return base64.b64encode(digest).decode("ascii")
+
+
+def ws_send(sock: socket.socket, text: str, *, mask: bool) -> None:
+    payload = text.encode("utf-8")
+    header = bytearray([0x81])
+    length = len(payload)
+    if length < 126:
+        header.append((0x80 if mask else 0) | length)
+    elif length < 65536:
+        header.append((0x80 if mask else 0) | 126)
+        header.extend(struct.pack("!H", length))
+    else:
+        header.append((0x80 if mask else 0) | 127)
+        header.extend(struct.pack("!Q", length))
+    if mask:
+        key = os.urandom(4)
+        header.extend(key)
+        payload = bytes(byte ^ key[index % 4] for index, byte in enumerate(payload))
+    sock.sendall(bytes(header) + payload)
+
+
+def _read_until(sock: socket.socket, buf: bytearray, marker: bytes, deadline: float, limit: int) -> bytes:
+    while marker not in buf:
+        if len(buf) > limit:
+            raise CdpProtocolError("không đọc được trang")
+        remain = deadline - time.monotonic()
+        if remain <= 0:
+            raise NetworkError("lỗi mạng", reason="timeout")
+        sock.settimeout(remain)
+        try:
+            chunk = sock.recv(4096)
+        except socket.timeout as exc:
+            raise NetworkError("lỗi mạng", reason="timeout") from exc
+        if not chunk:
+            raise NetworkError("lỗi mạng", reason="network")
+        buf.extend(chunk)
+    index = buf.find(marker)
+    head = bytes(buf[:index])
+    del buf[: index + len(marker)]
+    return head
+
+
+def _read_exact(sock: socket.socket, buf: bytearray, size: int, deadline: float) -> bytes:
+    while len(buf) < size:
+        remain = deadline - time.monotonic()
+        if remain <= 0:
+            raise NetworkError("lỗi mạng", reason="timeout")
+        sock.settimeout(remain)
+        try:
+            chunk = sock.recv(min(65536, size - len(buf)))
+        except socket.timeout as exc:
+            raise NetworkError("lỗi mạng", reason="timeout") from exc
+        if not chunk:
+            raise NetworkError("lỗi mạng", reason="network")
+        buf.extend(chunk)
+    out = bytes(buf[:size])
+    del buf[:size]
+    return out
+
+
+def _send_pong(sock: socket.socket, payload: bytes) -> None:
+    mask = os.urandom(4)
+    frame = bytearray([0x8A, 0x80 | len(payload)])
+    frame.extend(mask)
+    frame.extend(byte ^ mask[index % 4] for index, byte in enumerate(payload))
+    sock.sendall(bytes(frame))
+
+
+def ws_recv_text(sock: socket.socket, buf: bytearray, deadline: float) -> str:
+    while True:
+        header = _read_exact(sock, buf, 2, deadline)
+        opcode = header[0] & 0x0F
+        masked = header[1] & 0x80
+        length = header[1] & 0x7F
+        if length == 126:
+            length = struct.unpack("!H", _read_exact(sock, buf, 2, deadline))[0]
+        elif length == 127:
+            length = struct.unpack("!Q", _read_exact(sock, buf, 8, deadline))[0]
+        if length > 4_000_000:
+            raise CdpProtocolError("không đọc được trang")
+        mask_key = _read_exact(sock, buf, 4, deadline) if masked else b""
+        payload = _read_exact(sock, buf, length, deadline)
+        if mask_key:
+            payload = bytes(byte ^ mask_key[index % 4] for index, byte in enumerate(payload))
+        if opcode == 0x8:
+            raise NetworkError("lỗi mạng", reason="network")
+        if opcode == 0x9:
+            _send_pong(sock, payload[:125])
+            continue
+        if opcode == 0xA:
+            continue
+        if opcode in {0x1, 0x0}:
+            return payload.decode("utf-8", "replace")
+        continue
+
+
+class WsSession:
+    def __init__(self, sock: socket.socket, buf: bytearray, timeout: float, *, mask_send: bool):
+        self.sock = sock
+        self.buf = buf
+        self.timeout = timeout
+        self.mask_send = mask_send
+
+    def send(self, text: str) -> None:
+        ws_send(self.sock, text, mask=self.mask_send)
+
+    def recv(self) -> dict:
+        raw = ws_recv_text(self.sock, self.buf, time.monotonic() + self.timeout)
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise CdpProtocolError("không đọc được trang") from exc
+        if not isinstance(data, dict):
+            raise CdpProtocolError("không đọc được trang")
+        return data
+
+    def close(self) -> None:
+        try:
+            self.sock.close()
+        except OSError:
+            pass
+
+
+def _header_value(head: bytes, name: str) -> str:
+    wanted = name.lower()
+    for line in head.split(b"\r\n")[1:]:
+        if b":" not in line:
+            continue
+        key, value = line.split(b":", 1)
+        if key.decode("latin1", "replace").strip().lower() == wanted:
+            return value.decode("latin1", "replace").strip()
+    return ""
+
+
+def ws_connect(port: int, path: str, timeout: float) -> WsSession:
+    if not path.startswith("/devtools/"):
+        raise CdpProtocolError("không đọc được trang")
+    deadline = time.monotonic() + timeout
+    try:
+        sock = socket.create_connection(("127.0.0.1", port), timeout=max(0.1, timeout))
+    except (TimeoutError, socket.timeout) as exc:
+        raise NetworkError("lỗi mạng", reason="timeout") from exc
+    except OSError as exc:
+        raise NetworkError("lỗi mạng", reason="network") from exc
+    key = base64.b64encode(os.urandom(16)).decode("ascii")
+    request = (
+        f"GET {path} HTTP/1.1\r\n"
+        f"Host: 127.0.0.1:{port}\r\n"
+        "Upgrade: websocket\r\n"
+        "Connection: Upgrade\r\n"
+        f"Sec-WebSocket-Key: {key}\r\n"
+        "Sec-WebSocket-Version: 13\r\n"
+        "\r\n"
+    )
+    try:
+        sock.sendall(request.encode("ascii"))
+        buf = bytearray()
+        head = _read_until(sock, buf, b"\r\n\r\n", deadline, 65536)
+    except Exception:
+        sock.close()
+        raise
+    status = head.split(b"\r\n", 1)[0]
+    if b" 101 " not in status:
+        sock.close()
+        raise CdpProtocolError("không đọc được trang")
+    if _header_value(head, "sec-websocket-accept") != ws_accept_value(key):
+        sock.close()
+        raise CdpProtocolError("không đọc được trang")
+    return WsSession(sock, buf, timeout, mask_send=True)
+
+
+def _local_opener() -> urllib.request.OpenerDirector:
+    class _StayLocal(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            host = urllib.parse.urlparse(newurl).hostname
+            if host not in {"127.0.0.1", "localhost"}:
+                raise CdpUnreachable("không thấy trình duyệt")
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+    return urllib.request.build_opener(urllib.request.ProxyHandler({}), _StayLocal())
+
+
+def _http_json(port: int, path: str, timeout: float, method: str = "GET"):
+    url = f"http://127.0.0.1:{int(port)}{path}"
+    request = urllib.request.Request(url, method=method)
+    if method == "PUT":
+        request.add_header("Content-Length", "0")
+    try:
+        with _local_opener().open(request, timeout=timeout) as response:
+            raw = response.read(2_000_000)
+    except urllib.error.HTTPError as exc:
+        if method == "PUT" and exc.code in {400, 404, 405}:
+            return _http_json(port, path, timeout, method="GET")
+        raise CdpUnreachable("không thấy trình duyệt") from exc
+    except (TimeoutError, socket.timeout, urllib.error.URLError, OSError) as exc:
+        raise CdpUnreachable("không thấy trình duyệt") from exc
+    try:
+        return json.loads(raw.decode("utf-8", "replace"))
+    except json.JSONDecodeError as exc:
+        raise CdpProtocolError("không đọc được trang") from exc
+
+
+def _ws_path(tab: dict) -> str:
+    parsed = urllib.parse.urlparse(str(tab.get("webSocketDebuggerUrl") or ""))
+    path = parsed.path or ""
+    if not path.startswith("/devtools/"):
+        raise CdpProtocolError("không đọc được trang")
+    return path
+
+
+def _parse_evaluate(result: dict) -> dict:
+    if not isinstance(result, dict):
+        raise CdpProtocolError("không đọc được trang")
+    if result.get("exceptionDetails"):
+        text = json.dumps(result.get("exceptionDetails"), ensure_ascii=False).lower()
+        if "context" in text or "destroyed" in text or "navigat" in text:
+            raise CdpNotReady()
+        raise CdpProtocolError("không đọc được trang")
+    value = (result.get("result") or {}).get("value")
+    if not isinstance(value, str):
+        raise CdpNotReady()
+    if len(value) > 2_000_000:
+        raise CdpProtocolError("không đọc được trang")
+    try:
+        data = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise CdpProtocolError("không đọc được trang") from exc
+    if not isinstance(data, dict):
+        raise CdpProtocolError("không đọc được trang")
+    return data
+
+
+class CdpSocket:
+    """Một tab Chrome. Lệnh đi trên websocket nối 127.0.0.1, bỏ host trong URL DevTools."""
+
+    def __init__(self, port: int, timeout: float):
+        self.port = port
+        self.timeout = timeout
+        self._session: WsSession | None = None
+        self._next_id = 1
+
+    def close(self) -> None:
+        session = self._session
+        self._session = None
+        if session is not None:
+            session.close()
+
+    def call(self, method: str, params: dict | None = None) -> dict:
+        if self._session is None:
+            raise CdpProtocolError("không đọc được trang")
+        message_id = self._next_id
+        self._next_id += 1
+        self._session.send(json.dumps({"id": message_id, "method": method, "params": params or {}}))
+        deadline = time.monotonic() + self.timeout
+        while time.monotonic() < deadline:
+            message = self._session.recv()
+            if message.get("id") != message_id:
+                continue
+            if message.get("error"):
+                text = json.dumps(message.get("error"), ensure_ascii=False).lower()
+                if "context" in text or "destroyed" in text or "navigat" in text:
+                    raise CdpNotReady()
+                raise CdpProtocolError("không đọc được trang")
+            result = message.get("result")
+            return result if isinstance(result, dict) else {}
+        raise NetworkError("lỗi mạng", reason="timeout")
+
+    def attach(self, tab: dict) -> None:
+        self.close()
+        self._session = ws_connect(self.port, _ws_path(tab), self.timeout)
+
+
+class LiveCdp:
+    def __init__(self, port: int, timeout: float):
+        self.port = port
+        self.timeout = timeout
+        self._http_timeout = min(max(timeout, 0.2), 5.0)
+        self._socket: CdpSocket | None = None
+
+    def close(self) -> None:
+        if self._socket is not None:
+            self._socket.close()
+            self._socket = None
+
+    def list_pages(self) -> list:
+        data = _http_json(self.port, "/json/list", self._http_timeout, method="GET")
+        if not isinstance(data, list):
+            raise CdpProtocolError("không đọc được trang")
+        return data
+
+    def open_page(self, url: str) -> dict:
+        quoted = urllib.parse.quote(url, safe=":/?&=%")
+        data = _http_json(self.port, "/json/new?" + quoted, self._http_timeout, method="PUT")
+        if not isinstance(data, dict):
+            raise CdpProtocolError("không đọc được trang")
+        return data
+
+    def reload(self, tab: dict) -> None:
+        self.close()
+        self._socket = CdpSocket(self.port, self.timeout)
+        self._socket.attach(tab)
+        self._socket.call("Page.enable", {})
+        self._socket.call("Page.reload", {"ignoreCache": False})
+
+    def evaluate(self, tab: dict) -> dict:
+        if self._socket is None:
+            self.reload(tab)
+        assert self._socket is not None
+        return _parse_evaluate(
+            self._socket.call(
+                "Runtime.evaluate",
+                {
+                    "expression": DOM_EXPR,
+                    "returnByValue": True,
+                    "awaitPromise": False,
+                    "userGesture": False,
+                },
+            )
+        )
+
+
+class ScriptedCdp:
+    """Fixture không mở socket. Dùng khi thử, hoặc truyền thẳng vào execute."""
+
+    def __init__(self, tabs=None, snapshots=None, down: bool = False, fail_reload: int = 0):
+        self.tabs = list(tabs or [])
+        self.snapshots = list(snapshots or [])
+        self.down = down
+        self.fail_reload = fail_reload
+        self.calls: list[str] = []
+        self.opened: list[str] = []
+        self._last: dict | None = None
+
+    @classmethod
+    def from_file(cls, path: str) -> "ScriptedCdp":
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        snapshots = data.get("snapshots")
+        if snapshots is None and data.get("snapshot") is not None:
+            snapshots = [data.get("snapshot")]
+        return cls(tabs=data.get("tabs") or [], snapshots=snapshots or [], down=bool(data.get("down")))
+
+    def close(self) -> None:
+        return None
+
+    def list_pages(self) -> list:
+        self.calls.append("list")
+        if self.down:
+            raise CdpUnreachable("không thấy trình duyệt")
+        return list(self.tabs)
+
+    def open_page(self, url: str) -> dict:
+        self.calls.append("open")
+        self.opened.append(url)
+        tab = {
+            "id": "opened",
+            "type": "page",
+            "url": url,
+            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/opened",
+        }
+        self.tabs.append(tab)
+        return tab
+
+    def reload(self, tab: dict) -> None:
+        if self.fail_reload:
+            self.fail_reload -= 1
+            raise NetworkError("lỗi mạng", reason="network")
+        self.calls.append("Page.reload")
+
+    def evaluate(self, tab: dict) -> dict:
+        self.calls.append("Runtime.evaluate")
+        if self.snapshots:
+            snap = self.snapshots.pop(0)
+            if snap.get("pending"):
+                raise CdpNotReady()
+            self._last = snap
+            return snap
+        if self._last is not None:
+            return self._last
+        raise CdpNotReady()
+
+
+def _pick_tab(tabs: list, page_url: str) -> dict | None:
+    if not isinstance(tabs, list):
+        raise CdpProtocolError("không đọc được trang")
+    host = urllib.parse.urlparse(page_url).netloc.lower()
+    exact: list[dict] = []
+    other: list[dict] = []
+    for tab in tabs:
+        if not isinstance(tab, dict):
+            continue
+        if str(tab.get("type") or "page") not in {"page", ""}:
+            continue
+        url = str(tab.get("url") or "")
+        path = urllib.parse.urlparse(url).path.lower()
+        if not path.endswith("main.zul") or not tab.get("webSocketDebuggerUrl"):
+            continue
+        bucket = exact if urllib.parse.urlparse(url).netloc.lower() == host else other
+        bucket.append(tab)
+    if exact:
+        return exact[0]
+    if other:
+        return other[0]
+    return None
+
+
+def _snapshot_ready(snap: dict, polls: int) -> bool:
+    """Đợi ZK vẽ nhóm hoặc danh sách. Chỉ có số chuông thì chờ thêm một nhịp."""
+    if snap.get("loginUrl") or snap.get("loginForm"):
+        return True
+    if snap.get("notices"):
+        return True
+    if parse_group_counts(str(snap.get("text") or "")):
+        return True
+    if _url_is_login(str(snap.get("href") or "")):
+        return True
+    if (snap.get("sawBell") or isinstance(snap.get("badge"), int)) and polls >= 2:
+        return True
+    return False
+
+
+def _notices_from_snapshot(raw_notices: object) -> list[dict]:
+    if not isinstance(raw_notices, list):
+        return []
+    notices: list[dict] = []
+    for raw in raw_notices[:100]:
+        if not isinstance(raw, dict):
+            continue
+        item = _notice(str(raw.get("id") or ""), str(raw.get("title") or ""))
+        if not item:
+            continue
+        when = _to_iso(str(raw.get("time") or "")) or _extract_time(str(raw.get("text") or ""))
+        if when:
+            item["time"] = when
+        blob = f"{raw.get('text') or ''} {raw.get('klass') or ''}"
+        item["khan"] = _extract_khan(blob)
+        link = str(raw.get("link") or "").strip()
+        if link:
+            item["link"] = link
+        notices.append(item)
+    return _dedupe_notices(notices)
+
+
+def parse_cdp_snapshot(snap: dict, page_url: str) -> tuple[bool, BellView | None, dict | None]:
+    href = str(snap.get("href") or "")
+    login = bool(snap.get("loginUrl")) or bool(snap.get("loginForm")) or _url_is_login(href)
+    notices = _notices_from_snapshot(snap.get("notices"))
+    _apply_links(notices, page_url)
+    counts = parse_group_counts(str(snap.get("text") or ""))
+    badge = snap.get("badge")
+    count = int(badge) if isinstance(badge, int) else 0
+    saw_bell = bool(snap.get("sawBell")) or bool(notices) or isinstance(badge, int)
+    if login:
+        return True, None, counts
+    if not saw_bell and counts is None:
+        return False, None, None
+    view = BellView(
+        count=count,
+        notices=notices,
+        saw_list=bool(notices),
+        saw_bell=saw_bell,
+    )
+    return False, view, counts
+
+
+def read_dom(transport, page_url: str, timeout: float, sleep, now=None) -> dict:
+    clock = now or time.monotonic
+    tab = _pick_tab(transport.list_pages(), page_url)
+    if tab is None:
+        tab = transport.open_page(page_url)
+    transport.reload(tab)
+    deadline = clock() + max(0.0, float(timeout))
+    last = None
+    polls = 0
+    while True:
+        try:
+            snap = transport.evaluate(tab)
+        except CdpNotReady:
+            snap = None
+        else:
+            if isinstance(snap, dict):
+                polls += 1
+                last = snap
+                if _snapshot_ready(snap, polls):
+                    return snap
+        if clock() >= deadline:
+            if last:
+                return last
+            raise NetworkError("lỗi mạng", reason="timeout")
+        pause = min(CDP_POLL_SECONDS, max(0.0, deadline - clock()))
+        sleep(pause)
+
+
+def _mode(env: dict[str, str]) -> str:
+    transport = (env.get("QLVB_TRANSPORT") or "").strip().lower()
+    if transport in {"cookie", "cdp"}:
+        return transport
+    if (env.get("QLVB_CDP") or "").strip() == "1" or (env.get("QLVB_CDP_PORT") or "").strip():
+        return "cdp"
+    if (env.get("QLVB_COOKIE_FILE") or "").strip():
+        return "cookie"
+    return "cdp"
+
+
+def _cdp_port(env: dict[str, str]) -> int:
+    raw = (env.get("QLVB_CDP_PORT") or "").strip() or str(DEFAULT_CDP_PORT)
+    try:
+        port = int(raw)
+    except ValueError as exc:
+        raise CookieError("QLVB_CDP_PORT không hợp lệ") from exc
+    if not 1 <= port <= 65535:
+        raise CookieError("QLVB_CDP_PORT không hợp lệ")
+    return port
+
+
+def _make_cdp(env: dict[str, str], port: int, timeout: float):
+    if env.get("QLVB_ALLOW_FIXTURE") == "1" and (env.get("QLVB_CDP_FIXTURE") or "").strip():
+        return ScriptedCdp.from_file(env["QLVB_CDP_FIXTURE"])
+    return LiveCdp(port, timeout)
+
+
+def _no_browser(header: str = "") -> tuple[int, str, str]:
+    return _finish(
+        EXIT_ERROR,
+        _json_line({"status": "no_browser"}),
+        "qlvb-bell: không thấy trình duyệt",
+        header,
+    )
+
+
+def _publish(
+    state: State,
+    view: BellView | None,
+    counts: dict | None,
+    seed: bool,
+    baseline_path: Path,
+    header: str,
+    page_url: str,
+) -> tuple[int, str, str]:
+    if view is None and counts is None:
+        return _finish(EXIT_ERROR, "", "qlvb-bell: không thấy chuông trong trang", header)
+    if view is None:
+        view = BellView(count=0, notices=[], saw_list=False, saw_bell=False)
+    _apply_links(view.notices, page_url)
+    ids, strings = _known_index(state)
+    if seed or not view.saw_list:
+        new_notices: list[dict] = []
+    else:
+        new_notices = [
+            notice for notice in view.notices if _is_new_notice(notice, ids, strings, state.tip)
+        ]
+    new_notices.sort(key=lambda notice: (notice.get("time") or "9999", notice.get("id") or ""))
+    badge = None if seed or new_notices else _badge_delta(state.items, view)
+    hot_counts = bool(counts) and any(value > 0 for value in counts.values())
+    has_new = bool(new_notices) or badge is not None or (hot_counts and not seed)
+    if view.saw_bell:
+        items = project_items(state.items, view)
+    else:
+        items = state.items
+    alerted = _merge_alerted(state.alerted, view.notices) if view.saw_list else state.alerted
+    tip = _merge_tip(state.tip, view.notices) if view.saw_list else state.tip
+    stored_counts = counts if counts is not None else state.counts
+    new_state = State(
+        tip=tip,
+        alerted=alerted,
+        items=items,
+        consecutive_failures=0,
+        counts=stored_counts,
+        last_failure=None,
+    )
+    if _sig(new_state) != _sig(state):
+        try:
+            _atomic_write(baseline_path, _state_payload(new_state))
+        except OSError:
+            return _finish(EXIT_ERROR, "", "qlvb-bell: không ghi được baseline", header)
+    payload: dict = {
+        "status": "new" if has_new else "ok",
+        "moi": [] if seed else [_public_notice(notice) for notice in new_notices],
+        "counts": counts,
+    }
+    if badge is not None:
+        payload["badge"] = badge
+    code = EXIT_NEW if has_new else EXIT_OK
+    return _finish(code, _json_line(payload), "", header)
+
+
+def _execute_cdp(env: dict[str, str], sleep, cdp) -> tuple[int, str, str]:
+    page_url = (env.get("QLVB_PAGE_URL") or "").strip()
+    baseline_path = Path((env.get("QLVB_BASELINE_FILE") or DEFAULT_BASELINE).strip())
+    seed = (env.get("QLVB_SEED") or "").strip() == "1"
+    if not page_url:
+        return EXIT_ERROR, "", "qlvb-bell: thiếu QLVB_PAGE_URL"
+    try:
+        timeout = float(env.get("QLVB_TIMEOUT") or DEFAULT_TIMEOUT)
+        backoff = _backoff_seconds(env)
+        _require_https(page_url)
+        port = _cdp_port(env)
+        state = load_state(baseline_path)
+    except CookieError as exc:
+        return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", "")
+    except BaselineError as exc:
+        return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", "")
+    except ValueError:
+        return EXIT_ERROR, "", "qlvb-bell: QLVB_TIMEOUT không hợp lệ"
+    try:
+        transport = cdp if cdp is not None else _make_cdp(env, port, timeout)
+    except (OSError, json.JSONDecodeError):
+        return _finish(EXIT_ERROR, "", "qlvb-bell: không đọc được trang", "")
+    try:
+        last_network: NetworkError | None = None
+        snap = None
+        for attempt in (1, 2):
+            try:
+                snap = read_dom(transport, page_url, timeout, sleep)
+                break
+            except CdpUnreachable:
+                return _no_browser()
+            except NetworkError as exc:
+                last_network = exc
+                transport.close()
+                if attempt == 1:
+                    sleep(backoff)
+                    continue
+                return _failure_result(
+                    baseline_path,
+                    state,
+                    "network",
+                    getattr(exc, "reason", "network"),
+                    "",
+                )
+        if snap is None:
+            reason = getattr(last_network, "reason", "network")
+            return _failure_result(baseline_path, state, "network", reason, "")
+        login, view, counts = parse_cdp_snapshot(snap, page_url)
+        if login:
+            return _session_result("")
+        return _publish(state, view, counts, seed, baseline_path, "", page_url)
+    except CdpUnreachable:
+        return _no_browser()
+    except BaselineError as exc:
+        return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", "")
+    except CdpProtocolError:
+        return _finish(EXIT_ERROR, "", "qlvb-bell: không đọc được trang", "")
+    except NetworkError as exc:
+        return _failure_result(baseline_path, state, "network", getattr(exc, "reason", "network"), "")
+    finally:
+        closer = getattr(transport, "close", None)
+        if closer:
+            closer()
+
+
+def execute(env: dict[str, str], fetch, sleep=time.sleep, cdp=None) -> tuple[int, str, str]:
     """Trả (mã thoát, stdout, stderr). Không in cookie."""
+    if _mode(env) == "cdp":
+        return _execute_cdp(env, sleep, cdp)
     cookie_path = (env.get("QLVB_COOKIE_FILE") or "").strip()
     page_url = (env.get("QLVB_PAGE_URL") or "").strip()
     baseline_path = Path((env.get("QLVB_BASELINE_FILE") or DEFAULT_BASELINE).strip())
@@ -1315,64 +2056,22 @@ def execute(env: dict[str, str], fetch, sleep=time.sleep) -> tuple[int, str, str
 
     view = parse_bell(result.body)
     counts = parse_group_counts(result.body)
-    if view is None and counts is None:
-        return _finish(EXIT_ERROR, "", "qlvb-bell: không thấy chuông trong trang", header)
-    if view is None:
-        view = BellView(count=0, notices=[], saw_list=False, saw_bell=False)
-    _apply_links(view.notices, page_url)
-
-    ids, strings = _known_index(state)
-    if seed or not view.saw_list:
-        new_notices: list[dict] = []
-    else:
-        new_notices = [
-            notice
-            for notice in view.notices
-            if _is_new_notice(notice, ids, strings, state.tip)
-        ]
-    new_notices.sort(key=lambda notice: (notice.get("time") or "9999", notice.get("id") or ""))
-    badge = None if seed or new_notices else _badge_delta(state.items, view)
-    hot_counts = bool(counts) and any(value > 0 for value in counts.values())
-    has_new = bool(new_notices) or badge is not None or (hot_counts and not seed)
-
-    if view.saw_bell:
-        items = project_items(state.items, view)
-    else:
-        items = state.items
-    alerted = _merge_alerted(state.alerted, view.notices) if view.saw_list else state.alerted
-    tip = _merge_tip(state.tip, view.notices) if view.saw_list else state.tip
-    stored_counts = counts if counts is not None else state.counts
-    new_state = State(
-        tip=tip,
-        alerted=alerted,
-        items=items,
-        consecutive_failures=0,
-        counts=stored_counts,
-        last_failure=None,
-    )
-    if _sig(new_state) != _sig(state):
-        try:
-            _atomic_write(baseline_path, _state_payload(new_state))
-        except OSError:
-            return _finish(EXIT_ERROR, "", "qlvb-bell: không ghi được baseline", header)
-
-    payload: dict = {
-        "status": "new" if has_new else "ok",
-        "moi": [] if seed else [_public_notice(notice) for notice in new_notices],
-        "counts": counts,
-    }
-    if badge is not None:
-        payload["badge"] = badge
-    code = EXIT_NEW if has_new else EXIT_OK
-    return _finish(code, _json_line(payload), "", header)
+    return _publish(state, view, counts, seed, baseline_path, header, page_url)
 
 
 def _apply_args(env: dict[str, str], argv: list[str] | None) -> dict[str, str]:
     parser = argparse.ArgumentParser(
         prog="check_bell.py",
-        description="Kiểm tra chuông QLVB bằng GET. Không đăng nhập, không POST.",
+        description="Đọc chuông QLVB từ Chrome đang đăng nhập. Không đăng nhập, không POST.",
     )
-    parser.add_argument("--cookie-file", help="File cookie nằm ngoài repo, quyền 0600")
+    parser.add_argument(
+        "--cdp",
+        nargs="?",
+        const=str(DEFAULT_CDP_PORT),
+        default=None,
+        help="Cổng DevTools của Chrome đang đăng nhập. Bỏ số thì dùng 9222.",
+    )
+    parser.add_argument("--cookie-file", help="Chế độ cookie: file ngoài repo, quyền 0600")
     parser.add_argument("--baseline-file", help="File state (baseline) quyền 0600")
     parser.add_argument("--page-url", help="URL https đầy đủ tới trang main.zul")
     parser.add_argument("--timeout", help="Timeout giây")
@@ -1389,6 +2088,16 @@ def _apply_args(env: dict[str, str], argv: list[str] | None) -> dict[str, str]:
         merged["QLVB_TIMEOUT"] = args.timeout
     if args.seed:
         merged["QLVB_SEED"] = "1"
+    if args.cdp is not None:
+        merged["QLVB_CDP"] = "1"
+        merged["QLVB_CDP_PORT"] = str(args.cdp)
+        merged["QLVB_TRANSPORT"] = "cdp"
+    elif args.cookie_file:
+        merged["QLVB_TRANSPORT"] = "cookie"
+    elif (merged.get("QLVB_TRANSPORT") or "").strip().lower() != "cookie":
+        merged["QLVB_CDP"] = "1"
+        merged["QLVB_CDP_PORT"] = (merged.get("QLVB_CDP_PORT") or "").strip() or str(DEFAULT_CDP_PORT)
+        merged["QLVB_TRANSPORT"] = "cdp"
     return merged
 
 
