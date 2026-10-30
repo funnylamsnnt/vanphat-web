@@ -1,6 +1,17 @@
 {
   "version": 1,
   "updatedAt": "2026-10-23T07:00:00+07:00",
+  "tip": "2026-10-23T07:00:00+07:00",
+  "alerted": [
+    "notice-vi-du",
+    {
+      "id": "notice-vi-du-2",
+      "time": "2026-10-23T06:00:00+07:00",
+      "title": "Ví dụ object, không phải thông báo thật",
+      "khan": false
+    }
+  ],
+  "consecutiveFailures": 0,
   "items": [
     {
       "id": "notification-count",

@@ -1,104 +1,161 @@
 # Kiểm tra chuông QLVB
 
-Script Python chuẩn thư viện, không mở trình duyệt, không đăng nhập. Dùng để routine chỉ gọi bot QLVB V.O khi có thông báo mới so với baseline.
+Script Python chuẩn thư viện, chỉ gửi `GET`, không mở trình duyệt, không đăng nhập, không POST, không bấm chuông. Routine 10 phút gọi script này trước. Chỉ khi mã thoát là 10 thì bot mới chạy quy trình trình duyệt đầy đủ.
 
-Trang cần kiểm tra **không ghi trong repo** (ranh giới: không commit link hệ thống văn bản hành chính). Lúc chạy, routine tự đặt `QLVB_PAGE_URL` là URL https đầy đủ tới `pages/main.zul`.
-
-## Vì sao làm được bằng cookie
-
-ZK 6.5 giữ phiên bằng `JSESSIONID` (HttpOnly). File cookie do người vận hành hoặc bot cấp qua `QLVB_COOKIE_FILE` là đủ để gửi `GET`. Script không gửi form đăng nhập, không lưu mật khẩu, không đọc profile Chrome hay file SQLite `Cookies`.
-
-Hết phiên thường vẫn là HTTP 200. Trong thân trang có lệnh ZK `redirect` tới `login.zul`. Script coi đó là hết phiên (mã 20), cùng với URL cuối trỏ `login.zul` hoặc HTTP 401.
-
-Chuông trên giao diện dùng lớp `notification-bell`, số badge `notification-count`, từng dòng (nếu có trong lần GET) là `notification-item` / `notification-title`. Đây là lớp trong CSS theme công khai, parser bám các lớp đó trong HTML hoặc cây widget `zkmx`.
-
-## Giới hạn
-
-GET một lần chỉ thấy những gì server nhét vào lần tải đầu. Theme gọi thêm sự kiện ZK `onRendered` sau khi vẽ trang. Nếu số trên chuông chỉ hiện sau sự kiện đó, script không thấy dấu chuông và thoát 30, **không** đổi baseline, **không** đoán là hết thông báo. Phương án thay thế an toàn (chưa làm, cần anh duyệt): POST đúng sự kiện `onRendered` mà trang đã gửi, vẫn bằng cookie được cấp, không đăng nhập và không đọc Chrome. Sự kiện này có thể có tác dụng phụ phía server nên không bật sẵn.
-
-Script không bấm chuông, không gọi `/zkau`, không đánh dấu đã đọc.
-
-## Baseline
-
-File mẫu sẵn không có trong workspace nên script tự định nghĩa schema **version 1**:
-
-```json
-{
-  "version": 1,
-  "updatedAt": "2026-10-23T07:00:00+07:00",
-  "items": [
-    {"id": "notification-count", "kind": "badge", "count": 2},
-    {"id": "notice-vi-du", "kind": "notice", "title": "Ví dụ, không phải thông báo thật"}
-  ]
-}
-```
-
-- `notification-count`: số trên chuông. Tăng so với baseline thì là mới.
-- `notice`: một thông báo có `id` ổn định. `id` lạ, hoặc cùng `id` mà `title` đổi, thì là mới.
-- Có dòng `notice` mới thì JSON chỉ liệt kê các dòng đó, không kèm thêm badge cho cùng một lần.
-- Chỉ có số, chưa có danh sách: `moi` là một badge `count`, `truoc`, `them`.
-- Số giảm hoặc dòng biến mất: im lặng (mã 0) nhưng baseline cập nhật số mới. Dòng cũ được giữ nếu lần GET này không thấy `notification-item`, để lần sau danh sách hiện lại không bị báo trùng.
-- Lần đầu chưa có file baseline: mọi số lớn hơn 0 hoặc mọi dòng đều là mới (mã 10). Đặt `QLVB_SEED=1` để ghi baseline rồi thoát 0, không in, dùng một lần khi lập mốc.
-
-Mặc định ghi `/workspace/qlvb-bell-baseline.json` (quyền `0600`). Đường dẫn này nằm ngoài git nhờ `.gitignore`. Không commit baseline thật.
-
-`moi` in ra stdout, một dòng:
-
-```json
-{"moi":[{"id":"notification-count","kind":"badge","count":4,"truoc":1,"them":3}]}
-```
-
-hoặc
-
-```json
-{"moi":[{"id":"notice-2","kind":"notice","title":"Phiếu trình mới"}]}
-```
+Trang cần kiểm tra **không ghi trong repo** (ranh giới: không commit link hệ thống văn bản hành chính). Lúc chạy, routine tự đặt `QLVB_PAGE_URL` hoặc `--page-url` là URL https đầy đủ tới `pages/main.zul`.
 
 ## File cookie
+
+Đọc từ file **nằm ngoài repo**. Đường dẫn lấy từ `QLVB_COOKIE_FILE` hoặc `--cookie-file`. Không truyền giá trị cookie trên dòng lệnh (lệnh sẽ lộ trong `ps` và lịch sử shell).
+
+File phải có quyền `0600` hoặc chặt hơn (ví dụ `0400`). Bit group hoặc other bật thì script từ chối, mã 30, không đọc nội dung. Không in và không ghi giá trị cookie ra stdout, stderr, hay file state.
+
+```bash
+install -m 600 /dev/null /var/lib/vanphat/qlvb.cookie
+# rồi ghi cookie đã có sẵn vào file đó
+```
 
 Một trong ba dạng, chỉ chứa cookie phiên đã có sẵn:
 
 1. Một dòng header: `JSESSIONID=...; tenkhac=...`
-2. JSON: `{"cookie":"JSESSIONID=..."}` — có khóa mật khẩu hoặc tên đăng nhập thì script từ chối.
-3. Netscape cookie jar (kể cả dòng `#HttpOnly_`).
+2. JSON: `{"cookie":"JSESSIONID=..."}` — có khóa mật khẩu hoặc tên đăng nhập thì script từ chối. Khóa `expires` / `expiresAt` / `expiry` trong quá khứ thì coi là hết phiên.
+3. Netscape cookie jar (kể cả dòng `#HttpOnly_`). Cột hết hạn `0` là cookie phiên, không coi là hết hạn. Thời điểm đã qua thì hết phiên.
 
-Không trỏ biến vào thư mục profile Chrome/Chromium/Edge hoặc file SQLite.
+Không trỏ biến vào thư mục profile Chrome/Chromium/Edge hoặc file SQLite `Cookies`.
+
+Hết hạn cookie, HTTP 401, URL cuối là `login.zul`, lệnh ZK `redirect` tới `login.zul`, hoặc trang login không có chuông: mã **3**, stdout đúng một dòng:
+
+```json
+{"status":"session_expired"}
+```
+
+Script không đăng nhập lại và không lưu mật khẩu. Bot gọi trình duyệt để đăng nhập, cấp lại file cookie (`chmod 600`), rồi chạy tiếp.
+
+## Mã thoát
+
+| Mã | `status` | Khi nào |
+| --- | --- | --- |
+| 0 | `ok` | Không thông báo mới, số chuông không tăng, mọi nhóm đọc được đều 0 hoặc không đọc được nhóm |
+| 10 | `new` | Có thông báo mới so với mốc, hoặc số chuông tăng khi danh sách không có trong lần GET, hoặc một nhóm Văn bản đến > 0 |
+| 3 | `session_expired` | Hết phiên hoặc cookie hết hạn. Baseline không đổi |
+| 4 | `forbidden` hoặc `network` | nginx 403, hoặc lỗi mạng / timeout. `consecutiveFailures` tăng 1 |
+| 30 | (không có JSON) | Thiếu cấu hình, cookie lỏng quyền hoặc nằm trong repo, trang không có chuông lẫn nhóm, baseline hỏng |
+
+Mã 0 và 10 vẫn in một dòng JSON để bot đọc. Mã 3 và 4 cũng vậy. Mã 30 chỉ có một dòng stderr, không có stdout.
+
+403 và lỗi mạng được thử **đúng một lần** nữa, chờ `QLVB_RETRY_BACKOFF` giây (mặc định 1, trần 5). Hết phiên không thử lại. Không vòng lặp.
+
+## JSON khi thành công
+
+`title` là trích yếu. `link` chỉ có khi trang trả về liên kết. `time` là ISO 8601 giờ Bangkok, hoặc `null` nếu không đọc được.
+
+```json
+{"status":"new","moi":[{"id":"notice-2","time":"2026-10-30T14:05:00+07:00","title":"Trích yếu ví dụ","khan":true,"link":"https://example.test/van-ban/2"}],"counts":{"choXuLy":1,"sapDenHan":0,"quaHan":0,"nhanDeBiet":0}}
+```
+
+Nhóm Văn bản đến, chỉ những nhãn đọc được mới có khóa:
+
+| Khóa | Nhãn trên trang |
+| --- | --- |
+| `choXuLy` | Chờ xử lý |
+| `sapDenHan` | Sắp đến hạn |
+| `quaHan` | Quá hạn |
+| `nhanDeBiet` | Nhận để biết |
+
+Không thấy nhãn nào thì `counts` là `null` (không suy ra bằng 0). Một khóa có giá trị `> 0` thì mã 10, kể cả khi `moi` rỗng, để bot xử lý hàng đợi. Lần sau số vẫn `> 0` thì vẫn mã 10.
+
+Chỉ khi danh sách thông báo không nằm trong lần GET mà số trên chuông tăng, JSON thêm:
+
+```json
+{"status":"new","moi":[],"counts":null,"badge":{"count":4,"truoc":1,"them":3}}
+```
+
+Im lặng (mã 0):
+
+```json
+{"status":"ok","moi":[],"counts":{"choXuLy":0,"sapDenHan":0,"quaHan":0,"nhanDeBiet":0}}
+```
+
+403 và mạng:
+
+```json
+{"status":"forbidden","consecutiveFailures":2}
+{"status":"network","reason":"timeout","consecutiveFailures":1}
+```
+
+`reason` là `timeout` hoặc `network`.
+
+## File state
+
+Cùng đường dẫn baseline cũ (`QLVB_BASELINE_FILE` hoặc `--baseline-file`). Mặc định `/workspace/qlvb-bell-baseline.json`, quyền `0600`, đã nằm trong `.gitignore`. Không commit file thật.
+
+Đọc được cả file cũ (`version` 1, `items` là badge/notice) và `alerted` lẫn lộn chuỗi với object. Một chuỗi coi như mã hoặc `thời điểm|trích yếu`.
+
+```json
+{
+  "version": 1,
+  "updatedAt": "2026-10-30T14:05:00+07:00",
+  "tip": "2026-10-30T14:05:00+07:00",
+  "alerted": [
+    "notice-cu",
+    {"id": "notice-2", "time": "2026-10-30T14:05:00+07:00", "title": "Trích yếu ví dụ", "khan": true}
+  ],
+  "consecutiveFailures": 0,
+  "counts": {"choXuLy": 0, "sapDenHan": 0, "quaHan": 0, "nhanDeBiet": 0},
+  "items": [
+    {"id": "notification-count", "kind": "badge", "count": 2}
+  ]
+}
+```
+
+- `tip`: mốc thời gian mới nhất đã thấy. Thông báo có `time` không sau mốc, và đã nằm trong `alerted` hoặc `items`, thì không báo lại.
+- `alerted`: giữ tối đa 400 mục. Chuỗi và object đều nhận.
+- `items`: badge và notice như bản version 1, để file cũ vẫn đọc được.
+- `consecutiveFailures`: chỉ tăng khi mã 4. Lần GET thành công thì về 0. Hết phiên không đụng file.
+- Baseline hỏng thì mã 30, không ghi đè.
+
+`QLVB_SEED=1` hoặc `--seed`: ghi mốc (tip, alerted, items, counts) rồi thoát 0 dù nhóm đang > 0. Dùng một lần khi lập mốc.
+
+Số chuông giảm: mã 0, baseline cập nhật số mới. Lần GET không có `notification-item` thì giữ notice cũ, để lần sau danh sách hiện lại không bị báo trùng.
+
+## Giới hạn
+
+GET một lần chỉ thấy những gì server nhét vào lần tải đầu. Không gọi `/zkau`, không gửi sự kiện `onRendered`, không đánh dấu đã đọc. Trang không có dấu chuông và cũng không có bốn nhãn nhóm thì mã 30, baseline giữ nguyên.
 
 ## Chạy
 
 ```bash
-export QLVB_COOKIE_FILE=/duong/dan/ngoai/git/qlvb.cookie
+export QLVB_COOKIE_FILE=/var/lib/vanphat/qlvb.cookie
 export QLVB_PAGE_URL='https://.../pages/main.zul'
 export QLVB_BASELINE_FILE=/workspace/qlvb-bell-baseline.json
 python3 tools/qlvb-chuong/check_bell.py
 ```
 
-`QLVB_TIMEOUT` mặc định 20 giây. `QLVB_ALLOW_FIXTURE=1` và `QLVB_HTTP_FIXTURE` chỉ để thử mock; routine thật không đặt hai biến này.
+Cờ tương đương: `--cookie-file`, `--baseline-file`, `--page-url`, `--timeout`, `--seed`.
 
-Đã đối chiếu một lần GET không cookie: server trả HTTP 200, trong thân trang có lệnh ZK `redirect` tới `login.zul`. Script nhận đúng dạng đó là hết phiên. Lần GET đó không lưu cookie.
+`QLVB_TIMEOUT` mặc định 20 giây. `QLVB_ALLOW_FIXTURE=1` và `QLVB_HTTP_FIXTURE` chỉ để thử mock; routine thật không đặt hai biến này.
 
 ## Routine
 
 ```bash
+chmod 600 "$QLVB_COOKIE_FILE"
 python3 tools/qlvb-chuong/check_bell.py
 rc=$?
 case "$rc" in
   0)  ;;
-  10) # stdout là {"moi":[...]} — gọi bot QLVB V.O với đúng chuỗi này
+  10) # stdout là JSON status new — chạy quy trình trình duyệt
       ;;
-  20) # hết phiên — cấp lại file cookie, không gọi bot vì không có nội dung
+  3)  # session_expired — bot đăng nhập lại bằng trình duyệt, cấp cookie, không đoán mật khẩu
       ;;
-  30) # lỗi mạng, 403, hoặc chưa thấy chuông — baseline giữ nguyên
+  4)  # forbidden hoặc network — đọc consecutiveFailures, không thử lại dày hơn một lần
+      ;;
+  30) # cấu hình, quyền cookie, hoặc baseline — xem stderr
       ;;
 esac
 ```
-
-Stderr chỉ một dòng ngắn khi mã 20 hoặc 30. Mã 0 không in stdout. Cookie không được in.
 
 ## Test
 
 ```bash
 python3 tools/qlvb-chuong/test_check_bell.py
 ```
-
-Mock bốn tình huống: có mới (mã 10), không mới (mã 0, im), hết phiên `login.zul` (mã 20), HTTP 403 và lỗi mạng (mã 30, baseline không đổi).
