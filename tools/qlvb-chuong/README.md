@@ -1,8 +1,28 @@
 # Kiểm tra chuông QLVB
 
-Script Python chuẩn thư viện, chỉ gửi `GET`, không mở trình duyệt, không đăng nhập, không POST, không bấm chuông. Routine 10 phút gọi script này trước. Chỉ khi mã thoát là 10 thì bot mới chạy quy trình trình duyệt đầy đủ.
+Script Python chuẩn thư viện. Routine 10 phút gọi script này trước. Chỉ khi mã thoát là 10 thì bot mới chạy quy trình trình duyệt đầy đủ.
+
+Cách chạy khuyến nghị là **CDP**: nối Chrome đang đăng nhập sẵn, reload tab `main.zul`, đợi ZK vẽ, rồi đọc chuông và bốn số Văn bản đến trên DOM. Không bấm nút, không gõ form, không đăng nhập, không đọc cookie.
+
+GET chỉ với cookie không đủ. Server trả HTTP 200 kèm lệnh ZK `redirect` tới `login.zul` vì phiên còn gắn với bước JS trong trình duyệt (`initializeSecurityMode`). Cùng cookie đó trong Chrome thì vẫn đang đăng nhập. Vì vậy cookie chỉ còn là chế độ phụ để thử fixture.
 
 Trang cần kiểm tra **không ghi trong repo** (ranh giới: không commit link hệ thống văn bản hành chính). Lúc chạy, routine tự đặt `QLVB_PAGE_URL` hoặc `--page-url` là URL https đầy đủ tới `pages/main.zul`.
+
+## Chrome DevTools
+
+Chrome phải được mở trước, đã đăng nhập, với cổng gỡ lỗi chỉ trên máy này:
+
+```bash
+google-chrome --remote-debugging-port=9222
+```
+
+Script nối `127.0.0.1` (không nhận host khác). `--cdp` hoặc `--cdp 9222`. Bỏ cờ thì vẫn dùng CDP cổng `QLVB_CDP_PORT`, mặc định 9222. Không thấy cổng: mã **30**, stdout:
+
+```json
+{"status":"no_browser"}
+```
+
+Việc script làm: tìm tab có path kết thúc bằng `main.zul`, chưa có thì mở tab đó, `Page.reload`, rồi `Runtime.evaluate` đọc DOM. Hết phiên khi URL tab kết thúc bằng `login.zul`, hoặc form đăng nhập đang hiện (ô mật khẩu hiện và có chữ đăng nhập). Không lấy giá trị ô mật khẩu, không in cookie.
 
 ## File cookie
 
@@ -39,9 +59,9 @@ Script không đăng nhập lại và không lưu mật khẩu. Bot gọi trình
 | 10 | `new` | Có thông báo mới so với mốc, hoặc số chuông tăng khi danh sách không có trong lần GET, hoặc một nhóm Văn bản đến > 0 |
 | 3 | `session_expired` | Hết phiên hoặc cookie hết hạn. Baseline không đổi |
 | 4 | `forbidden` hoặc `network` | nginx 403, hoặc lỗi mạng / timeout. `consecutiveFailures` tăng 1 |
-| 30 | (không có JSON) | Thiếu cấu hình, cookie lỏng quyền hoặc nằm trong repo, trang không có chuông lẫn nhóm, baseline hỏng |
+| 30 | `no_browser` khi không có Chrome; các lỗi cấu hình khác không có JSON | Thiếu cấu hình, cookie lỏng quyền hoặc nằm trong repo, trang không có chuông lẫn nhóm, baseline hỏng, hoặc cổng CDP không mở |
 
-Mã 0 và 10 vẫn in một dòng JSON để bot đọc. Mã 3 và 4 cũng vậy. Mã 30 chỉ có một dòng stderr, không có stdout.
+Mã 0, 10, 3 và 4 in một dòng JSON. Mã 30 in JSON khi `status` là `no_browser`. Lỗi cấu hình khác chỉ có stderr.
 
 403 và lỗi mạng được thử **đúng một lần** nữa, chờ `QLVB_RETRY_BACKOFF` giây (mặc định 1, trần 5). Hết phiên không thử lại. Không vòng lặp.
 
@@ -120,36 +140,36 @@ Số chuông giảm: mã 0, baseline cập nhật số mới. Lần GET không c
 
 ## Giới hạn
 
-GET một lần chỉ thấy những gì server nhét vào lần tải đầu. Không gọi `/zkau`, không gửi sự kiện `onRendered`, không đánh dấu đã đọc. Trang không có dấu chuông và cũng không có bốn nhãn nhóm thì mã 30, baseline giữ nguyên.
+Chế độ cookie chỉ thấy những gì server nhét vào lần GET đầu, và với ZK hiện tại lần đó là trang login. Chế độ CDP đọc DOM sau khi ZK vẽ. Cả hai đều không gọi `/zkau`, không gửi sự kiện `onRendered`, không đánh dấu đã đọc, không bấm. Việc duy nhất làm đổi trang ở CDP là reload tab. Trang không có dấu chuông và cũng không có bốn nhãn nhóm thì mã 30, baseline giữ nguyên.
 
 ## Chạy
 
 ```bash
-export QLVB_COOKIE_FILE=/var/lib/vanphat/qlvb.cookie
 export QLVB_PAGE_URL='https://.../pages/main.zul'
 export QLVB_BASELINE_FILE=/workspace/qlvb-bell-baseline.json
-python3 tools/qlvb-chuong/check_bell.py
+python3 tools/qlvb-chuong/check_bell.py --cdp
 ```
 
-Cờ tương đương: `--cookie-file`, `--baseline-file`, `--page-url`, `--timeout`, `--seed`.
+Cờ: `--cdp` (cổng tuỳ chọn), `--cookie-file`, `--baseline-file`, `--page-url`, `--timeout`, `--seed`.
 
-`QLVB_TIMEOUT` mặc định 20 giây. `QLVB_ALLOW_FIXTURE=1` và `QLVB_HTTP_FIXTURE` chỉ để thử mock; routine thật không đặt hai biến này.
+Chế độ cookie, chỉ khi cần thử fixture: `QLVB_TRANSPORT=cookie` và `QLVB_COOKIE_FILE`. Không đặt `QLVB_TRANSPORT` thì script dùng CDP.
+
+`QLVB_TIMEOUT` mặc định 20 giây, vừa là hạn chờ ZK vẽ. `QLVB_ALLOW_FIXTURE=1` cùng `QLVB_HTTP_FIXTURE` hoặc `QLVB_CDP_FIXTURE` chỉ để thử mock. Routine thật không đặt các biến fixture.
 
 ## Routine
 
 ```bash
-chmod 600 "$QLVB_COOKIE_FILE"
-python3 tools/qlvb-chuong/check_bell.py
+python3 tools/qlvb-chuong/check_bell.py --cdp
 rc=$?
 case "$rc" in
   0)  ;;
   10) # stdout là JSON status new — chạy quy trình trình duyệt
       ;;
-  3)  # session_expired — bot đăng nhập lại bằng trình duyệt, cấp cookie, không đoán mật khẩu
+  3)  # session_expired — người vận hành đăng nhập lại trên Chrome đang mở cổng 9222
       ;;
   4)  # forbidden hoặc network — đọc consecutiveFailures, không thử lại dày hơn một lần
       ;;
-  30) # cấu hình, quyền cookie, hoặc baseline — xem stderr
+  30) # no_browser nếu Chrome chưa mở cổng; hoặc cấu hình, quyền cookie, baseline — xem stderr
       ;;
 esac
 ```

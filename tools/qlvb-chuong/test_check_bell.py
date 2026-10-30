@@ -6,11 +6,14 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import socket
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import unittest
+import urllib.parse
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -687,6 +690,11 @@ class BellTests(unittest.TestCase):
         self.assertNotIn("data=", source)
         self.assertIn('method="GET"', source)
         self.assertIn("session_expired", source)
+        self.assertNotIn("document.cookie", source)
+        self.assertNotIn(".click(", source)
+        self.assertNotIn("getCookies", source)
+        self.assertIn("no_browser", source)
+        self.assertIn("Page.reload", source)
 
     def test_readme_documents_contract(self):
         readme = (HERE / "README.md").read_text(encoding="utf-8")
@@ -700,6 +708,8 @@ class BellTests(unittest.TestCase):
             "nhanDeBiet",
             "QLVB_COOKIE_FILE",
             "--cookie-file",
+            "--cdp",
+            "no_browser",
             "consecutiveFailures",
         ):
             self.assertIn(token, readme)
@@ -733,6 +743,7 @@ class BellTests(unittest.TestCase):
             env.update(self.env)
             env["QLVB_ALLOW_FIXTURE"] = "1"
             env["QLVB_HTTP_FIXTURE"] = str(fixture)
+            env["QLVB_TRANSPORT"] = "cookie"
             env.pop("QLVB_SEED", None)
             proc = subprocess.run(
                 [sys.executable, str(HERE / "check_bell.py")],
@@ -780,6 +791,380 @@ class BellTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, msg=proc.stderr)
         self.assertEqual(json.loads(proc.stdout)["status"], "ok")
         self.assertNotIn(SECRET, proc.stdout + proc.stderr)
+
+    def _cdp_env(self):
+        env = {
+            "QLVB_PAGE_URL": PAGE,
+            "QLVB_BASELINE_FILE": str(self.baseline),
+            "QLVB_TRANSPORT": "cdp",
+            "QLVB_CDP_PORT": "9222",
+            "QLVB_TIMEOUT": "2",
+            "QLVB_RETRY_BACKOFF": "0",
+        }
+        return env
+
+    def test_cdp_reads_rendered_dom_and_keeps_cookie_off_the_output(self):
+        tab = {
+            "id": "t1",
+            "type": "page",
+            "url": PAGE,
+            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+        }
+        snap = {
+            "href": PAGE,
+            "loginUrl": False,
+            "loginForm": False,
+            "sawBell": True,
+            "badge": 2,
+            "notices": [
+                {
+                    "id": "n-khanh",
+                    "title": "Công văn Khánh Hòa",
+                    "time": "30/10/2026 09:00",
+                    "text": "Công văn Khánh Hòa",
+                    "link": "/van-ban/3",
+                },
+                {
+                    "id": "n-gap",
+                    "title": "Tờ trình hỏa tốc",
+                    "time": "30/10/2026 15:40",
+                    "text": "Tờ trình hỏa tốc",
+                    "klass": "khan",
+                },
+            ],
+            "text": "Chờ xử lý 2 Sắp đến hạn 0 Quá hạn 1 Nhận để biết 0",
+        }
+        cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[snap])
+        code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 10, msg=err)
+        payload = json.loads(out)
+        self.assertEqual(payload["status"], "new")
+        self.assertEqual(payload["counts"]["choXuLy"], 2)
+        self.assertEqual(payload["counts"]["quaHan"], 1)
+        by_id = {item["id"]: item for item in payload["moi"]}
+        self.assertFalse(by_id["n-khanh"]["khan"])
+        self.assertTrue(by_id["n-gap"]["khan"])
+        self.assertEqual(by_id["n-gap"]["time"], "2026-10-30T15:40:00+07:00")
+        self.assertEqual(by_id["n-khanh"]["link"], "https://qlvb.example.test/van-ban/3")
+        self.assertEqual(cdp.calls[0], "list")
+        self.assertIn("Page.reload", cdp.calls)
+        self.assertNotIn("open", cdp.calls)
+        self.assertNotIn(SECRET, out + err)
+        self.assertNotIn(".click(", bell.DOM_EXPR)
+        self.assertNotIn("document.cookie", bell.DOM_EXPR)
+
+    def test_cdp_login_form_and_login_url_do_not_touch_baseline(self):
+        self._write_baseline([{"id": "notification-count", "kind": "badge", "count": 2}])
+        before = self.baseline.read_bytes()
+        tab = {
+            "id": "t1",
+            "type": "page",
+            "url": PAGE,
+            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+        }
+        for snap in (
+            {"href": PAGE, "loginForm": True, "loginUrl": False, "sawBell": False},
+            {"href": LOGIN, "loginForm": False, "loginUrl": True, "sawBell": True, "badge": 9},
+        ):
+            self.baseline.write_bytes(before)
+            cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[snap])
+            code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+            self.assertEqual(code, 3, msg=err + out)
+            self.assertEqual(json.loads(out), {"status": "session_expired"})
+            self.assertEqual(self.baseline.read_bytes(), before)
+            self.assertIn("Page.reload", cdp.calls)
+
+    def test_cdp_opens_main_tab_when_missing_and_retries_reload_once(self):
+        cdp = bell.ScriptedCdp(
+            tabs=[],
+            snapshots=[
+                {
+                    "href": PAGE,
+                    "sawBell": True,
+                    "badge": 0,
+                    "notices": [],
+                    "text": "Chờ xử lý 0 Sắp đến hạn 0 Quá hạn 0 Nhận để biết 0",
+                }
+            ],
+            fail_reload=1,
+        )
+        code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 0, msg=err)
+        self.assertEqual(json.loads(out)["status"], "ok")
+        self.assertEqual(cdp.opened, [PAGE])
+        self.assertEqual(cdp.calls.count("Page.reload"), 1)
+        self.assertGreaterEqual(cdp.calls.count("list"), 2)
+
+    def test_cdp_no_browser_exit_30(self):
+        self._write_baseline([{"id": "notification-count", "kind": "badge", "count": 1}])
+        before = self.baseline.read_bytes()
+        cdp = bell.ScriptedCdp(down=True)
+        code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 30)
+        self.assertEqual(json.loads(out), {"status": "no_browser"})
+        self.assertIn("trình duyệt", err)
+        self.assertEqual(self.baseline.read_bytes(), before)
+        self.assertNotIn(SECRET, out + err)
+
+    def test_cdp_closed_port_is_no_browser(self):
+        probe = socket.socket()
+        probe.bind(("127.0.0.1", 0))
+        port = probe.getsockname()[1]
+        probe.close()
+        env = self._cdp_env()
+        env["QLVB_CDP_PORT"] = str(port)
+        code, out, err = bell.execute(env, bell.live_fetch)
+        self.assertEqual(code, 30, msg=err)
+        self.assertEqual(json.loads(out), {"status": "no_browser"})
+        self.assertFalse(self.baseline.exists())
+
+    def test_cdp_expr_waits_until_zk_paints(self):
+        tab = {
+            "id": "t1",
+            "type": "page",
+            "url": PAGE,
+            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+        }
+        ready = {"href": PAGE, "sawBell": True, "badge": 1, "notices": [], "text": ""}
+        cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[{"pending": True}, ready])
+        clock = {"t": 0.0}
+
+        def now():
+            return clock["t"]
+
+        def sleep(amount):
+            clock["t"] += amount
+
+        snap = bell.read_dom(cdp, PAGE, 5, sleep, now=now)
+        self.assertEqual(snap["badge"], 1)
+        self.assertGreaterEqual(cdp.calls.count("Runtime.evaluate"), 2)
+        self.assertGreater(clock["t"], 0)
+
+    def test_cdp_subprocess_fixture_and_live_socket(self):
+        fixture = self.root / "cdp.json"
+        fixture.write_text(
+            json.dumps(
+                {
+                    "tabs": [
+                        {
+                            "id": "t1",
+                            "type": "page",
+                            "url": PAGE,
+                            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+                        }
+                    ],
+                    "snapshot": {
+                        "href": PAGE,
+                        "sawBell": True,
+                        "badge": 0,
+                        "notices": [],
+                        "text": "Chờ xử lý 1 Sắp đến hạn 0 Quá hạn 0 Nhận để biết 0",
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        env = os.environ.copy()
+        env.update(self._cdp_env())
+        env.pop("QLVB_COOKIE_FILE", None)
+        env["QLVB_ALLOW_FIXTURE"] = "1"
+        env["QLVB_CDP_FIXTURE"] = str(fixture)
+        proc = subprocess.run(
+            [sys.executable, str(HERE / "check_bell.py"), "--cdp", "9222"],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 10, msg=proc.stderr + proc.stdout)
+        self.assertEqual(json.loads(proc.stdout)["status"], "new")
+        self.assertNotIn(SECRET, proc.stdout + proc.stderr)
+
+        down = self.root / "down.json"
+        down.write_text(json.dumps({"down": True}), encoding="utf-8")
+        env["QLVB_CDP_FIXTURE"] = str(down)
+        proc = subprocess.run(
+            [sys.executable, str(HERE / "check_bell.py")],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 30, msg=proc.stderr + proc.stdout)
+        self.assertEqual(json.loads(proc.stdout)["status"], "no_browser")
+
+        server = _FakeChrome(
+            [
+                {
+                    "id": "t1",
+                    "type": "page",
+                    "url": PAGE,
+                    "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+                }
+            ],
+            {
+                "href": PAGE,
+                "loginUrl": False,
+                "loginForm": False,
+                "sawBell": True,
+                "badge": 1,
+                "notices": [
+                    {
+                        "id": "n-live",
+                        "title": "Phiếu mới",
+                        "time": "30/10/2026 16:00",
+                        "text": "Phiếu mới",
+                        "link": "/van-ban/8",
+                    }
+                ],
+                "text": "Chờ xử lý 0 Sắp đến hạn 0 Quá hạn 0 Nhận để biết 0",
+            },
+        )
+        self.baseline.unlink(missing_ok=True)
+        with server:
+            env = self._cdp_env()
+            env["QLVB_CDP_PORT"] = str(server.port)
+            env["QLVB_TIMEOUT"] = "5"
+            code, out, err = bell.execute(env, bell.live_fetch)
+        self.assertEqual(code, 10, msg=err + out)
+        body = json.loads(out)
+        self.assertEqual(body["moi"][0]["id"], "n-live")
+        self.assertEqual(body["moi"][0]["link"], "https://qlvb.example.test/van-ban/8")
+        self.assertIn("Page.reload", server.methods)
+        self.assertIn("Runtime.evaluate", server.methods)
+        self.assertNotIn("Input.dispatchMouseEvent", server.methods)
+        self.assertNotIn("document.cookie", server.expression)
+        self.assertIn("notification-item", server.expression)
+        self.assertTrue(any(line.startswith("GET /json/list") for line in server.requests))
+
+
+class _FakeChrome:
+    def __init__(self, tabs, snapshot):
+        self.tabs = list(tabs)
+        self.snapshot = snapshot
+        self.methods: list[str] = []
+        self.requests: list[str] = []
+        self.expression = ""
+        self.port = 0
+        self.stop = threading.Event()
+        self.ready = threading.Event()
+        self._thread = threading.Thread(target=self._serve, daemon=True)
+        self._srv: socket.socket | None = None
+
+    def __enter__(self):
+        self._thread.start()
+        self.ready.wait(2)
+        return self
+
+    def __exit__(self, *_args):
+        self.stop.set()
+        if self._srv is not None:
+            try:
+                self._srv.close()
+            except OSError:
+                pass
+        self._thread.join(2)
+        return False
+
+    def _serve(self):
+        srv = socket.socket()
+        srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        srv.bind(("127.0.0.1", 0))
+        srv.listen(8)
+        srv.settimeout(0.2)
+        self._srv = srv
+        self.port = srv.getsockname()[1]
+        self.ready.set()
+        while not self.stop.is_set():
+            try:
+                conn, _addr = srv.accept()
+            except socket.timeout:
+                continue
+            except OSError:
+                break
+            threading.Thread(target=self._client, args=(conn,), daemon=True).start()
+
+    def _client(self, conn: socket.socket):
+        try:
+            conn.settimeout(5)
+            buf = bytearray()
+            while b"\r\n\r\n" not in buf:
+                chunk = conn.recv(4096)
+                if not chunk:
+                    return
+                buf.extend(chunk)
+            index = buf.find(b"\r\n\r\n")
+            head = bytes(buf[:index])
+            rest = bytearray(buf[index + 4 :])
+            first = head.split(b"\r\n", 1)[0].decode("latin1", "replace")
+            self.requests.append(first)
+            if b"Upgrade: websocket" in head:
+                self._websocket(conn, head, rest)
+                return
+            target = first.split(" ")[1]
+            if target.startswith("/json/list"):
+                body = json.dumps(self.tabs).encode()
+            elif target.startswith("/json/new"):
+                raw = target.split("?", 1)[1] if "?" in target else ""
+                url = urllib.parse.unquote(raw)
+                tab = {
+                    "id": "new",
+                    "type": "page",
+                    "url": url,
+                    "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/new",
+                }
+                self.tabs.append(tab)
+                body = json.dumps(tab).encode()
+            else:
+                body = b"{}"
+            conn.sendall(
+                (
+                    "HTTP/1.1 200 OK\r\n"
+                    "Content-Type: application/json\r\n"
+                    f"Content-Length: {len(body)}\r\n"
+                    "Connection: close\r\n"
+                    "\r\n"
+                ).encode("ascii")
+                + body
+            )
+        except OSError:
+            pass
+        finally:
+            try:
+                conn.close()
+            except OSError:
+                pass
+
+    def _websocket(self, conn: socket.socket, head: bytes, rest: bytearray):
+        key = bell._header_value(head, "sec-websocket-key")
+        accept = bell.ws_accept_value(key)
+        conn.sendall(
+            (
+                "HTTP/1.1 101 Switching Protocols\r\n"
+                "Upgrade: websocket\r\n"
+                "Connection: Upgrade\r\n"
+                f"Sec-WebSocket-Accept: {accept}\r\n"
+                "\r\n"
+            ).encode("ascii")
+        )
+        session = bell.WsSession(conn, rest, 5, mask_send=False)
+        try:
+            while True:
+                message = session.recv()
+                method = str(message.get("method") or "")
+                self.methods.append(method)
+                if method == "Runtime.evaluate":
+                    self.expression = str((message.get("params") or {}).get("expression") or "")
+                    value = json.dumps(self.snapshot)
+                    session.send(
+                        json.dumps(
+                            {"id": message.get("id"), "result": {"result": {"type": "string", "value": value}}}
+                        )
+                    )
+                    return
+                session.send(json.dumps({"id": message.get("id"), "result": {}}))
+        finally:
+            session.close()
 
 
 if __name__ == "__main__":
