@@ -22,7 +22,7 @@ Script nối `127.0.0.1` (không nhận host khác). `--cdp` hoặc `--cdp 9222`
 {"status":"no_browser"}
 ```
 
-Việc script làm: tìm tab có path kết thúc bằng `main.zul`, chưa có thì mở tab đó, `Page.reload`, rồi `Runtime.evaluate` đọc DOM. Hết phiên khi URL tab kết thúc bằng `login.zul`, hoặc form đăng nhập đang hiện (ô mật khẩu hiện và có chữ đăng nhập). Không lấy giá trị ô mật khẩu, không in cookie.
+Việc script làm: tìm tab có path kết thúc bằng `main.zul`, chưa có thì mở tab đó, `Page.reload`, rồi `Runtime.evaluate` đọc DOM. Hết phiên khi URL tab là `login.zul` kể cả dạng `login.zul;jsessionid=...`, hoặc form đăng nhập đang hiện (ô mật khẩu hiện và có chữ đăng nhập). Trang nginx có title `403 Forbidden` và chữ `nginx` thì mã **4**, `{"status":"forbidden"}`, tăng `consecutiveFailures`, thử lại đúng một lần. Không lấy giá trị ô mật khẩu, không in cookie.
 
 ## File cookie
 

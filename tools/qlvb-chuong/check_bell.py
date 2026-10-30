@@ -514,8 +514,13 @@ def load_cookie_header(path: Path) -> str:
     return header
 
 
+def _strip_matrix(path: str) -> str:
+    """Bỏ tham số ma trận `;jsessionid=...` trên từng đoạn path."""
+    return "/".join(segment.split(";", 1)[0] for segment in path.split("/"))
+
+
 def _url_is_login(url: str) -> bool:
-    path = urllib.parse.urlparse(url).path.lower()
+    path = _strip_matrix(urllib.parse.urlparse(url).path.lower())
     return path.endswith("login.zul") or "/login.zul" in path
 
 
@@ -1206,19 +1211,30 @@ def _require_https(url: str) -> None:
         raise CookieError("QLVB_PAGE_URL phải là URL https")
 
 
+def _text_is_nginx_forbidden(sample: str) -> bool:
+    sample = sample[:2500].lower()
+    if "403 forbidden" not in sample or "nginx" not in sample:
+        return False
+    if any(marker in sample for marker in BELL_MARKERS):
+        return False
+    if parse_group_counts(sample):
+        return False
+    return True
+
+
 def _is_nginx_forbidden(result: FetchResult) -> bool:
     if result.status == 403:
         return True
     if result.status != 200:
         return False
-    sample = result.body[:2500].lower()
-    if "403 forbidden" not in sample or "nginx" not in sample:
+    return _text_is_nginx_forbidden(result.body)
+
+
+def _snap_is_nginx_forbidden(snap: dict) -> bool:
+    if snap.get("sawBell") or snap.get("notices"):
         return False
-    if any(marker in result.body for marker in BELL_MARKERS):
-        return False
-    if parse_group_counts(result.body):
-        return False
-    return True
+    sample = f"{snap.get('title') or ''}\n{snap.get('text') or ''}"
+    return _text_is_nginx_forbidden(sample)
 
 
 def _backoff_seconds(env: dict[str, str]) -> float:
@@ -1303,7 +1319,7 @@ DOM_EXPR = r"""(function () {
     return String(el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
   }
   var href = String(location.href || "");
-  var path = String(location.pathname || "");
+  var path = String(location.pathname || "").replace(/;[^/]*/g, "");
   var loginUrl = /login\.zul$/i.test(path);
   var body = document.body;
   var bodyText = body ? txt(body) : "";
@@ -1339,6 +1355,7 @@ DOM_EXPR = r"""(function () {
   }
   return JSON.stringify({
     href: href,
+    title: String(document.title || ""),
     loginUrl: loginUrl,
     loginForm: !!(pw && loginWord),
     sawBell: sawBell,
@@ -1773,6 +1790,8 @@ def _snapshot_ready(snap: dict, polls: int) -> bool:
     """Đợi ZK vẽ nhóm hoặc danh sách. Chỉ có số chuông thì chờ thêm một nhịp."""
     if snap.get("loginUrl") or snap.get("loginForm"):
         return True
+    if _snap_is_nginx_forbidden(snap):
+        return True
     if snap.get("notices"):
         return True
     if parse_group_counts(str(snap.get("text") or "")):
@@ -1977,7 +1996,6 @@ def _execute_cdp(env: dict[str, str], sleep, cdp) -> tuple[int, str, str]:
         for attempt in (1, 2):
             try:
                 snap = read_dom(transport, page_url, timeout, sleep)
-                break
             except CdpUnreachable:
                 return _no_browser()
             except NetworkError as exc:
@@ -1993,6 +2011,12 @@ def _execute_cdp(env: dict[str, str], sleep, cdp) -> tuple[int, str, str]:
                     getattr(exc, "reason", "network"),
                     "",
                 )
+            if _snap_is_nginx_forbidden(snap):
+                if attempt == 1:
+                    sleep(backoff)
+                    continue
+                return _failure_result(baseline_path, state, "forbidden", "forbidden", "")
+            break
         if snap is None:
             reason = getattr(last_network, "reason", "network")
             return _failure_result(baseline_path, state, "network", reason, "")
