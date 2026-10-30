@@ -124,7 +124,7 @@
     "groupMoves": "VP541–VP550 TP Khác→Kem; nhóm mới Kem (26 mã) bot chuyển sang nuoc-banh trong data/ia.json"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-27T07:48:00Z",
+  "lastCheckAt": "2026-10-30T07:40:00Z",
   "lastCheckResult": "10:3x ICT 28/10 (routine Kiểm tra web): Sheet đổi giá 24 mã Kem VP543–VP566, tên VP543/VP549 -> commit f56cf8c0 + chuyển hướng 2 slug cũ; bridge LIVE CHƯA refresh (cần trình duyệt) — lượt 14:35 làm bridge.",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
@@ -346,11 +346,11 @@
   },
   "bridge": {
     "lastRefreshAt": "2026-10-28 14:49 ICT",
-    "sourceModifiedTime": "2026-10-28T06:53:23.728Z",
-    "bridgeLiveModifiedTime": "2026-10-23T01:15:42.319Z",
-    "rows_verified": "572 rows (571 SKU), B572=VP571",
+    "sourceModifiedTime": "2026-10-30T06:52:09.701Z",
+    "bridgeLiveModifiedTime": "2026-10-29T07:43:18.410Z",
+    "rows_verified": "589 rows (588 SKU), B589=VP588, khớp nguồn 30/10",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "lastVerifiedAt": "2026-10-24 14:22 ICT"
+    "lastVerifiedAt": "2026-10-30 14:40 ICT"
   },
   "webSync_20261019": {
     "sourceModifiedTime": "2026-10-19T08:09:17.071Z",
@@ -700,14 +700,14 @@
     "type": "google_sheet",
     "fileId": "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM",
     "title": "PHIEU BAO GIA VAN PHAT - 2026",
-    "modifiedTime": "2026-10-28T06:53:23.728Z"
+    "modifiedTime": "2026-10-30T06:52:09.701Z"
   },
   "bridgeRefresh": {
     "status": "done",
-    "at": "2026-10-28T14:49:00+07:00",
-    "rows": 572,
-    "lastMa": "VP571",
-    "method": "Import insert new sheet + swap tab Danh Mục Vật Tư; Chính Sách Đối Tác kept"
+    "at": "2026-10-29T14:43:00+07:00",
+    "rows": 589,
+    "lastMa": "VP588",
+    "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
   },
   "webSync_20261026_1443": {
     "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư), export xlsx qua Drive connector",
@@ -869,5 +869,18 @@
     "note": "Không xuất Sheet→Excel.",
     "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
   },
-  "lastSyncNote": "29/10 10:40 ICT: web 35583d8f từ Google Sheet; +17 mã VP572–VP588, VP537 0→12000; bridge LIVE pending (không có trình duyệt CDP), file _UPLOAD_BRIDGE.xlsx 588 dòng sẵn"
+  "lastSyncNote": "30/10 14:40 ICT: Sheet sửa 13:52 nhưng không đổi dữ liệu web (552 SP, 0 thêm/xóa/đổi giá); bridge LIVE 588 SKU khớp nguồn.",
+  "webSync_20261030_1435": {
+    "source": "Google Sheet (Danh Mục Vật Tư), export xlsx qua Drive connector (chỉ đọc)",
+    "sourceModifiedTime": "2026-10-30T06:52:09.701Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261030_1435.xlsx",
+    "count": 552,
+    "added": [],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "zeroPrice_count": 32,
+    "commit": null,
+    "note": "Không đổi dữ liệu web (chỉ lastmod sitemap) -> không push"
+  }
 }
