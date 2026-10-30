@@ -874,6 +874,88 @@ class BellTests(unittest.TestCase):
             self.assertEqual(self.baseline.read_bytes(), before)
             self.assertIn("Page.reload", cdp.calls)
 
+    def test_cdp_nginx_403_is_forbidden_and_matrix_login_is_session(self):
+        self._write_baseline(
+            [{"id": "notification-count", "kind": "badge", "count": 2}],
+            tip="2026-10-01T00:00:00+07:00",
+            alerted=["notice-cu"],
+        )
+        before = self.baseline.read_bytes()
+        tab = {
+            "id": "t1",
+            "type": "page",
+            "url": PAGE,
+            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+        }
+        forbidden = {
+            "href": PAGE,
+            "title": "403 Forbidden",
+            "text": "nginx",
+            "loginUrl": False,
+            "loginForm": False,
+            "sawBell": False,
+            "notices": [],
+        }
+        cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[dict(forbidden), dict(forbidden)])
+        code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 4, msg=err + out)
+        self.assertNotIn("không thấy chuông", err)
+        self.assertIn("403", err)
+        payload = json.loads(out)
+        self.assertEqual(payload["status"], "forbidden")
+        self.assertEqual(payload["consecutiveFailures"], 1)
+        saved = json.loads(self.baseline.read_text(encoding="utf-8"))
+        self.assertEqual(saved["items"][0]["count"], 2)
+        self.assertEqual(saved["tip"], "2026-10-01T00:00:00+07:00")
+        self.assertEqual(saved["alerted"], ["notice-cu"])
+        self.assertEqual(saved["consecutiveFailures"], 1)
+        self.assertEqual(cdp.calls.count("Page.reload"), 2)
+
+        cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[dict(forbidden), dict(forbidden)])
+        code, out, _err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 4)
+        self.assertEqual(json.loads(out)["consecutiveFailures"], 2)
+
+        self.baseline.write_bytes(before)
+        good = {
+            "href": PAGE,
+            "title": "Văn bản",
+            "sawBell": True,
+            "badge": 2,
+            "notices": [],
+            "text": "Chờ xử lý 0 Sắp đến hạn 0 Quá hạn 0 Nhận để biết 0",
+        }
+        cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[dict(forbidden), good])
+        code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 0, msg=err + out)
+        self.assertEqual(json.loads(out)["status"], "ok")
+        saved = json.loads(self.baseline.read_text(encoding="utf-8"))
+        self.assertEqual(saved["consecutiveFailures"], 0)
+
+        secret = "MATRIXSESSIONVALUE99"
+        href = (
+            "https://qlvb.example.test/app-view/theme/admin-ex/pages/login.zul;jsessionid="
+            + secret
+        )
+        self.assertTrue(bell._url_is_login(href))
+        self.assertFalse(bell._url_is_login(PAGE))
+        self.baseline.write_bytes(before)
+        cdp = bell.ScriptedCdp(
+            tabs=[tab],
+            snapshots=[{"href": href, "title": "Đăng nhập", "text": "", "loginUrl": False, "sawBell": False}],
+        )
+        code, out, err = bell.execute(self._cdp_env(), bell.live_fetch, cdp=cdp)
+        self.assertEqual(code, 3, msg=err + out)
+        self.assertEqual(json.loads(out), {"status": "session_expired"})
+        self.assertEqual(self.baseline.read_bytes(), before)
+        self.assertNotIn(secret, out + err)
+        self.assertIn(";[", bell.DOM_EXPR)
+
+        fetch = FetchStub(bell.FetchResult(200, href, "<html>login</html>"))
+        code, out, err = bell.execute(self.env, fetch)
+        self.assertEqual(code, 3, msg=err)
+        self.assertNotIn(secret, out + err)
+
     def test_cdp_opens_main_tab_when_missing_and_retries_reload_once(self):
         cdp = bell.ScriptedCdp(
             tabs=[],
