@@ -449,14 +449,30 @@ def upsert_itemlist(text: str, script: str) -> str:
     return text.replace("</head>", script + "\n</head>", 1)
 
 
-def sync_home(root: Path, payload: dict, by_ma: dict, ia: dict, paths: dict) -> None:
+def listed_codes(text: str) -> list[str]:
+    if HOME_BEGIN not in text or HOME_END not in text:
+        return []
+    block = text.split(HOME_BEGIN, 1)[1].split(HOME_END, 1)[0]
+    return [code.upper() for code in re.findall(r'data-ma="([^"]+)"', block)]
+
+
+def should_write_home(text: str, payload: dict) -> bool:
+    """Chỉ ghi trang chủ khi thứ tự mã top 10 đổi. Giá lẻ đổi không đủ để ghi lại."""
+    new = [str(item.get("ma") or "").upper() for item in payload.get("items") or []]
+    return listed_codes(text) != new
+
+
+def sync_home(root: Path, payload: dict, by_ma: dict, ia: dict, paths: dict) -> bool:
     index_path = root / "index.html"
     text = index_path.read_text(encoding="utf-8")
+    if not should_write_home(text, payload):
+        return False
     text = upsert_home_block(text, home_section(payload, by_ma, ia, paths))
     text = upsert_itemlist(text, itemlist_markup(payload.get("items") or []))
     if not text.endswith("\n"):
         text += "\n"
     index_path.write_text(text, encoding="utf-8")
+    return True
 
 
 def public_payload(ranked: dict) -> dict:
@@ -496,12 +512,18 @@ def write_outputs(root: Path, as_of: date, files: list[Path]) -> dict:
     out = root / "data" / "ban-chay.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text, encoding="utf-8")
-    sync_home(root, payload, by_ma, ia, extra["paths"])
+    wrote_home = sync_home(root, payload, by_ma, ia, extra["paths"])
+    payload = dict(payload)
+    payload["_wroteHome"] = wrote_home
     return payload
 
 
 def print_public(payload: dict) -> None:
     items = payload.get("items") or []
+    if payload.get("_wroteHome"):
+        print("Top 10 đổi, đã ghi lại trang chủ.")
+    else:
+        print("Top 10 không đổi, giữ nguyên trang chủ.")
     if not items:
         print("Không có mã đủ điều kiện. data/ban-chay.json để items rỗng.")
         return

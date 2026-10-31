@@ -13,9 +13,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from generate_catalog_pages import card_html  # noqa: E402
 from rank_ban_chay import (  # noqa: E402
     PUBLIC_ITEM_KEYS,
     is_sample_file,
+    should_write_home,
     iter_source_files,
     load_lines,
     outside_repo,
@@ -287,6 +289,34 @@ class RankTests(unittest.TestCase):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("BAN_CHAY_CSV", readme)
         self.assertIn("ngoài repo", readme)
+        self.assertIn("product-hot-short", block)
+        self.assertNotIn("fetchpriority", block)
+
+    def test_home_rewrite_only_when_codes_change(self):
+        text = (
+            "<!-- vp-ban-chay -->\n"
+            '<article data-ma="VP1"></article><article data-ma="VP2"></article>\n'
+            "<!-- /vp-ban-chay -->"
+        )
+        same = {"items": [{"ma": "VP1"}, {"ma": "vp2"}]}
+        self.assertFalse(should_write_home(text, same))
+        changed = {"items": [{"ma": "VP2"}, {"ma": "VP1"}]}
+        self.assertTrue(should_write_home(text, changed))
+        self.assertTrue(should_write_home("<html></html>", {"items": [{"ma": "VP1"}]}))
+
+    def test_hot_card_has_no_fetchpriority(self):
+        html = card_html(
+            {"ma": "VP1", "ten": "A", "gia": 1000, "dvt": "Cái", "anh": "", "nhom": "Giấy"},
+            "san-pham/a.html",
+            "san-pham/nhom-giay.html",
+            "VPP",
+            hot=True,
+            image_loading="eager",
+        )
+        self.assertIn('loading="eager"', html)
+        self.assertIn("product-hot-short", html)
+        self.assertIn("Hot · Bán chạy", html)
+        self.assertNotIn("fetchpriority", html)
 
     def _page(self, root: Path, rel: str) -> None:
         path = root / rel
