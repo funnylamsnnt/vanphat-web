@@ -30,9 +30,9 @@
   font-family: var(--font, "Be Vietnam Pro", system-ui, sans-serif);
   font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.01em;
   line-height: 1.2;
-  text-transform: uppercase;
+  white-space: nowrap;
   box-shadow: 0 6px 16px rgba(180, 35, 24, 0.28);
   pointer-events: none;
 }
@@ -73,7 +73,7 @@
   .product-hot {
     top: 0.4rem;
     left: 0.4rem;
-    font-size: 0.62rem;
-    padding: 0.14rem 0.42rem;
+    font-size: 0.6rem;
+    padding: 0.14rem 0.38rem;
   }
 }

@@ -31,29 +31,43 @@
     });
   }
 
+  const HOT_LABEL = "Hot · Bán chạy";
+
   function hotEl() {
     const span = document.createElement("span");
     span.className = "product-hot";
-    span.setAttribute("aria-label", "Bán chạy");
-    span.textContent = "Hot";
+    span.setAttribute("aria-label", HOT_LABEL);
+    span.textContent = HOT_LABEL;
     return span;
   }
 
+  let marking = false;
+
   function mark(root, set) {
-    const scope = root && root.querySelectorAll ? root : document;
-    scope.querySelectorAll(".product-card[data-ma]").forEach((card) => {
-      const ma = String(card.getAttribute("data-ma") || "").toUpperCase();
-      const img = card.querySelector(".product-img");
-      if (!img) return;
-      const existing = img.querySelector(".product-hot");
-      if (set.has(ma)) {
-        card.setAttribute("data-hot", "1");
-        if (!existing) img.insertBefore(hotEl(), img.firstChild);
-      } else if (existing) {
-        existing.remove();
-        card.removeAttribute("data-hot");
-      }
-    });
+    if (marking) return;
+    marking = true;
+    try {
+      const scope = root && root.querySelectorAll ? root : document;
+      scope.querySelectorAll(".product-card[data-ma]").forEach((card) => {
+        const ma = String(card.getAttribute("data-ma") || "").toUpperCase();
+        const img = card.querySelector(".product-img");
+        if (!img) return;
+        const existing = img.querySelector(".product-hot");
+        if (set.has(ma)) {
+          card.setAttribute("data-hot", "1");
+          if (!existing) img.insertBefore(hotEl(), img.firstChild);
+          else if (existing.textContent !== HOT_LABEL) {
+            existing.textContent = HOT_LABEL;
+            existing.setAttribute("aria-label", HOT_LABEL);
+          }
+        } else if (existing) {
+          existing.remove();
+          card.removeAttribute("data-hot");
+        }
+      });
+    } finally {
+      marking = false;
+    }
   }
 
   function applySection(hasItems) {

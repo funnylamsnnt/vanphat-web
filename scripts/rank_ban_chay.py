@@ -20,6 +20,7 @@ import csv
 import io
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 from datetime import date, datetime, timedelta
@@ -30,7 +31,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from generate_catalog_pages import build_ia, price_amount  # noqa: E402
+from generate_catalog_pages import SITE, badge_text, build_ia, card_html, price_amount  # noqa: E402
 from sync_products_from_excel import exclude_group_folds, is_excluded_nhom  # noqa: E402
 
 WINDOW_DAYS = 28
@@ -38,6 +39,11 @@ TOP_N = 10
 COLUMNS = ("so_hd", "ngay", "ma_vp", "so_luong", "don_gia", "thanh_tien")
 SAMPLE_MARK = "DỮ LIỆU MẪU"
 PUBLIC_ITEM_KEYS = ("hang", "ma", "ten", "href", "gia")
+HOME_BEGIN = "<!-- vp-ban-chay -->"
+HOME_END = "<!-- /vp-ban-chay -->"
+FEATURED_ANCHOR = '    <section class="section" style="padding-top:0">'
+HOME_LEAD = "Những mặt hàng được chọn nhiều trong bốn tuần gần đây."
+EAGER_IMAGES = 4
 
 
 def window_for(as_of: date) -> tuple[date, date]:
@@ -359,6 +365,100 @@ def rank_lines(
     }
 
 
+def home_section(payload: dict, by_ma: dict, ia: dict, paths: dict) -> str:
+    """HTML tĩnh để Google đọc. Không ghi số lượng hay doanh thu."""
+    items = payload.get("items") or []
+    if not items:
+        return ""
+    categories = paths.get("category") or {}
+    cards = []
+    for index, item in enumerate(items):
+        product = by_ma.get(item["ma"])
+        if not product:
+            continue
+        nhom = product.get("nhom") or ""
+        category = categories.get(nhom) or "san-pham.html"
+        cards.append(
+            card_html(
+                product,
+                item["href"],
+                category,
+                badge_text(product, ia),
+                hot=True,
+                image_loading="eager" if index < EAGER_IMAGES else "lazy",
+            )
+        )
+    body = "\n".join(cards)
+    return f"""    <section class="section ban-chay" id="ban-chay" aria-labelledby="ban-chay-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="ban-chay-title">Bán chạy 4 tuần qua</h2>
+          <p>{HOME_LEAD}</p>
+        </div>
+        <div class="product-grid" id="ban-chay-grid">
+{body}
+        </div>
+      </div>
+    </section>"""
+
+
+def itemlist_markup(items: list[dict]) -> str:
+    elements = []
+    for item in items:
+        href = str(item.get("href") or "").lstrip("/")
+        elements.append(
+            {
+                "@type": "ListItem",
+                "position": item.get("hang"),
+                "name": item.get("ten") or "",
+                "url": f"{SITE}/{href}" if href else SITE + "/",
+            }
+        )
+    doc = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "@id": f"{SITE}/#ban-chay",
+        "name": "Bán chạy 4 tuần qua",
+        "itemListOrder": "https://schema.org/ItemListOrderAscending",
+        "numberOfItems": len(elements),
+        "itemListElement": elements,
+    }
+    body = json.dumps(doc, ensure_ascii=False, indent=2)
+    indented = "\n".join("  " + line for line in body.splitlines())
+    return f'  <script type="application/ld+json" id="ban-chay-ld">\n{indented}\n  </script>'
+
+
+def upsert_home_block(text: str, section: str) -> str:
+    block = f"{HOME_BEGIN}\n{section}\n{HOME_END}" if section else f"{HOME_BEGIN}\n{HOME_END}"
+    if HOME_BEGIN in text and HOME_END in text:
+        pre, rest = text.split(HOME_BEGIN, 1)
+        _old, post = rest.split(HOME_END, 1)
+        return pre + block + post
+    if FEATURED_ANCHOR not in text:
+        raise SystemExit("index.html thiếu khối sản phẩm nổi bật")
+    return text.replace(FEATURED_ANCHOR, block + "\n\n" + FEATURED_ANCHOR, 1)
+
+
+def upsert_itemlist(text: str, script: str) -> str:
+    pattern = re.compile(
+        r"[ \t]*<script type=\"application/ld\+json\" id=\"ban-chay-ld\">.*?</script>\n?",
+        re.S,
+    )
+    if pattern.search(text):
+        return pattern.sub(script + "\n", text, count=1)
+    return text.replace("</head>", script + "\n</head>", 1)
+
+
+def sync_home(root: Path, payload: dict, by_ma: dict, ia: dict, paths: dict) -> None:
+    index_path = root / "index.html"
+    text = index_path.read_text(encoding="utf-8")
+    text = upsert_home_block(text, home_section(payload, by_ma, ia, paths))
+    text = upsert_itemlist(text, itemlist_markup(payload.get("items") or []))
+    if not text.endswith("\n"):
+        text += "\n"
+    index_path.write_text(text, encoding="utf-8")
+
+
 def public_payload(ranked: dict) -> dict:
     """Chỉ hạng, mã, tên, link, giá bán lẻ. Không số lượng, doanh thu, điểm."""
     items = []
@@ -389,13 +489,14 @@ def csv_paths_from(args_csv: list[str], env_value: str, root: Path) -> list[Path
 
 def write_outputs(root: Path, as_of: date, files: list[Path]) -> dict:
     lines, _dup = load_lines(files)
-    by_ma, _ia, extra = load_catalog(root)
+    by_ma, ia, extra = load_catalog(root)
     ranked = rank_lines(lines, by_ma, extra["phrases"], extra["paths"], root, as_of)
     payload = public_payload(ranked)
     text = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
     out = root / "data" / "ban-chay.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text, encoding="utf-8")
+    sync_home(root, payload, by_ma, ia, extra["paths"])
     return payload
 
 
