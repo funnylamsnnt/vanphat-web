@@ -37,7 +37,13 @@
     const span = document.createElement("span");
     span.className = "product-hot";
     span.setAttribute("aria-label", HOT_LABEL);
-    span.textContent = HOT_LABEL;
+    const short = document.createElement("span");
+    short.className = "product-hot-short";
+    short.textContent = "Hot";
+    const full = document.createElement("span");
+    full.className = "product-hot-full";
+    full.textContent = HOT_LABEL;
+    span.append(short, full);
     return span;
   }
 
@@ -56,9 +62,8 @@
         if (set.has(ma)) {
           card.setAttribute("data-hot", "1");
           if (!existing) img.insertBefore(hotEl(), img.firstChild);
-          else if (existing.textContent !== HOT_LABEL) {
-            existing.textContent = HOT_LABEL;
-            existing.setAttribute("aria-label", HOT_LABEL);
+          else if (!existing.querySelector(".product-hot-short")) {
+            existing.replaceWith(hotEl());
           }
         } else if (existing) {
           existing.remove();

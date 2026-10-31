@@ -646,6 +646,10 @@ def check_ban_chay(errors: list[str]) -> None:
         eager = block.count('loading="eager"')
         if cards >= 4 and eager < 4:
             errors.append("bốn ảnh đầu khối bán chạy phải tải ngay, không lazy")
+        if "fetchpriority" in block.lower():
+            errors.append("ảnh bán chạy không dùng fetchpriority")
+        if "product-hot-short" not in block or "product-hot-full" not in block:
+            errors.append("điện thoại hiện Hot, máy rộng hiện Hot · Bán chạy")
     if 'id="ban-chay-ld"' not in index or '"@type": "ItemList"' not in index:
         errors.append("trang chủ thiếu schema ItemList của khối bán chạy")
     workflow = ROOT / ".github" / "workflows" / "ban-chay.yml"
