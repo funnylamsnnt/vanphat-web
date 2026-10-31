@@ -700,14 +700,23 @@
     "type": "google_sheet",
     "fileId": "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM",
     "title": "PHIEU BAO GIA VAN PHAT - 2026",
-    "modifiedTime": "2026-10-30T06:52:09.701Z"
+    "modifiedTime": "2026-10-31T07:23:13.098Z"
   },
   "bridgeRefresh": {
-    "status": "done",
-    "at": "2026-10-29T14:43:00+07:00",
-    "rows": 589,
-    "lastMa": "VP588",
-    "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
+    "status": "pending",
+    "builtAt": "2026-10-31T14:42:00+07:00",
+    "rows": 590,
+    "skus": 589,
+    "lastMa": "VP589",
+    "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
+    "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+    "prev": {
+      "status": "done",
+      "at": "2026-10-29T14:43:00+07:00",
+      "rows": 589,
+      "lastMa": "VP588",
+      "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
+    }
   },
   "webSync_20261026_1443": {
     "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư), export xlsx qua Drive connector",
@@ -869,7 +878,7 @@
     "note": "Không xuất Sheet→Excel.",
     "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
   },
-  "lastSyncNote": "30/10 14:40 ICT: Sheet sửa 13:52 nhưng không đổi dữ liệu web (552 SP, 0 thêm/xóa/đổi giá); bridge LIVE 588 SKU khớp nguồn.",
+  "lastSyncNote": "31/10 14:40 ICT: thêm VP589 (Kẹo Doublemint sugarfree vị dâu, TP Khác, giá 0) → 553 SP, commit 8404153f, Pages OK; bridge LIVE lệch (VP589, VP164) → chờ Import→Replace _UPLOAD_BRIDGE.xlsx (589 SKU).",
   "webSync_20261030_1435": {
     "source": "Google Sheet (Danh Mục Vật Tư), export xlsx qua Drive connector (chỉ đọc)",
     "sourceModifiedTime": "2026-10-30T06:52:09.701Z",
@@ -882,5 +891,31 @@
     "zeroPrice_count": 32,
     "commit": null,
     "note": "Không đổi dữ liệu web (chỉ lastmod sitemap) -> không push"
+  },
+  "webSync_20261031_1440": {
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư), export xlsx qua Drive connector (chỉ đọc)",
+    "sourceModifiedTime": "2026-10-31T07:23:13.098Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261031_1440.xlsx",
+    "driveTitleArg": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
+    "count": 553,
+    "with_img": 441,
+    "added": [
+      "VP589"
+    ],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "zeroPrice_count": 33,
+    "zeroPriceNew": [
+      "VP589"
+    ],
+    "autoPlacedGroups": [],
+    "commit": "8404153f",
+    "pages_run": 41181627013,
+    "pages_status": "success",
+    "broken_images": [],
+    "live_check": "products.json live 553; VP589 200 + lightbox; VP164 38000 live; / san-pham 3 linh-vuc 200; VP415 404, 0 trong sitemap (583 URL); 5 ảnh mẫu 200",
+    "note": "VP164 48.000→38.000 đã đồng bộ web lúc 10:26 (commit 1d2309d3). Không xuất Sheet→Excel.",
+    "bridge": "pending: LIVE 588 SKU lệch (thiếu VP589, VP164 còn 48000); _UPLOAD_BRIDGE.xlsx 589 SKU (590 dòng kể tiêu đề) chờ Import→Replace bằng trình duyệt"
   }
 }
