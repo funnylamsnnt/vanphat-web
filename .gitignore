@@ -1,5 +1,10 @@
 __pycache__/
 
+# Hóa đơn GTGT thật không vào repo public. Mẫu định dạng: data/hoa-don-gtgt/mau/
+data/hoa-don-gtgt/*
+!data/hoa-don-gtgt/mau/
+!data/hoa-don-gtgt/mau/**
+
 # Chuông QLVB: baseline và cookie không vào git
 /qlvb-bell-baseline.json
 qlvb-bell-baseline.json

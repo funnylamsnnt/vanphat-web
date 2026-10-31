@@ -123,8 +123,11 @@
       : `<a class="btn btn-add-cart" data-add-cart href="${escapeAttr(zalo)}" target="_blank" rel="noopener">Chat Zalo</a>`;
     const href = productHref(p);
     const badge = badgeLabel(p, lvMap);
+    const hot = window.VanPhatBanChay && window.VanPhatBanChay.isHot && window.VanPhatBanChay.isHot(p.ma);
+    const hotAttr = hot ? ' data-hot="1"' : "";
+    const hotHtml = hot ? '<span class="product-hot" aria-label="Bán chạy">Hot</span>' : "";
     return `
-      <article class="product-card"
+      <article class="product-card"${hotAttr}
         data-ma="${escapeAttr(p.ma)}"
         data-ten="${escapeAttr(p.ten)}"
         data-gia="${escapeAttr(p.gia)}"
@@ -134,6 +137,7 @@
         data-linh-vuc-id="${escapeAttr(p.linhVucId || "")}"${factAttrs(p)}>
         <div class="product-img" data-product-zoom role="button" tabindex="0"
              aria-label="Xem ảnh lớn: ${escapeAttr(p.ten)}" title="Xem ảnh lớn">
+          ${hotHtml}
           ${pictureHTML(p.anh, p.ten)}
         </div>
         <div class="product-body">

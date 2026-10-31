@@ -544,6 +544,110 @@ def check_sync_schedule(errors: list[str]) -> None:
     check_py_script(errors, "test_sync_schedule.py", "test lịch sync")
 
 
+BAN_CHAY_PUBLIC_KEYS = {"hang", "ma", "ten", "href", "gia"}
+BAN_CHAY_FORBIDDEN_KEYS = {
+    "so_hd",
+    "sohd",
+    "so_luong",
+    "soluong",
+    "doanh_thu",
+    "doanhthu",
+    "thanh_tien",
+    "thanhtien",
+    "don_gia",
+    "dongia",
+    "diem",
+    "pctsoluong",
+    "pctdoanhthu",
+    "sodongdoc",
+    "sohoadontrongcuaso",
+    "tep",
+}
+INVOICE_NAME_RE = re.compile(r"^(hoadon_lines_|bills_thang)", re.I)
+
+
+def _walk_keys(node, found: list[str]) -> None:
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if str(key).replace("_", "").lower() in BAN_CHAY_FORBIDDEN_KEYS or str(key).lower() in BAN_CHAY_FORBIDDEN_KEYS:
+                found.append(str(key))
+            _walk_keys(value, found)
+    elif isinstance(node, list):
+        for item in node:
+            _walk_keys(item, found)
+
+
+def check_ban_chay(errors: list[str]) -> None:
+    """Repo public: không file hóa đơn thật, JSON bán chạy không có số lượng hay doanh thu."""
+    skip = {".git", "node_modules", "__pycache__"}
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or any(part in skip for part in path.parts):
+            continue
+        if "mau" in path.parts:
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        if INVOICE_NAME_RE.match(path.name):
+            errors.append(f"không commit hóa đơn: {rel}")
+        if rel.startswith("data/hoa-don-gtgt/"):
+            errors.append(f"không commit hóa đơn thật: {rel}")
+    data_root = ROOT / "data"
+    if data_root.is_dir():
+        for path in data_root.rglob("*"):
+            if not path.is_file() or "mau" in path.parts:
+                continue
+            rel = path.relative_to(ROOT).as_posix()
+            if path.suffix.lower() == ".csv":
+                header = ""
+                for line in path.read_text(encoding="utf-8-sig", errors="replace").splitlines():
+                    if line.strip() and not line.strip().startswith("#"):
+                        header = line
+                        break
+                cols = {part.strip().lower() for part in header.split(",")}
+                hit = cols & {"so_hd", "so_luong", "doanh_thu", "thanh_tien", "don_gia"}
+                if hit:
+                    errors.append(f"{rel}: cột hóa đơn {', '.join(sorted(hit))}")
+            if path.suffix.lower() == ".json":
+                try:
+                    payload = json.loads(path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError:
+                    errors.append(f"{rel}: JSON không đọc được")
+                    continue
+                bad: list[str] = []
+                _walk_keys(payload, bad)
+                if bad:
+                    errors.append(f"{rel}: lộ trường bán hàng {', '.join(sorted(set(bad)))}")
+    public = ROOT / "data" / "ban-chay.json"
+    if not public.is_file():
+        errors.append("thiếu data/ban-chay.json")
+    else:
+        payload = json.loads(public.read_text(encoding="utf-8"))
+        if set(payload) != {"items"}:
+            errors.append(f"data/ban-chay.json chỉ được có khóa items, đang có {sorted(payload)}")
+        items = payload.get("items")
+        if not isinstance(items, list) or not items:
+            errors.append("data/ban-chay.json thiếu items")
+        else:
+            for item in items:
+                if not isinstance(item, dict) or set(item) != BAN_CHAY_PUBLIC_KEYS:
+                    errors.append(f"mục bán chạy sai khóa: {item!r}")
+    index = (ROOT / "index.html").read_text(encoding="utf-8")
+    if "<!-- vp-ban-chay -->" not in index:
+        errors.append("index.html thiếu khối bán chạy")
+    else:
+        block = index.split("<!-- vp-ban-chay -->", 1)[1].split("<!-- /vp-ban-chay -->", 1)[0]
+        folded = block.lower()
+        if "hóa đơn" in folded or "gtgt" in folded:
+            errors.append("trang chủ không được nêu hóa đơn GTGT")
+        if "đã bán" in folded:
+            errors.append("trang chủ không hiện số đã bán")
+    if 'id="ban-chay-ld"' not in index or '"@type": "ItemList"' not in index:
+        errors.append("trang chủ thiếu schema ItemList của khối bán chạy")
+    workflow = ROOT / ".github" / "workflows" / "ban-chay.yml"
+    if workflow.is_file():
+        errors.append("không giữ GitHub Action xếp hạng; máy ngoài chạy script rồi commit JSON")
+    check_py_script(errors, "test_rank_ban_chay.py", "test bán chạy")
+
+
 def check_chat_search(errors: list[str]) -> None:
     check_node_script(errors, "test_chat_search.js", "test tìm chat")
     check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
@@ -675,6 +779,7 @@ def main() -> None:
     check_product_descriptions(errors)
     check_chat_search(errors)
     check_sync_schedule(errors)
+    check_ban_chay(errors)
     check_chat_widget_cache(errors)
     redirects = check_redirects(errors)
     if errors:

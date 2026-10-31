@@ -1,0 +1,79 @@
+/* Khối Bán chạy 4 tuần qua và nhãn Hot. File này network-first (sw.js). */
+
+.ban-chay {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 162, 39, 0.18), transparent 60%),
+    linear-gradient(180deg, #fff 0%, var(--cream) 100%);
+  border-block: 1px solid rgba(201, 162, 39, 0.28);
+}
+
+.ban-chay .section-header p {
+  max-width: 38rem;
+  margin-inline: auto;
+}
+
+.product-img {
+  position: relative;
+}
+
+.product-hot {
+  position: absolute;
+  z-index: 3;
+  top: 0.55rem;
+  left: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.52rem 0.2rem;
+  border-radius: 999px;
+  background: #b42318;
+  color: #fff;
+  font-family: var(--font, "Be Vietnam Pro", system-ui, sans-serif);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(180, 35, 24, 0.28);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .ban-chay.section {
+    padding: 2rem 0 1.35rem;
+  }
+  .ban-chay .section-header {
+    margin-bottom: 1.15rem;
+  }
+  .ban-chay .section-header h2 {
+    font-size: 1.35rem;
+  }
+  .ban-chay .product-grid {
+    gap: 0.7rem;
+  }
+  .ban-chay .product-body {
+    padding: 0.7rem 0.7rem 0.85rem;
+  }
+  .ban-chay .product-name {
+    font-size: 0.82rem;
+    min-height: 2.2em;
+  }
+  .ban-chay .qty-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .ban-chay .qty-input {
+    width: 36px;
+    height: 32px;
+  }
+  .ban-chay .btn-add-cart {
+    min-height: 36px;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.78rem;
+  }
+  .product-hot {
+    top: 0.4rem;
+    left: 0.4rem;
+    font-size: 0.62rem;
+    padding: 0.14rem 0.42rem;
+  }
+}
