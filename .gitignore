@@ -1,7 +1,9 @@
 __pycache__/
 
-# Chuông QLVB: baseline và cookie không vào git
+# Chuông QLVB: baseline, file nhịp và cookie không vào git
 /qlvb-bell-baseline.json
 qlvb-bell-baseline.json
+/qlvb-bell-pace.json
+qlvb-bell-pace.json
 tools/qlvb-chuong/*.cookie
 tools/qlvb-chuong/cookies.txt
