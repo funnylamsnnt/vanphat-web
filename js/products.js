@@ -125,7 +125,7 @@
     const badge = badgeLabel(p, lvMap);
     const hot = window.VanPhatBanChay && window.VanPhatBanChay.isHot && window.VanPhatBanChay.isHot(p.ma);
     const hotAttr = hot ? ' data-hot="1"' : "";
-    const hotHtml = hot ? '<span class="product-hot" aria-label="Bán chạy">Hot</span>' : "";
+    const hotHtml = hot ? '<span class="product-hot" aria-label="Hot · Bán chạy">Hot · Bán chạy</span>' : "";
     return `
       <article class="product-card"${hotAttr}
         data-ma="${escapeAttr(p.ma)}"

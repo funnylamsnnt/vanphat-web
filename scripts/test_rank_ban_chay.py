@@ -270,6 +270,8 @@ class RankTests(unittest.TestCase):
         index = (ROOT / "index.html").read_text(encoding="utf-8")
         block = index.split("<!-- vp-ban-chay -->", 1)[1].split("<!-- /vp-ban-chay -->", 1)[0]
         self.assertIn("Bán chạy 4 tuần qua", block)
+        self.assertIn("Hot · Bán chạy", block)
+        self.assertGreaterEqual(block.count('loading="eager"'), 4)
         self.assertNotIn("Hóa đơn", block)
         self.assertNotIn("GTGT", block)
         self.assertNotIn("đã bán", block.lower())

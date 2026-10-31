@@ -640,6 +640,12 @@ def check_ban_chay(errors: list[str]) -> None:
             errors.append("trang chủ không được nêu hóa đơn GTGT")
         if "đã bán" in folded:
             errors.append("trang chủ không hiện số đã bán")
+        if "Hot · Bán chạy" not in block:
+            errors.append("nhãn bán chạy phải là «Hot · Bán chạy»")
+        cards = block.count('class="product-card"')
+        eager = block.count('loading="eager"')
+        if cards >= 4 and eager < 4:
+            errors.append("bốn ảnh đầu khối bán chạy phải tải ngay, không lazy")
     if 'id="ban-chay-ld"' not in index or '"@type": "ItemList"' not in index:
         errors.append("trang chủ thiếu schema ItemList của khối bán chạy")
     workflow = ROOT / ".github" / "workflows" / "ban-chay.yml"
