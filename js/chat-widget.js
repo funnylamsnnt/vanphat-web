@@ -5,6 +5,18 @@
   const CONFIG_URL = "/data/chat-config.json?v=20261002";
   const CHAT_CSS_URL = "/css/chat-widget.css";
 
+  /* Mọi trang khách đã nạp file này (network-first). Nhãn Hot nằm ở js/ban-chay.js
+     để khỏi chèn thẻ script vào hàng trăm HTML. Trang chủ gắn sẵn thì bỏ qua. */
+  function ensureBanChay() {
+    if (!document || typeof document.createElement !== "function" || !document.querySelector) return;
+    if (document.querySelector('script[src*="ban-chay.js"]')) return;
+    const script = document.createElement("script");
+    script.src = "/js/ban-chay.js";
+    script.defer = true;
+    (document.head || document.documentElement).appendChild(script);
+  }
+  ensureBanChay();
+
   function ensureChatCss() {
     if (!document || typeof document.createElement !== "function") return Promise.resolve();
     const existing = document.querySelector && document.querySelector('link[data-vp-chat-css]');
