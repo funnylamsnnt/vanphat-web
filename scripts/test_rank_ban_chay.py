@@ -290,14 +290,18 @@ class RankTests(unittest.TestCase):
         self.assertIn("BAN_CHAY_CSV", readme)
         self.assertIn("ngoài repo", readme)
         self.assertIn("product-hot-short", block)
-        self.assertIn('title="Hot · Bán chạy"', block)
+        self.assertIn('class="product-hot-short" title="Hot · Bán chạy"', block)
+        self.assertNotIn('class="product-hot" aria-label="Hot · Bán chạy" title=', block)
         self.assertNotIn("fetchpriority", block)
 
     def test_home_rewrite_when_price_name_or_link_differs(self):
-        def card(ma, ten, gia, href):
+        def card(ma, ten, gia, href, shown=None):
+            text = shown if shown is not None else f"{gia:,}".replace(",", ".") + " ₫"
             return (
                 f'<article class="product-card" data-ma="{ma}" data-ten="{ten}" data-gia="{gia}">'
-                f'<h3 class="product-name"><a href="{href}">{ten}</a></h3></article>'
+                f'<h3 class="product-name"><a href="{href}">{ten}</a></h3>'
+                f'<div class="product-price"><span class="price-label">Giá</span> {text}</div>'
+                f"</article>"
             )
 
         text = (
@@ -321,6 +325,13 @@ class RankTests(unittest.TestCase):
         self.assertTrue(should_write_home(text, renamed))
         self.assertTrue(should_write_home(text, relinked))
         self.assertTrue(should_write_home(text, reordered))
+        shown_wrong = (
+            "<!-- vp-ban-chay -->\n"
+            + card("VP1", "Bút", 1000, "san-pham/a.html", shown="9.999 ₫")
+            + card("VP2", "Giấy", 2000, "san-pham/b.html")
+            + "\n<!-- /vp-ban-chay -->"
+        )
+        self.assertTrue(should_write_home(shown_wrong, same))
         self.assertTrue(should_write_home("<html></html>", same))
 
     def test_hot_card_has_no_fetchpriority(self):
@@ -335,7 +346,8 @@ class RankTests(unittest.TestCase):
         self.assertIn('loading="eager"', html)
         self.assertIn("product-hot-short", html)
         self.assertIn("Hot · Bán chạy", html)
-        self.assertIn('title="Hot · Bán chạy"', html)
+        self.assertIn('class="product-hot-short" title="Hot · Bán chạy"', html)
+        self.assertNotIn('class="product-hot" aria-label="Hot · Bán chạy" title=', html)
         self.assertNotIn("fetchpriority", html)
 
     def _page(self, root: Path, rel: str) -> None:
