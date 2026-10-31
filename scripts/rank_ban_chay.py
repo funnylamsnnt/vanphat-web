@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import html
 import io
 import json
 import os
@@ -449,17 +450,59 @@ def upsert_itemlist(text: str, script: str) -> str:
     return text.replace("</head>", script + "\n</head>", 1)
 
 
-def listed_codes(text: str) -> list[str]:
+def _gia(value) -> int | None:
+    if value is None or value == "":
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def listed_cards(text: str) -> list[tuple] | None:
+    """Thẻ đang in: mã, tên, giá bán lẻ, link. None nếu chưa có khối."""
     if HOME_BEGIN not in text or HOME_END not in text:
-        return []
+        return None
     block = text.split(HOME_BEGIN, 1)[1].split(HOME_END, 1)[0]
-    return [code.upper() for code in re.findall(r'data-ma="([^"]+)"', block)]
+    cards = []
+    for article in re.findall(r'<article\b[^>]*class="product-card".*?</article>', block, re.S):
+        def attr(name: str) -> str:
+            match = re.search(rf'\b{name}="([^"]*)"', article)
+            return html.unescape(match.group(1)) if match else ""
+
+        link = re.search(r'class="product-name"><a href="([^"]*)"', article)
+        cards.append(
+            (
+                attr("data-ma").upper(),
+                attr("data-ten"),
+                _gia(attr("data-gia")),
+                html.unescape(link.group(1)) if link else "",
+            )
+        )
+    return cards
+
+
+def payload_cards(payload: dict) -> list[tuple]:
+    cards = []
+    for item in payload.get("items") or []:
+        cards.append(
+            (
+                str(item.get("ma") or "").upper(),
+                str(item.get("ten") or ""),
+                _gia(item.get("gia")),
+                str(item.get("href") or ""),
+            )
+        )
+    return cards
 
 
 def should_write_home(text: str, payload: dict) -> bool:
-    """Chỉ ghi trang chủ khi thứ tự mã top 10 đổi. Giá lẻ đổi không đủ để ghi lại."""
-    new = [str(item.get("ma") or "").upper() for item in payload.get("items") or []]
-    return listed_codes(text) != new
+    """Ghi lại khi thứ tự mã, tên, link hoặc giá bán lẻ in trên thẻ lệch JSON."""
+    current = listed_cards(text)
+    new = payload_cards(payload)
+    if current is None:
+        return bool(new)
+    return current != new
 
 
 def sync_home(root: Path, payload: dict, by_ma: dict, ia: dict, paths: dict) -> bool:
@@ -521,9 +564,9 @@ def write_outputs(root: Path, as_of: date, files: list[Path]) -> dict:
 def print_public(payload: dict) -> None:
     items = payload.get("items") or []
     if payload.get("_wroteHome"):
-        print("Top 10 đổi, đã ghi lại trang chủ.")
+        print("Trang chủ lệch mã, tên, link hoặc giá. Đã ghi lại.")
     else:
-        print("Top 10 không đổi, giữ nguyên trang chủ.")
+        print("Trang chủ khớp JSON, giữ nguyên.")
     if not items:
         print("Không có mã đủ điều kiện. data/ban-chay.json để items rỗng.")
         return

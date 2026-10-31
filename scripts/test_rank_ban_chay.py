@@ -290,19 +290,38 @@ class RankTests(unittest.TestCase):
         self.assertIn("BAN_CHAY_CSV", readme)
         self.assertIn("ngoài repo", readme)
         self.assertIn("product-hot-short", block)
+        self.assertIn('title="Hot · Bán chạy"', block)
         self.assertNotIn("fetchpriority", block)
 
-    def test_home_rewrite_only_when_codes_change(self):
+    def test_home_rewrite_when_price_name_or_link_differs(self):
+        def card(ma, ten, gia, href):
+            return (
+                f'<article class="product-card" data-ma="{ma}" data-ten="{ten}" data-gia="{gia}">'
+                f'<h3 class="product-name"><a href="{href}">{ten}</a></h3></article>'
+            )
+
         text = (
             "<!-- vp-ban-chay -->\n"
-            '<article data-ma="VP1"></article><article data-ma="VP2"></article>\n'
-            "<!-- /vp-ban-chay -->"
+            + card("VP1", "Bút", 1000, "san-pham/a.html")
+            + card("VP2", "Giấy", 2000, "san-pham/b.html")
+            + "\n<!-- /vp-ban-chay -->"
         )
-        same = {"items": [{"ma": "VP1"}, {"ma": "vp2"}]}
+        same = {
+            "items": [
+                {"ma": "vp1", "ten": "Bút", "gia": 1000, "href": "san-pham/a.html"},
+                {"ma": "VP2", "ten": "Giấy", "gia": 2000, "href": "san-pham/b.html"},
+            ]
+        }
         self.assertFalse(should_write_home(text, same))
-        changed = {"items": [{"ma": "VP2"}, {"ma": "VP1"}]}
-        self.assertTrue(should_write_home(text, changed))
-        self.assertTrue(should_write_home("<html></html>", {"items": [{"ma": "VP1"}]}))
+        pricey = {"items": [dict(same["items"][0], gia=1500), same["items"][1]]}
+        renamed = {"items": [dict(same["items"][0], ten="Bút mới"), same["items"][1]]}
+        relinked = {"items": [dict(same["items"][0], href="san-pham/c.html"), same["items"][1]]}
+        reordered = {"items": [same["items"][1], same["items"][0]]}
+        self.assertTrue(should_write_home(text, pricey))
+        self.assertTrue(should_write_home(text, renamed))
+        self.assertTrue(should_write_home(text, relinked))
+        self.assertTrue(should_write_home(text, reordered))
+        self.assertTrue(should_write_home("<html></html>", same))
 
     def test_hot_card_has_no_fetchpriority(self):
         html = card_html(
@@ -316,6 +335,7 @@ class RankTests(unittest.TestCase):
         self.assertIn('loading="eager"', html)
         self.assertIn("product-hot-short", html)
         self.assertIn("Hot · Bán chạy", html)
+        self.assertIn('title="Hot · Bán chạy"', html)
         self.assertNotIn("fetchpriority", html)
 
     def _page(self, root: Path, rel: str) -> None:

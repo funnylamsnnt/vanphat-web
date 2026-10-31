@@ -115,7 +115,7 @@ JSON cùng khóa, dạng mảng hoặc `{"dong":[...]}`. `thanh_tien` đã gồm
 
 Cách chấm, chỉ chạy trên máy có file nguồn: cửa sổ 28 ngày tính cả ngày chốt. Bỏ dòng không dương, mã không có trang, giá web bằng 0, nhóm «Không đưa lên web». Điểm = 50% hạng phần trăm số lượng + 50% hạng phần trăm doanh thu, vì cái, xấp, ram, hộp không cùng đơn vị. Hòa điểm thì ưu tiên doanh thu, rồi số lượng, rồi mã. Lấy tối đa 10.
 
-`data/ban-chay.json` chỉ có `items[]` với `hang`, `ma`, `ten`, `href`, `gia` (giá bán lẻ trên web). Không có số lượng, doanh thu, điểm, số hóa đơn. Cùng lúc script ghi lại khối HTML tĩnh và schema `ItemList` trên `index.html` để Google đọc được khi JSON đổi. Bốn ảnh đầu của khối dùng `loading="eager"`, không `fetchpriority`. Nhãn máy rộng là «Hot · Bán chạy»; điện thoại chỉ hiện «Hot», aria-label giữ đủ cụm. Script chỉ ghi lại `index.html` khi thứ tự mã top 10 đổi.
+`data/ban-chay.json` chỉ có `items[]` với `hang`, `ma`, `ten`, `href`, `gia` (giá bán lẻ trên web). Không có số lượng, doanh thu, điểm, số hóa đơn. Cùng lúc script ghi lại khối HTML tĩnh và schema `ItemList` trên `index.html` để Google đọc được khi JSON đổi. Bốn ảnh đầu của khối dùng `loading="eager"`, không `fetchpriority`. Nhãn máy rộng là «Hot · Bán chạy»; điện thoại chỉ hiện «Hot», aria-label giữ đủ cụm. Script ghi lại `index.html` khi thứ tự mã đổi, hoặc khi tên, link hay giá bán lẻ in trên thẻ lệch JSON. Điện thoại: nhãn «Hot» có `title="Hot · Bán chạy"`.
 
 ```bash
 python3 scripts/rank_ban_chay.py --csv /duong/dan/ngoai/hoadon.csv --as-of 2026-10-31
