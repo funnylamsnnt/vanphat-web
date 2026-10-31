@@ -1220,7 +1220,7 @@ def card_html(
     src = image_src(product)
     hot_attr = '\n        data-hot="1"' if hot else ""
     hot_html = (
-        '\n          <span class="product-hot" aria-label="Hot · Bán chạy">'
+        '\n          <span class="product-hot" aria-label="Hot · Bán chạy" title="Hot · Bán chạy">'
         '<span class="product-hot-short">Hot</span>'
         '<span class="product-hot-full">Hot · Bán chạy</span></span>'
         if hot

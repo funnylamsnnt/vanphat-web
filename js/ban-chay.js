@@ -37,6 +37,7 @@
     const span = document.createElement("span");
     span.className = "product-hot";
     span.setAttribute("aria-label", HOT_LABEL);
+    span.setAttribute("title", HOT_LABEL);
     const short = document.createElement("span");
     short.className = "product-hot-short";
     short.textContent = "Hot";
@@ -62,7 +63,10 @@
         if (set.has(ma)) {
           card.setAttribute("data-hot", "1");
           if (!existing) img.insertBefore(hotEl(), img.firstChild);
-          else if (!existing.querySelector(".product-hot-short")) {
+          else if (
+            !existing.querySelector(".product-hot-short")
+            || existing.getAttribute("title") !== HOT_LABEL
+          ) {
             existing.replaceWith(hotEl());
           }
         } else if (existing) {
