@@ -14,8 +14,9 @@ Mã thoát:
   10  có thông báo mới, số chuông tăng, hoặc một nhóm Văn bản đến > 0
   3   hết phiên — {"status":"session_expired"}
   4   HTTP 403 hoặc lỗi mạng — {"status":"forbidden"|"network",...}
+      Ba lần 403 liên tiếp thì nhịp kiểm tra thành 30 phút (file nhịp ngoài repo).
   30  thiếu cấu hình, cookie sai quyền, trang không đọc được, baseline hỏng,
-      hoặc không có Chrome ở cổng CDP — {"status":"no_browser"}
+      file nhịp hỏng, hoặc không có Chrome ở cổng CDP — {"status":"no_browser"}
 
 Xem README.md cùng thư mục.
 """
@@ -58,6 +59,14 @@ WS_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 CDP_POLL_SECONDS = 0.25
 DEFAULT_BACKOFF = 1.0
 BACKOFF_CAP = 5.0
+PACE_NAME = "qlvb-bell-pace.json"
+INTERVAL_NORMAL = 10
+INTERVAL_SLOW = 30
+FORBIDDEN_LIMIT = 3
+SEED_WARNING = (
+    "qlvb-bell: chưa seed — sau khi merge hãy chạy một lần: "
+    "python3 tools/qlvb-chuong/check_bell.py --cdp --seed"
+)
 MAX_BODY = 5_000_000
 MAX_COOKIE_BYTES = 1_000_000
 ALERTED_CAP = 400
@@ -143,6 +152,7 @@ STATE_KEYS = {
     "consecutiveFailures",
     "counts",
     "lastFailure",
+    "seeded",
 }
 TITLE_KEYS = ("title", "trichYeu", "trich_yeu")
 
@@ -194,10 +204,25 @@ class State:
     consecutive_failures: int = 0
     counts: dict | None = None
     last_failure: dict | None = None
+    seeded: bool = False
+
+
+@dataclass
+class Pace:
+    consecutive_forbidden: int = 0
+    interval_minutes: int = INTERVAL_NORMAL
+    last_check_at: str | None = None
+    next_check_at: str | None = None
 
 
 def _bangkok_now() -> str:
     return datetime.now(BANGKOK).isoformat(timespec="seconds")
+
+
+def _as_bangkok(moment: datetime) -> datetime:
+    if moment.tzinfo is None:
+        return moment.replace(tzinfo=BANGKOK)
+    return moment.astimezone(BANGKOK)
 
 
 def _fold(text: str) -> str:
@@ -887,6 +912,7 @@ def load_state(path: Path) -> State:
         consecutive_failures=consecutive,
         counts=counts,
         last_failure=last_failure,
+        seeded=data.get("seeded") is True,
     )
 
 
@@ -897,6 +923,7 @@ def _state_payload(state: State, *, failure: dict | None = None) -> dict:
         "tip": state.tip,
         "alerted": state.alerted,
         "consecutiveFailures": state.consecutive_failures,
+        "seeded": bool(state.seeded),
         "items": state.items,
     }
     if state.counts is not None:
@@ -923,6 +950,132 @@ def _atomic_write(path: Path, payload: dict) -> None:
     os.chmod(path, 0o600)
 
 
+def groups_to_open(counts: dict | None) -> list[str]:
+    """Nhóm Văn bản đến có số đếm > 0. Nhóm rỗng không nằm trong danh sách."""
+    if not counts:
+        return []
+    opened: list[str] = []
+    for key, _label in GROUP_LABELS:
+        if _as_int(counts.get(key), 0) > 0:
+            opened.append(key)
+    return opened
+
+
+def _resolve_pace_path(env: dict[str, str], baseline: Path) -> tuple[Path, str]:
+    """File nhịp ngoài repo. Có cookie thì đặt cạnh cookie."""
+    explicit = (env.get("QLVB_PACE_FILE") or "").strip()
+    note = ""
+    if explicit:
+        path = Path(explicit).expanduser()
+    else:
+        cookie = (env.get("QLVB_COOKIE_FILE") or "").strip()
+        if cookie:
+            path = Path(cookie).expanduser().parent / PACE_NAME
+        else:
+            candidate = baseline.expanduser().parent / PACE_NAME
+            if _path_inside_project(candidate):
+                path = Path.home() / ".local" / "share" / "vanphat" / PACE_NAME
+                note = (
+                    "qlvb-bell: đặt QLVB_PACE_FILE cạnh file cookie, ngoài repo. "
+                    f"Đang ghi nhịp tại {path}"
+                )
+            else:
+                path = candidate
+    if _path_inside_project(path):
+        raise CookieError("file nhịp phải nằm ngoài repo, cạnh file cookie")
+    return path, note
+
+
+def _pace_payload(pace: Pace) -> dict:
+    return {
+        "version": 1,
+        "consecutiveForbidden": pace.consecutive_forbidden,
+        "intervalMinutes": pace.interval_minutes,
+        "lastCheckAt": pace.last_check_at,
+        "nextCheckAt": pace.next_check_at,
+    }
+
+
+def load_pace(path: Path) -> Pace:
+    if not path.exists():
+        return Pace()
+    mode = stat.S_IMODE(path.stat().st_mode)
+    if mode & 0o077:
+        raise CookieError(f"file nhịp quyền {mode:04o}, cần 0600 hoặc chặt hơn")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise BaselineError("file nhịp hỏng, không ghi đè") from exc
+    if not isinstance(data, dict) or _as_int(data.get("version"), -1) != 1:
+        raise BaselineError("file nhịp hỏng, không ghi đè")
+    interval = _as_int(data.get("intervalMinutes"), INTERVAL_NORMAL)
+    if interval not in {INTERVAL_NORMAL, INTERVAL_SLOW}:
+        interval = INTERVAL_SLOW if interval >= INTERVAL_SLOW else INTERVAL_NORMAL
+    last_at = data.get("lastCheckAt")
+    next_at = data.get("nextCheckAt")
+    return Pace(
+        consecutive_forbidden=max(0, _as_int(data.get("consecutiveForbidden"), 0)),
+        interval_minutes=interval,
+        last_check_at=last_at if isinstance(last_at, str) and last_at else None,
+        next_check_at=next_at if isinstance(next_at, str) and next_at else None,
+    )
+
+
+def save_pace(path: Path, pace: Pace) -> bool:
+    try:
+        _atomic_write(path, _pace_payload(pace))
+    except OSError:
+        return False
+    return True
+
+
+def _pace_due(pace: Pace, now: datetime) -> bool:
+    if pace.interval_minutes < INTERVAL_SLOW or not pace.next_check_at:
+        return True
+    try:
+        nxt = datetime.fromisoformat(pace.next_check_at)
+    except ValueError:
+        return True
+    return _as_bangkok(now) >= _as_bangkok(nxt)
+
+
+def _mark_pace_failure(pace: Pace, status: str, now: datetime) -> None:
+    moment = _as_bangkok(now)
+    pace.last_check_at = moment.isoformat(timespec="seconds")
+    if status == "forbidden":
+        pace.consecutive_forbidden += 1
+    if pace.consecutive_forbidden >= FORBIDDEN_LIMIT:
+        pace.interval_minutes = INTERVAL_SLOW
+        pace.next_check_at = (moment + timedelta(minutes=INTERVAL_SLOW)).isoformat(timespec="seconds")
+    elif status == "forbidden":
+        pace.interval_minutes = INTERVAL_NORMAL
+        pace.next_check_at = None
+
+
+def _mark_pace_success(pace: Pace, now: datetime) -> None:
+    moment = _as_bangkok(now)
+    pace.consecutive_forbidden = 0
+    pace.interval_minutes = INTERVAL_NORMAL
+    pace.next_check_at = None
+    pace.last_check_at = moment.isoformat(timespec="seconds")
+
+
+def _seed_note(state: State, baseline_existed: bool, seed: bool) -> str:
+    if seed or not baseline_existed or state.seeded:
+        return ""
+    return SEED_WARNING
+
+
+def _with_notes(result: tuple[int, str, str], *notes: str) -> tuple[int, str, str]:
+    code, out, err = result
+    extra = [note for note in notes if note]
+    if not extra:
+        return result
+    addition = "\n".join(extra)
+    err = f"{err}\n{addition}" if err else addition
+    return code, out, err
+
+
 def _sig(state: State) -> str:
     return json.dumps(
         {
@@ -932,6 +1085,7 @@ def _sig(state: State) -> str:
             "consecutiveFailures": state.consecutive_failures,
             "counts": state.counts,
             "lastFailure": state.last_failure,
+            "seeded": state.seeded,
         },
         ensure_ascii=False,
         sort_keys=True,
@@ -1286,9 +1440,12 @@ def _failure_result(
     status: str,
     reason: str | None,
     header: str,
+    pace_path: Path,
+    pace: Pace,
+    now: datetime,
 ) -> tuple[int, str, str]:
     state.consecutive_failures += 1
-    failure = {"status": status, "at": _bangkok_now()}
+    failure = {"status": status, "at": _as_bangkok(now).isoformat(timespec="seconds")}
     if status == "network":
         failure["reason"] = reason if reason in {"timeout", "network"} else "network"
     err = "qlvb-bell: HTTP 403" if status == "forbidden" else "qlvb-bell: lỗi mạng"
@@ -1296,10 +1453,29 @@ def _failure_result(
         _atomic_write(baseline, _state_payload(state, failure=failure))
     except OSError:
         err = err + "; không ghi được baseline"
-    payload: dict = {"status": status, "consecutiveFailures": state.consecutive_failures}
+    _mark_pace_failure(pace, status, now)
+    if not save_pace(pace_path, pace):
+        err = err + "; không ghi được file nhịp"
+    payload: dict = {
+        "status": status,
+        "consecutiveFailures": state.consecutive_failures,
+        "intervalMinutes": pace.interval_minutes,
+    }
     if status == "network":
         payload["reason"] = failure.get("reason", "network")
     return _finish(EXIT_DENIED, _json_line(payload), err, header)
+
+
+def _backoff_skip_result(state: State, pace: Pace, header: str) -> tuple[int, str, str]:
+    payload = {
+        "status": "ok",
+        "backoff": True,
+        "intervalMinutes": pace.interval_minutes,
+        "consecutiveFailures": state.consecutive_failures,
+        "mo": [],
+    }
+    err = f"qlvb-bell: giãn nhịp {pace.interval_minutes} phút sau 403 liên tiếp"
+    return _finish(EXIT_OK, _json_line(payload), err, header)
 
 
 DOM_EXPR = r"""(function () {
@@ -1920,6 +2096,9 @@ def _publish(
     baseline_path: Path,
     header: str,
     page_url: str,
+    pace_path: Path,
+    pace: Pace,
+    now: datetime,
 ) -> tuple[int, str, str]:
     if view is None and counts is None:
         return _finish(EXIT_ERROR, "", "qlvb-bell: không thấy chuông trong trang", header)
@@ -1951,24 +2130,30 @@ def _publish(
         consecutive_failures=0,
         counts=stored_counts,
         last_failure=None,
+        seeded=True if seed else state.seeded,
     )
     if _sig(new_state) != _sig(state):
         try:
             _atomic_write(baseline_path, _state_payload(new_state))
         except OSError:
             return _finish(EXIT_ERROR, "", "qlvb-bell: không ghi được baseline", header)
+    _mark_pace_success(pace, now)
+    pace_err = "" if save_pace(pace_path, pace) else "qlvb-bell: không ghi được file nhịp"
     payload: dict = {
         "status": "new" if has_new else "ok",
         "moi": [] if seed else [_public_notice(notice) for notice in new_notices],
         "counts": counts,
+        "mo": groups_to_open(counts),
+        "intervalMinutes": INTERVAL_NORMAL,
+        "seeded": bool(new_state.seeded),
     }
     if badge is not None:
         payload["badge"] = badge
     code = EXIT_NEW if has_new else EXIT_OK
-    return _finish(code, _json_line(payload), "", header)
+    return _finish(code, _json_line(payload), pace_err, header)
 
 
-def _execute_cdp(env: dict[str, str], sleep, cdp) -> tuple[int, str, str]:
+def _execute_cdp(env: dict[str, str], sleep, cdp, wall_clock) -> tuple[int, str, str]:
     page_url = (env.get("QLVB_PAGE_URL") or "").strip()
     baseline_path = Path((env.get("QLVB_BASELINE_FILE") or DEFAULT_BASELINE).strip())
     seed = (env.get("QLVB_SEED") or "").strip() == "1"
@@ -1979,17 +2164,24 @@ def _execute_cdp(env: dict[str, str], sleep, cdp) -> tuple[int, str, str]:
         backoff = _backoff_seconds(env)
         _require_https(page_url)
         port = _cdp_port(env)
+        baseline_existed = baseline_path.exists()
         state = load_state(baseline_path)
+        pace_path, pace_note = _resolve_pace_path(env, baseline_path)
+        pace = load_pace(pace_path)
+        now = wall_clock()
     except CookieError as exc:
         return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", "")
     except BaselineError as exc:
         return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", "")
     except ValueError:
         return EXIT_ERROR, "", "qlvb-bell: QLVB_TIMEOUT không hợp lệ"
+    notes = (pace_note, _seed_note(state, baseline_existed, seed))
+    if not seed and not _pace_due(pace, now):
+        return _with_notes(_backoff_skip_result(state, pace, ""), *notes)
     try:
         transport = cdp if cdp is not None else _make_cdp(env, port, timeout)
     except (OSError, json.JSONDecodeError):
-        return _finish(EXIT_ERROR, "", "qlvb-bell: không đọc được trang", "")
+        return _with_notes(_finish(EXIT_ERROR, "", "qlvb-bell: không đọc được trang", ""), *notes)
     try:
         last_network: NetworkError | None = None
         snap = None
@@ -1997,51 +2189,79 @@ def _execute_cdp(env: dict[str, str], sleep, cdp) -> tuple[int, str, str]:
             try:
                 snap = read_dom(transport, page_url, timeout, sleep)
             except CdpUnreachable:
-                return _no_browser()
+                return _with_notes(_no_browser(), *notes)
             except NetworkError as exc:
                 last_network = exc
                 transport.close()
                 if attempt == 1:
                     sleep(backoff)
                     continue
-                return _failure_result(
-                    baseline_path,
-                    state,
-                    "network",
-                    getattr(exc, "reason", "network"),
-                    "",
+                return _with_notes(
+                    _failure_result(
+                        baseline_path,
+                        state,
+                        "network",
+                        getattr(exc, "reason", "network"),
+                        "",
+                        pace_path,
+                        pace,
+                        now,
+                    ),
+                    *notes,
                 )
             if _snap_is_nginx_forbidden(snap):
                 if attempt == 1:
                     sleep(backoff)
                     continue
-                return _failure_result(baseline_path, state, "forbidden", "forbidden", "")
+                return _with_notes(
+                    _failure_result(baseline_path, state, "forbidden", "forbidden", "", pace_path, pace, now),
+                    *notes,
+                )
             break
         if snap is None:
             reason = getattr(last_network, "reason", "network")
-            return _failure_result(baseline_path, state, "network", reason, "")
+            return _with_notes(
+                _failure_result(baseline_path, state, "network", reason, "", pace_path, pace, now),
+                *notes,
+            )
         login, view, counts = parse_cdp_snapshot(snap, page_url)
         if login:
-            return _session_result("")
-        return _publish(state, view, counts, seed, baseline_path, "", page_url)
+            return _with_notes(_session_result(""), *notes)
+        return _with_notes(
+            _publish(state, view, counts, seed, baseline_path, "", page_url, pace_path, pace, now),
+            *notes,
+        )
     except CdpUnreachable:
-        return _no_browser()
+        return _with_notes(_no_browser(), *notes)
     except BaselineError as exc:
-        return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", "")
+        return _with_notes(_finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", ""), *notes)
     except CdpProtocolError:
-        return _finish(EXIT_ERROR, "", "qlvb-bell: không đọc được trang", "")
+        return _with_notes(_finish(EXIT_ERROR, "", "qlvb-bell: không đọc được trang", ""), *notes)
     except NetworkError as exc:
-        return _failure_result(baseline_path, state, "network", getattr(exc, "reason", "network"), "")
+        return _with_notes(
+            _failure_result(
+                baseline_path,
+                state,
+                "network",
+                getattr(exc, "reason", "network"),
+                "",
+                pace_path,
+                pace,
+                now,
+            ),
+            *notes,
+        )
     finally:
         closer = getattr(transport, "close", None)
         if closer:
             closer()
 
 
-def execute(env: dict[str, str], fetch, sleep=time.sleep, cdp=None) -> tuple[int, str, str]:
+def execute(env: dict[str, str], fetch, sleep=time.sleep, cdp=None, wall_clock=None) -> tuple[int, str, str]:
     """Trả (mã thoát, stdout, stderr). Không in cookie."""
+    clock = wall_clock or (lambda: datetime.now(BANGKOK))
     if _mode(env) == "cdp":
-        return _execute_cdp(env, sleep, cdp)
+        return _execute_cdp(env, sleep, cdp, clock)
     cookie_path = (env.get("QLVB_COOKIE_FILE") or "").strip()
     page_url = (env.get("QLVB_PAGE_URL") or "").strip()
     baseline_path = Path((env.get("QLVB_BASELINE_FILE") or DEFAULT_BASELINE).strip())
@@ -2055,14 +2275,23 @@ def execute(env: dict[str, str], fetch, sleep=time.sleep, cdp=None) -> tuple[int
     except ValueError:
         return EXIT_ERROR, "", "qlvb-bell: QLVB_TIMEOUT không hợp lệ"
     header = ""
+    pace_note = ""
+    seed_note = ""
     try:
         _require_https(page_url)
         backoff = _backoff_seconds(env)
-        header = load_cookie_header(Path(cookie_path))
+        baseline_existed = baseline_path.exists()
         state = load_state(baseline_path)
+        pace_path, pace_note = _resolve_pace_path(env, baseline_path)
+        pace = load_pace(pace_path)
+        now = clock()
+        seed_note = _seed_note(state, baseline_existed, seed)
+        header = load_cookie_header(Path(cookie_path))
+        if not seed and not _pace_due(pace, now):
+            return _with_notes(_backoff_skip_result(state, pace, header), pace_note, seed_note)
         result, problem, reason = _attempt_fetch(fetch, page_url, header, timeout, sleep, backoff)
     except SessionExpiredError:
-        return _session_result(header)
+        return _with_notes(_session_result(header), pace_note, seed_note)
     except CookieError as exc:
         return _finish(EXIT_ERROR, "", f"qlvb-bell: {exc}", header)
     except BaselineError as exc:
@@ -2071,16 +2300,24 @@ def execute(env: dict[str, str], fetch, sleep=time.sleep, cdp=None) -> tuple[int
         return _finish(EXIT_ERROR, "", "qlvb-bell: lỗi không đọc được trang", header)
 
     if problem == "session":
-        return _session_result(header)
+        return _with_notes(_session_result(header), pace_note, seed_note)
     if problem in {"forbidden", "network"}:
-        return _failure_result(baseline_path, state, problem, reason, header)
+        return _with_notes(
+            _failure_result(baseline_path, state, problem, reason, header, pace_path, pace, now),
+            pace_note,
+            seed_note,
+        )
     if result is None or result.status != 200:
         code = getattr(result, "status", 0)
-        return _finish(EXIT_ERROR, "", f"qlvb-bell: HTTP {code}", header)
+        return _with_notes(_finish(EXIT_ERROR, "", f"qlvb-bell: HTTP {code}", header), pace_note, seed_note)
 
     view = parse_bell(result.body)
     counts = parse_group_counts(result.body)
-    return _publish(state, view, counts, seed, baseline_path, header, page_url)
+    return _with_notes(
+        _publish(state, view, counts, seed, baseline_path, header, page_url, pace_path, pace, now),
+        pace_note,
+        seed_note,
+    )
 
 
 def _apply_args(env: dict[str, str], argv: list[str] | None) -> dict[str, str]:
@@ -2097,6 +2334,7 @@ def _apply_args(env: dict[str, str], argv: list[str] | None) -> dict[str, str]:
     )
     parser.add_argument("--cookie-file", help="Chế độ cookie: file ngoài repo, quyền 0600")
     parser.add_argument("--baseline-file", help="File state (baseline) quyền 0600")
+    parser.add_argument("--pace-file", help="File nhịp 403, ngoài repo, cạnh cookie, quyền 0600")
     parser.add_argument("--page-url", help="URL https đầy đủ tới trang main.zul")
     parser.add_argument("--timeout", help="Timeout giây")
     parser.add_argument("--seed", action="store_true", help="Ghi mốc rồi thoát 0")
@@ -2106,6 +2344,8 @@ def _apply_args(env: dict[str, str], argv: list[str] | None) -> dict[str, str]:
         merged["QLVB_COOKIE_FILE"] = args.cookie_file
     if args.baseline_file:
         merged["QLVB_BASELINE_FILE"] = args.baseline_file
+    if args.pace_file:
+        merged["QLVB_PACE_FILE"] = args.pace_file
     if args.page_url:
         merged["QLVB_PAGE_URL"] = args.page_url
     if args.timeout:

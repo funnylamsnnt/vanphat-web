@@ -12,6 +12,7 @@
     }
   ],
   "consecutiveFailures": 0,
+  "seeded": false,
   "items": [
     {
       "id": "notification-count",
