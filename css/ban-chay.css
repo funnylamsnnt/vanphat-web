@@ -36,7 +36,7 @@
   box-shadow: 0 6px 16px rgba(180, 35, 24, 0.28);
   pointer-events: none;
 }
-.product-hot-short { display: none; }
+.product-hot-short { display: none; pointer-events: auto; }
 
 @media (max-width: 768px) {
   .ban-chay.section {

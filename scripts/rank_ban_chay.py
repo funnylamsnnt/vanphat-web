@@ -32,7 +32,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from generate_catalog_pages import SITE, badge_text, build_ia, card_html, price_amount  # noqa: E402
+from generate_catalog_pages import SITE, badge_text, build_ia, card_html, format_price, price_amount  # noqa: E402
 from sync_products_from_excel import exclude_group_folds, is_excluded_nhom  # noqa: E402
 
 WINDOW_DAYS = 28
@@ -459,8 +459,18 @@ def _gia(value) -> int | None:
         return None
 
 
+def _shown_price(article: str) -> str:
+    match = re.search(
+        r'class="product-price"><span class="price-label">[^<]*</span>\s*([^<]+)',
+        article,
+    )
+    if not match:
+        return ""
+    return re.sub(r"\s+", " ", html.unescape(match.group(1))).strip()
+
+
 def listed_cards(text: str) -> list[tuple] | None:
-    """Thẻ đang in: mã, tên, giá bán lẻ, link. None nếu chưa có khối."""
+    """Thẻ đang in: mã, tên, data-gia, chữ giá, link. None nếu chưa có khối."""
     if HOME_BEGIN not in text or HOME_END not in text:
         return None
     block = text.split(HOME_BEGIN, 1)[1].split(HOME_END, 1)[0]
@@ -476,6 +486,7 @@ def listed_cards(text: str) -> list[tuple] | None:
                 attr("data-ma").upper(),
                 attr("data-ten"),
                 _gia(attr("data-gia")),
+                _shown_price(article),
                 html.unescape(link.group(1)) if link else "",
             )
         )
@@ -485,11 +496,13 @@ def listed_cards(text: str) -> list[tuple] | None:
 def payload_cards(payload: dict) -> list[tuple]:
     cards = []
     for item in payload.get("items") or []:
+        gia = _gia(item.get("gia"))
         cards.append(
             (
                 str(item.get("ma") or "").upper(),
                 str(item.get("ten") or ""),
-                _gia(item.get("gia")),
+                gia,
+                format_price(gia) if gia else "",
                 str(item.get("href") or ""),
             )
         )
@@ -497,7 +510,7 @@ def payload_cards(payload: dict) -> list[tuple]:
 
 
 def should_write_home(text: str, payload: dict) -> bool:
-    """Ghi lại khi thứ tự mã, tên, link hoặc giá bán lẻ in trên thẻ lệch JSON."""
+    """Ghi lại khi mã, tên, link, data-gia hoặc chữ giá trên thẻ lệch JSON."""
     current = listed_cards(text)
     new = payload_cards(payload)
     if current is None:
