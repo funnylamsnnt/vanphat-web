@@ -100,6 +100,47 @@ python3 scripts/generate_catalog_pages.py
 
 Script ghi `san-pham/*.html`, `sitemap.xml`, `robots.txt`, `js/catalog-paths.js`, và xóa trang SKU cũ do chính nó sinh ra. Commit các file đó rồi merge `main` để GitHub Pages phát hành. Sitemap: https://vanphatcompany.vn/sitemap.xml. Các bước Semrush và Search Console: [docs/SEO-SEMRUSH.md](docs/SEO-SEMRUSH.md).
 
+## Bán chạy 4 tuần
+
+Khối «Bán chạy 4 tuần qua» trên trang chủ và nhãn **Hot** trên thẻ sản phẩm lấy từ **hóa đơn GTGT**, không lấy từ bill KiotViet.
+
+### File dòng hóa đơn
+
+Đặt file thật trong `data/hoa-don-gtgt/`. Script đọc mọi `.csv` và `.json` trong thư mục đó, bỏ `mau/` và mọi file có chữ `DỮ LIỆU MẪU` hoặc `"mau": true`.
+
+CSV, dòng đầu là tiêu đề, ngày theo `YYYY-MM-DD`:
+
+```text
+so_hd,ngay,ma_vp,so_luong,don_gia,thanh_tien
+16,2026-10-13,VP049,5,14000,70000
+```
+
+JSON cùng các khóa, dạng mảng hoặc `{"dong":[...]}`. `thanh_tien` là thành tiền đã gồm VAT. Không ghi tên khách, nhân viên, số điện thoại.
+
+Ví dụ không dùng để xếp hạng: `data/hoa-don-gtgt/mau/hoa-don-gtgt-mau.csv` và `hoa-don-gtgt-mau.json`.
+
+Một số hóa đơn chỉ tính một lần: nếu cùng `so_hd` nằm ở hai file, file đứng trước theo tên được giữ.
+
+### Cách chấm điểm
+
+Cửa sổ là **28 ngày tính cả ngày chốt** (từ ngày chốt lùi 27 ngày đến ngày chốt). Lần đầu chốt `2026-10-31`, tức `2026-10-04` đến `2026-10-31`.
+
+1. Bỏ dòng có `don_gia`, `thanh_tien` hoặc `so_luong` không dương.
+2. Cộng số lượng và cộng `thanh_tien` theo `ma_vp`. Doanh thu lấy thành tiền trên hóa đơn, không nhân lại đơn giá.
+3. Bỏ mã không có trang trên web, mã giá web bằng 0 hoặc trống, mã thuộc nhóm «Không đưa lên web».
+4. Vì cái, xấp, ram, hộp không cùng đơn vị, không xếp theo số lượng thô. Mỗi mã nhận hạng phần trăm số lượng và hạng phần trăm doanh thu (0 = thấp nhất, 1 = cao nhất; hòa thì lấy hạng trung bình).
+5. Điểm = `50 × hạng phần trăm số lượng + 50 × hạng phần trăm doanh thu`. Hòa điểm thì ưu tiên doanh thu, rồi số lượng, rồi mã. Lấy tối đa 10 mã.
+
+Khi không có file thật hoặc không còn mã đủ điều kiện, `data/ban-chay.json` có `coDuLieu: false`, trang chủ không in khối, và không gắn nhãn Hot.
+
+```bash
+python3 scripts/rank_ban_chay.py --as-of 2026-10-31
+```
+
+### Lịch thứ Hai
+
+Workflow [`.github/workflows/ban-chay.yml`](.github/workflows/ban-chay.yml) chạy **08:00 sáng thứ Hai giờ Việt Nam**, cron UTC `0 1 * * 1`, và có `workflow_dispatch` (ô `as_of` để chốt một ngày, để trống thì lấy hôm nay). Job gọi `scripts/run_ban_chay.py`. Nếu `data/ban-chay.json` hoặc khối trên `index.html` đổi, job chạy `check_rules.py` và `check_seo.py` rồi commit đúng hai file đó lên `main` bằng `GH_PUSH_TOKEN` (cùng secret với lịch sync 14:35). Không sửa Apps Script.
+
 ## Preview local
 
 **Cách 1 — Python (khuyến nghị, vì `fetch` JSON cần HTTP):**

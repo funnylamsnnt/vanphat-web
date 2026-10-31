@@ -544,6 +544,10 @@ def check_sync_schedule(errors: list[str]) -> None:
     check_py_script(errors, "test_sync_schedule.py", "test lịch sync")
 
 
+def check_ban_chay(errors: list[str]) -> None:
+    check_py_script(errors, "test_rank_ban_chay.py", "test bán chạy")
+
+
 def check_chat_search(errors: list[str]) -> None:
     check_node_script(errors, "test_chat_search.js", "test tìm chat")
     check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
@@ -675,6 +679,7 @@ def main() -> None:
     check_product_descriptions(errors)
     check_chat_search(errors)
     check_sync_schedule(errors)
+    check_ban_chay(errors)
     check_chat_widget_cache(errors)
     redirects = check_redirects(errors)
     if errors:

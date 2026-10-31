@@ -1,0 +1,40 @@
+name: ban-chay
+
+on:
+  schedule:
+    # 08:00 sáng thứ Hai, Asia/Ho_Chi_Minh (UTC+7, không đổi giờ mùa)
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+    inputs:
+      as_of:
+        description: "Ngày chốt YYYY-MM-DD. Để trống thì lấy hôm nay theo giờ Việt Nam."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ban-chay
+  cancel-in-progress: false
+
+jobs:
+  rank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Xếp hạng bán chạy 4 tuần
+        env:
+          GH_PUSH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          BAN_CHAY_AS_OF: ${{ inputs.as_of }}
+        run: python3 scripts/run_ban_chay.py
