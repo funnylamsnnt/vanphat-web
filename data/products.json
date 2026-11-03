@@ -7071,8 +7071,20 @@
       "gia": 30000,
       "anh": "https://lh3.googleusercontent.com/d/11-wLBYXGMV7yROiCnmNXl7JALADXsdRH",
       "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP589",
+      "ten": "Kẹo Doublemint sugarfree vị dâu",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
+  "syncedFrom": "source_sheet_20261031_1440.xlsx"
 }

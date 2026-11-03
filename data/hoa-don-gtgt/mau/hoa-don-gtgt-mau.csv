@@ -1,0 +1,4 @@
+# DỮ LIỆU MẪU — không dùng để xếp hạng. Không phải hóa đơn thật.
+# File thật đặt cạnh thư mục này: data/hoa-don-gtgt/hoadon_lines_YYYYMM.csv (cùng 6 cột, không dòng #).
+so_hd,ngay,ma_vp,so_luong,don_gia,thanh_tien
+MAU-1,2026-01-15,VP049,9999,14000,139986000

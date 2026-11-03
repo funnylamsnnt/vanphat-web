@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "hang": 1,
+      "ma": "VP206",
+      "ten": "Giấy A4 70 gsm IK plus",
+      "href": "san-pham/vp206-giay-a4-70-gsm-ik-plus.html",
+      "gia": 69000
+    },
+    {
+      "hang": 2,
+      "ma": "VP098",
+      "ten": "Bìa nút F4 (My Clear A4)",
+      "href": "san-pham/vp098-bia-nut-f4-my-clear-a4.html",
+      "gia": 3500
+    },
+    {
+      "hang": 3,
+      "ma": "VP327",
+      "ten": "Note nhựa 5 màu (Pronoti)",
+      "href": "san-pham/vp327-note-nhua-5-mau-pronoti.html",
+      "gia": 13000
+    },
+    {
+      "hang": 4,
+      "ma": "VP211",
+      "ten": "Giấy A4 70 gsm Supreme",
+      "href": "san-pham/vp211-giay-a4-70-gsm-supreme.html",
+      "gia": 69000
+    },
+    {
+      "hang": 5,
+      "ma": "VP337",
+      "ten": "Nước suối Vikoda (500ml)",
+      "href": "san-pham/vp337-nuoc-suoi-vikoda-500ml.html",
+      "gia": 6000
+    },
+    {
+      "hang": 6,
+      "ma": "VP336",
+      "ten": "Nước suối Vikoda (350ml)",
+      "href": "san-pham/vp336-nuoc-suoi-vikoda-350ml.html",
+      "gia": 5000
+    },
+    {
+      "hang": 7,
+      "ma": "VP160",
+      "ten": "Bút xóa TL-CP02 (hộp 10c)",
+      "href": "san-pham/vp160-but-xoa-tl-cp02-hop-10c.html",
+      "gia": 22000
+    },
+    {
+      "hang": 8,
+      "ma": "VP138",
+      "ten": "Bút Gel TL B-011 (Hộp 20)",
+      "href": "san-pham/vp138-but-gel-tl-b-011-hop-20.html",
+      "gia": 7000
+    },
+    {
+      "hang": 9,
+      "ma": "VP087",
+      "ten": "Bìa lá A4 88-V20",
+      "href": "san-pham/vp087-bia-la-a4-88-v20.html",
+      "gia": 1900
+    },
+    {
+      "hang": 10,
+      "ma": "VP132",
+      "ten": "Bút dạ quang HL-012 (hộp 10)",
+      "href": "san-pham/vp132-but-da-quang-hl-012-hop-10.html",
+      "gia": 11000
+    }
+  ]
+}

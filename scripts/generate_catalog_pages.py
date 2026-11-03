@@ -1208,9 +1208,26 @@ def detail_meta_html(product: dict) -> str:
     return "\n              ".join(bits)
 
 
-def card_html(product: dict, product_href: str, category_href: str, badge: str) -> str:
+def card_html(
+    product: dict,
+    product_href: str,
+    category_href: str,
+    badge: str,
+    *,
+    hot: bool = False,
+    image_loading: str = "lazy",
+) -> str:
     src = image_src(product)
-    return f"""<article class="product-card"
+    hot_attr = '\n        data-hot="1"' if hot else ""
+    hot_html = (
+        '\n          <span class="product-hot" aria-label="Hot · Bán chạy">'
+        '<span class="product-hot-short" title="Hot · Bán chạy">Hot</span>'
+        '<span class="product-hot-full">Hot · Bán chạy</span></span>'
+        if hot
+        else ""
+    )
+    loading = "eager" if image_loading == "eager" else "lazy"
+    return f"""<article class="product-card"{hot_attr}
         data-ma="{esc(product.get('ma'))}"
         data-ten="{esc(product.get('ten'))}"
         data-gia="{esc(product.get('gia'))}"
@@ -1219,8 +1236,8 @@ def card_html(product: dict, product_href: str, category_href: str, badge: str) 
         data-nhom="{esc(product.get('nhom'))}"
         data-linh-vuc-id="{esc(product.get('linhVucId') or '')}"{fact_attr_lines(product)}>
         <div class="product-img" data-product-zoom role="button" tabindex="0"
-             aria-label="Xem ảnh lớn: {esc(product.get('ten'))}" title="Xem ảnh lớn">
-          {product_picture(src, str(product.get('ten') or ''), 400, 400, loading="lazy")}
+             aria-label="Xem ảnh lớn: {esc(product.get('ten'))}" title="Xem ảnh lớn">{hot_html}
+          {product_picture(src, str(product.get('ten') or ''), 400, 400, loading=loading)}
         </div>
         <div class="product-body">
           <div class="product-badge"><a href="{esc(category_href)}">{esc(badge)}</a></div>
