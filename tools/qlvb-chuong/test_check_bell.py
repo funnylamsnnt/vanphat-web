@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+from datetime import datetime, timedelta
 import socket
 import subprocess
 import sys
@@ -138,7 +139,12 @@ class BellTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def _write_baseline(self, items, **extra):
-        payload = {"version": 1, "updatedAt": "2026-10-01T00:00:00+07:00", "items": items}
+        payload = {
+            "version": 1,
+            "updatedAt": "2026-10-01T00:00:00+07:00",
+            "items": items,
+            "seeded": True,
+        }
         payload.update(extra)
         self.baseline.write_text(json.dumps(payload, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -380,6 +386,7 @@ class BellTests(unittest.TestCase):
             payload["counts"],
             {"choXuLy": 2, "sapDenHan": 0, "quaHan": 1, "nhanDeBiet": 0},
         )
+        self.assertEqual(payload["mo"], ["choXuLy", "quaHan"])
         by_id = {item["id"]: item for item in payload["moi"]}
         self.assertFalse(by_id["n-khan"]["khan"])
         self.assertEqual(by_id["n-khan"]["time"], "2026-10-30T09:00:00+07:00")
@@ -414,6 +421,7 @@ class BellTests(unittest.TestCase):
         self.assertEqual(payload["status"], "ok")
         self.assertEqual(payload["moi"], [])
         self.assertEqual(payload["counts"]["quaHan"], 0)
+        self.assertEqual(payload["mo"], [])
 
     def test_string_and_object_alerted_and_tip(self):
         self.baseline.write_text(
@@ -711,6 +719,12 @@ class BellTests(unittest.TestCase):
             "--cdp",
             "no_browser",
             "consecutiveFailures",
+            "--seed",
+            "chưa seed",
+            "qlvb-bell-pace.json",
+            "intervalMinutes",
+            '"mo"',
+            "30 phút",
         ):
             self.assertIn(token, readme)
         self.assertNotIn("khanhhoa.gov.vn", readme)
@@ -1118,6 +1132,179 @@ class BellTests(unittest.TestCase):
         self.assertNotIn("document.cookie", server.expression)
         self.assertIn("notification-item", server.expression)
         self.assertTrue(any(line.startswith("GET /json/list") for line in server.requests))
+
+    def _clock(self, moment):
+        return lambda: moment
+
+    def test_three_forbidden_slows_to_30_minutes_then_success_restores_10(self):
+        start = datetime(2026, 10, 31, 10, 0, tzinfo=bell.BANGKOK)
+        self._write_baseline([{"id": "notification-count", "kind": "badge", "count": 1}])
+        fetch = FetchStub(bell.FetchResult(403, PAGE, "no"))
+        for expected in (1, 2, 3):
+            code, out, err = bell.execute(self.env, fetch, sleep=lambda _s: None, wall_clock=self._clock(start))
+            self.assertEqual(code, 4, msg=err)
+            payload = json.loads(out)
+            self.assertEqual(payload["status"], "forbidden")
+            self.assertEqual(payload["consecutiveFailures"], expected)
+            self.assertEqual(payload["intervalMinutes"], 30 if expected == 3 else 10)
+        pace_path = self.cookie.parent / "qlvb-bell-pace.json"
+        self.assertEqual(pace_path.parent, self.cookie.parent)
+        self.assertFalse(bell._path_inside_project(pace_path))
+        self.assertEqual(pace_path.stat().st_mode & 0o077, 0)
+        saved = json.loads(pace_path.read_text(encoding="utf-8"))
+        self.assertEqual(saved["consecutiveForbidden"], 3)
+        self.assertEqual(saved["intervalMinutes"], 30)
+        self.assertNotIn(SECRET, pace_path.read_text(encoding="utf-8"))
+
+        early = start + timedelta(minutes=5)
+        before_calls = len(fetch.calls)
+        code, out, err = bell.execute(self.env, fetch, wall_clock=self._clock(early))
+        self.assertEqual(code, 0, msg=err)
+        skipped = json.loads(out)
+        self.assertEqual(skipped["status"], "ok")
+        self.assertTrue(skipped["backoff"])
+        self.assertEqual(skipped["intervalMinutes"], 30)
+        self.assertEqual(skipped["mo"], [])
+        self.assertEqual(len(fetch.calls), before_calls)
+        self.assertIn("30 phút", err)
+
+        later = start + timedelta(minutes=31)
+        fetch_ok = FetchStub(bell.FetchResult(200, PAGE, zk_page(1)))
+        code, out, err = bell.execute(self.env, fetch_ok, wall_clock=self._clock(later))
+        self.assertEqual(code, 0, msg=err)
+        self.assertEqual(json.loads(out)["intervalMinutes"], 10)
+        self.assertFalse(json.loads(out).get("backoff"))
+        self.assertEqual(len(fetch_ok.calls), 1)
+        restored = json.loads(pace_path.read_text(encoding="utf-8"))
+        self.assertEqual(restored["consecutiveForbidden"], 0)
+        self.assertEqual(restored["intervalMinutes"], 10)
+        self.assertIsNone(restored["nextCheckAt"])
+
+        again = later + timedelta(minutes=1)
+        fetch_ok.calls.clear()
+        code, out, err = bell.execute(self.env, fetch_ok, wall_clock=self._clock(again))
+        self.assertEqual(len(fetch_ok.calls), 1, msg=out + err)
+
+    def test_network_errors_do_not_stretch_the_interval(self):
+        start = datetime(2026, 10, 31, 11, 0, tzinfo=bell.BANGKOK)
+        fetch = FetchStub(error=bell.NetworkError("lỗi mạng", reason="timeout"))
+        for _ in range(3):
+            code, out, err = bell.execute(self.env, fetch, sleep=lambda _s: None, wall_clock=self._clock(start))
+            self.assertEqual(code, 4, msg=err)
+            self.assertEqual(json.loads(out)["intervalMinutes"], 10)
+        pace = json.loads((self.cookie.parent / "qlvb-bell-pace.json").read_text(encoding="utf-8"))
+        self.assertEqual(pace["consecutiveForbidden"], 0)
+        self.assertEqual(pace["intervalMinutes"], 10)
+        before = len(fetch.calls)
+        code, _out, err = bell.execute(
+            self.env,
+            fetch,
+            sleep=lambda _s: None,
+            wall_clock=self._clock(start + timedelta(minutes=1)),
+        )
+        self.assertEqual(code, 4, msg=err)
+        self.assertGreater(len(fetch.calls), before)
+
+    def test_cdp_backoff_keeps_cookie_unread_and_skips_chrome(self):
+        start = datetime(2026, 10, 31, 12, 0, tzinfo=bell.BANGKOK)
+        env = self._cdp_env()
+        env["QLVB_COOKIE_FILE"] = str(self.cookie)
+        tab = {
+            "id": "t1",
+            "type": "page",
+            "url": PAGE,
+            "webSocketDebuggerUrl": "ws://198.51.100.9/devtools/page/t1",
+        }
+        forbidden = {
+            "href": PAGE,
+            "title": "403 Forbidden",
+            "text": "nginx",
+            "sawBell": False,
+            "notices": [],
+        }
+        for _ in range(3):
+            cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[dict(forbidden), dict(forbidden)])
+            code, out, err = bell.execute(env, bell.live_fetch, cdp=cdp, wall_clock=self._clock(start))
+            self.assertEqual(code, 4, msg=err + out)
+            self.assertNotIn(SECRET, out + err)
+        pace_path = self.cookie.parent / "qlvb-bell-pace.json"
+        self.assertTrue(pace_path.is_file())
+        cdp = bell.ScriptedCdp(tabs=[tab], snapshots=[dict(forbidden)])
+        code, out, err = bell.execute(
+            env,
+            bell.live_fetch,
+            cdp=cdp,
+            wall_clock=self._clock(start + timedelta(minutes=5)),
+        )
+        self.assertEqual(code, 0, msg=err)
+        self.assertTrue(json.loads(out)["backoff"])
+        self.assertEqual(cdp.calls, [])
+        self.assertNotIn("Page.reload", cdp.calls)
+
+    def test_seed_runs_during_backoff_and_unseeded_file_warns(self):
+        start = datetime(2026, 10, 31, 13, 0, tzinfo=bell.BANGKOK)
+        self._write_baseline(
+            [{"id": "notification-count", "kind": "badge", "count": 1}],
+            seeded=False,
+        )
+        fetch = FetchStub(bell.FetchResult(403, PAGE, "no"))
+        for _ in range(3):
+            bell.execute(self.env, fetch, sleep=lambda _s: None, wall_clock=self._clock(start))
+        quiet = FetchStub(bell.FetchResult(200, PAGE, zk_page(1)))
+        code, out, err = bell.execute(self.env, quiet, wall_clock=self._clock(start + timedelta(minutes=2)))
+        self.assertEqual(code, 0)
+        self.assertIn("chưa seed", err)
+        self.assertEqual(len(quiet.calls), 0)
+
+        env = dict(self.env)
+        env["QLVB_SEED"] = "1"
+        seeded_fetch = FetchStub(bell.FetchResult(200, PAGE, zk_page(1)))
+        code, out, err = bell.execute(env, seeded_fetch, wall_clock=self._clock(start + timedelta(minutes=2)))
+        self.assertEqual(code, 0, msg=err)
+        self.assertNotIn("chưa seed", err)
+        self.assertEqual(len(seeded_fetch.calls), 1)
+        self.assertEqual(json.loads(out)["status"], "ok")
+        self.assertTrue(json.loads(out)["seeded"])
+        saved = json.loads(self.baseline.read_text(encoding="utf-8"))
+        self.assertTrue(saved["seeded"])
+        pace = json.loads((self.cookie.parent / "qlvb-bell-pace.json").read_text(encoding="utf-8"))
+        self.assertEqual(pace["intervalMinutes"], 10)
+
+    def test_pace_file_inside_repo_is_refused_and_corrupt_pace_is_kept(self):
+        env = dict(self.env)
+        env["QLVB_PACE_FILE"] = str(HERE / "_tmp_pace.json")
+        fetch = FetchStub(bell.FetchResult(200, PAGE, zk_page(0)))
+        code, out, err = bell.execute(env, fetch)
+        self.assertEqual(code, 30)
+        self.assertIn("ngoài repo", err)
+        self.assertEqual(fetch.calls, [])
+        self.assertFalse((HERE / "_tmp_pace.json").exists())
+
+        pace_path = self.cookie.parent / "qlvb-bell-pace.json"
+        pace_path.write_text("{bad", encoding="utf-8")
+        os.chmod(pace_path, 0o600)
+        before = pace_path.read_bytes()
+        code, out, err = bell.execute(self.env, fetch)
+        self.assertEqual(code, 30)
+        self.assertIn("file nhịp", err)
+        self.assertEqual(pace_path.read_bytes(), before)
+        self.assertEqual(fetch.calls, [])
+
+        loose = self.root / "loose-pace.json"
+        loose.write_text('{"version":1,"consecutiveForbidden":0,"intervalMinutes":10}\n', encoding="utf-8")
+        os.chmod(loose, 0o644)
+        env = dict(self.env)
+        env["QLVB_PACE_FILE"] = str(loose)
+        code, _out, err = bell.execute(env, fetch)
+        self.assertEqual(code, 30)
+        self.assertIn("0600", err)
+
+    def test_home_fallback_when_baseline_is_inside_the_repo(self):
+        env = {"QLVB_PAGE_URL": PAGE}
+        path, note = bell._resolve_pace_path(env, HERE / "baseline.json")
+        self.assertFalse(bell._path_inside_project(path))
+        self.assertIn("QLVB_PACE_FILE", note)
+        self.assertTrue(str(path).endswith("qlvb-bell-pace.json"))
 
 
 class _FakeChrome:
