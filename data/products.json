@@ -53,7 +53,8 @@
       "browseMode": "group-images",
       "moTa": "Ổ cắm, dây điện và thiết bị điện văn phòng",
       "nhomIds": [
-        "dien"
+        "dien",
+        "gia-dung"
       ]
     }
   ],
@@ -130,6 +131,16 @@
       "visible": true,
       "placeholder": true,
       "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    },
+    {
+      "id": "gia-dung",
+      "STT": 1000,
+      "TenNhom": "Gia dụng",
+      "slug": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "visible": true,
+      "moTa": "Đồ gia dụng cho văn phòng: nước rửa tay, khay, ly, khăn, bộ bình trà.",
+      "autoPlaced": true
     },
     {
       "id": "kem",
@@ -3617,10 +3628,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP190",
-      "ten": "Dây thun nhỏ, lớn",
+      "ten": "Dây thun Vàng (bịch 500g)",
       "dvt": "Bịch",
-      "gia": 50000,
-      "anh": "",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1K6n_4NEVxPJXXYBwIwKqHTxyngt6FOXw",
       "ton": 0
     },
     {
@@ -5517,6 +5528,18 @@
       "ton": 0
     },
     {
+      "nhom": "Điện",
+      "nhomId": "dien",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP602",
+      "ten": "Đĩa trắng CD Maxcell",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1Hwc5X51v2wbTXMcNr-vvK57phFx7O2k2",
+      "ton": 0
+    },
+    {
       "nhom": "Nước uống",
       "nhomId": "nuoc-uong",
       "linhVucId": "nuoc-banh",
@@ -6497,6 +6520,18 @@
       "ton": 0
     },
     {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP603",
+      "ten": "Pepsi chanh không calo 330ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
       "nhom": "TP Khác",
       "nhomId": "tp-khac",
       "linhVucId": "nuoc-banh",
@@ -7083,8 +7118,152 @@
       "gia": 0,
       "anh": "",
       "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP590",
+      "ten": "Sửa rửa tay Dr Clean (Hương Lựu)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/17LczTbFoYVBKXEE1JIIzGkCc3iM2CVq6",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP591",
+      "ten": "Sửa rửa tay Dr Clean (Sả gừng)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP592",
+      "ten": "Sửa rửa tay Dr Clean (Hương Đào)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP593",
+      "ten": "Sửa rửa tay Dr Clean (Hương Táo)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP594",
+      "ten": "Sửa rửa tay Dr Clean (Hương Chanh)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP595",
+      "ten": "Sửa rửa tay Dr Clean (Hương Dâu)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP596",
+      "ten": "Khay chữ nhật (45 x 32 cm)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP597",
+      "ten": "Khay gỗ tay cầm Oval (trung)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP598",
+      "ten": "Bộ 2 ly sứ ENVIECASA PL 268ML",
+      "dvt": "Bộ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP599",
+      "ten": "Khăn tay CT HK01 (28x40)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP600",
+      "ten": "Khăn tay mềm HELI HM668 (30x30)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP601",
+      "ten": "Bộ bình trà Phú quý cát tường",
+      "dvt": "Bộ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261031_1440.xlsx"
+  "syncedFrom": "source_sheet_20261104_1437.xlsx"
 }
