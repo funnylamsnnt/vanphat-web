@@ -31,6 +31,71 @@ function docDanhMucVatTu() {
   };
 }
 
+/**
+ * File tạm giá vốn không được nằm trong thư mục chứng từ «8. PHIẾU BÁO GIÁ».
+ * Tạo ở thư mục gốc Drive CN_TMP_GiaVon. try/finally luôn đưa file vào thùng rác,
+ * kể cả khi việc đọc ném lỗi.
+ * docDanhMucVatTu không tạo file tạm. File TMP_GiaVon_* đang thấy trong thư mục
+ * báo giá do capNhatGiaVon của GiaVon.gs cũ. Hàm donFileTamGiaVonLech_ dọn các
+ * file đó sau khi đã tạo hơn 2 phút. Không đè GiaVon.gs.
+ */
+function idThuMucTamGiaVon_() {
+  canDrive_();
+  var q = "trashed = false and mimeType = 'application/vnd.google-apps.folder' and 'root' in parents and name = '" +
+    String(THU_MUC_TAM_GIA_VON).replace(/'/g, '\\\'') + "'";
+  var ds = lietKeDrive_(q, 'nextPageToken, files(id, name)');
+  var i;
+  for (i = 0; i < ds.length; i++) {
+    if (ds[i].name === THU_MUC_TAM_GIA_VON) return ds[i].id;
+  }
+  var tao = Drive.Files.create({
+    name: THU_MUC_TAM_GIA_VON,
+    mimeType: 'application/vnd.google-apps.folder'
+  });
+  return tao.id;
+}
+
+function taoFileTamGiaVon_() {
+  var thuMucId = idThuMucTamGiaVon_();
+  var ten = tenFileTamGiaVon_(Date.now());
+  var tao = Drive.Files.create({
+    name: ten,
+    mimeType: 'application/vnd.google-apps.spreadsheet',
+    parents: [thuMucId]
+  });
+  return {id: tao.id, ten: ten, thuMuc: thuMucFileTamGiaVon_()};
+}
+
+function duaFileTamVaoThungRac_(id) {
+  if (!id) return;
+  Drive.Files.update({trashed: true}, id, {supportsAllDrives: true});
+}
+
+function chayVoiFileTamGiaVon_(viec) {
+  var id = '';
+  try {
+    var tao = taoFileTamGiaVon_();
+    id = tao.id;
+    return viec(tao);
+  } finally {
+    if (id) {
+      try {
+        duaFileTamVaoThungRac_(id);
+      } catch (eRac) {}
+    }
+  }
+}
+
+function donFileTamGiaVonLech_(bayMs) {
+  canDrive_();
+  var q = "trashed = false and mimeType = 'application/vnd.google-apps.spreadsheet' and name contains 'TMP_GiaVon_'";
+  var ds = lietKeDrive_(q, 'nextPageToken, files(id, name, createdTime)');
+  var chon = danhSachFileTamCanBo_(ds, bayMs || Date.now(), HAN_GIU_FILE_TAM_MS);
+  var i;
+  for (i = 0; i < chon.length; i++) duaFileTamVaoThungRac_(chon[i].id);
+  return chon.length;
+}
+
 function kiemTraNguonGiaVon() {
   var doc = docDanhMucVatTu();
   var ss = moSo_();

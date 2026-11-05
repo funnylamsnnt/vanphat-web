@@ -42,6 +42,29 @@ function ghiCongThuc_(sheet, row, col, formula) {
   sheet.getRange(row, col).setFormula(formula);
 }
 
+function xoaCacDong_(sheet, dongs) {
+  if (!dongs || !dongs.length) return 0;
+  var rows = [];
+  var i;
+  for (i = 0; i < dongs.length; i++) {
+    var r = Number(dongs[i] && dongs[i].row);
+    if (r >= 2) rows.push(r);
+  }
+  rows.sort(function(a, b) { return b - a; });
+  var n = 0;
+  for (i = 0; i < rows.length; i++) {
+    assertGhiChoPhep_(sheet.getName(), {
+      row: rows[i],
+      column: 1,
+      numRows: 1,
+      numColumns: 1
+    });
+    sheet.deleteRows(rows[i], 1);
+    n++;
+  }
+  return n;
+}
+
 function xoaVung_(sheet, row, col, numRows, numColumns) {
   if (numRows < 1 || numColumns < 1) return;
   assertGhiChoPhep_(sheet.getName(), {
