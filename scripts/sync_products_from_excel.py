@@ -394,7 +394,7 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
 
     company = {
         "Ten": "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT",
-        "DiaChi": "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang",
+        "DiaChi": "LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang",
         "Website": "http://vanphatcompany.vn",
         "Email": "congtytnhhvanphat999@gmail.com",
         "Hotline": "033 5652 832",

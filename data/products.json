@@ -1,7 +1,7 @@
 {
   "company": {
     "Ten": "CÔNG TY TNHH TƯ VẤN ĐẦU TƯ THƯƠNG MẠI VẠN PHÁT",
-    "DiaChi": "LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang",
+    "DiaChi": "LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang",
     "Website": "http://vanphatcompany.vn",
     "Email": "congtytnhhvanphat999@gmail.com",
     "Hotline": "033 5652 832",
@@ -39,7 +39,8 @@
       "nhomIds": [
         "nuoc-uong",
         "banh",
-        "tp-khac"
+        "tp-khac",
+        "kem"
       ]
     },
     {
@@ -52,7 +53,8 @@
       "browseMode": "group-images",
       "moTa": "Ổ cắm, dây điện và thiết bị điện văn phòng",
       "nhomIds": [
-        "dien"
+        "dien",
+        "gia-dung"
       ]
     }
   ],
@@ -129,6 +131,26 @@
       "visible": true,
       "placeholder": true,
       "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    },
+    {
+      "id": "gia-dung",
+      "STT": 1000,
+      "TenNhom": "Gia dụng",
+      "slug": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "visible": true,
+      "moTa": "Đồ gia dụng cho văn phòng: nước rửa tay, khay, ly, khăn, bộ bình trà.",
+      "autoPlaced": true
+    },
+    {
+      "id": "kem",
+      "STT": 1000,
+      "TenNhom": "Kem",
+      "slug": "kem",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "moTa": "Kem các loại cho văn phòng và cửa hàng ở Nam Nha Trang.",
+      "autoPlaced": true
     },
     {
       "id": "tp-khac",
@@ -663,8 +685,8 @@
       "ma": "VP237",
       "ten": "Giấy ghi chú Bitex 3x5/SN04 (100 tờ/xấp)",
       "dvt": "Xấp",
-      "gia": 18000,
-      "anh": "https://lh3.googleusercontent.com/d/1rzkZUgwvb2vLamy0povUo_nnKw8RcHvZ",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1M5gfhwr9uBNBWqt4UGJQSXu3wJeEI3ys",
       "ton": 12,
       "thuongHieu": "Bitex",
       "quyCach": "100 tờ/xấp"
@@ -759,11 +781,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP245",
-      "ten": "Giấy Supreme A3",
-      "dvt": "Ram",
-      "gia": 134259,
-      "anh": "",
-      "ton": 0,
+      "ten": "Kim bấm 23/10 (Việt Đức - 70 tờ)",
+      "dvt": "Hộp",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1M5gfhwr9uBNBWqt4UGJQSXu3wJeEI3ys",
+      "ton": 20,
       "thuongHieu": "Supreme"
     },
     {
@@ -978,7 +1000,7 @@
       "ma": "VP079",
       "ten": "Bìa hộp A4 150mm FO-BF05",
       "dvt": "Cái",
-      "gia": 88000,
+      "gia": 96000,
       "anh": "https://lh3.googleusercontent.com/d/1P96_uWNRN5bsdSbkCpEJeJEDHKJl38lE",
       "ton": 10,
       "thuongHieu": "FlexOffice"
@@ -989,11 +1011,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP080",
-      "ten": "Bìa hộp si 10F Thành Phát",
+      "ten": "Bìa hộp A4 100mm FO-BF03",
       "dvt": "Cái",
-      "gia": 60000,
-      "anh": "",
-      "ton": 0
+      "gia": 88000,
+      "anh": "https://lh3.googleusercontent.com/d/1LvB_VjcJ8ODkRMuIRIG1MMKNjBve6p_d",
+      "ton": 15
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1201,11 +1223,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP097",
-      "ten": "Bìa nút",
+      "ten": "Bìa phân trang nhựa A4 (12 màu 12 số)",
       "dvt": "Cái",
-      "gia": 4000,
-      "anh": "",
-      "ton": 0
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1qDKswYt1FNMnSFKyn0DhvKCagzRGtpp3",
+      "ton": 20
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1240,8 +1262,8 @@
       "ten": "Bìa thái A3 Màu",
       "dvt": "Xấp",
       "gia": 75000,
-      "anh": "",
-      "ton": 0
+      "anh": "https://lh3.googleusercontent.com/d/1-prUgea3hrlKn1NH6cMDb4ckFTXnF18u",
+      "ton": 10
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1289,7 +1311,7 @@
       "dvt": "Cái",
       "gia": 23000,
       "anh": "https://lh3.googleusercontent.com/d/1acH_l1QXJcYw00AvnDNBoGvPo_q_94xO",
-      "ton": 40
+      "ton": 60
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1350,7 +1372,7 @@
       "dvt": "Cái",
       "gia": 26000,
       "anh": "https://lh3.googleusercontent.com/d/1LobjFvbrygt2Mdf-TN9jzyVOpaE1DZOn",
-      "ton": 10
+      "ton": 30
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1505,7 +1527,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
-      "ton": 160,
+      "ton": 360,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1544,7 +1566,7 @@
       "dvt": "Cây",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1H63C4B78NVBj3PY-x6_WuzlVPOjF9nDr",
-      "ton": 389,
+      "ton": 1589,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1557,7 +1579,7 @@
       "dvt": "Cây",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/18w2z1oUUCaUdrbOIlCSqm4K-GiRpqaJI",
-      "ton": 200,
+      "ton": 300,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1648,7 +1670,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
-      "ton": 60,
+      "ton": 140,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -1843,7 +1865,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
-      "ton": 820,
+      "ton": 1540,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1882,7 +1904,7 @@
       "dvt": "Cây",
       "gia": 9500,
       "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
-      "ton": 870,
+      "ton": 1590,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1973,7 +1995,7 @@
       "dvt": "Cây",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1uKutKE8xEsFxMGyjZMOgqZw57yfE41WZ",
-      "ton": 480,
+      "ton": 960,
       "thuongHieu": "Thiên Long",
       "quyCach": "10 cây/hộp"
     },
@@ -2237,7 +2259,7 @@
       "dvt": "Cây",
       "gia": 5500,
       "anh": "https://lh3.googleusercontent.com/d/1rJbwVPdvjk1GMidZutvX1MFTd8KYNmMq",
-      "ton": 300
+      "ton": 400
     },
     {
       "nhom": "Bút & Mực",
@@ -2261,6 +2283,126 @@
       "dvt": "Cây",
       "gia": 5500,
       "anh": "https://lh3.googleusercontent.com/d/1D9uD3lXNjOSb7_vmy3G7RsTWihx2BPYR",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP572",
+      "ten": "Bút Bi Thiên Long TL-08 (Xanh - Hộp 20)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1--igZd3C_RWa0ZjEZR0861CiZf9HnbMT",
+      "ton": 400
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP573",
+      "ten": "Bút Bi Thiên Long TL-08 (Đỏ - Hộp 20)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1--igZd3C_RWa0ZjEZR0861CiZf9HnbMT",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP574",
+      "ten": "Bút Bi Thiên Long TL-08 (Đen - Hộp 20)",
+      "dvt": "Cây",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1--igZd3C_RWa0ZjEZR0861CiZf9HnbMT",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP576",
+      "ten": "Bút gel TP-GelE01 (xanh hộp 20 - xóa được)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1xjcguxHFo9uhJlmf1jjBrr9yMNmv92Zs",
+      "ton": 400
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP577",
+      "ten": "Bút gel TP-GelE01 (Đỏ hộp 20 - xóa được)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1xjcguxHFo9uhJlmf1jjBrr9yMNmv92Zs",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP578",
+      "ten": "Bút gel TP-GelE01 (Đen hộp 20 - xóa được)",
+      "dvt": "Cây",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1xjcguxHFo9uhJlmf1jjBrr9yMNmv92Zs",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP579",
+      "ten": "Bút gel GEL-068 (Xanh - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 200
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP580",
+      "ten": "Bút gel GEL-068 (Đỏ - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP581",
+      "ten": "Bút gel GEL-068 (Đen - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP582",
+      "ten": "Bút gel GEL-068 (Tím - hộp 20)",
+      "dvt": "Cây",
+      "gia": 5000,
+      "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
       "ton": 0
     },
     {
@@ -2357,7 +2499,7 @@
       "dvt": "Cuộn",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
-      "ton": 96,
+      "ton": 112,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2370,7 +2512,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
-      "ton": 0,
+      "ton": 72,
       "quyCach": "6 cuộn/cây"
     },
     {
@@ -2395,7 +2537,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1ePGemScJvBcWYEivvC78iWebfPfhav2w",
-      "ton": 8,
+      "ton": 24,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2698,7 +2840,7 @@
       "dvt": "Cái",
       "gia": 130000,
       "anh": "https://lh3.googleusercontent.com/d/14-bACIqdS_OvXPk0cNdOr8BdeZhVTpom",
-      "ton": 0,
+      "ton": 1,
       "thuongHieu": "KW-triO"
     },
     {
@@ -2965,11 +3107,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP023",
-      "ten": "Bâm lỗ Trio 952",
+      "ten": "Bấm lỗ Trio 952",
       "dvt": "Cái",
-      "gia": 1650000,
+      "gia": 1330000,
       "anh": "https://lh3.googleusercontent.com/d/1ToNcerXHPlUBw7xyv_m-OezjoE4q3CSl",
-      "ton": 0,
+      "ton": 1,
       "thuongHieu": "KW-triO"
     },
     {
@@ -3168,7 +3310,7 @@
       "ma": "VP164",
       "ten": "Cắm bút sắt tròn (đen)",
       "dvt": "Cái",
-      "gia": 48000,
+      "gia": 38000,
       "anh": "https://lh3.googleusercontent.com/d/1gASeQY1GuPPuagv1iw6WwnMwQzIJ_REk",
       "ton": 29
     },
@@ -3486,10 +3628,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP190",
-      "ten": "Dây thun nhỏ, lớn",
+      "ten": "Dây thun Vàng (bịch 500g)",
       "dvt": "Bịch",
-      "gia": 50000,
-      "anh": "",
+      "gia": 55000,
+      "anh": "https://lh3.googleusercontent.com/d/1K6n_4NEVxPJXXYBwIwKqHTxyngt6FOXw",
       "ton": 0
     },
     {
@@ -3776,11 +3918,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP265",
-      "ten": "Kệ nhựa 3 tầng",
+      "ten": "Kệ nhựa 3 tầng (trượt 206-3)",
       "dvt": "Cái",
-      "gia": 80000,
-      "anh": "",
-      "ton": 0
+      "gia": 148000,
+      "anh": "https://lh3.googleusercontent.com/d/1WktCbo6LEtigNXv_Ui7FCux4q-9L6Lg1",
+      "ton": 6
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3800,11 +3942,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP267",
-      "ten": "Kệ xéo nhựa 3 ngăn",
+      "ten": "Kệ rổ nhựa 3 ngăn đứng (194)",
       "dvt": "Cái",
-      "gia": 32000,
-      "anh": "",
-      "ton": 0
+      "gia": 53000,
+      "anh": "https://lh3.googleusercontent.com/d/1XEN5T0LVxqdPd9r4qlOOCTDZcz_yWkCh",
+      "ton": 12
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4196,7 +4338,7 @@
       "dvt": "Hộp",
       "gia": 21000,
       "anh": "https://lh3.googleusercontent.com/d/1lKSlkvd4ogS73aGiC_vkwNpUrR71zZ_u",
-      "ton": 5,
+      "ton": 20,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4220,9 +4362,9 @@
       "ma": "VP301",
       "ten": "Kim bấm 23/23 (TriO - 200 tờ)",
       "dvt": "Hộp",
-      "gia": 37000,
+      "gia": 36000,
       "anh": "https://lh3.googleusercontent.com/d/1HdXrwwjTAkLDsHB-77KNJPMeG8B_ZD1_",
-      "ton": 0,
+      "ton": 20,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4235,7 +4377,7 @@
       "dvt": "Hộp",
       "gia": 19000,
       "anh": "https://lh3.googleusercontent.com/d/1FJ_X5YlhzIqDYFborttpKHGeegR0mBvm",
-      "ton": 0,
+      "ton": 10,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4600,7 +4742,7 @@
       "dvt": "Cặp",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
-      "ton": 160,
+      "ton": 460,
       "thuongHieu": "Maxell"
     },
     {
@@ -4975,11 +5117,11 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP382",
-      "ten": "Tệp hồ sơ có dây (10cm)",
-      "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
-      "ton": 0
+      "ten": "Kim bấm 23/6 (TriO)",
+      "dvt": "Hộp",
+      "gia": 19000,
+      "anh": "https://lh3.googleusercontent.com/d/1zcjLkx8Az1Zr1UovlhIi9fBX-Th4Jn8Z",
+      "ton": 10
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5192,6 +5334,78 @@
       "ton": 120
     },
     {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP530",
+      "ten": "Dập Ghim Đại - Deli 0394 (80 Tờ-100pcs)",
+      "dvt": "Cái",
+      "gia": 500000,
+      "anh": "https://lh3.googleusercontent.com/d/1efeAUW09i-SYKznANX2scRm37VifYm1p",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP568",
+      "ten": "Thước cuộn 50m",
+      "dvt": "Cái",
+      "gia": 98000,
+      "anh": "https://lh3.googleusercontent.com/d/1DtBfKxRLk9mnNGGKABY3UAh3sY2MwwcJ",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP569",
+      "ten": "Tập Sinh Viên 200 trang Campus",
+      "dvt": "Quyển",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/1lUkZAv_5xtCbs_1igVi35uJMuQk2utlE",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP570",
+      "ten": "Tập học sinh 200 trang",
+      "dvt": "Quyển",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP575",
+      "ten": "Pin Carbon AA (tiểu) lốc 4 BAC-R6/4",
+      "dvt": "Cặp",
+      "gia": 6000,
+      "anh": "https://lh3.googleusercontent.com/d/1YRP8cvIaCZ3md00jzebzHjG7lb3EYCw7",
+      "ton": 60
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP583",
+      "ten": "Bìa nút F4 in (ô vuông) FO CBF01",
+      "dvt": "Cái",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1bDwa8Ex8OSgOCv2N4iNo8nSAdgz02EdT",
+      "ton": 100
+    },
+    {
       "nhom": "Điện",
       "nhomId": "dien",
       "linhVucId": "dien-gia-dung",
@@ -5311,6 +5525,18 @@
       "dvt": "Cuộn",
       "gia": 40000,
       "anh": "https://lh3.googleusercontent.com/d/1-kXhQuBoDtivEcE_u8sMkO0-4LdkeUmK",
+      "ton": 0
+    },
+    {
+      "nhom": "Điện",
+      "nhomId": "dien",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP602",
+      "ten": "Đĩa trắng CD Maxcell",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1Hwc5X51v2wbTXMcNr-vvK57phFx7O2k2",
       "ton": 0
     },
     {
@@ -5980,10 +6206,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP482",
-      "ten": "Trà bí đao la hán (Chai)",
+      "ten": "Trà bí đao la hán quả (Chai 450 ML)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1Q-7n6wgvZggEikBvIolUm5zpY0ZSwacG",
       "ton": 24
     },
     {
@@ -5992,10 +6218,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP483",
-      "ten": "Trà vải mật ong Hương hoa nhài (Chai)",
+      "ten": "Trà vải mật ong Hương hoa nhài (Chai 450 ML)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "",
+      "gia": 8000,
+      "anh": "https://lh3.googleusercontent.com/d/1jg3VPFmnac_D6AbjZa8BvsVOkoPXBohd",
       "ton": 24
     },
     {
@@ -6004,10 +6230,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP484",
-      "ten": "Trà Chanh Dây và hạt chia FuzeTea+ (Chai)",
+      "ten": "Trà Chanh Dây và hạt chia (Chai 350 ML)",
       "dvt": "Chai",
-      "gia": 0,
-      "anh": "https://cdn2-retail-images.kiotviet.vn/2026/10/16/ctytnhhvanphat/5f04eb88cef240c5b32d4bfc8462351e.png",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1jlV1-Qq5E2Oitt1vNPoDsYa4o2GjX52R",
       "ton": 24,
       "thuongHieu": "Fuze Tea"
     },
@@ -6095,10 +6321,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP501",
-      "ten": "Nước sâm C2",
+      "ten": "Nước sâm C2 Cool hoa cúc thảo mộc (chai 280ml )",
       "dvt": "",
-      "gia": 0,
-      "anh": "",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1dnk2wpMubSgoK8wjO8H15wmq5n3CWrTH",
       "ton": -1
     },
     {
@@ -6107,10 +6333,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP502",
-      "ten": "Nước sữa dâu Twister 320ml",
+      "ten": "Nước sữa dâu Twister (Chai 320ml)",
       "dvt": "Chai",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1hG_cPKMQoWsY9bCoscKcGlDIh4Xg6LWU",
       "ton": 0
     },
     {
@@ -6119,10 +6345,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP503",
-      "ten": "Nước trái cây sữa juicy milk vị cam 330ml",
+      "ten": "Sữa trái cây Twister hương cam (Chai 320ml)",
       "dvt": "Chai",
       "gia": 11000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1RPrS5iH8hgJdWugVXyQ5o2SQ9X5cCaUy",
       "ton": 0
     },
     {
@@ -6133,8 +6359,8 @@
       "ma": "VP512",
       "ten": "TH True Tea trà xanh vị chanh Tự Nhiên ( Chai 350ml)",
       "dvt": "Chai",
-      "gia": 9000,
-      "anh": "",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1WL9F1OlLXU8SaQJn0jAx8rxVFW6VNFRW",
       "ton": 0
     },
     {
@@ -6145,8 +6371,8 @@
       "ma": "VP513",
       "ten": "TH True Tea Trà ổi (Chai 350ml)",
       "dvt": "Chai",
-      "gia": 9000,
-      "anh": "",
+      "gia": 11000,
+      "anh": "https://lh3.googleusercontent.com/d/1t-jkXUNo4-kwc3AVT2gcf8tZM9FvuYSK",
       "ton": 0
     },
     {
@@ -6158,7 +6384,7 @@
       "ten": "Nước suối Lavie vị dịu nhẹ 500ml",
       "dvt": "Chai",
       "gia": 6000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1rduRHKAf-3ZlmRsuQCHDcqYsut_6nXWB",
       "ton": 0
     },
     {
@@ -6170,7 +6396,7 @@
       "ten": "Nước suối Lavie ion kiềm 500ml",
       "dvt": "Chai",
       "gia": 6000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1UhSTU670UcpV5EqCWTuia5ejFZyZvECs",
       "ton": 0
     },
     {
@@ -6182,40 +6408,124 @@
       "ten": "Chanh muối Đảnh Thạnh chai 430ml",
       "dvt": "Chai",
       "gia": 8000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1dnk2wpMubSgoK8wjO8H15wmq5n3CWrTH",
       "ton": -1
     },
     {
-      "nhom": "TP Khác",
-      "nhomId": "tp-khac",
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
-      "ma": "VP504",
-      "ten": "Kẹo gum Xylitol (Hương Lime Mint)",
-      "dvt": "Hủ",
+      "ma": "VP532",
+      "ten": "Nước tăng lực Redbull chai 150ml",
+      "dvt": "Chai",
+      "gia": 14000,
+      "anh": "https://lh3.googleusercontent.com/d/1xH9Jry50pMcGTAnLHRR1ZjB4Voyxmg8n",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP537",
+      "ten": "Nước cam ép Twister 450ml",
+      "dvt": "Chai",
+      "gia": 12000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP538",
+      "ten": "Nước Wake Up 247 lon 245Ml",
+      "dvt": "Lon",
+      "gia": 13000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP540",
+      "ten": "Nước cam có tép Teppy 327ml",
+      "dvt": "Chai",
+      "gia": 11000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP584",
+      "ten": "Nước tăng lực Rockstar lon 250ml",
+      "dvt": "",
       "gia": 0,
       "anh": "",
       "ton": 0
     },
     {
-      "nhom": "TP Khác",
-      "nhomId": "tp-khac",
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
-      "ma": "VP505",
-      "ten": "Kẹo cao su Xylitol dâu 58GR",
-      "dvt": "Hủ",
+      "ma": "VP585",
+      "ten": "Nước tăng lực Carabao lon 250ml",
+      "dvt": "",
       "gia": 0,
       "anh": "",
       "ton": 0
     },
     {
-      "nhom": "TP Khác",
-      "nhomId": "tp-khac",
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
-      "ma": "VP506",
-      "ten": "Kẹo gum không đường Lotte Xylitol Super Cool",
+      "ma": "VP586",
+      "ten": "Lon Sting Thái tăng lực Warrior 325ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP587",
+      "ten": "Nước uống tăng lực mật nhân Lipovitan lon 250ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP588",
+      "ten": "Nước tăng lực Warrior nho lon 325ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP603",
+      "ten": "Pepsi chanh không calo 330ml",
       "dvt": "",
       "gia": 0,
       "anh": "",
@@ -6226,11 +6536,47 @@
       "nhomId": "tp-khac",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP504",
+      "ten": "Kẹo gum Xylitol (Hương Lime Mint)",
+      "dvt": "Hủ",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/19QLaCMvbRbV12uyOjvpJ_2xaqvmkSj5m",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP505",
+      "ten": "Kẹo gum không đường Lotte Xylitol Cool hũ 55.1g",
+      "dvt": "Hủ",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1SVWWzSWMcQqQJL7ik25_vn944RyvDLOR",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP506",
+      "ten": "Lotte Xylitol hương Blueberry Mint (hũ 55.1g)",
+      "dvt": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1r_-u_Q6iaY-dw6ewDkjGJDZ3V43uidqv",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
       "ma": "VP507",
       "ten": "Bánh Lát khoai Tây Slide (Vị Potato Crisps)",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1GJS4gEZAdbRMYDhYW6AFcDZV8v8-Gsdi",
       "ton": 0
     },
     {
@@ -6241,8 +6587,8 @@
       "ma": "VP508",
       "ten": "Bánh Lát khoai Tây Slide (Vị nguyên bản)",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1kMr6PwwbrztlR0K3ZSM7kGJLO7FrzDJF",
       "ton": 0
     },
     {
@@ -6251,10 +6597,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP509",
-      "ten": "Khoai Tây Lát Slide sour vị hành 75GR",
+      "ten": "Khoai Tây Lát Slide sour vị hành 60Gr",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/1L5k0qVSxGhyxPWxgdwm_FVn5Aax3wbL3",
       "ton": 0
     },
     {
@@ -6275,10 +6621,10 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP511",
-      "ten": "Kẹo ngậm Mentos đào Bạc Hà",
-      "dvt": "",
-      "gia": 0,
-      "anh": "",
+      "ten": "Kẹo ngậm Mentos đào Bạc Hà (17,5 g)",
+      "dvt": "Hủ",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1zmdF_sgDxLyA2ynpfxM2ukYytkg8apaM",
       "ton": 0
     },
     {
@@ -6348,9 +6694,9 @@
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP521",
       "ten": "Bánh gạo An vị tảo biển",
-      "dvt": "Bịch",
-      "gia": 0,
-      "anh": "",
+      "dvt": "Gói",
+      "gia": 18000,
+      "anh": "https://lh3.googleusercontent.com/d/1gCIftz98VU-gYXfsxIAakdW73KeOkiFV",
       "ton": 0
     },
     {
@@ -6361,8 +6707,8 @@
       "ma": "VP522",
       "ten": "Khoai Tây chiên Pringles Original 42g",
       "dvt": "Hủ",
-      "gia": 0,
-      "anh": "",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1H-uievs6Q85ZQYWFyJ98pBWhHuDGr13y",
       "ton": 0
     },
     {
@@ -6373,11 +6719,551 @@
       "ma": "VP523",
       "ten": "Kẹo ngậm Mentos Hương đào Bạc Hà 17,5g",
       "dvt": "",
+      "gia": 20000,
+      "anh": "https://lh3.googleusercontent.com/d/1dVZ0J6t-ThBNnNghJGi4YMIikdHKPx-c",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP533",
+      "ten": "Kẹo socola M&M",
+      "dvt": "Gói",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP534",
+      "ten": "Kẹo Skittles",
+      "dvt": "Gói",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP535",
+      "ten": "Kẹo Skittles dâu rừng 15g",
+      "dvt": "Gói",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP536",
+      "ten": "Kẹo trái cây Skittles vị chua xanh lá cây gói 15GR",
+      "dvt": "Gói",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP539",
+      "ten": "Kẹo cao su Xylitol dâu 58GR",
+      "dvt": "Hủ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP541",
+      "ten": "Kẹo gum Xylitol Lime mint 26.1g",
+      "dvt": "Chai",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP542",
+      "ten": "Bánh Lát khoai Tây vị Tự Nhiên Slide 75g",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP543",
+      "ten": "Snow baby kem dưa hấu",
+      "dvt": "Cái",
+      "gia": 8000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP544",
+      "ten": "Kem xoài",
+      "dvt": "Cái",
+      "gia": 8000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP545",
+      "ten": "Kem sữa bắp snow",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1ShH0rPNjjiIk98QYNOL9WV5jM2YUvXYN",
+      "ton": 24
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP546",
+      "ten": "Kem snow baby sữa dừa yến mạch",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP547",
+      "ten": "Kem đậu đỏ yến mạch snowbaby",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1VVcHIO8xs2mm9yGABntjyckPlUuhUUDt",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP548",
+      "ten": "Kem ốc quế socola hương vani",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1OXAxNDr7bJwshTUGRdz1R80N7SP5LZdX",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP549",
+      "ten": "Kem ốc quế Matcha Socola",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1yTSb04pfSibl_HqThFH5sxgIVBcE720o",
+      "ton": 0
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP550",
+      "ten": "Kem bàn tay gấu",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP551",
+      "ten": "Kem snow baby đậu xanh yến mạch x",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP552",
+      "ten": "Kem hũ snow socola",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP553",
+      "ten": "Kem dâu ly",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 12
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP554",
+      "ten": "Kem trà sữa Trân Châu",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP555",
+      "ten": "Kem vani socola hạnh nhân T20",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1NLwsISDUg0eHQxG45EgdHZxZFhsHd9j6",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP556",
+      "ten": "Kem scl chuối hạnh nhân",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1hCEI_GP8xw2Ugst8YxAQHJHZdYZ0tekY",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP557",
+      "ten": "Kem scl hạnh nhân Hương Bạc Hà",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1_sMzkxESIOi2OrH_-24J8E71AOC42xen",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP558",
+      "ten": "Kem cá dâu",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "https://lh3.googleusercontent.com/d/1yiqhL44yNfUmMPWX5TKuL-Hl2QvoVk3B",
+      "ton": 0
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP559",
+      "ten": "Kem bánh cá vị phomai dâu",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1CbXZWekdQGgKZMwzyEwkoYnkKlgB7i6Q",
+      "ton": 24
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP560",
+      "ten": "Kem bánh cá trà sữa chân châu snow",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1_sMzkxESIOi2OrH_-24J8E71AOC42xen",
+      "ton": 12
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP561",
+      "ten": "Kem bánh cá vị Matcha Trân Châu",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1ysSE9J4AhuyVUQYuwXbUoRKP4ad-3Dbr",
+      "ton": 12
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP562",
+      "ten": "Kem cá vị đậu đỏ",
+      "dvt": "Cái",
+      "gia": 15000,
+      "anh": "https://lh3.googleusercontent.com/d/1LUYZQsGlbBnnU19A99BBKopLujDOMm6m",
+      "ton": 12
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP563",
+      "ten": "Kem que snow x socola nhân mứt dâu",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP564",
+      "ten": "Kem snowbaby ốc quế vani socola",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP565",
+      "ten": "Kem ốc quế vani snow baby",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "Kem",
+      "nhomId": "kem",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP566",
+      "ten": "Kem bàn tay gấu socola",
+      "dvt": "Cái",
+      "gia": 10000,
+      "anh": "",
+      "ton": 20
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP567",
+      "ten": "Kẹo sing gum Doublemint 58,4g",
+      "dvt": "Hủ",
+      "gia": 30000,
+      "anh": "https://lh3.googleusercontent.com/d/11-wLBYXGMV7yROiCnmNXl7JALADXsdRH",
+      "ton": 0
+    },
+    {
+      "nhom": "TP Khác",
+      "nhomId": "tp-khac",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP589",
+      "ten": "Kẹo Doublemint sugarfree vị dâu",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP590",
+      "ten": "Sửa rửa tay Dr Clean (Hương Lựu)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "https://lh3.googleusercontent.com/d/17LczTbFoYVBKXEE1JIIzGkCc3iM2CVq6",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP591",
+      "ten": "Sửa rửa tay Dr Clean (Sả gừng)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP592",
+      "ten": "Sửa rửa tay Dr Clean (Hương Đào)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP593",
+      "ten": "Sửa rửa tay Dr Clean (Hương Táo)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP594",
+      "ten": "Sửa rửa tay Dr Clean (Hương Chanh)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP595",
+      "ten": "Sửa rửa tay Dr Clean (Hương Dâu)",
+      "dvt": "Chai",
+      "gia": 48000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP596",
+      "ten": "Khay chữ nhật (45 x 32 cm)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP597",
+      "ten": "Khay gỗ tay cầm Oval (trung)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP598",
+      "ten": "Bộ 2 ly sứ ENVIECASA PL 268ML",
+      "dvt": "Bộ",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP599",
+      "ten": "Khăn tay CT HK01 (28x40)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP600",
+      "ten": "Khăn tay mềm HELI HM668 (30x30)",
+      "dvt": "Cái",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Gia dụng",
+      "nhomId": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "linhVucTen": "Điện gia dụng",
+      "ma": "VP601",
+      "ten": "Bộ bình trà Phú quý cát tường",
+      "dvt": "Bộ",
       "gia": 0,
       "anh": "",
       "ton": 0
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
+  "syncedFrom": "source_sheet_20261104_1437.xlsx"
 }

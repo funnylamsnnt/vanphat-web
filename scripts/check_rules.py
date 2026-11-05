@@ -21,6 +21,8 @@
 6. Trang HTML không chứa «0đ» hay schema price 0.
 7. Mô tả dài trong data/descriptions.json chỉ khi trang_thai là da_xac_minh
    và nguon_url là http(s). Câu đệm không nguồn không được vào file hay trang SKU.
+8. Lịch sync 14:35 (`scripts/test_sync_schedule.py`): chỉ chạy khi modifiedTime
+   đổi, không commit Apps Script, không ghi id cầu nối.
 
 Sổ đơn nhân viên (js/staff-order.js) không dùng lightbox giỏ khách nên không
 nằm trong hạng mục 2. Chạy: python3 scripts/check_rules.py
@@ -120,6 +122,8 @@ def iter_html() -> list[Path]:
     found: list[Path] = []
     for path in ROOT.rglob("*.html"):
         if any(part in SKIP_DIRS for part in path.parts):
+            continue
+        if "vp-generated-redirect" in path.read_text(encoding="utf-8", errors="ignore")[:200]:
             continue
         found.append(path)
     return found
@@ -282,7 +286,7 @@ def check_company(errors: list[str]) -> None:
     if not address:
         errors.append("generate_catalog_pages.py thiếu ADDRESS")
     else:
-        for needle in ("LK 19-06", "Mỹ Gia", "Vĩnh Thái", "Nam Nha Trang"):
+        for needle in ("LK 19-06", "Mỹ Gia", "Nam Nha Trang"):
             if needle not in address:
                 errors.append(f"ADDRESS thiếu {needle}")
         if "phuoc hai" in fold_vn(address):
@@ -514,6 +518,150 @@ def check_node_script(errors: list[str], name: str, label: str) -> None:
         errors.append(f"{label} lỗi:\n" + (detail or f"exit {proc.returncode}"))
 
 
+def check_py_script(errors: list[str], name: str, label: str) -> None:
+    script = ROOT / "scripts" / name
+    if not script.is_file():
+        errors.append(f"thiếu scripts/{name}")
+        return
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(script)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        errors.append(f"scripts/{name} quá thời gian")
+        return
+    if proc.returncode != 0:
+        detail = ((proc.stdout or "") + (proc.stderr or "")).strip()
+        errors.append(f"{label} lỗi:\n" + (detail or f"exit {proc.returncode}"))
+
+
+def check_sync_schedule(errors: list[str]) -> None:
+    check_py_script(errors, "test_sync_schedule.py", "test lịch sync")
+
+
+BAN_CHAY_PUBLIC_KEYS = {"hang", "ma", "ten", "href", "gia"}
+BAN_CHAY_FORBIDDEN_KEYS = {
+    "so_hd",
+    "sohd",
+    "so_luong",
+    "soluong",
+    "doanh_thu",
+    "doanhthu",
+    "thanh_tien",
+    "thanhtien",
+    "don_gia",
+    "dongia",
+    "diem",
+    "pctsoluong",
+    "pctdoanhthu",
+    "sodongdoc",
+    "sohoadontrongcuaso",
+    "tep",
+}
+INVOICE_NAME_RE = re.compile(r"^(hoadon_lines_|bills_thang)", re.I)
+
+
+def _walk_keys(node, found: list[str]) -> None:
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if str(key).replace("_", "").lower() in BAN_CHAY_FORBIDDEN_KEYS or str(key).lower() in BAN_CHAY_FORBIDDEN_KEYS:
+                found.append(str(key))
+            _walk_keys(value, found)
+    elif isinstance(node, list):
+        for item in node:
+            _walk_keys(item, found)
+
+
+def check_ban_chay(errors: list[str]) -> None:
+    """Repo public: không file hóa đơn thật, JSON bán chạy không có số lượng hay doanh thu."""
+    skip = {".git", "node_modules", "__pycache__"}
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or any(part in skip for part in path.parts):
+            continue
+        if "mau" in path.parts:
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        if INVOICE_NAME_RE.match(path.name):
+            errors.append(f"không commit hóa đơn: {rel}")
+        if rel.startswith("data/hoa-don-gtgt/"):
+            errors.append(f"không commit hóa đơn thật: {rel}")
+    data_root = ROOT / "data"
+    if data_root.is_dir():
+        for path in data_root.rglob("*"):
+            if not path.is_file() or "mau" in path.parts:
+                continue
+            rel = path.relative_to(ROOT).as_posix()
+            if path.suffix.lower() == ".csv":
+                header = ""
+                for line in path.read_text(encoding="utf-8-sig", errors="replace").splitlines():
+                    if line.strip() and not line.strip().startswith("#"):
+                        header = line
+                        break
+                cols = {part.strip().lower() for part in header.split(",")}
+                hit = cols & {"so_hd", "so_luong", "doanh_thu", "thanh_tien", "don_gia"}
+                if hit:
+                    errors.append(f"{rel}: cột hóa đơn {', '.join(sorted(hit))}")
+            if path.suffix.lower() == ".json":
+                try:
+                    payload = json.loads(path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError:
+                    errors.append(f"{rel}: JSON không đọc được")
+                    continue
+                bad: list[str] = []
+                _walk_keys(payload, bad)
+                if bad:
+                    errors.append(f"{rel}: lộ trường bán hàng {', '.join(sorted(set(bad)))}")
+    public = ROOT / "data" / "ban-chay.json"
+    if not public.is_file():
+        errors.append("thiếu data/ban-chay.json")
+    else:
+        payload = json.loads(public.read_text(encoding="utf-8"))
+        if set(payload) != {"items"}:
+            errors.append(f"data/ban-chay.json chỉ được có khóa items, đang có {sorted(payload)}")
+        items = payload.get("items")
+        if not isinstance(items, list) or not items:
+            errors.append("data/ban-chay.json thiếu items")
+        else:
+            for item in items:
+                if not isinstance(item, dict) or set(item) != BAN_CHAY_PUBLIC_KEYS:
+                    errors.append(f"mục bán chạy sai khóa: {item!r}")
+    index = (ROOT / "index.html").read_text(encoding="utf-8")
+    if "<!-- vp-ban-chay -->" not in index:
+        errors.append("index.html thiếu khối bán chạy")
+    else:
+        block = index.split("<!-- vp-ban-chay -->", 1)[1].split("<!-- /vp-ban-chay -->", 1)[0]
+        folded = block.lower()
+        if "hóa đơn" in folded or "gtgt" in folded:
+            errors.append("trang chủ không được nêu hóa đơn GTGT")
+        if "đã bán" in folded:
+            errors.append("trang chủ không hiện số đã bán")
+        if "Hot · Bán chạy" not in block:
+            errors.append("nhãn bán chạy phải là «Hot · Bán chạy»")
+        cards = block.count('class="product-card"')
+        eager = block.count('loading="eager"')
+        if cards >= 4 and eager < 4:
+            errors.append("bốn ảnh đầu khối bán chạy phải tải ngay, không lazy")
+        if "fetchpriority" in block.lower():
+            errors.append("ảnh bán chạy không dùng fetchpriority")
+        if "product-hot-short" not in block or "product-hot-full" not in block:
+            errors.append("điện thoại hiện Hot, máy rộng hiện Hot · Bán chạy")
+        if 'class="product-hot-short" title="Hot · Bán chạy"' not in block:
+            errors.append("nhãn Hot trên điện thoại thiếu title Hot · Bán chạy")
+        if re.search(r'<span class="product-hot" [^>]*\btitle=', block):
+            errors.append("máy rộng không gắn title trùng chữ Hot · Bán chạy")
+    if 'id="ban-chay-ld"' not in index or '"@type": "ItemList"' not in index:
+        errors.append("trang chủ thiếu schema ItemList của khối bán chạy")
+    workflow = ROOT / ".github" / "workflows" / "ban-chay.yml"
+    if workflow.is_file():
+        errors.append("không giữ GitHub Action xếp hạng; máy ngoài chạy script rồi commit JSON")
+    check_py_script(errors, "test_rank_ban_chay.py", "test bán chạy")
+
+
 def check_chat_search(errors: list[str]) -> None:
     check_node_script(errors, "test_chat_search.js", "test tìm chat")
     check_node_script(errors, "test_cart_quote.js", "test giỏ giá 0")
@@ -595,6 +743,43 @@ def check_chat_widget_cache(errors: list[str]) -> None:
         errors.append("css/chat-widget.css thiếu khung chat")
 
 
+def check_redirects(errors: list[str]) -> int:
+    """Old product slugs in data/redirects.json must be redirect stubs to the live page of the same mã."""
+    path = ROOT / "data" / "redirects.json"
+    if not path.is_file():
+        return 0
+    entries = json.loads(path.read_text(encoding="utf-8")).get("redirects") or []
+    paths_js = (ROOT / "js" / "catalog-paths.js").read_text(encoding="utf-8")
+    product_map = json.loads(paths_js.split("=", 1)[1].strip().rstrip(";"))["product"]
+    sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+    for item in entries:
+        old = str(item.get("old") or "")
+        code = str(item.get("ma") or "").upper()
+        target = product_map.get(code)
+        stub = ROOT / old
+        if not target or not (ROOT / target).is_file():
+            errors.append(f"redirect {old}: mã {code} không có trang hiện tại")
+            continue
+        if not stub.is_file():
+            errors.append(f"redirect {old}: thiếu trang chuyển hướng (404)")
+            continue
+        text = stub.read_text(encoding="utf-8")
+        url = "/" + target
+        need = [
+            "vp-generated-redirect",
+            f'http-equiv="refresh" content="0; url={url}"',
+            f'rel="canonical" href="https://vanphatcompany.vn{url}"',
+            f'location.replace("{url}"',
+            'name="robots" content="noindex',
+        ]
+        for n in need:
+            if n not in text:
+                errors.append(f"redirect {old}: thiếu {n!r}")
+        if f"/{old}<" in sitemap:
+            errors.append(f"redirect {old}: không được có trong sitemap")
+    return len(entries)
+
+
 def main() -> None:
     self_test()
     errors: list[str] = []
@@ -607,12 +792,15 @@ def main() -> None:
     check_zero_price_pages(errors)
     check_product_descriptions(errors)
     check_chat_search(errors)
+    check_sync_schedule(errors)
+    check_ban_chay(errors)
     check_chat_widget_cache(errors)
+    redirects = check_redirects(errors)
     if errors:
         fail(errors)
     print(
         f"OK: {product_count} sản phẩm trên web, {len(skus)} mã loại trừ không xuất hiện, "
-        f"{cards} thẻ có lightbox."
+        f"{cards} thẻ có lightbox, {redirects} trang chuyển hướng."
     )
 
 

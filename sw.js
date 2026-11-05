@@ -75,7 +75,10 @@ self.addEventListener("activate", (event) => {
 
 function isPriceDocument(url) {
   const path = url.pathname;
-  if (path === "/data/products.json") return true;
+  // Giá catalog và bảng bán chạy phải lấy bản mới. js/css của khối Hot cũng vậy,
+  // vì lịch thứ Hai ghi data/ban-chay.json mà không tăng ?v trên cả site.
+  if (path === "/data/products.json" || path === "/data/ban-chay.json") return true;
+  if (path === "/js/ban-chay.js" || path === "/css/ban-chay.css") return true;
   if (path === "/" || path.endsWith("/")) return true;
   return path.endsWith(".html");
 }

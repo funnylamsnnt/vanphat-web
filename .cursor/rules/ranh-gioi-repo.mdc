@@ -13,6 +13,6 @@ Không commit bí mật: API key, token, mật khẩu, email cá nhân, tài kho
 
 Không thêm lại lời kêu gọi «Đặt hàng online» và không gắn lại form Apps Script đặt hàng đã gỡ (PR #5 và #6). Giữ giỏ hàng (`js/cart.js`), nút Zalo, và hotline đang có trên site.
 
-Mọi thay đổi, kể cả tài liệu agent và script kiểm tra, đi trên nhánh `cursor/<mô-tả>-720b`, push nhánh đó, mở một pull request. Không push thẳng `main`. Trợ lý ngoài cũng vậy: lịch sync chỉ được mở PR. Không merge. Anh Hà duyệt rồi mới vào Pages.
+Mọi thay đổi code, kể cả tài liệu agent và script kiểm tra, đi trên nhánh `cursor/<mô-tả>-720b`, push nhánh đó, mở một pull request. Agent không push thẳng `main`. Ngoại lệ đã giao: workflow `.github/workflows/sync-catalog.yml` lúc 14:35 (cron UTC `35 7 * * *`) commit catalog lên `main` và để GitHub Pages build, rồi làm mới cầu nối LIVE. Lịch đó không sửa Apps Script. Việc code khác vẫn mở PR. Không merge PR đỏ. Anh Hà duyệt PR thì code mới vào Pages; catalog của lịch 14:35 phát hành khi workflow push `main`.
 
 PR catalog điền mẫu `.github/PULL_REQUEST_TEMPLATE.md`. `python3 scripts/check_rules.py` và `python3 scripts/check_seo.py` phải xanh. Workflow kiểm tra không thay phát hành Pages. Sau merge, workflow `seo-audit` chạy lại trên `main`. Nếu đỏ, mở PR sửa. Semrush và Search Console nằm ngoài repo.

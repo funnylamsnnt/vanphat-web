@@ -32,7 +32,7 @@ Ghi 1–3 đề xuất ngắn về UI, SEO hoặc hiệu năng thấy khi làm t
 
 - [ ] `python3 scripts/check_rules.py`
 - [ ] `python3 scripts/check_seo.py`
-- [ ] Không push thẳng `main`. Anh merge thì Pages mới phát hành.
+- [ ] Agent không push thẳng `main`. Anh merge thì Pages phát hành. Workflow `sync-catalog` (14:35) là ngoại lệ đã giao: commit catalog lên `main` rồi Pages build.
 - [ ] Không ghi đè `CNAME`, không commit bí mật, không thêm lại «Đặt hàng online».
 
 Cầu nối LIVE do trợ lý ngoài refresh sau khi anh merge, rồi báo một tin. Không ghi fileId cầu nối vào PR.

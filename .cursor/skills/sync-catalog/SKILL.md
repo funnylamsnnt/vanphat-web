@@ -18,7 +18,7 @@ Nguồn duy nhất (anh Hà khóa 27/09/2026):
 
 Không dùng catalog Drive khác, kể cả file tên `VanPhat_Web_Catalog_SOURCE.xlsx`. Không ghi fileId nguồn cũ vào repo.
 
-Lịch 8:09 và 14:09 (Asia/Bangkok), bản Excel trên máy trợ lý, và refresh cầu nối LIVE thuộc trợ lý ngoài. Cursor không tự chạy lịch đó. Cả trợ lý ngoài và Cursor, khi có đổi, chỉ mở PR. Không push `main`. Khi anh nói `sync giá`, hoặc giao sync, làm trong repo này.
+Lịch 8:09 (Asia/Bangkok) vẫn là trợ lý ngoài: có đổi thì mở PR, không push `main`. Lịch 14:35 là workflow `.github/workflows/sync-catalog.yml` (cron UTC `35 7 * * *`): service account `GDRIVE_SA_JSON` tải file nguồn, chỉ sync khi `modifiedTime` đổi so với `scripts/sync_state.json`, commit catalog lên `main`, đợi GitHub Pages, rồi làm mới cầu nối LIVE. Id cầu nối nằm ở secret `LIVE_BRIDGE_SHEET_ID`, không commit. Khi anh nói `sync giá` cho Cursor làm tay, vẫn mở PR trong repo này, không push `main` bằng tay.
 
 Trong repo này:
 
@@ -56,8 +56,8 @@ Thiếu `--drive-title` hoặc title sai thì script thoát 3, chưa ghi gì.
 1. So `modifiedTime` của nguồn với `scripts/sync_state.json`. Không đổi thì dừng, không báo rỗng.
 2. Đọc sheet `Danh Mục Vật Tư`. Đối chiếu thêm, xóa, đổi tên, giá, ảnh, tồn.
 3. Loại nhóm cấm. Nhóm tên mới do script xếp và ghi vào `ia.json`. Script tự gọi generator: `products.json`, trang lĩnh vực, nhóm, SKU, sitemap, `js/catalog-paths.js`.
-4. Mở PR, không push `main`. Điền mẫu `.github/PULL_REQUEST_TEMPLATE.md` từ JSON script in ra (`added`, `removed`, `priceChanges`, `slugChanges`, `zeroPrice`, `autoPlacedGroups`, `heldUnmappedGroups`, `excludedGroups`). Không tự sửa file nguồn trên Drive.
-5. Nhờ trợ lý ngoài refresh cầu nối sau khi web đúng, hoặc chỉ làm nếu anh giao riêng từng lần. Vẫn không ghi fileId vào commit.
+4. Khi làm tay: mở PR, không push `main`. Điền mẫu `.github/PULL_REQUEST_TEMPLATE.md` từ JSON script in ra (`added`, `removed`, `priceChanges`, `slugChanges`, `zeroPrice`, `autoPlacedGroups`, `heldUnmappedGroups`, `excludedGroups`). Không tự sửa file nguồn trên Drive. Lịch 14:35 không mở PR: workflow commit catalog lên `main`.
+5. Khi làm tay: nhờ trợ lý ngoài refresh cầu nối sau khi web đúng, trừ khi anh giao riêng. Lịch 14:35 tự làm mới cầu nối sau khi Pages xanh. Vẫn không ghi fileId vào commit.
 6. Cập nhật `scripts/sync_state.json` trong cùng PR khi lượt này do Cursor chạy. Chạy `python3 scripts/check_rules.py`.
 
 ## Giữ nguyên

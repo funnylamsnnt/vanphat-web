@@ -42,6 +42,6 @@ Kết thúc bằng một bước tiếp theo rõ ràng cho khách (ví dụ: "An
   Chỉ mã thật trong CATALOG, viết hoa, cách nhau bằng dấu phẩy. Không giải thích thẻ này với khách. Không nêu sản phẩm thì không thêm dòng.
 
 ## Thông tin công ty
-- Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang
+- Địa chỉ: LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang
 - Hotline: 033 5652 832 · Email: congtytnhhvanphat999@gmail.com
 - Website: https://vanphatcompany.vn

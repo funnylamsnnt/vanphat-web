@@ -38,7 +38,8 @@
       "nhomIds": [
         "nuoc-uong",
         "banh",
-        "tp-khac"
+        "tp-khac",
+        "kem"
       ]
     },
     {
@@ -51,7 +52,8 @@
       "browseMode": "group-images",
       "moTa": "Ổ cắm, dây điện và thiết bị điện văn phòng",
       "nhomIds": [
-        "dien"
+        "dien",
+        "gia-dung"
       ]
     }
   ],
@@ -128,6 +130,26 @@
       "visible": true,
       "placeholder": true,
       "moTa": "Bánh cho văn phòng — sắp có hàng, liên hệ để đặt trước."
+    },
+    {
+      "id": "gia-dung",
+      "STT": 1000,
+      "TenNhom": "Gia dụng",
+      "slug": "gia-dung",
+      "linhVucId": "dien-gia-dung",
+      "visible": true,
+      "moTa": "Đồ gia dụng cho văn phòng: nước rửa tay, khay, ly, khăn, bộ bình trà.",
+      "autoPlaced": true
+    },
+    {
+      "id": "kem",
+      "STT": 1000,
+      "TenNhom": "Kem",
+      "slug": "kem",
+      "linhVucId": "nuoc-banh",
+      "visible": true,
+      "moTa": "Kem các loại cho văn phòng và cửa hàng ở Nam Nha Trang.",
+      "autoPlaced": true
     },
     {
       "id": "tp-khac",

@@ -9,7 +9,7 @@ Excel gốc trên Drive là nguồn chuẩn duy nhất về mã, tên và giá: 
 QL Kiot đồng bộ Excel với KiotViet theo cả hai chiều. Từ Excel, dữ liệu đi tiếp hai nhánh:
 
 - Excel → Google Sheet «PHIEU BAO GIA» → form Đơn Đặt Hàng (bridge LIVE).
-- Excel → web (`data/products.json`), bỏ nhóm «Không đưa lên web», chia ba lĩnh vực. Từ 17/10/2026 nhánh này do QL Kiot đảm nhiệm.
+- Excel → web (`data/products.json`), bỏ nhóm «Không đưa lên web», chia ba lĩnh vực. Lúc 14:35 giờ Việt Nam, workflow `sync-catalog` làm nhánh này khi `modifiedTime` của Excel đổi, rồi làm mới cầu nối LIVE. Lịch 8:09 vẫn là bot ngoài.
 
 Cursor không sửa tay giá hay tên sản phẩm, không ghi vào Excel gốc, sổ công nợ v7, hay KiotViet.
 

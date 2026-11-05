@@ -51,6 +51,47 @@ python3 scripts/sync_products_from_excel.py /workspace/vanphat-sync/PHIEU_BAO_GI
 
 Nếu tên kết thúc bằng `.tmp` (lỗi lưu Excel/Drive for desktop, như `FB1DA4E5.tmp` ngày 10/10/2026) hoặc khác `PHIEU BAO GIA VAN PHAT - 2026.xlsx` (đã chuẩn hóa hoa/thường, dấu, khoảng trắng, đuôi), script thoát mã **3** trước khi ghi gì: không deploy web, không refresh cầu nối LIVE, báo anh Hà. Logic nằm ở `scripts/source_title_guard.py`.
 
+### Action đồng bộ catalog 14:35
+
+Workflow [`.github/workflows/sync-catalog.yml`](.github/workflows/sync-catalog.yml) chạy lúc **14:35 giờ Việt Nam**, cron UTC `35 7 * * *`. Có thể bấm chạy tay bằng `workflow_dispatch`.
+
+Việc làm, theo thứ tự:
+
+1. Đọc metadata Drive của file `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR` bằng service account.
+2. Tên file sai hoặc kết thúc bằng `.tmp` thì dừng (thoát 3). Không ghi web, không đụng cầu nối.
+3. `modifiedTime` trùng `scripts/sync_state.json` và cầu nối của mốc đó đã `ok` thì dừng. Không commit.
+4. `modifiedTime` đổi thì tải Excel (chỉ GET, không convert file gốc), chạy `scripts/sync_products_from_excel.py`, rồi `check_rules.py` và `check_seo.py`.
+5. Commit các file catalog được phép, push `main` bằng `GH_PUSH_TOKEN`, đợi workflow `pages-build-deployment` xanh.
+6. Sau Pages, thay tab `Danh Mục Vật Tư` trên spreadsheet cầu nối LIVE: ghi đủ dòng nguồn, kể cả nhóm «Không đưa lên web», xóa tab cũ, đổi tên tab mới. Tab `Chính Sách Đối Tác` giữ nguyên. Số mã trên cầu nối phải bằng số mã nguồn, lệch 0.
+7. Nếu cầu nối lỗi sau khi catalog đã lên `main`, lần sau chỉ làm lại cầu nối (trạng thái `pending`), không sync lại từ đầu.
+
+File Excel tải về nằm ở thư mục tạm của runner, không commit. Id cầu nối không ghi vào repo.
+
+#### Tạo secret
+
+Repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**. Ba secret:
+
+| Secret | Nội dung |
+|---|---|
+| `GDRIVE_SA_JSON` | Nguyên file JSON của service account |
+| `LIVE_BRIDGE_SHEET_ID` | Id spreadsheet cầu nối LIVE, đoạn giữa URL `/spreadsheets/d/<id>/edit` |
+| `GH_PUSH_TOKEN` | PAT được push nhánh `main` |
+
+Service account:
+
+1. Vào Google Cloud Console, chọn hoặc tạo một project.
+2. Bật **Google Drive API** và **Google Sheets API**.
+3. **IAM & Admin** → **Service accounts** → **Create service account**. Không cần role trên project.
+4. Mở account đó → **Keys** → **Add key** → **JSON**. Tải file về.
+5. Share file Excel `PHIEU BAO GIA VAN PHAT - 2026.xlsx` (fileId `1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR`) cho `client_email` trong JSON, quyền **Viewer**.
+6. Share spreadsheet cầu nối LIVE cho cùng email, quyền **Editor**. Không dán id này vào git, README, hay log commit.
+
+`GH_PUSH_TOKEN`: fine-grained PAT của tài khoản được ghi `main`, quyền **Contents: Read and write** và **Actions: Read**. Classic PAT thì scope `repo`. Push bằng `GITHUB_TOKEN` mặc định không kích hoạt build GitHub Pages (nguồn đang là nhánh `main`). Nếu `main` chặn push thẳng, cho PAT này được bypass rule của lịch sync.
+
+Dán JSON vào `GDRIVE_SA_JSON` cả khối, kể cả nhiều dòng. Không commit file key.
+
+Khi lượt 14:35 đã xanh, dừng lịch 14:35 của bot ngoài để khỏi làm mới cầu nối hai lần. Lịch 8:09 vẫn là bot ngoài, mở PR nếu có đổi. Workflow này không sửa Apps Script.
+
 Sau khi Excel cập nhật `data/products.json`, `scripts/sync_products_from_excel.py` tự gọi generator. Nếu chỉ sửa JSON:
 
 ```bash
@@ -58,6 +99,29 @@ python3 scripts/generate_catalog_pages.py
 ```
 
 Script ghi `san-pham/*.html`, `sitemap.xml`, `robots.txt`, `js/catalog-paths.js`, và xóa trang SKU cũ do chính nó sinh ra. Commit các file đó rồi merge `main` để GitHub Pages phát hành. Sitemap: https://vanphatcompany.vn/sitemap.xml. Các bước Semrush và Search Console: [docs/SEO-SEMRUSH.md](docs/SEO-SEMRUSH.md).
+
+## Bán chạy 4 tuần
+
+Khối «Bán chạy 4 tuần qua» và nhãn **Hot** lấy thứ hạng đã tính. Repo này public, nên **không commit file hóa đơn**. Mẫu định dạng (không phải số liệu) nằm ở `data/hoa-don-gtgt/mau/`.
+
+CSV ngoài repo, ngày `YYYY-MM-DD`:
+
+```text
+so_hd,ngay,ma_vp,so_luong,don_gia,thanh_tien
+MAU-1,2026-01-15,VP049,1,14000,14000
+```
+
+JSON cùng khóa, dạng mảng hoặc `{"dong":[...]}`. `thanh_tien` đã gồm VAT. Không ghi tên khách hay nhân viên.
+
+Cách chấm, chỉ chạy trên máy có file nguồn: cửa sổ 28 ngày tính cả ngày chốt. Bỏ dòng không dương, mã không có trang, giá web bằng 0, nhóm «Không đưa lên web». Điểm = 50% hạng phần trăm số lượng + 50% hạng phần trăm doanh thu, vì cái, xấp, ram, hộp không cùng đơn vị. Hòa điểm thì ưu tiên doanh thu, rồi số lượng, rồi mã. Lấy tối đa 10.
+
+`data/ban-chay.json` chỉ có `items[]` với `hang`, `ma`, `ten`, `href`, `gia` (giá bán lẻ trên web). Không có số lượng, doanh thu, điểm, số hóa đơn. Cùng lúc script ghi lại khối HTML tĩnh và schema `ItemList` trên `index.html` để Google đọc được khi JSON đổi. Bốn ảnh đầu của khối dùng `loading="eager"`, không `fetchpriority`. Nhãn máy rộng là «Hot · Bán chạy»; điện thoại chỉ hiện «Hot», aria-label giữ đủ cụm. Script ghi lại `index.html` khi thứ tự mã đổi, hoặc khi tên, link, `data-gia` hay chữ giá đang hiện (ví dụ «69.000 ₫») lệch JSON. Điện thoại: nhãn «Hot» có `title="Hot · Bán chạy"`. Máy rộng không gắn title đó.
+
+```bash
+python3 scripts/rank_ban_chay.py --csv /duong/dan/ngoai/hoadon.csv --as-of 2026-10-31
+```
+
+Hoặc `BAN_CHAY_CSV` trỏ cùng file. Script từ chối đường dẫn nằm trong repo. Không có GitHub Action cho việc này: máy ngoài chạy script mỗi tuần rồi chỉ commit JSON. Trang chủ không ghi nguồn chứng từ.
 
 ## Preview local
 
@@ -84,7 +148,7 @@ Trang nhân viên: http://localhost:8080/nhan-vien.html
 ## Thông tin công ty
 
 - **Tên:** Công ty TNHH Tư vấn Đầu tư Thương mại Vạn Phát
-- **Địa chỉ:** LK 19-06 Đường số 20 KĐT Mỹ Gia, Vĩnh Thái, Phường Nam Nha Trang
+- **Địa chỉ:** LK 19-06 Đường số 20 KĐT Mỹ Gia, Phường Nam Nha Trang
 - **Hotline:** 033 5652 832
 - **Đặt hàng:** thêm vào giỏ trên web, rồi chốt đơn bằng email. Hotline và Zalo vẫn dùng để báo giá.
 

@@ -50,6 +50,8 @@ def iter_html() -> list[Path]:
     for path in ROOT.rglob("*.html"):
         if any(part in SKIP_DIRS for part in path.parts):
             continue
+        if "vp-generated-redirect" in path.read_text(encoding="utf-8", errors="ignore")[:200]:
+            continue
         found.append(path)
     return found
 

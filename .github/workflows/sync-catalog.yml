@@ -1,0 +1,39 @@
+name: sync-catalog
+
+on:
+  schedule:
+    # 14:35 Asia/Ho_Chi_Minh (UTC+7, không đổi giờ mùa)
+    - cron: "35 7 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sync-catalog
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Thư viện Drive và Excel
+        run: python -m pip install --disable-pip-version-check openpyxl google-auth requests
+
+      - name: Đồng bộ catalog và cầu nối LIVE
+        env:
+          GDRIVE_SA_JSON: ${{ secrets.GDRIVE_SA_JSON }}
+          LIVE_BRIDGE_SHEET_ID: ${{ secrets.LIVE_BRIDGE_SHEET_ID }}
+          GH_PUSH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 scripts/run_scheduled_sync.py
