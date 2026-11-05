@@ -283,12 +283,13 @@
     "bridge": "OK 14:22 ICT, 500 rows verified"
   },
   "bridge": {
-    "lastRefreshAt": "2026-11-04 14:44 ICT",
-    "sourceModifiedTime": "2026-11-04T07:28:09.202Z",
-    "bridgeLiveModifiedTime": "2026-10-29T07:43:18.410Z",
+    "lastRefreshAt": "2026-11-05 15:13 ICT",
+    "sourceModifiedTime": "2026-11-05T06:55:05.449Z",
+    "bridgeLiveModifiedTime": "2026-11-05T08:13:00Z",
     "rows_verified": "604 rows (603 SKU), B604=VP603",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "lastVerifiedAt": "2026-11-04 14:44 ICT"
+    "lastVerifiedAt": "2026-11-05 15:13 ICT",
+    "note": "Import Replace OK; Google signed out after verify (không gõ mật khẩu). Tab đóng, không pkill."
   },
   "webSync_20261019": {
     "sourceModifiedTime": "2026-10-19T08:09:17.071Z",
@@ -642,21 +643,31 @@
   },
   "bridgeRefresh": {
     "status": "done",
-    "builtAt": "2026-10-31T14:42:00+07:00",
-    "rows": 590,
-    "skus": 589,
-    "lastMa": "VP589",
+    "at": "2026-11-05T15:13:00+07:00",
+    "builtAt": "2026-11-05T14:46:00+07:00",
+    "rows": 604,
+    "skus": 603,
+    "lastMa": "VP603",
     "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+    "verified": "603 SKU B2:B604, last VP603; tabs DMVT + CSĐT; session signed out after import (ok)",
     "prev": {
       "status": "done",
-      "at": "2026-10-29T14:43:00+07:00",
-      "rows": 589,
-      "lastMa": "VP588",
-      "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
-    },
-    "at": "2026-10-31T14:45:00+07:00",
-    "verified": "590 rows (589 SKU), B590=VP589, VP164=38000; tabs DMVT + CSĐT, xóa tab (1) thừa"
+      "builtAt": "2026-10-31T14:42:00+07:00",
+      "rows": 590,
+      "skus": 589,
+      "lastMa": "VP589",
+      "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
+      "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+      "prev": {
+        "status": "done",
+        "at": "2026-10-29T14:43:00+07:00",
+        "rows": 589,
+        "lastMa": "VP588",
+        "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
+      },
+      "at": "2026-10-31T14:45:00+07:00",
+      "verified": "590 rows (589 SKU), B590=VP589, VP164=38000; tabs DMVT + CSĐT, xóa tab (1) thừa"
+    }
   },
   "webSync_20261026_1443": {
     "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư), export xlsx qua Drive connector",
@@ -818,7 +829,7 @@
     "note": "Không xuất Sheet→Excel.",
     "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
   },
-  "lastSyncNote": "05/11 ~14:40 ICT: Sheet→web chỉ đổi ảnh VP237; không đổi giá/SKU; bridge chờ.",
+  "lastSyncNote": "05/11 14:45–15:13 ICT: Sheet→web chỉ đổi ảnh VP237 (96c144e6, Pages OK); bridge LIVE OK 603 SKU; không đổi giá. Session Google đăng xuất sau import (đã xong, không cần báo).",
   "webSync_20261030_1435": {
     "source": "Google Sheet (Danh Mục Vật Tư), export xlsx qua Drive connector (chỉ đọc)",
     "sourceModifiedTime": "2026-10-30T06:52:09.701Z",
@@ -984,6 +995,9 @@
     "zeroPrice_count": 40,
     "zeroPriceNew": [],
     "excluded_khong_dua_len_web": 36,
-    "commit": "pending"
+    "commit": "96c144e6",
+    "pages": "built 2026-11-05T07:45:16Z",
+    "bridge": "OK 15:13 ICT 603 SKU VP603",
+    "google_signed_out_after": true
   }
 }
