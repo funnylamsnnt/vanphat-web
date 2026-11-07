@@ -11,11 +11,13 @@ Cụm này nằm ở `data/ia.json` → `excludeGroups`. Script sync còn luôn 
 
 Không được xuất hiện ở:
 
-- `data/products.json` (kể cả tìm kiếm, vì `san-pham.html` đọc file này)
-- trang SKU `san-pham/<slug>.html`
-- trang nhóm và trang lĩnh vực
-- `js/catalog-paths.js`
+- `data/products.json` (kể cả giá, ảnh và tìm kiếm, vì `san-pham.html` đọc file này)
+- `data/ban-chay.json`
+- trang SKU `san-pham/<slug>.html`, trang chuyển hướng, trang nhóm và trang lĩnh vực
+- tên file ảnh
+- `js/catalog-paths.js` và các file `js/*.js` khách tải
 - `sitemap.xml`
+- danh sách cache trong `sw.js`
 
 Mã đang có trên web mà nguồn gán sang nhóm này: xóa khỏi catalog, xóa trang SKU, sinh lại sitemap và path map trong cùng lượt, ghi danh sách mã đã gỡ trong PR.
 

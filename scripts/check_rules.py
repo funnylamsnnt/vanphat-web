@@ -133,6 +133,49 @@ def line_of(text: str, index: int) -> int:
     return text.count("\n", 0, index) + 1
 
 
+PUBLIC_DATA = (
+    "data/products.json",
+    "data/ban-chay.json",
+    "data/descriptions.json",
+    "data/redirects.json",
+    "data/local-pages.json",
+    "js/catalog-paths.js",
+    "js/products.js",
+    "sitemap.xml",
+    "sw.js",
+)
+IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"}
+SKIP_PUBLIC = {".git", "node_modules", "__pycache__", "scripts", "apps-script", ".github", ".cursor"}
+
+
+def public_output_files() -> list[Path]:
+    """File khách tải được: JSON giá/ảnh, trang, sitemap, chỉ mục tìm, bán chạy, cache SW."""
+    found: list[Path] = []
+    seen: set[str] = set()
+
+    def add(path: Path) -> None:
+        if not path.is_file():
+            return
+        rel = path.relative_to(ROOT).as_posix()
+        if rel in seen or any(part in SKIP_PUBLIC for part in path.parts):
+            return
+        seen.add(rel)
+        found.append(path)
+
+    for rel in PUBLIC_DATA:
+        add(ROOT / rel)
+    js_dir = ROOT / "js"
+    if js_dir.is_dir():
+        for path in js_dir.glob("*.js"):
+            add(path)
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or any(part in SKIP_PUBLIC for part in path.parts):
+            continue
+        if path.suffix.lower() == ".html" or path.suffix.lower() in IMAGE_EXT:
+            add(path)
+    return found
+
+
 def check_excluded(errors: list[str], skus: list[str]) -> int:
     ia = load_ia()
     folds = exclude_group_folds(ia)
@@ -154,25 +197,18 @@ def check_excluded(errors: list[str], skus: list[str]) -> int:
         return len(data.get("sanpham") or [])
 
     pat = sku_pattern(skus)
-    targets: list[Path] = [
-        products_path,
-        ROOT / "data" / "descriptions.json",
-        ROOT / "js" / "catalog-paths.js",
-        ROOT / "sitemap.xml",
-        *iter_html(),
-    ]
-    for path in targets:
-        if not path.is_file():
-            continue
+    for path in public_output_files():
         rel = path.relative_to(ROOT).as_posix()
         name_hit = pat.search(path.name)
         if name_hit:
             errors.append(f"{rel}: tên file chứa mã {name_hit.group(0).upper()}")
+        if path.suffix.lower() in IMAGE_EXT:
+            continue
         text = path.read_text(encoding="utf-8", errors="replace")
         hit = pat.search(text)
         if hit:
             errors.append(
-                f"{rel}:{line_of(text, hit.start())}: mã loại trừ {hit.group(0).upper()}"
+                f"{rel}:{line_of(text, hit.start())}: mã loại trừ {hit.group(0).upper()} trên bản công khai"
             )
     return len(data.get("sanpham") or [])
 
@@ -411,6 +447,16 @@ def self_test() -> None:
         raise SystemExit("self-test: không bắt tên file vp415")
     if pat.search("VP4150") or pat.search("san-pham/vp4150-khac.html"):
         raise SystemExit("self-test: bắt nhầm mã dài hơn")
+    for rel in ("data/products.json", "data/ban-chay.json", "sitemap.xml", "js/catalog-paths.js", "sw.js"):
+        if rel not in PUBLIC_DATA:
+            raise SystemExit(f"self-test: bản công khai thiếu {rel}")
+    for sample in (
+        '{"ma":"VP415","gia":1000,"anh":"vp415.jpg"}',
+        'SHELL_URLS = ["/san-pham/vp415-noi-bo.html"]',
+        '"href": "san-pham/vp415-noi-bo.html"',
+    ):
+        if not pat.search(sample):
+            raise SystemExit("self-test: không bắt mã nội bộ trên JSON, cache hoặc chỉ mục")
     html = '<article class="product-card product-detail" data-ma="VP1"><div class="product-img"></div></article>'
     attrs, body = ARTICLE_RE.findall(html)[0]
     if "data-product-zoom" in attrs + body:
