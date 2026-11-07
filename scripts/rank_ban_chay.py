@@ -33,7 +33,11 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from generate_catalog_pages import SITE, badge_text, build_ia, card_html, format_price, price_amount  # noqa: E402
-from sync_products_from_excel import exclude_group_folds, is_excluded_nhom  # noqa: E402
+from sync_products_from_excel import (  # noqa: E402
+    exclude_group_folds,
+    excluded_codes_from_state,
+    is_excluded_nhom,
+)
 
 WINDOW_DAYS = 28
 TOP_N = 10
@@ -282,8 +286,13 @@ def rank_lines(
     paths: dict,
     root: Path,
     as_of: date,
+    blocked_codes: set[str] | None = None,
 ) -> dict:
     start, end = window_for(as_of)
+    if blocked_codes is None:
+        blocked = excluded_codes_from_state(root / "scripts" / "sync_state.json")
+    else:
+        blocked = {str(code or "").strip().upper() for code in blocked_codes if str(code or "").strip()}
     qty: dict[str, Decimal] = defaultdict(lambda: Decimal(0))
     revenue: dict[str, int] = defaultdict(int)
     zero_only: set[str] = set()
@@ -321,7 +330,7 @@ def rank_lines(
         if product is None or not page_exists(root, href):
             skipped_web.append(ma)
             continue
-        if is_excluded_nhom(str(product.get("nhom") or ""), phrases):
+        if ma in blocked or is_excluded_nhom(str(product.get("nhom") or ""), phrases):
             skipped_group.append(ma)
             continue
         if price_amount(product.get("gia")) is None:
@@ -540,10 +549,13 @@ def sync_home(root: Path, payload: dict, by_ma: dict, ia: dict, paths: dict) -> 
     return True
 
 
-def public_payload(ranked: dict) -> dict:
-    """Chỉ hạng, mã, tên, link, giá bán lẻ. Không số lượng, doanh thu, điểm."""
+def public_payload(ranked: dict, blocked_codes: set[str] | None = None) -> dict:
+    """Chỉ hạng, mã, tên, link, giá bán lẻ. Không số lượng, doanh thu, điểm, không mã nội bộ."""
+    blocked = {str(code or "").strip().upper() for code in (blocked_codes or set()) if str(code or "").strip()}
     items = []
     for item in ranked["items"]:
+        if str(item.get("ma") or "").strip().upper() in blocked:
+            continue
         items.append({key: item[key] for key in PUBLIC_ITEM_KEYS})
     return {"items": items}
 
@@ -571,8 +583,9 @@ def csv_paths_from(args_csv: list[str], env_value: str, root: Path) -> list[Path
 def write_outputs(root: Path, as_of: date, files: list[Path]) -> dict:
     lines, _dup = load_lines(files)
     by_ma, ia, extra = load_catalog(root)
-    ranked = rank_lines(lines, by_ma, extra["phrases"], extra["paths"], root, as_of)
-    payload = public_payload(ranked)
+    blocked = excluded_codes_from_state(root / "scripts" / "sync_state.json")
+    ranked = rank_lines(lines, by_ma, extra["phrases"], extra["paths"], root, as_of, blocked)
+    payload = public_payload(ranked, blocked)
     text = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
     out = root / "data" / "ban-chay.json"
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -361,6 +361,59 @@ def assert_exclusion_rules() -> None:
             raise SystemExit(f"exclusion false positive {sample!r}")
     if nhom_key("  ") or nhom_key("Khác") == "":
         raise SystemExit("blank nhóm must not be renamed before the exclusion check")
+    sample_rows = [
+        {"ma": "VP415", "nhom": "Giấy", "gia": 1000, "anh": "https://example.test/vp415.jpg"},
+        {"ma": "vp1", "nhom": "Giấy", "gia": 2000},
+        {"ma": "VP9", "nhom": "Không đưa lên web (nội bộ)", "gia": 5, "anh": "x"},
+    ]
+    kept = drop_internal_products(sample_rows, {"vp415"}, phrases)
+    if [row["ma"] for row in kept] != ["vp1"]:
+        raise SystemExit("drop_internal_products must remove internal codes before write")
+
+
+def excluded_codes_from_state(path: Path | None = None) -> set[str]:
+    """Mã trong lastSyncResult.excluded_nhom. Thiếu file thì tập rỗng."""
+    state_path = path or (ROOT / "scripts" / "sync_state.json")
+    if not state_path.is_file():
+        return set()
+    try:
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return set()
+    result = state.get("lastSyncResult") if isinstance(state, dict) else None
+    groups = result.get("excluded_nhom") if isinstance(result, dict) else None
+    if not isinstance(groups, dict):
+        return set()
+    codes: set[str] = set()
+    for values in groups.values():
+        if not isinstance(values, list):
+            continue
+        for code in values:
+            text = str(code or "").strip().upper()
+            if text:
+                codes.add(text)
+    return codes
+
+
+def drop_internal_products(products: list[dict], codes: set[str] | None = None, phrases: set | None = None) -> list[dict]:
+    """Bỏ mã nội bộ trước khi ghi JSON, trang, sitemap hay bảng bán chạy.
+
+    Một mã bị bỏ khi nằm trong excluded_nhom, hoặc nhóm khớp Không đưa lên web.
+    Giá và ảnh của mã đó không được ghi theo.
+    """
+    blocked = codes if codes is not None else excluded_codes_from_state()
+    blocked = {str(code or "").strip().upper() for code in blocked if str(code or "").strip()}
+    if phrases is None:
+        phrases = exclude_group_folds(load_ia())
+    kept = []
+    for product in products:
+        ma = str(product.get("ma") or "").strip().upper()
+        if ma and ma in blocked:
+            continue
+        if is_excluded_nhom(str(product.get("nhom") or ""), phrases):
+            continue
+        kept.append(product)
+    return kept
 
 
 def load_previous(out_json: Path) -> dict:
@@ -485,11 +538,14 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         products.append(record)
     wb.close()
 
+    blocked = {str(ma).strip().upper() for codes in excluded.values() for ma in codes}
+    blocked |= excluded_codes_from_state()
+    products = drop_internal_products(products, blocked, excl_folds)
     by = {}
     for p in products:
         by[p["ma"]] = p
     products = list(by.values())
-    leaked = [p["ma"] for p in products if is_excluded_nhom(p.get("nhom") or "", excl_folds)]
+    leaked = [p["ma"] for p in products if is_excluded_nhom(p.get("nhom") or "", excl_folds) or str(p.get("ma") or "").strip().upper() in blocked]
     if leaked:
         raise SystemExit(f"Excluded nhóm leaked into web catalog: {leaked}")
 
@@ -612,6 +668,7 @@ def main():
 
 assert_optional_columns()
 assert_placement_rules()
+assert_exclusion_rules()
 
 if __name__ == "__main__":
     main()

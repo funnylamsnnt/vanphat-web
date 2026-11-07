@@ -3530,12 +3530,16 @@ def main() -> None:
     products_path = Path(args.products)
     data = load_products(products_path)
     ia = build_ia(data)
-    excl = excluded_nhom_keys()
-    dropped = [p.get("ma") for p in data["sanpham"] if nhom_is_excluded(str(p.get("nhom") or ""), excl)]
-    if dropped:
-        print("excludeGroups: not publishing", ", ".join(map(str, dropped)))
-    products = [p for p in data["sanpham"] if not nhom_is_excluded(str(p.get("nhom") or ""), excl)]
+    from sync_products_from_excel import drop_internal_products
+
+    raw_products = list(data.get("sanpham") or [])
+    products = drop_internal_products(raw_products)
+    kept_ids = {id(product) for product in products}
+    dropped = [str(product.get("ma")) for product in raw_products if id(product) not in kept_ids and product.get("ma")]
     data["sanpham"] = products
+    if dropped:
+        print("excludeGroups: not publishing", ", ".join(dropped))
+        products_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     for product in products:
         annotate_product(product, ia)
     sync_descriptions(products)

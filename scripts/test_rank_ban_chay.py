@@ -30,7 +30,11 @@ from rank_ban_chay import (  # noqa: E402
     refuse_kiot_bill,
     window_for,
 )
-from sync_products_from_excel import exclude_group_folds  # noqa: E402
+from sync_products_from_excel import (  # noqa: E402
+    drop_internal_products,
+    exclude_group_folds,
+    excluded_codes_from_state,
+)
 
 AS_OF = date(2026, 10, 31)
 
@@ -207,6 +211,53 @@ class RankTests(unittest.TestCase):
         self.assertIn("VPZ", ranked["skipped_group"])
         self.assertEqual(ranked["outside"], 1)
         self.assertIn("VP0", ranked["zero_only"])
+
+    def test_internal_code_dropped_before_public_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._page(root, "san-pham/a.html")
+            self._page(root, "san-pham/b.html")
+            ranked = rank_lines(
+                [line("VP1", 2, 1000), line("VP415", 9, 5000)],
+                {
+                    "VP1": {"ma": "VP1", "ten": "Có web", "dvt": "Cái", "gia": 1000, "nhom": "Giấy"},
+                    "VP415": {
+                        "ma": "VP415",
+                        "ten": "Nội bộ",
+                        "dvt": "Cái",
+                        "gia": 5000,
+                        "nhom": "Giấy",
+                        "anh": "https://example.test/vp415.jpg",
+                    },
+                },
+                exclude_group_folds({}),
+                {"product": {"VP1": "san-pham/a.html", "VP415": "san-pham/b.html"}, "category": {}},
+                root,
+                AS_OF,
+                blocked_codes={"vp415"},
+            )
+            self.assertEqual([item["ma"] for item in ranked["items"]], ["VP1"])
+            self.assertIn("VP415", ranked["skipped_group"])
+            payload = public_payload(ranked, {"VP415"})
+            blob = json.dumps(payload)
+            self.assertNotIn("VP415", blob)
+            self.assertNotIn("5000", blob)
+            kept = drop_internal_products(
+                [
+                    {"ma": "VP415", "nhom": "Giấy", "gia": 5000, "anh": "vp415.jpg"},
+                    {"ma": "VP1", "nhom": "Giấy", "gia": 1000, "anh": "a.jpg"},
+                ],
+                {"VP415"},
+                exclude_group_folds({}),
+            )
+            self.assertEqual([item["ma"] for item in kept], ["VP1"])
+            state = root / "scripts" / "sync_state.json"
+            state.parent.mkdir(parents=True)
+            state.write_text(
+                json.dumps({"lastSyncResult": {"excluded_nhom": {"Không đưa lên web": ["VP571"]}}}),
+                encoding="utf-8",
+            )
+            self.assertEqual(excluded_codes_from_state(state), {"VP571"})
 
     def test_sample_files_are_ignored(self):
         with tempfile.TemporaryDirectory() as tmp:
