@@ -38,6 +38,7 @@ from sync_products_from_excel import exclude_group_folds, is_excluded_nhom  # no
 WINDOW_DAYS = 28
 TOP_N = 10
 COLUMNS = ("so_hd", "ngay", "ma_vp", "so_luong", "don_gia", "thanh_tien")
+KIOT_NAME_RE = re.compile(r"(^bills_thang|kiot)", re.I)
 SAMPLE_MARK = "DỮ LIỆU MẪU"
 PUBLIC_ITEM_KEYS = ("hang", "ma", "ten", "href", "gia")
 HOME_BEGIN = "<!-- vp-ban-chay -->"
@@ -133,6 +134,12 @@ def parse_row(raw: dict, path: Path, row_no: int) -> dict:
     }
 
 
+def refuse_kiot_bill(path: Path) -> None:
+    """Nguồn là dòng hóa đơn GTGT. Bill KiotViet không được xếp."""
+    if any(KIOT_NAME_RE.search(part) for part in path.parts):
+        raise ValueError(f"{path.as_posix()}: không xếp từ bill KiotViet")
+
+
 def is_sample_file(path: Path) -> bool:
     if "mau" in path.parts:
         return True
@@ -167,6 +174,7 @@ def iter_source_files(directory: Path) -> list[Path]:
 
 
 def _csv_rows(path: Path) -> list[dict]:
+    refuse_kiot_bill(path)
     kept = []
     for line in path.read_text(encoding="utf-8-sig").splitlines():
         stripped = line.strip()
@@ -190,6 +198,7 @@ def _csv_rows(path: Path) -> list[dict]:
 
 
 def _json_rows(path: Path) -> list[dict]:
+    refuse_kiot_bill(path)
     data = json.loads(path.read_text(encoding="utf-8-sig"))
     if isinstance(data, dict):
         if data.get("mau") is True:

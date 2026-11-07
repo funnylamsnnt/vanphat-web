@@ -121,7 +121,7 @@ Cách chấm, chỉ chạy trên máy có file nguồn: cửa sổ 28 ngày tín
 python3 scripts/rank_ban_chay.py --csv /duong/dan/ngoai/hoadon.csv --as-of 2026-10-31
 ```
 
-Hoặc `BAN_CHAY_CSV` trỏ cùng file. Script từ chối đường dẫn nằm trong repo. Không có GitHub Action cho việc này: máy ngoài chạy script mỗi tuần rồi chỉ commit JSON. Trang chủ không ghi nguồn chứng từ.
+Hoặc `BAN_CHAY_CSV` trỏ cùng file. Script từ chối đường dẫn nằm trong repo, và từ chối file bill KiotViet (`bills_thang*`, tên có `kiot`). Không có GitHub Action cho việc này: máy ngoài chạy script mỗi tuần, lịch thứ Hai giờ Việt Nam, rồi chỉ commit JSON và khối trang chủ. Test không khóa danh sách mã của một tuần cũ; vẫn bắt schema công khai, trang chủ khớp JSON, và không lộ số lượng hay doanh thu. Trang chủ không ghi nguồn chứng từ.
 
 ## Preview local
 
