@@ -394,6 +394,13 @@ class RepoContractTests(unittest.TestCase):
         self.assertIn("secrets.LIVE_BRIDGE_SHEET_ID", text)
         self.assertIn("secrets.GH_PUSH_TOKEN", text)
         self.assertIn("persist-credentials: false", text)
+        self.assertIn("group: sync-catalog", text)
+        self.assertIn("cancel-in-progress: false", text)
+        runner = (ROOT / "scripts" / "run_scheduled_sync.py").read_text(encoding="utf-8")
+        schedule = (ROOT / "scripts" / "sync_schedule.py").read_text(encoding="utf-8")
+        self.assertIn("Cầu nối lệch số SKU", runner)
+        self.assertIn("delta != 0 or sku < 1", schedule)
+        self.assertIn("check_title", schedule)
         self.assertNotIn("everyMinutes", text)
         self.assertNotIn("1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM", text)
 

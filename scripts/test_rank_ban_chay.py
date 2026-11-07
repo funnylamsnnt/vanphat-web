@@ -17,6 +17,7 @@ from generate_catalog_pages import card_html  # noqa: E402
 from rank_ban_chay import (  # noqa: E402
     PUBLIC_ITEM_KEYS,
     is_sample_file,
+    itemlist_markup,
     should_write_home,
     iter_source_files,
     load_lines,
@@ -26,11 +27,53 @@ from rank_ban_chay import (  # noqa: E402
     percent_ranks,
     public_payload,
     rank_lines,
+    refuse_kiot_bill,
     window_for,
 )
 from sync_products_from_excel import exclude_group_folds  # noqa: E402
 
 AS_OF = date(2026, 10, 31)
+
+
+def public_top_errors(payload: dict, index: str, root: Path) -> list[str]:
+    """Schema, quyền riêng tư, và trang chủ khớp JSON. Không khóa mã của một tuần."""
+    errors = []
+    if set(payload) != {"items"}:
+        errors.append("chỉ được có khóa items")
+    items = payload.get("items")
+    if not isinstance(items, list) or not 1 <= len(items) <= 10:
+        errors.append("cần từ 1 đến 10 mã")
+        return errors
+    seen = set()
+    for index_no, item in enumerate(items, start=1):
+        if not isinstance(item, dict) or set(item) != set(PUBLIC_ITEM_KEYS):
+            errors.append(f"hạng {index_no} sai khóa")
+            continue
+        if item.get("hang") != index_no:
+            errors.append(f"hạng {index_no} không liên tục")
+        ma = str(item.get("ma") or "")
+        if not ma.startswith("VP") or not ma[2:].isdigit() or ma in seen:
+            errors.append(f"mã không hợp lệ: {ma}")
+        seen.add(ma)
+        if not str(item.get("ten") or "").strip():
+            errors.append(f"{ma} thiếu tên")
+        gia = item.get("gia")
+        if not isinstance(gia, int) or gia <= 0:
+            errors.append(f"{ma} giá không dương")
+        href = str(item.get("href") or "")
+        if not href.startswith("san-pham/") or not href.endswith(".html"):
+            errors.append(f"{ma} link không phải trang sản phẩm")
+        elif not (root / href).is_file():
+            errors.append(f"{ma} thiếu file {href}")
+        if href and f"https://vanphatcompany.vn/{href}" not in index:
+            errors.append(f"{ma} thiếu URL schema")
+    blob = json.dumps(payload, ensure_ascii=False)
+    for banned in ("soLuong", "doanhThu", "diem", "so_hd", "so_luong", "doanh_thu", "thanh_tien"):
+        if banned in blob:
+            errors.append(f"lộ {banned}")
+    if should_write_home(index, payload):
+        errors.append("trang chủ lệch mã, tên, link hoặc giá")
+    return errors
 
 
 def line(ma, qty, price, ngay="2026-10-20", so_hd="1", thanh=None):
@@ -264,12 +307,8 @@ class RankTests(unittest.TestCase):
 
     def test_published_json_is_public_top_10(self):
         disk = json.loads((ROOT / "data" / "ban-chay.json").read_text(encoding="utf-8"))
-        self.assertEqual(
-            [item["ma"] for item in disk["items"]],
-            ["VP206", "VP098", "VP327", "VP211", "VP337", "VP336", "VP160", "VP138", "VP087", "VP132"],
-        )
-        self.assertTrue(all(set(item) == set(PUBLIC_ITEM_KEYS) and item["gia"] > 0 for item in disk["items"]))
         index = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(public_top_errors(disk, index, ROOT), [])
         block = index.split("<!-- vp-ban-chay -->", 1)[1].split("<!-- /vp-ban-chay -->", 1)[0]
         self.assertIn("Bán chạy 4 tuần qua", block)
         self.assertIn("Hot · Bán chạy", block)
@@ -277,9 +316,6 @@ class RankTests(unittest.TestCase):
         self.assertNotIn("Hóa đơn", block)
         self.assertNotIn("GTGT", block)
         self.assertNotIn("đã bán", block.lower())
-        for item in disk["items"]:
-            self.assertIn(item["href"], index)
-            self.assertIn(f"https://vanphatcompany.vn/{item['href']}", index)
         self.assertIn('id="ban-chay-ld"', index)
         self.assertIn('"@type": "ItemList"', index)
         sample = ROOT / "data" / "hoa-don-gtgt" / "mau" / "hoa-don-gtgt-mau.csv"
@@ -289,10 +325,67 @@ class RankTests(unittest.TestCase):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("BAN_CHAY_CSV", readme)
         self.assertIn("ngoài repo", readme)
+        self.assertIn("máy ngoài", readme)
+        self.assertIn("thứ Hai", readme)
+        self.assertNotIn("cron:", readme.split("## Bán chạy", 1)[-1].split("## ", 1)[0])
         self.assertIn("product-hot-short", block)
         self.assertIn('class="product-hot-short" title="Hot · Bán chạy"', block)
         self.assertNotIn('class="product-hot" aria-label="Hot · Bán chạy" title=', block)
         self.assertNotIn("fetchpriority", block)
+
+    def test_shape_accepts_a_different_top_10(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            href = "san-pham/vp999-hang-moi.html"
+            self._page(root, href)
+            product = {"ma": "VP999", "ten": "Hàng mới", "gia": 15000, "dvt": "Cái", "anh": "", "nhom": "Giấy"}
+            card = card_html(product, href, "san-pham/nhom-giay.html", "VPP", hot=True, image_loading="eager")
+            page = (
+                "<!-- vp-ban-chay -->\n"
+                + card
+                + "\n<!-- /vp-ban-chay -->\n"
+                + itemlist_markup([{"hang": 1, "ma": "VP999", "ten": "Hàng mới", "href": href}])
+            )
+            payload = {
+                "items": [{"hang": 1, "ma": "VP999", "ten": "Hàng mới", "href": href, "gia": 15000}]
+            }
+            self.assertEqual(public_top_errors(payload, page, root), [])
+            self.assertNotEqual(payload["items"][0]["ma"], "VP206")
+            drifted = {"items": [dict(payload["items"][0], gia=16000)]}
+            self.assertTrue(public_top_errors(drifted, page, root))
+
+    def test_kiot_bill_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            kiot = base / "bills_thang10.json"
+            kiot.write_text(
+                json.dumps([{"code": "VP1", "quantity": 10, "price": 1000}]),
+                encoding="utf-8",
+            )
+            with self.assertRaises(ValueError) as caught:
+                load_lines([kiot])
+            self.assertIn("KiotViet", str(caught.exception))
+            nested = base / "kiotviet" / "lines.csv"
+            nested.parent.mkdir()
+            nested.write_text(
+                "so_hd,ngay,ma_vp,so_luong,don_gia,thanh_tien\n1,2026-10-20,VP1,1,10,10\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(ValueError):
+                refuse_kiot_bill(nested)
+            gtgt = base / "hoadon_lines_202611.csv"
+            gtgt.write_text(
+                "so_hd,ngay,ma_vp,so_luong,don_gia,thanh_tien\n1,2026-10-20,VP1,2,10,20\n",
+                encoding="utf-8",
+            )
+            lines, dups = load_lines([gtgt])
+            self.assertEqual(dups, 0)
+            self.assertEqual(lines[0]["ma"], "VP1")
+            bare = base / "bill-khac.csv"
+            bare.write_text("code,quantity,price\nVP1,1,10\n", encoding="utf-8")
+            with self.assertRaises(ValueError) as missing:
+                load_lines([bare])
+            self.assertIn("thiếu cột", str(missing.exception))
 
     def test_home_rewrite_when_price_name_or_link_differs(self):
         def card(ma, ten, gia, href, shown=None):
