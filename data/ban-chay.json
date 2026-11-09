@@ -9,66 +9,66 @@
     },
     {
       "hang": 2,
-      "ma": "VP098",
-      "ten": "Bìa nút F4 (My Clear A4)",
-      "href": "san-pham/vp098-bia-nut-f4-my-clear-a4.html",
-      "gia": 3500
+      "ma": "VP072",
+      "ten": "Bìa còng 9F Plus",
+      "href": "san-pham/vp072-bia-cong-9f-plus.html",
+      "gia": 64000
     },
     {
       "hang": 3,
-      "ma": "VP327",
-      "ten": "Note nhựa 5 màu (Pronoti)",
-      "href": "san-pham/vp327-note-nhua-5-mau-pronoti.html",
-      "gia": 13000
-    },
-    {
-      "hang": 4,
-      "ma": "VP211",
-      "ten": "Giấy A4 70 gsm Supreme",
-      "href": "san-pham/vp211-giay-a4-70-gsm-supreme.html",
-      "gia": 69000
-    },
-    {
-      "hang": 5,
       "ma": "VP337",
       "ten": "Nước suối Vikoda (500ml)",
       "href": "san-pham/vp337-nuoc-suoi-vikoda-500ml.html",
       "gia": 6000
     },
     {
-      "hang": 6,
+      "hang": 4,
       "ma": "VP336",
       "ten": "Nước suối Vikoda (350ml)",
       "href": "san-pham/vp336-nuoc-suoi-vikoda-350ml.html",
       "gia": 5000
     },
     {
+      "hang": 5,
+      "ma": "VP211",
+      "ten": "Giấy A4 70 gsm Supreme",
+      "href": "san-pham/vp211-giay-a4-70-gsm-supreme.html",
+      "gia": 69000
+    },
+    {
+      "hang": 6,
+      "ma": "VP327",
+      "ten": "Note nhựa 5 màu (Pronoti)",
+      "href": "san-pham/vp327-note-nhua-5-mau-pronoti.html",
+      "gia": 13000
+    },
+    {
       "hang": 7,
-      "ma": "VP160",
-      "ten": "Bút xóa TL-CP02 (hộp 10c)",
-      "href": "san-pham/vp160-but-xoa-tl-cp02-hop-10c.html",
-      "gia": 22000
+      "ma": "VP282",
+      "ten": "Kẹp bướm 25mm (G-Star)",
+      "href": "san-pham/vp282-kep-buom-25mm-g-star.html",
+      "gia": 10000
     },
     {
       "hang": 8,
-      "ma": "VP138",
-      "ten": "Bút Gel TL B-011 (Hộp 20)",
-      "href": "san-pham/vp138-but-gel-tl-b-011-hop-20.html",
-      "gia": 7000
+      "ma": "VP210",
+      "ten": "Giấy A4 70 gsm Smartis",
+      "href": "san-pham/vp210-giay-a4-70-gsm-smartis.html",
+      "gia": 63000
     },
     {
       "hang": 9,
-      "ma": "VP087",
-      "ten": "Bìa lá A4 88-V20",
-      "href": "san-pham/vp087-bia-la-a4-88-v20.html",
-      "gia": 1900
+      "ma": "VP120",
+      "ten": "Bút bi TL-027 (Xanh)",
+      "href": "san-pham/vp120-but-bi-tl-027-xanh.html",
+      "gia": 4500
     },
     {
       "hang": 10,
-      "ma": "VP132",
-      "ten": "Bút dạ quang HL-012 (hộp 10)",
-      "href": "san-pham/vp132-but-da-quang-hl-012-hop-10.html",
-      "gia": 11000
+      "ma": "VP098",
+      "ten": "Bìa nút F4 (My Clear A4)",
+      "href": "san-pham/vp098-bia-nut-f4-my-clear-a4.html",
+      "gia": 3500
     }
   ]
 }
