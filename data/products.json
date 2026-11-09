@@ -2801,7 +2801,7 @@
       "ten": "Hồ khô HQ 8g",
       "dvt": "Lọ",
       "gia": 6000,
-      "anh": "",
+      "anh": "https://lh3.googleusercontent.com/d/1z8RkBjxT1YQR8t-CVG1rJUPudHg5Zykz",
       "ton": 0
     },
     {
@@ -5406,6 +5406,30 @@
       "ton": 100
     },
     {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP604",
+      "ten": "Búa đóng ghim",
+      "dvt": "Cái",
+      "gia": 60000,
+      "anh": "",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP605",
+      "ten": "Phiếu xuất kho",
+      "dvt": "Quyển",
+      "gia": 5000,
+      "anh": "",
+      "ton": 0
+    },
+    {
       "nhom": "Điện",
       "nhomId": "dien",
       "linhVucId": "dien-gia-dung",
@@ -7265,5 +7289,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261105_1436.xlsx"
+  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
 }

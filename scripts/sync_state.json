@@ -102,7 +102,7 @@
     }
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
-  "lastCheckAt": "2026-10-30T07:40:00Z",
+  "lastCheckAt": "2026-11-08T07:45:00Z",
   "lastCheckResult": "10:3x ICT 28/10 (routine Kiểm tra web): Sheet đổi giá 24 mã Kem VP543–VP566, tên VP543/VP549 -> commit f56cf8c0 + chuyển hướng 2 slug cũ; bridge LIVE CHƯA refresh (cần trình duyệt) — lượt 14:35 làm bridge.",
   "driveTitleAtSync": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "sourceTitleGuard": "Abort sync (exit 3) if Drive title is .tmp or not PHIEU BAO GIA VAN PHAT - 2026.xlsx",
@@ -679,7 +679,7 @@
     "type": "google_sheet",
     "fileId": "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM",
     "title": "PHIEU BAO GIA VAN PHAT - 2026",
-    "modifiedTime": "2026-11-05T06:55:05.449Z"
+    "modifiedTime": "2026-11-07T06:55:07.403Z"
   },
   "bridgeRefresh": {
     "status": "done",
@@ -1039,5 +1039,64 @@
     "pages": "built 2026-11-05T07:45:16Z",
     "bridge": "OK 15:13 ICT 603 SKU VP603",
     "google_signed_out_after": true
+  },
+  "webSync_20261106_1440": {
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư), tải xlsx qua Drive connector (chỉ đọc)",
+    "sourceModifiedTime": "2026-11-06T06:51:50.822Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261106_1440.xlsx",
+    "log": "/workspace/vanphat-sync/_sync_run_20261106_1440.log",
+    "count": 567,
+    "with_img": 444,
+    "added": [],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "imageChanges": [],
+    "zeroPrice_count": 40,
+    "zeroPriceNew": [],
+    "autoPlacedGroups": [],
+    "excluded_khong_dua_len_web": 36,
+    "webDataChanged": false,
+    "commit": null,
+    "note": "Sheet đổi ngoài các cột web dùng; chỉ syncedFrom + lastmod sitemap đổi → hoàn tác, không push. Live products.json == local (567); /, san-pham + 3 lĩnh vực 200; VP415 404. Không xuất Sheet→Excel.",
+    "bridge": "không cần import: _UPLOAD_BRIDGE.xlsx dựng lại 604 dòng (603 SKU, cuối VP603) trùng hoàn toàn LIVE bridge export _live_bridge_20261106_1440.xlsx"
+  },
+  "webSync_20261107_1437": {
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư + Chính Sách Đối Tác), đọc giá trị qua Google Sheets connector (chỉ đọc), dựng xlsx cục bộ từ khung bản 06/11 (không xuất Sheet→Excel trên Drive)",
+    "sourceModifiedTime": "2026-11-07T06:55:07.403Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261107_1437.xlsx",
+    "log": "/workspace/vanphat-sync/_sync_run_20261107_1437.log",
+    "count": 567,
+    "with_img": 444,
+    "added": [],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "imageChanges": [],
+    "zeroPrice_count": 40,
+    "zeroPriceNew": [],
+    "autoPlacedGroups": [],
+    "excluded_khong_dua_len_web": 36,
+    "webDataChanged": false,
+    "commit": null,
+    "note": "Sheet đổi ngoài các cột web dùng; chỉ syncedFrom + lastmod sitemap đổi → hoàn tác, không push. Live products.json == local (567); /, san-pham + 3 lĩnh vực 200; VP415 404.",
+    "bridge": "không cần import: DMVT A–F 604 dòng (603 SKU) và tab Chính Sách Đối Tác trùng hoàn toàn LIVE bridge export _live_bridge_20261106_1440.xlsx"
+  },
+  "webSync_20261108_1438": {
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư + Chính Sách Đối Tác), đọc giá trị qua Google Sheets connector (chỉ đọc), không xuất Sheet→Excel",
+    "sourceModifiedTime": "2026-11-08T06:52:49.553Z",
+    "count": 567,
+    "excluded_khong_dua_len_web": 36,
+    "source_count": 603,
+    "added": [],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "imageChanges": [],
+    "zeroPriceNew": [],
+    "webDataChanged": false,
+    "commit": null,
+    "note": "Sheet A–F 603 mã trùng live products.json (567 SKU, 0 lệch giá/tên/ĐVT/nhóm/ảnh) và trùng bản 07/11 → không chạy generator, không push.",
+    "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
   }
 }
