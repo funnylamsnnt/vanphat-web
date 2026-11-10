@@ -5411,10 +5411,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP604",
-      "ten": "Búa đóng ghim",
+      "ten": "Búa cao su cán gỗ",
       "dvt": "Cái",
-      "gia": 60000,
-      "anh": "",
+      "gia": 45000,
+      "anh": "https://lh3.googleusercontent.com/d/1xu9fEWKQuhOWqhhLlVx_5TK5cNlz-vNr",
       "ton": 0
     },
     {
@@ -5425,8 +5425,8 @@
       "ma": "VP605",
       "ten": "Phiếu xuất kho",
       "dvt": "Quyển",
-      "gia": 5000,
-      "anh": "",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1C7xscb20o_HC1HLIL66VzbTmPIUGq01u",
       "ton": 0
     },
     {
@@ -7289,5 +7289,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
+  "syncedFrom": "source_sheet_20261110_1445.xlsx"
 }
