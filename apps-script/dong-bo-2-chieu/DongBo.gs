@@ -136,6 +136,7 @@ function dongBoTrongKhoa_(deps, opts, now) {
     var daChep = chepBuGiuNhiPhan_(filesMoi, excelPack.files);
     var kiem = kiemXuatTuFiles_(daChep.filesXml, catalogTuExcel_(excelPack.moHinh));
     if (!kiem.ok) return ketDung_(deps, 'đã ghi Sheet nhưng chưa ghi Excel: ' + kiem.errs.join(' || '));
+    chuanHoaNgayXlsx_(daChep.files);
     var zipBlob = deps.zip(daChep.files);
     if (!laXlsxBlob_(zipBlob, minBytes)) return ketDung_(deps, 'đã ghi Sheet nhưng file xlsx sau khi chép Q–T không hợp lệ, chưa ghi Excel');
     after = deps.updateExcel(zipBlob);
@@ -240,6 +241,7 @@ function apDungKeHoach_(ss, keHoach) {
       dem.xoa++;
     });
     var dongKe = 0;
+    var tong = laTabKeThuaHoaDon_(cfg) ? timDongTongCong_(sh) : 0;
     theo[ten].them.forEach(function (dong) {
       var soCot = sh.getLastColumn ? sh.getLastColumn() : 20;
       if (soCot < 1) soCot = 1;
@@ -250,7 +252,15 @@ function apDungKeHoach_(ss, keHoach) {
         return -1;
       }
       var khoaIdx = (cfg.khoa || []).map(idxCot).filter(function (x) { return x >= 0; });
-      var dest = dongKe || dongTrongDauTien_(sh, Object.keys(dong.cells || {}).map(Number).concat(khoaIdx));
+      var dest;
+      if (tong > 1) {
+        if (!sh.insertRowBefore) throw new Error('không chèn được dòng trên TỔNG CỘNG');
+        sh.insertRowBefore(tong);
+        dest = tong;
+        tong += 1;
+      } else {
+        dest = dongKe || dongTrongDauTien_(sh, Object.keys(dong.cells || {}).map(Number).concat(khoaIdx));
+      }
       var last = dest - 1;
       Object.keys(dong.cells || {}).forEach(function (ck) {
         sh.getRange(dest, (+ck) + 1).setValue(dong.cells[ck]);
@@ -264,12 +274,13 @@ function apDungKeHoach_(ss, keHoach) {
           var f2 = sh.getRange(last, idx + 1).getFormula ? sh.getRange(last, idx + 1).getFormula() : '';
           if (f2) { oDich.setFormula(dieuChinhCongThuc_(f2, last, dest)); return; }
           if ((cfg.khoa || []).indexOf(tenCot) >= 0 && dong.khoa && (oDich.getValue() === '' || oDich.getValue() == null)) {
-            oDich.setValue(String(dong.khoa).split('#')[0]);
+            var rieng = phanKhoa_(dong.khoa, (cfg.khoa || []).indexOf(tenCot));
+            if (rieng) oDich.setValue(rieng);
           }
         });
       }
       dem.them++;
-      dongKe = dest + 1;
+      if (!(tong > 1)) dongKe = dest + 1;
     });
   });
   return dem;
@@ -278,6 +289,23 @@ function apDungKeHoach_(ss, keHoach) {
 // Dòng trống đầu tiên sau dòng cuối có GIÁ TRỊ ở các cột dữ liệu (bỏ qua cột chỉ có
 // công thức kéo sẵn). Không dùng getLastRow(): tab Danh Mục có công thức G–M kéo tới
 // ~9985 nên getLastRow() trả 9985 và dòng mới rơi xuống cuối, mất Mã SP (lỗi 24/10).
+function timDongTongCong_(sh) {
+  if (!sh || !sh.getLastRow || !sh.getRange) return 0;
+  var lastR = sh.getLastRow();
+  var lastC = sh.getLastColumn ? sh.getLastColumn() : 0;
+  if (lastR < 1 || lastC < 1) return 0;
+  var vals = sh.getRange(1, 1, lastR, lastC).getValues();
+  var r;
+  var c;
+  for (r = 0; r < vals.length; r++) {
+    for (c = 0; c < (vals[r] || []).length; c++) {
+      if (vals[r][c] instanceof Date) continue;
+      if (laNhanTongCong_(vals[r][c])) return r + 1;
+    }
+  }
+  return 0;
+}
+
 function dongTrongDauTien_(sh, cols) {
   var lastR = sh.getLastRow();
   if (lastR < 1) return 1;
