@@ -1160,8 +1160,11 @@ test('ngày cùng một ngày không thành diff, ngày khác ghi serial', funct
   assert.equal(context.cungGiaTri_('2026-10-09T07:00:00.000Z', 46304), true);
   assert.equal(context.cungGiaTri_(46304, d10), false);
   assert.equal(context.cungGiaTri_('010', '10'), false);
-  assert.equal(context.giaTriGhiExcel_(d10), 46305);
-  assert.equal(typeof context.giaTriGhiExcel_(d10), 'number');
+  assert.equal(context.cungGiaTri_(12000, 12000.5), false);
+  var ghiD10 = context.giaTriGhiExcel_(d10);
+  assert.equal(typeof ghiD10, 'number');
+  assert.equal(Math.floor(ghiD10 + 1e-9), 46305);
+  assert.ok(ghiD10 < 46306);
   assert.equal(context.giaTriGhiExcel_(12000), 12000);
   assert.equal(context.giaTriGhiExcel_('Hop'), 'Hop');
 
@@ -1192,7 +1195,8 @@ test('ngày cùng một ngày không thành diff, ngày khác ghi serial', funct
   var lech = plan.log.filter(function (d) { return d.tab === HD && d.cot === 'Ngày Lập HĐ' && d.nguon === 'sheet'; });
   assert.equal(lech.length, 1);
   assert.equal(lech[0].cu, '46304');
-  assert.equal(lech[0].moi, '46305');
+  assert.equal(Math.floor(Number(lech[0].moi) + 1e-9), 46305);
+  assert.ok(Number(lech[0].moi) < 46306);
   assert.equal(lech[0].moi.indexOf('GMT'), -1);
   assert.equal(lech[0].moi.indexOf('Fri'), -1);
 
@@ -1205,7 +1209,9 @@ test('ngày cùng một ngày không thành diff, ngày khác ghi serial', funct
     files['xl/worksheets/sheet1.xml'] = '<worksheet><sheetData><c r="D2" t="inlineStr"><is><t>Sat Oct 10 2026 14:00:00 GMT+0700</t></is></c></sheetData></worksheet>';
   }
   assert.equal(context.chuanHoaNgayXlsx_(files) >= 1, true);
-  assert.match(files['xl/worksheets/sheet1.xml'], /<v>46305<\/v>/);
+  var soXuat = Number((files['xl/worksheets/sheet1.xml'].match(/<v>([^<]+)<\/v>/) || [])[1]);
+  assert.equal(Math.floor(soXuat + 1e-9), 46305);
+  assert.ok(soXuat < 46306);
   assert.equal(/t="inlineStr"/.test(files['xl/worksheets/sheet1.xml']), false);
   assert.equal(/GMT/.test(files['xl/worksheets/sheet1.xml']), false);
   assert.match(files['xl/styles.xml'], /formatCode="dd\/mm\/yyyy"/);
@@ -1217,8 +1223,73 @@ test('ngày cùng một ngày không thành diff, ngày khác ghi serial', funct
   assert.equal((files['xl/styles.xml'].match(/<xf\b/g) || []).length, soXf);
 
   var o = context.theOMoi_('D2', d10, '');
-  assert.match(o, /<v>46305<\/v>/);
+  var soO = Number((o.match(/<v>([^<]+)<\/v>/) || [])[1]);
+  assert.equal(Math.floor(soO + 1e-9), 46305);
+  assert.ok(soO < 46306);
   assert.equal(/inlineStr|GMT|Oct/.test(o), false);
+});
+
+function dateTuSerialGioTuong(n) {
+  var ngaySo = Math.floor(n + 1e-9);
+  var giay = Math.round((n - ngaySo) * 86400);
+  return new Date(Date.UTC(1899, 11, 30) + ngaySo * 86400000 + giay * 1000);
+}
+
+test('Ngày Lập Phiếu giữ giờ tường, không làm tròn 46255.88 thành 46256', function () {
+  var mau = [46255.88472222222, 46257.7659, 46268.82375];
+  var tron = [46256, 46258, 46269];
+  mau.forEach(function (serial, i) {
+    var gioTuong = dateTuSerialGioTuong(serial);
+    var gioThat = new Date(gioTuong.getTime() - 7 * 60 * 60 * 1000);
+    assert.equal(context.cungGiaTri_(serial, gioTuong), true, String(serial));
+    assert.equal(context.cungGiaTri_(serial, gioThat), true, String(serial));
+    assert.equal(context.cungGiaTri_(String(serial), gioTuong), true, String(serial));
+    assert.equal(context.cungGiaTri_(serial, tron[i]), false, String(serial));
+    var ghi = context.giaTriGhiExcel_(gioTuong);
+    assert.equal(typeof ghi, 'number');
+    assert.ok(Math.abs(ghi - serial) < 1 / 86400, String(ghi));
+    assert.notEqual(ghi, tron[i]);
+    assert.equal(Math.round(ghi) === tron[i] && Math.abs(ghi - serial) > 0.1, false);
+    var xml = context.theOMoi_('C2', gioTuong, '');
+    var so = Number((xml.match(/<v>([^<]+)<\/v>/) || [])[1]);
+    assert.ok(Math.abs(so - serial) < 1 / 86400, xml);
+    assert.notEqual(so, tron[i]);
+    assert.equal(/GMT|inlineStr/.test(xml), false);
+    assert.equal(context.giaTriGhiExcel_(serial), serial);
+  });
+
+  var XK = 'Lịch Sử Xuất Kho';
+  var goc = moDayDu();
+  var nen = clone(goc);
+  var excel = clone(goc);
+  var sheet = clone(goc);
+  var khoa = 'PX-20260821-211451';
+  var cfg = context.timCauHinh_(XK);
+  var tab = nen.sheets[XK];
+  var idxPhieu = tab.col[context.chuanTieuDe_('Số Phiếu / Mã Đơn')];
+  var idxNgay = tab.col[context.chuanTieuDe_('Ngày Lập Phiếu')];
+  function ganPhieu(model, ngay) {
+    var hang = model.sheets[XK].rows;
+    hang[khoa] = { row: 5, cells: {} };
+    hang[khoa].cells[idxPhieu] = { v: khoa, f: false, img: false, formula: '', ref: 'B5' };
+    hang[khoa].cells[idxNgay] = { v: ngay, f: false, img: false, formula: '', ref: 'C5' };
+  }
+  ganPhieu(nen, 46255.88472222222);
+  ganPhieu(excel, 46255.88472222222);
+  ganPhieu(sheet, dateTuSerialGioTuong(46255.88472222222));
+  var plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.log.some(function (d) { return d.khoa === khoa; }), false);
+  assert.equal(plan.ghiSheet.some(function (d) { return d.giaTri === 46256 || d.giaTri === 46255; }), false);
+
+  ganPhieu(sheet, 46256);
+  plan = context.gopBaBen_(nen, excel, sheet, {});
+  var dong = plan.log.filter(function (d) { return d.khoa === khoa && d.cot === 'Ngày Lập Phiếu'; });
+  assert.equal(dong.length, 1);
+  assert.notEqual(Number(dong[0].moi), 46255.88472222222);
+  assert.equal(plan.ghiSheet.some(function (d) { return d.khoa === khoa && d.giaTri === 46256; }), false);
+  assert.equal(context.giaTriGhiExcel_(46255.88472222222), 46255.88472222222);
+  assert.equal(cfg.khoa[0], 'Số Phiếu / Mã Đơn');
 });
 
 function gridHoaDon(dong) {
