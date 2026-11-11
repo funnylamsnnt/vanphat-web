@@ -1036,7 +1036,7 @@
     "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
   },
   "sheetModifiedTime": "2026-11-11T01:16:34.278Z",
-  "bridgeFileBuiltAt": "2026-11-10T07:46:00Z",
+  "bridgeFileBuiltAt": "2026-11-11T07:55:00Z",
   "bridgeImportPending": true,
   "webSync_20261111_1450": {
     "source": "Google Sheet Danh Mục Vật Tư (đọc connector, dựng xlsx cục bộ, không xuất Sheet→Excel)",
@@ -1074,6 +1074,7 @@
       "VP181 -> 9mm"
     ],
     "zeroPrice_count": 40,
-    "zeroPriceNew": []
+    "zeroPriceNew": [],
+    "bridge": "pending: cần Import→Replace bằng trình duyệt (subagent không có trình duyệt); _UPLOAD_BRIDGE.xlsx đã dựng"
   }
 }
