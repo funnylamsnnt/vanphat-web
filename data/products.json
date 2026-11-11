@@ -325,7 +325,7 @@
       "ma": "VP209",
       "ten": "Giấy A4 70 gsm Quality",
       "dvt": "Ram",
-      "gia": 65000,
+      "gia": 66000,
       "anh": "https://lh3.googleusercontent.com/d/13KfaAjlpUGfzDQFUUKX9lFZcQpPP99_6",
       "ton": 0
     },
@@ -3493,10 +3493,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP179",
-      "ten": "Dao rọc giấy lớn",
+      "ten": "Dao rọc giấy lớn 18mm",
       "dvt": "Cái",
-      "gia": 25000,
-      "anh": "https://lh3.googleusercontent.com/d/1efNaieDpKc22L5mzqJ6t-oCCvS9hwEr1",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1GWT4PrdsyvvfYGPMK7ADTYSHEvjkCpYc",
       "ton": 0
     },
     {
@@ -3507,7 +3507,7 @@
       "ma": "VP180",
       "ten": "Dao rọc giấy lớn SDI 0423",
       "dvt": "Cái",
-      "gia": 35000,
+      "gia": 65000,
       "anh": "https://lh3.googleusercontent.com/d/1f2Cx408kDyBFnVuV-f1oBMk0ZIvLNyTi",
       "ton": 0,
       "thuongHieu": "SDI"
@@ -3518,10 +3518,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP181",
-      "ten": "Dao rọc giấy nhỏ",
+      "ten": "Dao rọc giấy nhỏ 9mm",
       "dvt": "Cái",
-      "gia": 15000,
-      "anh": "https://lh3.googleusercontent.com/d/116gfqOYx3GnyJS_h8HqwdVac4V_tHoBs",
+      "gia": 12000,
+      "anh": "https://lh3.googleusercontent.com/d/1-GKHejrD3u8N3DystCxA0Kvbi4tWI2eM",
       "ton": 0
     },
     {
@@ -3532,7 +3532,7 @@
       "ma": "VP182",
       "ten": "Dao rọc giấy nhỏ SDI 0404",
       "dvt": "Cái",
-      "gia": 25000,
+      "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1TEukkw5ukE2l-FEDRPIcjfHcgMKgkrGd",
       "ton": 0,
       "thuongHieu": "SDI"
@@ -7289,5 +7289,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261110_1445.xlsx"
+  "syncedFrom": "source_sheet_20261111_1450.xlsx"
 }

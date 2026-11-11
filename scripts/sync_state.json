@@ -7,99 +7,35 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-11-05T07:40:00Z",
+  "lastSyncAt": "2026-11-10T07:50:00Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 567,
-    "with_img": 444,
+    "count": 569,
+    "with_img": 447,
     "added": [],
     "removed": [],
-    "priceChanges": [],
-    "slugChanges": [],
-    "zeroPrice": [
-      "VP238",
-      "VP239",
-      "VP240",
-      "VP241",
-      "VP242",
-      "VP297",
-      "VP117",
-      "VP123",
-      "VP139",
-      "VP488",
-      "VP035",
-      "VP324",
-      "VP328",
-      "VP329",
-      "VP370",
-      "VP390",
-      "VP570",
-      "VP338",
-      "VP584",
-      "VP585",
-      "VP586",
-      "VP587",
-      "VP588",
-      "VP603",
-      "VP510",
-      "VP514",
-      "VP515",
-      "VP516",
-      "VP517",
-      "VP518",
-      "VP539",
-      "VP541",
-      "VP542",
-      "VP589",
-      "VP596",
-      "VP597",
-      "VP598",
-      "VP599",
-      "VP600",
-      "VP601"
+    "priceChanges": [
+      {
+        "ma": "VP604",
+        "old": 60000,
+        "new": 45000
+      },
+      {
+        "ma": "VP605",
+        "old": 5000,
+        "new": 12000
+      }
     ],
-    "autoPlacedGroups": [],
-    "source_count": 603,
-    "excluded_nhom": {
-      "Không đưa lên web": [
-        "VP415",
-        "VP416",
-        "VP417",
-        "VP418",
-        "VP419",
-        "VP420",
-        "VP421",
-        "VP422",
-        "VP423",
-        "VP424",
-        "VP425",
-        "VP426",
-        "VP427",
-        "VP428",
-        "VP429",
-        "VP430",
-        "VP431",
-        "VP432",
-        "VP433",
-        "VP434",
-        "VP435",
-        "VP436",
-        "VP437",
-        "VP438",
-        "VP439",
-        "VP440",
-        "VP441",
-        "VP442",
-        "VP443",
-        "VP444",
-        "VP445",
-        "VP446",
-        "VP447",
-        "VP448",
-        "VP531",
-        "VP571"
-      ]
-    }
+    "slugChanges": [
+      {
+        "ma": "VP604",
+        "old": "Búa đóng ghim",
+        "new": "Búa cao su cán gỗ"
+      }
+    ],
+    "zeroPriceCount": 40,
+    "commit": "b25119c4",
+    "source": "Google Sheet 1Hwslun… modified 2026-11-09T09:10:37Z"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "lastCheckAt": "2026-11-08T07:45:00Z",
@@ -1098,5 +1034,46 @@
     "commit": null,
     "note": "Sheet A–F 603 mã trùng live products.json (567 SKU, 0 lệch giá/tên/ĐVT/nhóm/ảnh) và trùng bản 07/11 → không chạy generator, không push.",
     "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
+  },
+  "sheetModifiedTime": "2026-11-11T01:16:34.278Z",
+  "bridgeFileBuiltAt": "2026-11-10T07:46:00Z",
+  "bridgeImportPending": true,
+  "webSync_20261111_1450": {
+    "source": "Google Sheet Danh Mục Vật Tư (đọc connector, dựng xlsx cục bộ, không xuất Sheet→Excel)",
+    "sourceModifiedTime": "2026-11-11T01:16:34.278Z",
+    "count": 569,
+    "priceChanges": [
+      [
+        "VP209",
+        65000,
+        66000
+      ],
+      [
+        "VP179",
+        25000,
+        35000
+      ],
+      [
+        "VP180",
+        35000,
+        65000
+      ],
+      [
+        "VP181",
+        15000,
+        12000
+      ],
+      [
+        "VP182",
+        25000,
+        45000
+      ]
+    ],
+    "slugChanges": [
+      "VP179 -> 18mm",
+      "VP181 -> 9mm"
+    ],
+    "zeroPrice_count": 40,
+    "zeroPriceNew": []
   }
 }
