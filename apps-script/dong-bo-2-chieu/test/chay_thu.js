@@ -375,6 +375,19 @@ function taoSheetNho(name, values, formulas) {
           }
           return out;
         },
+        getFormulas: function () {
+          var out = [];
+          var i;
+          var j;
+          for (i = 0; i < numRows; i++) {
+            var row = [];
+            for (j = 0; j < numCols; j++) {
+              row.push((forms[r - 1 + i] && forms[r - 1 + i][c - 1 + j]) || '');
+            }
+            out.push(row);
+          }
+          return out;
+        },
         setValues: function (vals) {
           var i;
           var j;
@@ -531,20 +544,113 @@ test('ba bên: excel, sheet, xung đột, công thức, Q–T, giá 0', function
 
   nen = clone(goc); excel = clone(goc); sheet = clone(goc);
   datCot(sheet, DM, 'VP001', GIA, 0);
+  datCot(sheet, DM, 'VP002', GIA, '');
+  datCot(sheet, DM, 'VP003', TEN, 'Keo moi');
   plan = context.gopBaBen_(nen, excel, sheet, {});
-  assert.equal(plan.ok, false);
-  assert.match(plan.lyDo, /giá 0\/trống sẽ đè giá thật/);
-  assert.equal(plan.ghiSheet.length, 0);
-  assert.equal(plan.xoaDong.length, 0);
-  assert.equal(plan.canXuat, false);
+  assert.equal(plan.ok, true);
+  assert.equal(plan.dung, false);
+  assert.equal(/sẽ đè giá thật/.test(plan.lyDo), false);
+  assert.equal(ghiCot(plan, DM, 'VP001', cotGia)[0].giaTri, 12000);
+  assert.equal(ghiCot(plan, DM, 'VP001', cotGia)[0].nguon, 'giu-gia');
+  assert.equal(ghiCot(plan, DM, 'VP002', cotGia)[0].giaTri, 8000);
+  assert.ok(plan.log.some(function (d) { return d.khoa === 'VP003' && d.nguon === 'sheet' && d.moi === 'Keo moi'; }));
 
   nen = clone(goc); excel = clone(goc); sheet = clone(goc);
   datCot(excel, DM, 'VP001', GIA, 0);
   plan = context.gopBaBen_(nen, excel, sheet, {});
   assert.equal(plan.ok, true);
   assert.equal(ghiCot(plan, DM, 'VP001', cotGia).length, 0);
-  assert.ok(plan.log.some(function (d) { return d.ghiChu === 'giá 0/trống không đè giá thật' && d.khoa === 'VP001'; }));
+  assert.ok(plan.log.some(function (d) {
+    return d.khoa === 'VP001' && d.nguon === 'giu-gia' && d.ghiChu.indexOf('giá 0/trống không đè giá thật') >= 0;
+  }));
   assert.equal(plan.canXuat, true);
+});
+
+test('giá chữ Việt Nam là số, không chặn lượt', function () {
+  assert.equal(context.phanTichGia_('45.000 đ'), 45000);
+  assert.equal(context.phanTichGia_('45.000'), 45000);
+  assert.equal(context.phanTichGia_('45,000'), 45000);
+  assert.equal(context.phanTichGia_('45000đ'), 45000);
+  assert.equal(context.phanTichGia_('12.000 đ'), 12000);
+  assert.equal(context.phanTichGia_('1.234.567'), 1234567);
+  assert.equal(context.phanTichGia_(45000), 45000);
+  assert.equal(context.phanTichGia_(0), null);
+  assert.equal(context.phanTichGia_(''), null);
+  assert.equal(context.phanTichGia_('0'), null);
+  assert.equal(context.phanTichGia_('0 đ'), null);
+  assert.equal(context.laGiaThat_('45.000 đ'), true);
+  assert.equal(context.laGiaThat_(0), false);
+
+  var goc = moDayDu();
+  var nen = clone(goc);
+  var excel = clone(goc);
+  var sheet = clone(goc);
+  datCot(nen, DM, 'VP001', GIA, 45000);
+  datCot(excel, DM, 'VP001', GIA, 45000);
+  datCot(sheet, DM, 'VP001', GIA, '45.000 đ');
+  datCot(nen, DM, 'VP002', GIA, 12000);
+  datCot(excel, DM, 'VP002', GIA, 12000);
+  datCot(sheet, DM, 'VP002', GIA, '12.000 đ');
+  var plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.canXuat, false);
+  assert.equal(ghiCot(plan, DM, 'VP001', 4).length, 0);
+  assert.equal(ghiCot(plan, DM, 'VP002', 4).length, 0);
+
+  ['45.000', '45,000', '45000đ'].forEach(function (chu) {
+    nen = clone(goc); excel = clone(goc); sheet = clone(goc);
+    datCot(nen, DM, 'VP001', GIA, 45000);
+    datCot(excel, DM, 'VP001', GIA, 45000);
+    datCot(sheet, DM, 'VP001', GIA, chu);
+    plan = context.gopBaBen_(nen, excel, sheet, {});
+    assert.equal(plan.ok, true, chu + ' ' + plan.lyDo);
+    assert.equal(ghiCot(plan, DM, 'VP001', 4).length, 0);
+  });
+
+  nen = clone(goc); excel = clone(goc); sheet = clone(goc);
+  datCot(nen, DM, 'VP001', GIA, 45000);
+  datCot(excel, DM, 'VP001', GIA, 45000);
+  datCot(sheet, DM, 'VP001', GIA, '12.000 đ');
+  plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.canXuat, true);
+  assert.ok(plan.log.some(function (d) { return d.khoa === 'VP001' && d.nguon === 'sheet' && d.moi === '12000'; }));
+
+  var cu = context.catalogTuExcel_(moDayDu());
+  var moi = clone(cu);
+  moi.items.VP001.price = '45.000 đ';
+  moi.items.VP002.price = '12.000 đ';
+  var kiem = context.kiemTraXuat_(moi, cu);
+  assert.equal(kiem.ok, true, kiem.errs.join(' | '));
+});
+
+test('Hóa Đơn Đầu Vào đồng bộ theo khóa, không theo số dòng', function () {
+  function gan(model) {
+    var tab = model.sheets['Hóa Đơn Đầu Vào'];
+    var soIdx = tab.col[context.chuanTieuDe_('Số Hóa Đơn')];
+    var maIdx = tab.col[context.chuanTieuDe_('Mã SP')];
+    tab.rows['HDV9|VP001'] = { row: 370, cells: {} };
+    tab.rows['HDV9|VP001'].cells[soIdx] = { v: 'HDV9', f: false, img: false, formula: '', ref: 'B370' };
+    tab.rows['HDV9|VP001'].cells[maIdx] = { v: 'VP001', f: false, img: false, formula: '', ref: 'G370' };
+  }
+  var goc = moDayDu();
+  var sheet = clone(goc);
+  gan(sheet);
+  var plan = context.gopBaBen_(clone(goc), clone(goc), sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.xoaDong.some(function (d) { return d.khoa === 'HDV9|VP001'; }), false);
+  assert.ok(plan.log.some(function (d) {
+    return d.tab === 'Hóa Đơn Đầu Vào' && d.khoa === 'HDV9|VP001' && d.ghiChu.indexOf('thêm dòng từ Sheet') >= 0;
+  }));
+  assert.equal(plan.canXuat, true);
+
+  var nen = clone(goc);
+  var sheet2 = clone(goc);
+  gan(nen);
+  gan(sheet2);
+  plan = context.gopBaBen_(nen, clone(goc), sheet2, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.ok(plan.xoaDong.some(function (d) { return d.tab === 'Hóa Đơn Đầu Vào' && d.khoa === 'HDV9|VP001'; }));
 });
 
 test('lượt đầu dayExcel đẩy giá Excel lên Sheet, không lấy Sheet cũ đè', function () {
@@ -816,7 +922,9 @@ test('vòng: khóa, khung cấm, dry-run, thứ tự ghi, không đè snapshot n
   assert.equal(kq.muc, 'DA_GHI');
   assert.equal(kq.ghi, true);
   var thuTu = xong.calls.filter(function (n) { return ['saoLuu', 'apDung', 'ghiNhatKy', 'export', 'updateExcel', 'snapshot'].indexOf(n) >= 0; });
-  assert.deepEqual(thuTu, ['saoLuu', 'apDung', 'ghiNhatKy', 'export', 'updateExcel', 'snapshot']);
+  assert.deepEqual(thuTu, ['apDung', 'ghiNhatKy', 'export', 'updateExcel', 'snapshot']);
+  assert.equal(kq.saoLuu, false);
+  assert.equal(xong.calls.includes('saoLuu'), false);
   assert.equal(xong.snapId, context.BASELINE_BACKUP_ID);
   assert.equal(xong.props.LAST_EXCEL_MD5, 'md5-moi');
   assert.equal(xong.props.LAST_SHEET_MODIFIED_TIME, '2026-10-24T06:05:00.000Z');
@@ -850,7 +958,7 @@ test('vòng: khóa, khung cấm, dry-run, thứ tự ghi, không đè snapshot n
   assert.equal(kq.ok, false);
   assert.match(kq.lyDo, /đã ghi Sheet nhưng chưa ghi Excel/);
   assert.match(kq.lyDo, /giá 0\/trống sẽ đè giá thật/);
-  assert.equal(guard.calls.includes('saoLuu'), true);
+  assert.equal(guard.calls.includes('saoLuu'), false);
   assert.equal(guard.calls.includes('apDung'), true);
   assert.equal(guard.calls.includes('updateExcel'), false);
   assert.equal(guard.props.LAST_EXCEL_MD5, 'cu-md5');
@@ -1037,4 +1145,8 @@ test('mã nguồn không chứa bí mật, không tạo file giá mới, không 
   assert.equal(context.timCauHinh_(DM).viTriExcel['Thương Hiệu'], 18);
   assert.equal(context.timCauHinh_(DM).viTriExcel['Quy Cách'], 19);
   assert.equal(context.HANDLER_DONG_BO, 'dongBoHaiChieu');
+  var dongBoSrc = fs.readFileSync(path.join(root, 'DongBo.gs'), 'utf8');
+  assert.equal(dongBoSrc.indexOf('2026_BACKUP_'), -1);
+  assert.equal(dongBoSrc.indexOf('deps.saoLuu'), -1);
+  assert.equal(dongBoSrc.indexOf('Drive.Files.create'), -1);
 });

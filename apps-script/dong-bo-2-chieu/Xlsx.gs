@@ -222,10 +222,41 @@ function chenOVaoHang_(xml, ref, value) {
   return xml.slice(0, end) + theOMoi_(ref, value, '') + xml.slice(end);
 }
 
+function datNhieuOXml_(xml, cap) {
+  var keys = Object.keys(cap || {});
+  if (!keys.length) return xml;
+  var refs = {};
+  var i;
+  for (i = 0; i < keys.length; i++) refs[keys[i]] = true;
+  var found = {};
+  var re = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g;
+  var m;
+  while ((m = re.exec(xml))) {
+    var ref = thuocTinh_(m[1], 'r');
+    if (!refs[ref] || found[ref]) continue;
+    found[ref] = { start: m.index, end: m.index + m[0].length, attrs: m[1] };
+  }
+  var co = [];
+  var thieu = [];
+  for (i = 0; i < keys.length; i++) {
+    if (found[keys[i]]) co.push(keys[i]);
+    else thieu.push(keys[i]);
+  }
+  co.sort(function (a, b) { return found[b].start - found[a].start; });
+  var out = xml;
+  for (i = 0; i < co.length; i++) {
+    var refCo = co[i];
+    var tim = found[refCo];
+    out = out.slice(0, tim.start) + theOMoi_(refCo, cap[refCo], tim.attrs) + out.slice(tim.end);
+  }
+  for (i = 0; i < thieu.length; i++) out = chenOVaoHang_(out, thieu[i], cap[thieu[i]]);
+  return out;
+}
+
 function datOXml_(xml, ref, value) {
-  var tim = timTheC_(xml, ref);
-  if (!tim) return chenOVaoHang_(xml, ref, value);
-  return xml.slice(0, tim.start) + theOMoi_(ref, value, tim.attrs) + xml.slice(tim.end);
+  var cap = {};
+  cap[ref] = value;
+  return datNhieuOXml_(xml, cap);
 }
 
 function gridDanhMuc_(files) {
@@ -290,11 +321,11 @@ function chepBuQT_(filesMoi, filesCu) {
   var headerCu = cu.grid[1] || {};
   var xml = moi.xml;
   var soO = 0;
+  var cap = {};
   var c;
   for (c = 16; c <= 19; c++) {
     if (!headerCu[c] || headerCu[c].v == null || headerCu[c].v === '') continue;
-    var refH = cotChu_(c) + '1';
-    xml = datOXml_(xml, refH, headerCu[c].v);
+    cap[cotChu_(c) + '1'] = headerCu[c].v;
     soO++;
   }
   Object.keys(moi.grid).forEach(function (rk) {
@@ -307,10 +338,11 @@ function chepBuQT_(filesMoi, filesCu) {
       var cell = nguon[col];
       if (!cell || cell.f || cell.img) continue;
       if (cell.v == null || cell.v === '') continue;
-      xml = datOXml_(xml, cotChu_(col) + rk, cell.v);
+      cap[cotChu_(col) + rk] = cell.v;
       soO++;
     }
   });
+  xml = datNhieuOXml_(xml, cap);
   var files = {};
   Object.keys(filesMoi).forEach(function (k) { files[k] = filesMoi[k]; });
   files[moi.path] = xml;
