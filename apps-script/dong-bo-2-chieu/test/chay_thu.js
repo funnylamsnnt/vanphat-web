@@ -23,7 +23,8 @@ var context = {
   isNaN: isNaN,
   parseInt: parseInt,
   parseFloat: parseFloat,
-  JSON: JSON
+  JSON: JSON,
+  Intl: Intl
 };
 vm.createContext(context);
 ['Config.gs', 'Xlsx.gs', 'Logic.gs', 'DongBo.gs'].forEach(function (f) {
@@ -1241,16 +1242,16 @@ test('Ngày Lập Phiếu giữ giờ tường, không làm tròn 46255.88 thàn
   mau.forEach(function (serial, i) {
     var gioTuong = dateTuSerialGioTuong(serial);
     var gioThat = new Date(gioTuong.getTime() - 7 * 60 * 60 * 1000);
-    assert.equal(context.cungGiaTri_(serial, gioTuong), true, String(serial));
     assert.equal(context.cungGiaTri_(serial, gioThat), true, String(serial));
-    assert.equal(context.cungGiaTri_(String(serial), gioTuong), true, String(serial));
+    assert.equal(context.cungGiaTri_(serial, gioTuong), false, String(serial));
+    assert.equal(context.cungGiaTri_(String(serial), gioThat), true, String(serial));
     assert.equal(context.cungGiaTri_(serial, tron[i]), false, String(serial));
-    var ghi = context.giaTriGhiExcel_(gioTuong);
+    var ghi = context.giaTriGhiExcel_(gioThat);
     assert.equal(typeof ghi, 'number');
     assert.ok(Math.abs(ghi - serial) < 1 / 86400, String(ghi));
     assert.notEqual(ghi, tron[i]);
     assert.equal(Math.round(ghi) === tron[i] && Math.abs(ghi - serial) > 0.1, false);
-    var xml = context.theOMoi_('C2', gioTuong, '');
+    var xml = context.theOMoi_('C2', gioThat, '');
     var so = Number((xml.match(/<v>([^<]+)<\/v>/) || [])[1]);
     assert.ok(Math.abs(so - serial) < 1 / 86400, xml);
     assert.notEqual(so, tron[i]);
@@ -1276,7 +1277,7 @@ test('Ngày Lập Phiếu giữ giờ tường, không làm tròn 46255.88 thàn
   }
   ganPhieu(nen, 46255.88472222222);
   ganPhieu(excel, 46255.88472222222);
-  ganPhieu(sheet, dateTuSerialGioTuong(46255.88472222222));
+  ganPhieu(sheet, new Date(dateTuSerialGioTuong(46255.88472222222).getTime() - 7 * 60 * 60 * 1000));
   var plan = context.gopBaBen_(nen, excel, sheet, {});
   assert.equal(plan.ok, true, plan.lyDo);
   assert.equal(plan.log.some(function (d) { return d.khoa === khoa; }), false);
@@ -1305,6 +1306,86 @@ function ganHoaDon(model, grid) {
   model.sheets['Hóa Đơn Đầu Vào'].headers = header.headers;
   return model;
 }
+
+test('Ngày Lập Phiếu: Date theo múi bảng tính, chữ giờ tường, không cộng 7 hay 14 giờ', function () {
+  function serial(nam, thang, ngay, gio, phut, giay) {
+    return context.serialTuThanhPhan_(nam, thang, ngay, gio, phut, giay || 0);
+  }
+  var s2114 = serial(2026, 8, 21, 21, 14, 0);
+  var s211451 = serial(2026, 8, 21, 21, 14, 51);
+  var s212413 = serial(2026, 8, 21, 21, 24, 13);
+  var s213549 = serial(2026, 8, 21, 21, 35, 49);
+  var s214743 = serial(2026, 8, 21, 21, 47, 43);
+  var s230835 = serial(2026, 8, 21, 23, 8, 35);
+  var s054534 = serial(2026, 8, 22, 5, 45, 34);
+  var s060455 = serial(2026, 8, 22, 6, 4, 55);
+  var s131558 = serial(2026, 8, 23, 13, 15, 58);
+  var s132831 = serial(2026, 8, 23, 13, 28, 31);
+  assert.ok(Math.abs(s2114 - 46255.88472222222) < 1e-9);
+  assert.ok(Math.abs(s131558 - 46257.55275462963) < 1e-9);
+  assert.ok(Math.abs(s132831 - 46257.56146990741) < 1e-9);
+
+  var instant2114 = new Date(Date.UTC(2026, 7, 21, 14, 14, 0));
+  var seen = [];
+  context.Utilities = {
+    formatDate: function (date, tz) {
+      seen.push(tz);
+      return context.formatIntlNgayGio_(date, tz);
+    }
+  };
+  context.datMuiGioSheet_('Asia/Ho_Chi_Minh');
+  [s2114, s211451, s212413, s213549, s214743, s230835, s054534, s060455, s131558, s132831].forEach(function (n) {
+    var ngaySo = Math.floor(n + 1e-9);
+    var giay = Math.round((n - ngaySo) * 86400);
+    var gio = Math.floor(giay / 3600);
+    var phut = Math.floor((giay % 3600) / 60);
+    var sec = giay % 60;
+    var instant = new Date(Date.UTC(1899, 11, 30) + ngaySo * 86400000 + giay * 1000 - 7 * 3600000);
+    assert.equal(context.cungGiaTri_(n, instant), true, String(n));
+    assert.equal(context.cungGiaTri_(n, n + 7 / 24), false, String(n));
+    assert.equal(context.cungGiaTri_(n, n + 14 / 24), false, String(n));
+    var ghi = context.giaTriGhiExcel_(instant);
+    assert.ok(Math.abs(ghi - n) < 1 / 86400, String(ghi) + ' vs ' + n);
+    assert.ok(Math.abs(ghi - (n + 7 / 24)) > 1 / 24);
+    assert.equal(gio + phut + sec >= 0, true);
+  });
+  assert.ok(seen.indexOf('Asia/Ho_Chi_Minh') >= 0);
+  assert.equal(seen.indexOf('UTC'), -1);
+  assert.equal(seen.indexOf('America/Los_Angeles'), -1);
+
+  context.datMuiGioSheet_('UTC');
+  assert.equal(context.cungGiaTri_(s2114, instant2114), false);
+  context.datMuiGioSheet_('America/Los_Angeles');
+  assert.equal(context.cungGiaTri_(s2114, instant2114), false);
+  context.datMuiGioSheet_('Asia/Ho_Chi_Minh');
+  assert.equal(context.cungGiaTri_(s2114, instant2114), true);
+  assert.equal(context.cungGiaTri_(s230835, '2026-08-21 23:08:35'), true);
+  assert.equal(context.cungGiaTri_(s2114, '8/21/26 21:14'), true);
+  assert.equal(context.cungGiaTri_(s054534, '2026-08-22 05:45:34'), true);
+  assert.equal(context.cungGiaTri_(s131558, '2026-08-23 13:15:58'), true);
+  assert.equal(context.cungGiaTri_(46255.88472, 46256.46806), false);
+  assert.equal(context.cungGiaTri_(46257.55275, 46257.84442), false);
+
+  delete context.Utilities;
+  context.datMuiGioSheet_('Asia/Ho_Chi_Minh');
+});
+
+test('xuống dòng \\r\\n và \\n không thành diff', function () {
+  assert.equal(context.cungGiaTri_('Dong 1\r\nDong 2', 'Dong 1\nDong 2'), true);
+  assert.equal(context.cungGiaTri_('Ten\r\nSP', 'Ten\nSP'), true);
+  assert.equal(context.cungGiaTri_('Ten\r\nSP', 'Ten SP'), false);
+  var goc = moDayDu();
+  var nen = clone(goc);
+  var excel = clone(goc);
+  var sheet = clone(goc);
+  datCot(nen, DM, 'VP001', TEN, 'But\r\nbi');
+  datCot(excel, DM, 'VP001', TEN, 'But\r\nbi');
+  datCot(sheet, DM, 'VP001', TEN, 'But\nbi');
+  var plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.log.some(function (d) { return d.khoa === 'VP001' && d.cot === TEN; }), false);
+  assert.equal(plan.canXuat, false);
+});
 
 test('hóa đơn kế thừa số HĐ, bỏ khóa rác, dừng tại TỔNG CỘNG', function () {
   var cfg = context.timCauHinh_('Hóa Đơn Đầu Vào');

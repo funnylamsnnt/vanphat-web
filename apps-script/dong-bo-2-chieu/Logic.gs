@@ -75,12 +75,9 @@ function ngayHopLe_(nam, thang, ngay) {
  * gioPhutSaigon_ chỉ dùng cho lịch trigger.
  */
 function ngayTuDate_(date) {
-  if (!(date instanceof Date) || isNaN(date.getTime())) return '';
-  var nam = date.getUTCFullYear();
-  var thang = date.getUTCMonth() + 1;
-  var ngay = date.getUTCDate();
-  if (!ngayHopLe_(nam, thang, ngay)) return '';
-  return chuNgay_(nam, thang, ngay);
+  var tp = thanhPhanMui_(date, MUI_GIO_SHEET);
+  if (!tp || !ngayHopLe_(tp.nam, tp.thang, tp.ngay)) return '';
+  return chuNgay_(tp.nam, tp.thang, tp.ngay);
 }
 
 function serialTuThanhPhan_(nam, thang, ngay, gio, phut, giay) {
@@ -91,41 +88,64 @@ function serialTuThanhPhan_(nam, thang, ngay, gio, phut, giay) {
   return ngaySo + (gio * 3600 + phut * 60 + giay) / 86400;
 }
 
-function serialTuDateCach_(date, cach) {
-  if (!(date instanceof Date) || isNaN(date.getTime())) return null;
-  var nam;
-  var thang;
-  var ngay;
-  var gio;
-  var phut;
-  var giay;
-  if (cach === 'saigon') {
-    var hm = gioPhutSaigon_(date);
-    nam = hm.nam;
-    thang = hm.thang;
-    ngay = hm.ngay;
-    gio = hm.gio;
-    phut = hm.phut;
-    giay = hm.giay;
-  } else {
-    nam = date.getUTCFullYear();
-    thang = date.getUTCMonth() + 1;
-    ngay = date.getUTCDate();
-    gio = date.getUTCHours();
-    phut = date.getUTCMinutes();
-    giay = date.getUTCSeconds();
-  }
-  return serialTuThanhPhan_(nam, thang, ngay, gio, phut, giay);
+/** Múi giờ của Google Sheet giá. Script có thể để múi khác; ô Date đọc theo múi này. */
+var MUI_GIO_SHEET = 'Asia/Ho_Chi_Minh';
+
+function datMuiGioSheet_(tz) {
+  MUI_GIO_SHEET = tz && String(tz).trim() ? String(tz).trim() : 'Asia/Ho_Chi_Minh';
+  return MUI_GIO_SHEET;
 }
 
-/** Serial ghi ra Excel. Không làm tròn phần ngày: 21:14 giữ 46255.88, không thành 46256. */
+function formatIntlNgayGio_(date, timeZone) {
+  var fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23'
+  });
+  var map = {};
+  fmt.formatToParts(date).forEach(function (p) { map[p.type] = p.value; });
+  var gio = map.hour === '24' ? '00' : map.hour;
+  return map.year + '-' + map.month + '-' + map.day + ' ' + gio + ':' + map.minute + ':' + map.second;
+}
+
+/** Giờ tường của một instant. Ưu tiên Utilities.formatDate theo múi giờ bảng tính. */
+function thanhPhanMui_(date, timeZone) {
+  if (!(date instanceof Date) || isNaN(date.getTime())) return null;
+  var tz = timeZone || MUI_GIO_SHEET || 'Asia/Ho_Chi_Minh';
+  var chu = '';
+  if (typeof Utilities !== 'undefined' && Utilities && Utilities.formatDate) {
+    chu = Utilities.formatDate(date, tz, 'yyyy-MM-dd HH:mm:ss');
+  } else {
+    chu = formatIntlNgayGio_(date, tz);
+  }
+  var m = String(chu).match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/);
+  if (!m) return null;
+  var gio = +m[4] === 24 ? 0 : +m[4];
+  return { nam: +m[1], thang: +m[2], ngay: +m[3], gio: gio, phut: +m[5], giay: +m[6] };
+}
+
 function serialGhiTuDate_(date) {
-  var utc = serialTuDateCach_(date, 'utc');
-  var sg = serialTuDateCach_(date, 'saigon');
-  if (utc == null) return sg;
-  if (sg == null) return utc;
-  if (Math.floor(sg + 1e-9) !== Math.floor(utc + 1e-9)) return utc;
-  return sg;
+  var tp = thanhPhanMui_(date, MUI_GIO_SHEET);
+  if (!tp) return null;
+  return serialTuThanhPhan_(tp.nam, tp.thang, tp.ngay, tp.gio, tp.phut, tp.giay);
+}
+
+/** Chữ giờ tường, không dịch múi. yyyy-mm-dd hh:mm:ss và m/d/yy hh:mm. */
+function tachChuoiGioTuong_(t) {
+  var m = String(t || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+  if (m) {
+    return { nam: +m[1], thang: +m[2], ngay: +m[3], gio: +m[4], phut: +m[5], giay: +(m[6] || 0) };
+  }
+  m = String(t || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (!m) return null;
+  var nam = +m[3];
+  nam = nam >= 70 ? 1900 + nam : 2000 + nam;
+  return { nam: nam, thang: +m[1], ngay: +m[2], gio: +(m[4] || 0), phut: +(m[5] || 0), giay: +(m[6] || 0) };
 }
 
 /**
@@ -158,6 +178,8 @@ function ngayTuChuoi_(s) {
     var js = new Date(t);
     if (!isNaN(js.getTime())) return ngayTuDate_(js);
   }
+  var tuong = tachChuoiGioTuong_(t);
+  if (tuong && ngayHopLe_(tuong.nam, tuong.thang, tuong.ngay)) return chuNgay_(tuong.nam, tuong.thang, tuong.ngay);
   return '';
 }
 
@@ -190,8 +212,7 @@ function themSerial_(out, n) {
 function ungVienSerial_(v) {
   var out = [];
   if (v instanceof Date) {
-    themSerial_(out, serialTuDateCach_(v, 'utc'));
-    themSerial_(out, serialTuDateCach_(v, 'saigon'));
+    themSerial_(out, serialGhiTuDate_(v));
     return out;
   }
   if (typeof v === 'string') {
@@ -199,6 +220,11 @@ function ungVienSerial_(v) {
     if (laChuoiDateJs_(t) || /^\d{4}-\d{2}-\d{2}T/.test(t)) {
       var d = new Date(t);
       if (!isNaN(d.getTime())) return ungVienSerial_(d);
+    }
+    var tuong = tachChuoiGioTuong_(t);
+    if (tuong) {
+      themSerial_(out, serialTuThanhPhan_(tuong.nam, tuong.thang, tuong.ngay, tuong.gio, tuong.phut, tuong.giay));
+      return out;
     }
     var m = t.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
     if (m) {
@@ -278,7 +304,7 @@ function chuanGiaTri_(v) {
   if (typeof v === 'boolean') return v ? '1' : '0';
   if (v instanceof Date) return ngayTuDate_(v);
   if (typeof v === 'number' && isFinite(v)) return chuanSoChuoi_(v);
-  var s = String(v).trim();
+  var s = chuanXuongDong_(String(v)).trim();
   var nc = ngayTuChuoi_(s);
   if (nc) return nc;
   if (/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(s)) {
@@ -317,6 +343,10 @@ function cungGiaTri_(a, b) {
     }
   }
   return chuanGiaTri_(a) === chuanGiaTri_(b);
+}
+
+function chuanXuongDong_(s) {
+  return String(s).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 }
 
 function catChuoi_(v, n) {
