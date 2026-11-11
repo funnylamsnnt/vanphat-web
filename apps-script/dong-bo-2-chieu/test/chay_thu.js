@@ -344,6 +344,12 @@ function taoSheetNho(name, values, formulas) {
       data.splice(r - 1, 1);
       forms.splice(r - 1, 1);
     },
+    insertRowBefore: function (r) {
+      sh._inserted = sh._inserted || [];
+      sh._inserted.push(r);
+      data.splice(r - 1, 0, []);
+      forms.splice(r - 1, 0, []);
+    },
     getRange: function (r, c, numRows, numCols) {
       if (numRows == null) {
         return {
@@ -1127,6 +1133,217 @@ test('snapshot và bản sao không được trùng file nền hay file giá', f
   }, /bản sao không an toàn/);
   assert.equal(context.idCamGhi_(context.BASELINE_BACKUP_ID), true);
   assert.equal(context.idCamGhi_(context.EXCEL_ID), false);
+});
+
+function lucNgay(y, thang, ngay, gio, phut) {
+  return new Date(Date.UTC(y, thang - 1, ngay, (gio || 0) - 7, phut || 0, 0));
+}
+
+function stylesToiThieu() {
+  return '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cellXfs count="1"><xf numFmtId="0"/></cellXfs></styleSheet>';
+}
+
+test('ngày cùng một ngày không thành diff, ngày khác ghi serial', function () {
+  var d09 = lucNgay(2026, 10, 9, 14, 0);
+  var d12 = lucNgay(2026, 12, 9, 15, 0);
+  var d16 = lucNgay(2026, 9, 16, 14, 0);
+  var d10 = lucNgay(2026, 10, 10, 14, 0);
+  assert.equal(context.cungGiaTri_(46304, d09), true);
+  assert.equal(context.cungGiaTri_('46304', d09), true);
+  assert.equal(context.cungGiaTri_(46304, '09/10/2026'), true);
+  assert.equal(context.cungGiaTri_(d09, '09/10/2026'), true);
+  assert.equal(context.cungGiaTri_(d09, '9/10/2026'), true);
+  assert.equal(context.cungGiaTri_(d09, '2026-10-09'), true);
+  assert.equal(context.cungGiaTri_(46365, d12), true);
+  assert.equal(context.cungGiaTri_(46281, d16), true);
+  assert.equal(context.cungGiaTri_(46304.583333, d09), true);
+  assert.equal(context.cungGiaTri_('2026-10-09T07:00:00.000Z', 46304), true);
+  assert.equal(context.cungGiaTri_(46304, d10), false);
+  assert.equal(context.cungGiaTri_('010', '10'), false);
+  assert.equal(context.giaTriGhiExcel_(d10), 46305);
+  assert.equal(typeof context.giaTriGhiExcel_(d10), 'number');
+  assert.equal(context.giaTriGhiExcel_(12000), 12000);
+  assert.equal(context.giaTriGhiExcel_('Hop'), 'Hop');
+
+  var HD = 'Hóa Đơn Đầu Vào';
+  var goc = moDayDu();
+  var nen = clone(goc);
+  var excel = clone(goc);
+  var sheet = clone(goc);
+  datCot(nen, HD, 'HDV1|VP001', 'Ngày Lập HĐ', 46304);
+  datCot(excel, HD, 'HDV1|VP001', 'Ngày Lập HĐ', '46304');
+  datCot(sheet, HD, 'HDV1|VP001', 'Ngày Lập HĐ', d09);
+  var plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.log.some(function (d) { return d.cot === 'Ngày Lập HĐ'; }), false);
+  assert.equal(plan.canXuat, false);
+
+  sheet = clone(goc);
+  datCot(nen, HD, 'HDV1|VP001', 'Ngày Lập HĐ', 46304);
+  datCot(excel, HD, 'HDV1|VP001', 'Ngày Lập HĐ', 46304);
+  datCot(sheet, HD, 'HDV1|VP001', 'Ngày Lập HĐ', '09/10/2026');
+  plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.log.some(function (d) { return d.cot === 'Ngày Lập HĐ'; }), false);
+
+  sheet = clone(goc);
+  datCot(sheet, HD, 'HDV1|VP001', 'Ngày Lập HĐ', d10);
+  plan = context.gopBaBen_(nen, excel, sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  var lech = plan.log.filter(function (d) { return d.tab === HD && d.cot === 'Ngày Lập HĐ' && d.nguon === 'sheet'; });
+  assert.equal(lech.length, 1);
+  assert.equal(lech[0].cu, '46304');
+  assert.equal(lech[0].moi, '46305');
+  assert.equal(lech[0].moi.indexOf('GMT'), -1);
+  assert.equal(lech[0].moi.indexOf('Fri'), -1);
+
+  var files = {
+    'xl/styles.xml': stylesToiThieu(),
+    'xl/worksheets/sheet1.xml': '<worksheet><sheetData><c r="D2" t="inlineStr"><is><t>' +
+      d10.toString().replace(/\(.*\)/, '').trim() + '</t></is></c></sheetData></worksheet>'
+  };
+  if (!/GMT[+-]\d{4}/.test(files['xl/worksheets/sheet1.xml'])) {
+    files['xl/worksheets/sheet1.xml'] = '<worksheet><sheetData><c r="D2" t="inlineStr"><is><t>Sat Oct 10 2026 14:00:00 GMT+0700</t></is></c></sheetData></worksheet>';
+  }
+  assert.equal(context.chuanHoaNgayXlsx_(files) >= 1, true);
+  assert.match(files['xl/worksheets/sheet1.xml'], /<v>46305<\/v>/);
+  assert.equal(/t="inlineStr"/.test(files['xl/worksheets/sheet1.xml']), false);
+  assert.equal(/GMT/.test(files['xl/worksheets/sheet1.xml']), false);
+  assert.match(files['xl/styles.xml'], /formatCode="dd\/mm\/yyyy"/);
+  assert.match(files['xl/worksheets/sheet1.xml'], /s="1"/);
+  var lan2 = context.chuanHoaNgayXlsx_(files);
+  assert.equal(lan2, 0);
+  var soXf = (files['xl/styles.xml'].match(/<xf\b/g) || []).length;
+  context.baoDamDinhDangNgay_(files);
+  assert.equal((files['xl/styles.xml'].match(/<xf\b/g) || []).length, soXf);
+
+  var o = context.theOMoi_('D2', d10, '');
+  assert.match(o, /<v>46305<\/v>/);
+  assert.equal(/inlineStr|GMT|Oct/.test(o), false);
+});
+
+function gridHoaDon(dong) {
+  var cfg = context.timCauHinh_('Hóa Đơn Đầu Vào');
+  return gridFrom([cfg.tieuDe].concat(dong));
+}
+
+function ganHoaDon(model, grid) {
+  var cfg = context.timCauHinh_('Hóa Đơn Đầu Vào');
+  var header = context.timHangTieuDe_(grid, cfg.khoa);
+  model.sheets['Hóa Đơn Đầu Vào'].rows = context.hangTheoKhoa_(grid, header, cfg);
+  model.sheets['Hóa Đơn Đầu Vào'].col = header.col;
+  model.sheets['Hóa Đơn Đầu Vào'].headers = header.headers;
+  return model;
+}
+
+test('hóa đơn kế thừa số HĐ, bỏ khóa rác, dừng tại TỔNG CỘNG', function () {
+  var cfg = context.timCauHinh_('Hóa Đơn Đầu Vào');
+  var dong = function (map) { return dongTheoTieuDe(cfg.tieuDe, map); };
+  var tong = cfg.tieuDe.map(function () { return ''; });
+  tong[0] = 'TỔNG CỘNG';
+  var grid = gridHoaDon([
+    dong({ 'Số Hóa Đơn': 'HD1', 'Mã SP': 'VP001', 'Số Lượng': 2, 'Ngày Lập HĐ': 46304 }),
+    dong({ 'Số Hóa Đơn': '', 'Mã SP': 'VP482', 'Số Lượng': 1, 'Tên Hàng Hóa / Quy Cách': 'Keo' }),
+    dong({ 'Số Hóa Đơn': '', 'Mã SP': 'VP482', 'Số Lượng': 4, 'Tên Hàng Hóa / Quy Cách': 'Keo le' }),
+    dong({ 'Số Hóa Đơn': '|VP483', 'Mã SP': '|VP483' }),
+    dong({ 'Số Hóa Đơn': '', 'Mã SP': '|⚠ Không khớp' }),
+    tong,
+    dong({ 'Số Hóa Đơn': '', 'Mã SP': 'VP999', 'Số Lượng': 9 })
+  ]);
+  var header = context.timHangTieuDe_(grid, cfg.khoa);
+  var rows = context.hangTheoKhoa_(grid, header, cfg);
+  assert.ok(rows['HD1|VP001']);
+  assert.ok(rows['HD1|VP482']);
+  assert.ok(rows['HD1|VP482#2']);
+  var oSo = rows['HD1|VP482'].cells[header.col[context.chuanTieuDe_('Số Hóa Đơn')]];
+  assert.equal(!oSo || oSo.v == null || oSo.v === '', true);
+  assert.equal(rows['HD1|VP999'], undefined);
+  assert.equal(Object.keys(rows).some(function (k) { return k.charAt(0) === '|' || k.indexOf('⚠') >= 0 || k.indexOf('VP999') >= 0; }), false);
+  assert.equal(context.khoaHong_('|VP482'), true);
+  assert.equal(context.khoaHong_('|VP482|||'), true);
+  assert.equal(context.khoaHong_('||'), true);
+  assert.equal(context.khoaHong_('|⚠ Không khớp'), true);
+  assert.equal(context.khoaHong_('|VP483'), true);
+  assert.equal(context.khoaHong_('HD1|VP482'), false);
+  assert.equal(context.phanKhoa_('HD9|VP482#2', 0), 'HD9');
+  assert.equal(context.phanKhoa_('HD9|VP482#2', 1), 'VP482');
+  assert.equal(context.phanKhoa_('|VP482', 0), '');
+
+  var goc = ganHoaDon(moDayDu(), gridHoaDon([
+    dong({ 'Số Hóa Đơn': 'HD1', 'Mã SP': 'VP001', 'Số Lượng': 2 }),
+    dong({ 'Mã SP': 'VP482', 'Số Lượng': 1 })
+  ]));
+  var sheet = ganHoaDon(clone(goc), gridHoaDon([
+    dong({ 'Số Hóa Đơn': 'HD1', 'Mã SP': 'VP001', 'Số Lượng': 2 }),
+    dong({ 'Mã SP': 'VP482', 'Số Lượng': 1 })
+  ]));
+  var plan = context.gopBaBen_(clone(goc), clone(goc), sheet, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.themDong.length, 0);
+  assert.equal(plan.canXuat, false);
+
+  var rac = clone(goc);
+  rac.sheets['Hóa Đơn Đầu Vào'].rows['|VP482|||'] = { row: 40, cells: { 6: { v: '|VP482|||', f: false, img: false, formula: '' } } };
+  rac.sheets['Hóa Đơn Đầu Vào'].rows['|VP483'] = { row: 41, cells: { 6: { v: '|VP483', f: false, img: false, formula: '' } } };
+  rac.sheets['Hóa Đơn Đầu Vào'].rows['|⚠ Không khớp'] = { row: 42, cells: { 6: { v: '⚠', f: false, img: false, formula: '' } } };
+  rac.sheets['Hóa Đơn Đầu Vào'].rows['||'] = { row: 43, cells: {} };
+  plan = context.gopBaBen_(clone(goc), clone(goc), rac, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.canXuat, false);
+  assert.equal(plan.themDong.some(function (d) { return context.khoaHong_(d.khoa); }), false);
+  assert.equal(plan.xoaDong.some(function (d) { return context.khoaHong_(d.khoa); }), false);
+  assert.equal(plan.log.some(function (d) { return context.khoaHong_(d.khoa); }), false);
+
+  var nenRac = clone(goc);
+  nenRac.sheets['Hóa Đơn Đầu Vào'].rows['|VP590'] = { row: 44, cells: {} };
+  var sheetRac = clone(nenRac);
+  plan = context.gopBaBen_(nenRac, clone(goc), sheetRac, {});
+  assert.equal(plan.ok, true, plan.lyDo);
+  assert.equal(plan.xoaDong.some(function (d) { return d.khoa === '|VP590'; }), false);
+  assert.equal(/xóa quá nhiều dòng/.test(plan.lyDo || ''), false);
+});
+
+test('thêm dòng hóa đơn ghi từng cột khóa và chèn trên TỔNG CỘNG', function () {
+  var cfg = context.timCauHinh_('Hóa Đơn Đầu Vào');
+  var tieuDe = cfg.tieuDe.slice();
+  var n = tieuDe.length;
+  function hang(vals) {
+    var r = [];
+    var i;
+    for (i = 0; i < n; i++) r.push(vals[i] == null ? '' : vals[i]);
+    return r;
+  }
+  var dong1 = hang([]);
+  dong1[1] = 'HD1';
+  dong1[6] = 'VP001';
+  dong1[9] = 2;
+  var tong = hang([]);
+  tong[0] = 'TỔNG CỘNG';
+  var data = [tieuDe, dong1, tong];
+  var fRong = tieuDe.map(function () { return ''; });
+  var fDuLieu = fRong.slice();
+  fDuLieu[6] = '=IF(C2="","","VP001")';
+  var forms = [fRong.slice(), fDuLieu, fRong.slice()];
+  var sh = taoSheetNho('Hóa Đơn Đầu Vào', data, forms);
+  var ss = { getSheetByName: function () { return sh; } };
+  context.apDungKeHoach_(ss, {
+    ghiSheet: [],
+    xoaDong: [],
+    themDong: [{
+      tab: 'Hóa Đơn Đầu Vào',
+      khoa: 'HD9|VP482#2',
+      cells: { 4: 'NCC moi', 9: 3 }
+    }]
+  });
+  assert.deepEqual(sh._inserted, [3]);
+  assert.equal(sh._data[2][1], 'HD9');
+  assert.equal(sh._data[2][4], 'NCC moi');
+  assert.equal(sh._data[2][9], 3);
+  assert.match(sh._forms[2][6], /C3/);
+  assert.equal(sh._data[2][6] === 'HD9|VP482' || sh._data[2][6] === 'VP482', false);
+  assert.equal(JSON.stringify(sh._data).indexOf('HD9|VP482'), -1);
+  assert.equal(JSON.stringify(sh._data).indexOf('|VP482'), -1);
+  assert.equal(sh._data[3][0], 'TỔNG CỘNG');
+  assert.equal(sh._data[1][1], 'HD1');
 });
 
 test('mã nguồn không chứa bí mật, không tạo file giá mới, không gọi KiotViet', function () {

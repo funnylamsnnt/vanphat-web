@@ -190,15 +190,31 @@ function timTheC_(xml, ref) {
   return null;
 }
 
+var NUMFMT_NGAY_CODE = 'dd/mm/yyyy';
+var CHI_SO_STYLE_NGAY = -1;
+
+function nenGhiSerialNgay_(value) {
+  if (value instanceof Date && !isNaN(value.getTime())) return true;
+  return !!(laChuoiDateJs_(value) && ngayTuChuoi_(value));
+}
+
 function theOMoi_(ref, value, attrs) {
   var style = '';
   var sm = String(attrs || '').match(/\ss="[^"]*"/);
   if (sm) style = sm[0];
-  if (typeof value === 'number' && isFinite(value)) {
-    return '<c r="' + ref + '"' + style + '><v>' + value + '</v></c>';
+  var ghi = value;
+  if (nenGhiSerialNgay_(value)) {
+    var so = giaTriGhiExcel_(value);
+    if (typeof so === 'number' && isFinite(so)) {
+      ghi = so;
+      if (CHI_SO_STYLE_NGAY >= 0) style = ' s="' + CHI_SO_STYLE_NGAY + '"';
+    }
   }
-  if (value == null || value === '') return '<c r="' + ref + '"' + style + '/>';
-  return '<c r="' + ref + '"' + style + ' t="inlineStr"><is><t xml:space="preserve">' + xmlEscape_(value) + '</t></is></c>';
+  if (typeof ghi === 'number' && isFinite(ghi)) {
+    return '<c r="' + ref + '"' + style + '><v>' + ghi + '</v></c>';
+  }
+  if (ghi == null || ghi === '') return '<c r="' + ref + '"' + style + '/>';
+  return '<c r="' + ref + '"' + style + ' t="inlineStr"><is><t xml:space="preserve">' + xmlEscape_(ghi) + '</t></is></c>';
 }
 
 function chenOVaoHang_(xml, ref, value) {
@@ -365,4 +381,135 @@ function laXlsxBlob_(blob, min) {
 function doDaiBlob_(blob) {
   if (blob && typeof blob.getBytes === 'function') return blob.getBytes().length;
   return blob && blob.length ? blob.length : 0;
+}
+
+function timStylesPath_(files) {
+  var keys = Object.keys(files || {});
+  var i;
+  for (i = 0; i < keys.length; i++) {
+    if (chuanKey_(keys[i]) === 'xl/styles.xml') return keys[i];
+  }
+  return '';
+}
+
+function chenStyleNgay_(xml) {
+  xml = String(xml || '');
+  var used = {};
+  var reFmt = /<numFmt\b([^>]*)\/?>/g;
+  var m;
+  var idCo = 0;
+  while ((m = reFmt.exec(xml))) {
+    var fid = parseInt(thuocTinh_(m[1], 'numFmtId'), 10);
+    var code = thuocTinh_(m[1], 'formatCode');
+    if (isFinite(fid)) used[fid] = code;
+    if (code === NUMFMT_NGAY_CODE && isFinite(fid)) idCo = fid;
+  }
+  var id = idCo;
+  if (!id) {
+    id = 176;
+    while (used[id]) id++;
+    var the = '<numFmt numFmtId="' + id + '" formatCode="' + NUMFMT_NGAY_CODE + '"/>';
+    if (/<numFmts\b/.test(xml)) {
+      xml = xml.replace(/<numFmts\b([^>]*)>/, function (_, attrs) {
+        var count = parseInt(thuocTinh_(attrs, 'count') || '0', 10) + 1;
+        var a2 = attrs;
+        if (/count="\d+"/.test(a2)) a2 = a2.replace(/count="\d+"/, 'count="' + count + '"');
+        else a2 += ' count="' + count + '"';
+        if (a2.charAt(0) !== ' ') a2 = ' ' + a2;
+        return '<numFmts' + a2 + '>' + the;
+      });
+    } else if (/<styleSheet\b/.test(xml)) {
+      xml = xml.replace(/<styleSheet\b[^>]*>/, function (open) {
+        return open + '<numFmts count="1">' + the + '</numFmts>';
+      });
+    } else {
+      xml = '<styleSheet><numFmts count="1">' + the + '</numFmts><cellXfs count="0"></cellXfs></styleSheet>';
+    }
+  }
+  var reBlock = /<cellXfs\b([^>]*)>([\s\S]*?)<\/cellXfs>/;
+  var block = xml.match(reBlock);
+  if (!block) {
+    xml = xml.replace(/<\/styleSheet>/, '<cellXfs count="1"><xf numFmtId="' + id + '" applyNumberFormat="1"/></cellXfs></styleSheet>');
+    return { xml: xml, index: 0 };
+  }
+  var inner = block[2];
+  var reOne = /<xf\b([^>]*?)\/>|<xf\b([^>]*?)>[\s\S]*?<\/xf>/g;
+  var i = 0;
+  var found = -1;
+  while ((m = reOne.exec(inner))) {
+    var at = m[1] != null ? m[1] : (m[2] || '');
+    if (parseInt(thuocTinh_(at, 'numFmtId') || '0', 10) === id && thuocTinh_(at, 'applyNumberFormat') === '1') found = i;
+    i++;
+  }
+  if (found >= 0) return { xml: xml, index: found };
+  var countXf = i + 1;
+  var attrs = block[1] || '';
+  if (/count="\d+"/.test(attrs)) attrs = attrs.replace(/count="\d+"/, 'count="' + countXf + '"');
+  else attrs += ' count="' + countXf + '"';
+  if (attrs.charAt(0) !== ' ') attrs = ' ' + attrs;
+  var neu = '<cellXfs' + attrs + '>' + inner + '<xf numFmtId="' + id + '" applyNumberFormat="1"/></cellXfs>';
+  xml = xml.replace(reBlock, neu);
+  return { xml: xml, index: i };
+}
+
+function baoDamDinhDangNgay_(files) {
+  var path = timStylesPath_(files);
+  var xml = path ? noiDungTep_(layTep_(files, path)) : '';
+  if (!xml) {
+    path = 'xl/styles.xml';
+    xml = '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cellXfs count="1"><xf numFmtId="0"/></cellXfs></styleSheet>';
+  }
+  var ket = chenStyleNgay_(xml);
+  files[path] = ket.xml;
+  CHI_SO_STYLE_NGAY = ket.index;
+  return ket.index;
+}
+
+function suaNgayTrongXml_(xml, shared) {
+  return String(xml || '').replace(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g, function (all, attrs, inner) {
+    if (inner == null) return all;
+    var loai = thuocTinh_(attrs, 't');
+    var text = '';
+    if (loai === 'inlineStr') text = noiText_(inner);
+    else if (loai === 'str') {
+      var raw = theV_(inner);
+      text = raw == null ? '' : giaiXml_(raw);
+    } else if (loai === 's') {
+      var rawS = theV_(inner);
+      var idx = parseInt(rawS, 10);
+      text = shared && shared[idx] != null ? shared[idx] : '';
+    } else return all;
+    if (!nenGhiSerialNgay_(text)) return all;
+    var ref = thuocTinh_(attrs, 'r');
+    if (!ref) return all;
+    return theOMoi_(ref, text, attrs);
+  });
+}
+
+/** Đổi ô chữ Date toString trong xlsx thành serial ngày, có numFmt dd/mm/yyyy. */
+function chuanHoaNgayXlsx_(files) {
+  CHI_SO_STYLE_NGAY = -1;
+  if (!files) return 0;
+  var keys = Object.keys(files);
+  var can = false;
+  var i;
+  for (i = 0; i < keys.length; i++) {
+    if (!/xl\/worksheets\/sheet\d+\.xml$/i.test(chuanKey_(keys[i]))) continue;
+    if (/GMT[+-]\d{4}/.test(noiDungTep_(layTep_(files, keys[i])))) { can = true; break; }
+  }
+  if (!can) return 0;
+  baoDamDinhDangNgay_(files);
+  var sharedXml = layTep_(files, 'xl/sharedStrings.xml');
+  var shared = docShared_(sharedXml ? noiDungTep_(sharedXml) : '');
+  var n = 0;
+  for (i = 0; i < keys.length; i++) {
+    if (!/xl\/worksheets\/sheet\d+\.xml$/i.test(chuanKey_(keys[i]))) continue;
+    var cu = noiDungTep_(layTep_(files, keys[i]));
+    var moi = suaNgayTrongXml_(cu, shared);
+    if (moi !== cu) {
+      files[keys[i]] = moi;
+      n++;
+    }
+  }
+  return n;
 }

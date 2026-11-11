@@ -58,12 +58,129 @@ function chuanSoChuoi_(n) {
   return s;
 }
 
+function chuNgay_(nam, thang, ngay) {
+  return nam + '-' + haiSo_(thang) + '-' + haiSo_(ngay);
+}
+
+function ngayHopLe_(nam, thang, ngay) {
+  if (!isFinite(nam) || !isFinite(thang) || !isFinite(ngay)) return false;
+  if (nam < 1900 || nam > 2100) return false;
+  var t = new Date(Date.UTC(nam, thang - 1, ngay));
+  return t.getUTCFullYear() === nam && t.getUTCMonth() === thang - 1 && t.getUTCDate() === ngay;
+}
+
+/** Ngày lịch theo Asia/Ho_Chi_Minh. Bỏ giờ trong ngày. */
+function ngayTuDate_(date) {
+  if (!(date instanceof Date) || isNaN(date.getTime())) return '';
+  var hm = gioPhutSaigon_(date);
+  if (!ngayHopLe_(hm.nam, hm.thang, hm.ngay)) return '';
+  return chuNgay_(hm.nam, hm.thang, hm.ngay);
+}
+
+/**
+ * Chuỗi ngày rõ: dd/mm/yyyy, yyyy-mm-dd, giờ tường, ISO có múi giờ, hoặc Date toString.
+ * Không đổi số thường.
+ */
+function ngayTuChuoi_(s) {
+  var t = String(s == null ? '' : s).trim();
+  if (!t) return '';
+  var m = t.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{4})$/);
+  if (m) {
+    if (!ngayHopLe_(+m[3], +m[2], +m[1])) return '';
+    return chuNgay_(+m[3], +m[2], +m[1]);
+  }
+  m = t.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) {
+    if (!ngayHopLe_(+m[1], +m[2], +m[3])) return '';
+    return chuNgay_(+m[1], +m[2], +m[3]);
+  }
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(t) && /(?:Z|[+-]\d{2}:?\d{2})$/.test(t)) {
+    var iso = new Date(t);
+    if (!isNaN(iso.getTime())) return ngayTuDate_(iso);
+  }
+  m = t.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+  if (m) {
+    if (!ngayHopLe_(+m[1], +m[2], +m[3])) return '';
+    return chuNgay_(+m[1], +m[2], +m[3]);
+  }
+  if (/^(?:Sun|Mon|Tue|Wed|Thu|Fri|Sat)\s/.test(t) && /GMT[+-]\d{4}/.test(t)) {
+    var js = new Date(t);
+    if (!isNaN(js.getTime())) return ngayTuDate_(js);
+  }
+  return '';
+}
+
+function ngayRo_(v) {
+  if (v instanceof Date) return ngayTuDate_(v);
+  if (typeof v === 'string') return ngayTuChuoi_(v);
+  return '';
+}
+
+function soThuan_(v) {
+  if (typeof v === 'number' && isFinite(v)) return v;
+  if (typeof v !== 'string') return null;
+  var s = v.trim();
+  if (!/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(s)) return null;
+  if (/^-?0\d/.test(s)) return null;
+  var nguyen = s.replace('-', '').split('.')[0];
+  if (nguyen.length > 15) return null;
+  return Number(s);
+}
+
+/** Serial Excel (mốc 1899-12-30). Phần thập phân là giờ, không làm tròn sang ngày sau. */
+function ngayTuSerial_(n) {
+  if (n == null || !isFinite(n)) return '';
+  var ngay = Math.floor(n + 1e-6);
+  if (ngay < 61 || ngay > 80000) return '';
+  var t = new Date(Date.UTC(1899, 11, 30) + ngay * 86400000);
+  var nam = t.getUTCFullYear();
+  var thang = t.getUTCMonth() + 1;
+  var d = t.getUTCDate();
+  if (!ngayHopLe_(nam, thang, d)) return '';
+  return chuNgay_(nam, thang, d);
+}
+
+function serialTuNgayChu_(chu) {
+  var p = String(chu || '').split('-');
+  if (p.length < 3) return null;
+  var nam = +p[0];
+  var thang = +p[1];
+  var ngay = +p[2];
+  if (!ngayHopLe_(nam, thang, ngay)) return null;
+  return Math.round((Date.UTC(nam, thang - 1, ngay) - Date.UTC(1899, 11, 30)) / 86400000);
+}
+
+function laChuoiDateJs_(v) {
+  return typeof v === 'string' && /^(?:Sun|Mon|Tue|Wed|Thu|Fri|Sat)\s/.test(v) && /GMT[+-]\d{4}/.test(v);
+}
+
+/** Date, chữ ngày, hoặc Date toString thành serial. Số và chữ không phải ngày giữ nguyên. */
+function giaTriGhiExcel_(v) {
+  var ngay = '';
+  if (v instanceof Date) ngay = ngayTuDate_(v);
+  else if (typeof v === 'string' && (laChuoiDateJs_(v) || /^\d{4}-\d{2}-\d{2}T/.test(v))) ngay = ngayTuChuoi_(v);
+  else if (typeof v === 'string') ngay = ngayTuChuoi_(v);
+  if (!ngay) return v;
+  var serial = serialTuNgayChu_(ngay);
+  return serial == null ? v : serial;
+}
+
+function chuoiHien_(v) {
+  if (v instanceof Date || (typeof v === 'string' && ngayTuChuoi_(v))) {
+    var g = giaTriGhiExcel_(v);
+    if (typeof g === 'number' && isFinite(g)) return String(g);
+  }
+  return catChuoi_(v);
+}
+
 function chuanGiaTri_(v) {
   if (v == null || v === '') return '';
   if (typeof v === 'boolean') return v ? '1' : '0';
+  if (v instanceof Date) return ngayTuDate_(v);
   if (typeof v === 'number' && isFinite(v)) return chuanSoChuoi_(v);
-  if (v instanceof Date) return dinhDangSaigon_(v);
   var s = String(v).trim();
+  var nc = ngayTuChuoi_(s);
+  if (nc) return nc;
   if (/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(s)) {
     if (/^-?0\d/.test(s)) return s;
     var nguyen = s.replace('-', '').split('.')[0];
@@ -74,6 +191,14 @@ function chuanGiaTri_(v) {
 }
 
 function cungGiaTri_(a, b) {
+  var ra = ngayRo_(a);
+  var rb = ngayRo_(b);
+  if (ra || rb) {
+    var na = ra || ngayTuSerial_(soThuan_(a));
+    var nb = rb || ngayTuSerial_(soThuan_(b));
+    if (na && nb) return na === nb;
+    return false;
+  }
   return chuanGiaTri_(a) === chuanGiaTri_(b);
 }
 
@@ -238,7 +363,69 @@ function thieuTen_(colMap, ds) {
   return thieu;
 }
 
-function khoaTuDong_(cells, cfg, colMap) {
+function laTabKeThuaHoaDon_(cfg) {
+  var khoa = (cfg && cfg.khoa) || [];
+  if (!khoa.length) return false;
+  return chuanTieuDe_(khoa[0]) === chuanTieuDe_('Số Hóa Đơn');
+}
+
+function laNhanTongCong_(v) {
+  var t = chuanTieuDe_(v == null ? '' : v);
+  if (!t) return false;
+  return t === 'tong cong' || /^tong cong\s*(?:[:;]|\([^)]*\))?$/.test(t);
+}
+
+function dongTongCong_(grid) {
+  var ds = Object.keys(grid || {}).map(function (rk) { return +rk; });
+  ds.sort(function (a, b) { return a - b; });
+  var i;
+  var c;
+  for (i = 0; i < ds.length; i++) {
+    var row = grid[ds[i]] || {};
+    var cols = Object.keys(row);
+    for (c = 0; c < cols.length; c++) {
+      var cell = row[cols[c]];
+      var raw = cell && cell.v != null ? cell.v : '';
+      if (raw instanceof Date) continue;
+      if (laNhanTongCong_(raw)) return ds[i];
+    }
+  }
+  return 0;
+}
+
+function catGridTruocTong_(grid) {
+  var moc = dongTongCong_(grid);
+  if (!moc) return grid || {};
+  var out = {};
+  Object.keys(grid || {}).forEach(function (rk) {
+    if (+rk < moc) out[rk] = grid[rk];
+  });
+  return out;
+}
+
+/** Khóa rác từ lần ghi cả cụm: chỉ dấu |, bắt đầu bằng |, ||, hoặc có ⚠. */
+function khoaHong_(khoa) {
+  var goc = String(khoa == null ? '' : khoa).split('#')[0];
+  if (!goc) return true;
+  if (goc.indexOf('⚠') >= 0 || String(khoa).indexOf('⚠') >= 0) return true;
+  if (/^[\|\s]+$/.test(goc)) return true;
+  if (goc.charAt(0) === '|') return true;
+  if (goc.indexOf('||') >= 0) return true;
+  if (/\|$/.test(goc)) return true;
+  return false;
+}
+
+function phanKhoa_(khoa, viTri) {
+  var goc = String(khoa == null ? '' : khoa).split('#')[0];
+  var phan = goc.split('|');
+  if (viTri < 0 || viTri >= phan.length) return '';
+  var rieng = phan[viTri];
+  if (!rieng || rieng.indexOf('|') >= 0) return '';
+  return rieng;
+}
+
+function khoaTuDong_(cells, cfg, colMap, keThua) {
+  keThua = keThua || {};
   var tenKhoa = cfg.khoa || [];
   var parts = [];
   var i;
@@ -246,6 +433,7 @@ function khoaTuDong_(cells, cfg, colMap) {
   for (i = 0; i < tenKhoa.length; i++) {
     var idx = colMap[chuanTieuDe_(tenKhoa[i])];
     var v = idx == null ? '' : chuanGiaTri_(giaO_(cells[idx]));
+    if (!v && keThua[tenKhoa[i]]) v = keThua[tenKhoa[i]];
     if (v) trong = false;
     parts.push(v);
   }
@@ -263,18 +451,43 @@ function khoaTuDong_(cells, cfg, colMap) {
   return parts.join('|');
 }
 
+function hangCoKhoaCon_(cells, cfg, colMap) {
+  var tenKhoa = (cfg && cfg.khoa) || [];
+  var i;
+  for (i = 1; i < tenKhoa.length; i++) {
+    var idx = colMap[chuanTieuDe_(tenKhoa[i])];
+    if (idx == null) continue;
+    if (chuanGiaTri_(giaO_(cells[idx]))) return true;
+  }
+  return false;
+}
+
 function hangTheoKhoa_(grid, header, cfg) {
+  if (laTabKeThuaHoaDon_(cfg)) grid = catGridTruocTong_(grid);
   var rows = {};
   var thuTu = {};
-  Object.keys(grid || {}).forEach(function (rk) {
-    var r = +rk;
-    if (r <= header.row) return;
-    var khoa = khoaTuDong_(grid[r], cfg, header.col);
-    if (!khoa) return;
+  var soCuoi = '';
+  var keThuaHd = laTabKeThuaHoaDon_(cfg);
+  var idxSo = keThuaHd ? header.col[chuanTieuDe_('Số Hóa Đơn')] : null;
+  var ds = Object.keys(grid || {}).map(function (rk) { return +rk; });
+  ds.sort(function (a, b) { return a - b; });
+  var i;
+  for (i = 0; i < ds.length; i++) {
+    var r = ds[i];
+    if (r <= header.row) continue;
+    var cells = grid[r];
+    var ke = {};
+    if (keThuaHd && idxSo != null) {
+      var so = chuanGiaTri_(giaO_(cells[idxSo]));
+      if (so) soCuoi = so;
+      else if (soCuoi && hangCoKhoaCon_(cells, cfg, header.col)) ke['Số Hóa Đơn'] = soCuoi;
+    }
+    var khoa = khoaTuDong_(cells, cfg, header.col, ke);
+    if (!khoa || khoaHong_(khoa)) continue;
     thuTu[khoa] = (thuTu[khoa] || 0) + 1;
     var key = thuTu[khoa] === 1 ? khoa : khoa + '#' + thuTu[khoa];
-    rows[key] = { row: r, cells: grid[r] };
-  });
+    rows[key] = { row: r, cells: cells };
+  }
   return rows;
 }
 
@@ -312,6 +525,7 @@ function moHinhTuGrid_(sheetNames, grids, pathsIgnored) {
       return;
     }
     var grid = grids[ten] || {};
+    if (laTabKeThuaHoaDon_(cfg)) grid = catGridTruocTong_(grid);
     if (cfg.cheDo === 'o') {
       sheets[ten] = { cheDo: 'o', o: oTuGrid_(grid) };
       return;
@@ -510,7 +724,7 @@ function lietKeXoa_(baseRows, excelRows, sheetRows) {
   Object.keys(sheetRows || {}).forEach(function (k) {
     if (seen[k] || baseRows[k] || excelRows[k]) return;
   });
-  return out;
+  return out.filter(function (d) { return !khoaHong_(d.khoa); });
 }
 
 function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
@@ -523,7 +737,8 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
   var xoa = [];
   if (opts.dayExcel) {
     Object.keys(sRows).forEach(function (k) {
-      if (!eRows[k]) xoa.push({ khoa: k, excel: true, sheet: false, row: sRows[k].row });
+      if (khoaHong_(k) || eRows[k]) return;
+      xoa.push({ khoa: k, excel: true, sheet: false, row: sRows[k].row });
     });
   } else {
     xoa = lietKeXoa_(bRows, eRows, sRows);
@@ -531,7 +746,7 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
   xoa.forEach(function (d) { d.tab = ten; tui.xoaUng.push(d); });
 
   Object.keys(eRows).forEach(function (k) {
-    if (sRows[k]) return;
+    if (khoaHong_(k) || sRows[k]) return;
     var cells = {};
     cot.forEach(function (idx) {
       var cell = eRows[k].cells[idx];
@@ -545,7 +760,7 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
 
   if (!opts.dayExcel) {
     Object.keys(sRows).forEach(function (k) {
-      if (eRows[k] || bRows[k]) return;
+      if (khoaHong_(k) || eRows[k] || bRows[k]) return;
       tui.canXuat = true;
       tui.log.push({ tab: ten, khoa: k, cot: '', o: '', nguon: 'sheet', cu: '', moi: k, ghiChu: 'thêm dòng từ Sheet, sẽ có khi xuất Excel' });
     });
@@ -554,6 +769,7 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
   var chung = {};
   Object.keys(eRows).forEach(function (k) { if (sRows[k]) chung[k] = true; });
   Object.keys(chung).forEach(function (k) {
+    if (khoaHong_(k)) return;
     cot.forEach(function (idx) {
       var ce = eRows[k].cells[idx];
       var cs = sRows[k].cells[idx];
@@ -582,19 +798,19 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
       })) return;
       if (quyet === 'excel') {
         tui.ghiSheet.push({ tab: ten, khoa: k, col: idx, row: sRows[k].row, giaTri: ve, nguon: 'excel' });
-        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'excel', cu: catChuoi_(vs), moi: catChuoi_(ve), ghiChu: '' });
+        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'excel', cu: chuoiHien_(vs), moi: chuoiHien_(ve), ghiChu: '' });
         tui.canXuat = true;
       } else if (quyet === 'sheet') {
         tui.canXuat = true;
-        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'sheet', cu: catChuoi_(ve), moi: catChuoi_(vs), ghiChu: '' });
+        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'sheet', cu: chuoiHien_(ve), moi: chuoiHien_(vs), ghiChu: '' });
       } else {
         tui.canXuat = true;
         tui.xungDot.push({
           tab: ten, khoa: k, cot: tenCot, o: diaChi,
-          nen: catChuoi_(vb), excel: catChuoi_(ve), sheet: catChuoi_(vs),
+          nen: chuoiHien_(vb), excel: chuoiHien_(ve), sheet: chuoiHien_(vs),
           ketLuan: 'Sheet thắng'
         });
-        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'xung-dot', cu: catChuoi_(ve), moi: catChuoi_(vs), ghiChu: 'Sheet thắng' });
+        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'xung-dot', cu: chuoiHien_(ve), moi: chuoiHien_(vs), ghiChu: 'Sheet thắng' });
       }
     });
   });
@@ -676,15 +892,15 @@ function gopO_(ten, nenTab, excelTab, sheetTab, opts, tui) {
     if (quyet === 'excel') {
       if (!cs && (ve === '' || ve == null)) return;
       tui.ghiSheet.push({ tab: ten, khoa: ref, col: col, row: row, giaTri: ve, nguon: 'excel' });
-      tui.log.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nguon: 'excel', cu: catChuoi_(vs), moi: catChuoi_(ve), ghiChu: '' });
+      tui.log.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nguon: 'excel', cu: chuoiHien_(vs), moi: chuoiHien_(ve), ghiChu: '' });
       tui.canXuat = true;
     } else if (quyet === 'sheet') {
       tui.canXuat = true;
-      tui.log.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nguon: 'sheet', cu: catChuoi_(ve), moi: catChuoi_(vs), ghiChu: '' });
+      tui.log.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nguon: 'sheet', cu: chuoiHien_(ve), moi: chuoiHien_(vs), ghiChu: '' });
     } else {
       tui.canXuat = true;
-      tui.xungDot.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nen: catChuoi_(vb), excel: catChuoi_(ve), sheet: catChuoi_(vs), ketLuan: 'Sheet thắng' });
-      tui.log.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nguon: 'xung-dot', cu: catChuoi_(ve), moi: catChuoi_(vs), ghiChu: 'Sheet thắng' });
+      tui.xungDot.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nen: chuoiHien_(vb), excel: chuoiHien_(ve), sheet: chuoiHien_(vs), ketLuan: 'Sheet thắng' });
+      tui.log.push({ tab: ten, khoa: ref, cot: cotChu_(col), o: ref, nguon: 'xung-dot', cu: chuoiHien_(ve), moi: chuoiHien_(vs), ghiChu: 'Sheet thắng' });
     }
   });
 }

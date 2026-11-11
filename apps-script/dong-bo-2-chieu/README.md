@@ -63,7 +63,9 @@ Giá cột E (`Đơn Giá (Gồm VAT 8%)`): chuỗi `45.000 đ`, `45.000`, `45,0
 
 Mã `VP001` .. `VPn` phải liên tục. Mất mã so với Excel hiện tại thì dừng. Sheet xóa một mã mà Excel còn thì giữ mã, ghi `SYNC_XungDot`, và vẫn tính vào ngưỡng xóa. Excel xóa mã ở giữa thì dừng vì đứt dãy. Xóa đúng mã cuối, dưới ngưỡng, thì được.
 
-Hóa Đơn Đầu Vào và Hóa Đơn Đầu Ra được đồng bộ theo khóa, không theo số dòng. Khóa Hóa Đơn Đầu Vào là `Số Hóa Đơn` + `Mã SP`. Excel dừng ở dòng 369 trong khi Sheet còn dòng 370–376 nghĩa là Sheet đang có thêm khóa mà Excel chưa có. Khóa chỉ có trên Sheet và chưa có trong bản chụp được đưa sang Excel ở lần xuất. Khóa đã có trong bản chụp mà Excel không còn thì tính là xóa trên Sheet, vẫn chịu ngưỡng 10 dòng.
+Hóa Đơn Đầu Vào và Hóa Đơn Đầu Ra được đồng bộ theo khóa, không theo số dòng. Khóa là `Số Hóa Đơn` + `Mã SP`. Dòng tiếp của cùng một hóa đơn để trống Số Hóa Đơn: script lấy số ở dòng tiêu đề phía trên để khóa ổn định, không ghép cả chuỗi khóa vào từng cột. Cột khóa nào đang là công thức (ví dụ Mã SP) thì giữ công thức, không ghi đè bằng chữ khóa. Dòng có nhãn `TỔNG CỘNG` và mọi dòng dưới nó không được đọc hay ghi; dòng mới chèn phía trên dòng tổng. Khóa chỉ gồm dấu `|`, bắt đầu bằng `|`, có `||`, hoặc có `⚠` bị bỏ qua, không thêm sang bên kia và không xóa. Excel dừng ở dòng 369 trong khi Sheet còn dòng 370–376 nghĩa là Sheet đang có thêm khóa mà Excel chưa có. Khóa chỉ có trên Sheet và chưa có trong bản chụp được đưa sang Excel ở lần xuất. Khóa đã có trong bản chụp mà Excel không còn thì tính là xóa trên Sheet, vẫn chịu ngưỡng 10 dòng.
+
+Ô ngày (Ngày Lập HĐ và các ô ngày khác) so theo ngày lịch múi giờ Asia/Ho_Chi_Minh, bỏ giờ trong ngày. Serial Excel, đối tượng Date và chuỗi `dd/mm/yyyy` cùng một ngày thì không thành diff. Khi ngày thật sự đổi và được ghi vào Excel, ô là số serial kèm định dạng `dd/mm/yyyy`, không phải chữ `Date.toString()`.
 
 ## Ngưỡng xóa
 
