@@ -438,6 +438,7 @@ function moHinhTuMap_(files) {
 
 function moSheetGia_() {
   var ss = SpreadsheetApp.openById(GSHEET_ID);
+  datMuiGioSheet_(ss.getSpreadsheetTimeZone());
   var all = ss.getSheets();
   var byName = {};
   var i;
