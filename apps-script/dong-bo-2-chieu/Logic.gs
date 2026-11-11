@@ -119,13 +119,69 @@ function giaO_(cell) {
   return cell.v == null ? '' : cell.v;
 }
 
-function laGiaThat_(v) {
-  if (typeof v === 'number' && isFinite(v)) return v > 0;
-  if (typeof v === 'string' && /^-?\d+(\.\d+)?$/.test(v.trim())) {
-    var n = Number(v);
-    return isFinite(n) && n > 0;
+/**
+ * Giá bán. Dấu chấm nhóm 3 số là hàng nghìn (45.000 = 45000).
+ * "45.000 đ", "45.000", "45,000", "45000đ" đều là 45000.
+ * Trả về null khi trống, bằng 0, hoặc không đọc được thành số lớn hơn 0.
+ */
+function phanTichGia_(v) {
+  if (typeof v === 'number') {
+    if (!isFinite(v) || v <= 0) return null;
+    return v;
   }
-  return false;
+  if (v == null || v === '' || typeof v === 'boolean' || v instanceof Date) return null;
+  var s = String(v).replace(/[\s\u00a0]+/g, '');
+  if (!s) return null;
+  s = s.replace(/đồng/ig, '').replace(/dong/ig, '').replace(/vnđ/ig, '').replace(/vnd/ig, '').replace(/đ/ig, '');
+  if (/^d/i.test(s)) s = s.replace(/^d/i, '');
+  if (/d$/i.test(s)) s = s.replace(/d$/i, '');
+  if (!s) return null;
+  if (s.charAt(0) === '+') s = s.slice(1);
+  if (!s || s.charAt(0) === '-') return null;
+  var n = null;
+  if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) n = Number(s.replace(/\./g, '').replace(',', '.'));
+  else if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) n = Number(s.replace(/,/g, ''));
+  else if (/^\d+,\d+$/.test(s)) n = Number(s.replace(',', '.'));
+  else if (/^\d+(\.\d+)?$/.test(s)) n = Number(s);
+  if (n == null || !isFinite(n) || n <= 0) return null;
+  return n;
+}
+
+function laGiaThat_(v) {
+  return phanTichGia_(v) != null;
+}
+
+function chuanGiaCot_(v) {
+  var n = phanTichGia_(v);
+  return n == null ? v : n;
+}
+
+/** Giá trống/0/không đọc được không đè giá thật. Giữ số thật và ghi lại bên đang trống. */
+function giuGiaNeuLech_(tui, o) {
+  var eThat = laGiaThat_(o.ve);
+  var sThat = laGiaThat_(o.vs);
+  if (!(eThat && !sThat) && !(sThat && !eThat)) return false;
+  var thangSheet = o.quyet === 'sheet' || o.quyet === 'xung-dot';
+  if (eThat && !sThat && !thangSheet) return false;
+  if (sThat && !eThat && thangSheet) return false;
+  var giaGiu = eThat ? o.ve : o.vs;
+  var giaBo = eThat ? o.vs : o.ve;
+  var ma = String(o.khoa).split('#')[0];
+  tui.giaGiu[ma] = giaGiu;
+  tui.log.push({
+    tab: o.tab, khoa: o.khoa, cot: o.cot, o: o.o, nguon: 'giu-gia',
+    cu: catChuoi_(giaGiu), moi: catChuoi_(giaBo),
+    ghiChu: 'giá 0/trống không đè giá thật, giữ giá thật và ghi lại bên trống'
+  });
+  if (eThat) {
+    tui.ghiSheet.push({
+      tab: o.tab, khoa: o.khoa, col: o.col, row: o.row,
+      giaTri: giaGiu, nguon: 'giu-gia'
+    });
+  } else {
+    tui.canXuat = true;
+  }
+  return true;
 }
 
 function laBoQuaO_(cell) {
@@ -389,9 +445,7 @@ function kiemTraXuat_(moi, cu) {
     if (!cu.items || !cu.items[c]) return;
     var cuGia = cu.items[c].price;
     var moiGia = moi.items[c].price;
-    var cuThat = typeof cuGia === 'number' && isFinite(cuGia) && cuGia > 0;
-    var moiThat = typeof moiGia === 'number' && isFinite(moiGia) && moiGia > 0;
-    if (cuThat && !moiThat) zero.push(c);
+    if (laGiaThat_(cuGia) && !laGiaThat_(moiGia)) zero.push(c);
   });
   zero.sort(soSanhVp_);
   if (zero.length) errs.push('giá 0/trống sẽ đè giá thật (' + zero.length + '): ' + zero.slice(0, 10).join(', '));
@@ -411,7 +465,9 @@ function itemTuHang_(hang, colMap) {
   var ma = maIdx == null ? '' : chuanGiaTri_(giaO_(hang.cells[maIdx]));
   if (!/^VP\d{3,}$/.test(ma)) return null;
   var price = giaIdx == null ? null : giaO_(hang.cells[giaIdx]);
-  if (price === '') price = null;
+  var soGia = phanTichGia_(price);
+  if (soGia != null) price = soGia;
+  else if (price === '') price = null;
   return {
     ma: ma,
     name: tenIdx == null || giaO_(hang.cells[tenIdx]) === '' ? null : giaO_(hang.cells[tenIdx]),
@@ -460,6 +516,7 @@ function lietKeXoa_(baseRows, excelRows, sheetRows) {
 function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
   var colE = excelTab.col || {};
   var cot = cotDongBo_(cfg, colE);
+  var giaIdx = cfg.cotGia ? colE[chuanTieuDe_(cfg.cotGia)] : null;
   var eRows = excelTab.rows || {};
   var sRows = sheetTab.rows || {};
   var bRows = (nenTab && nenTab.rows) || {};
@@ -502,9 +559,10 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
       var cs = sRows[k].cells[idx];
       var cb = bRows[k] && bRows[k].cells ? bRows[k].cells[idx] : null;
       if (laBoQuaO_(ce) || laBoQuaO_(cs) || laBoQuaO_(cb)) return;
-      var ve = giaO_(ce);
-      var vs = giaO_(cs);
-      var vb = giaO_(cb);
+      var laCotGia = giaIdx != null && idx === giaIdx;
+      var ve = laCotGia ? chuanGiaCot_(giaO_(ce)) : giaO_(ce);
+      var vs = laCotGia ? chuanGiaCot_(giaO_(cs)) : giaO_(cs);
+      var vb = laCotGia ? chuanGiaCot_(giaO_(cb)) : giaO_(cb);
       var quyet;
       if (opts.dayExcel) {
         if (cungGiaTri_(ve, vs)) return;
@@ -518,20 +576,14 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
       if (quyet === 'giu') return;
       var tenCot = tenCotTheoIndex_(excelTab.headers, idx);
       var diaChi = cotChu_(idx) + sRows[k].row;
+      if (laCotGia && giuGiaNeuLech_(tui, {
+        tab: ten, khoa: k, cot: tenCot, o: diaChi, col: idx, row: sRows[k].row,
+        quyet: quyet, ve: ve, vs: vs
+      })) return;
       if (quyet === 'excel') {
-        var giaIdxQuyet = cfg.cotGia ? colE[chuanTieuDe_(cfg.cotGia)] : null;
-        if (giaIdxQuyet != null && idx === giaIdxQuyet && !laGiaThat_(ve) && laGiaThat_(vs)) {
-          tui.giaGiu[k.split('#')[0]] = vs;
-          tui.canXuat = true;
-          tui.log.push({
-            tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'giu-gia',
-            cu: catChuoi_(vs), moi: catChuoi_(ve), ghiChu: 'giá 0/trống không đè giá thật'
-          });
-        } else {
-          tui.ghiSheet.push({ tab: ten, khoa: k, col: idx, row: sRows[k].row, giaTri: ve, nguon: 'excel' });
-          tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'excel', cu: catChuoi_(vs), moi: catChuoi_(ve), ghiChu: '' });
-          tui.canXuat = true;
-        }
+        tui.ghiSheet.push({ tab: ten, khoa: k, col: idx, row: sRows[k].row, giaTri: ve, nguon: 'excel' });
+        tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'excel', cu: catChuoi_(vs), moi: catChuoi_(ve), ghiChu: '' });
+        tui.canXuat = true;
       } else if (quyet === 'sheet') {
         tui.canXuat = true;
         tui.log.push({ tab: ten, khoa: k, cot: tenCot, o: diaChi, nguon: 'sheet', cu: catChuoi_(ve), moi: catChuoi_(vs), ghiChu: '' });
@@ -558,14 +610,16 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
       var goc = eRows[k];
       var it2 = itemTuHang_(goc, colE);
       if (!it2) return;
-      var giaIdx = colE[chuanTieuDe_(cfg.cotGia)];
       var tenIdx = colE[chuanTieuDe_('Tên Sản Phẩm')];
       var gia = it2.price;
       var tenSp = it2.name;
       if (sRows[k] && giaIdx != null && !laBoQuaO_(eRows[k].cells[giaIdx]) && !laBoQuaO_(sRows[k].cells[giaIdx])) {
-        var qs = opts.dayExcel ? 'excel' : (bRows[k] ? quyetDinhO_(giaO_(bRows[k].cells[giaIdx]), giaO_(eRows[k].cells[giaIdx]), giaO_(sRows[k].cells[giaIdx])) : (cungGiaTri_(giaO_(eRows[k].cells[giaIdx]), giaO_(sRows[k].cells[giaIdx])) ? 'giu' : 'xung-dot'));
-        if (qs === 'sheet' || qs === 'xung-dot') gia = giaO_(sRows[k].cells[giaIdx]);
-        else gia = giaO_(eRows[k].cells[giaIdx]);
+        var veG = chuanGiaCot_(giaO_(eRows[k].cells[giaIdx]));
+        var vsG = chuanGiaCot_(giaO_(sRows[k].cells[giaIdx]));
+        var vbG = bRows[k] ? chuanGiaCot_(giaO_(bRows[k].cells[giaIdx])) : '';
+        var qs = opts.dayExcel ? 'excel' : (bRows[k] ? quyetDinhO_(vbG, veG, vsG) : (cungGiaTri_(veG, vsG) ? 'giu' : 'xung-dot'));
+        if (qs === 'sheet' || qs === 'xung-dot') gia = vsG;
+        else gia = veG;
         if (tui.giaGiu[it2.ma] != null) gia = tui.giaGiu[it2.ma];
       }
       if (sRows[k] && tenIdx != null && !laBoQuaO_(eRows[k].cells[tenIdx]) && !laBoQuaO_(sRows[k].cells[tenIdx]) && !laBoQuaO_(bRows[k] && bRows[k].cells[tenIdx])) {

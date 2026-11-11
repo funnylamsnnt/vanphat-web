@@ -59,15 +59,19 @@ Script giữ một bản chụp của lần đồng bộ trước. Mỗi ô so v
 - Hai bên đổi thành cùng một giá trị: giữ.
 - Cùng một ô đổi thành hai giá trị khác nhau: Sheet thắng. Dòng đó vào `SYNC_XungDot` để anh xem lại. Script không ghi giá trị Sheet lên chính ô Sheet đó; lần xuất sẽ đưa giá trị Sheet sang Excel.
 
-Giá cột E: số lớn hơn 0 không được thành 0, trống, hoặc chữ. Nếu bên thắng là 0 hoặc trống mà bên kia còn giá thật, script không ghi 0 đè giá thật. Nếu việc đó làm file xuất đè giá thật trên Excel thì cả lượt dừng, không ghi.
+Giá cột E (`Đơn Giá (Gồm VAT 8%)`): chuỗi `45.000 đ`, `45.000`, `45,000`, `45000đ` được đọc thành số 45000. Dấu chấm là hàng nghìn khi đứng thành nhóm đúng 3 chữ số. Chỉ ô trống hoặc bằng 0 mới là giá trống. Giá trống hoặc 0 không được đè lên giá lớn hơn 0: script giữ giá thật, ghi ngược lại bên đang trống để hai file về cùng một số, ghi một dòng log, và vẫn đồng bộ mọi ô khác trong cùng lượt.
 
 Mã `VP001` .. `VPn` phải liên tục. Mất mã so với Excel hiện tại thì dừng. Sheet xóa một mã mà Excel còn thì giữ mã, ghi `SYNC_XungDot`, và vẫn tính vào ngưỡng xóa. Excel xóa mã ở giữa thì dừng vì đứt dãy. Xóa đúng mã cuối, dưới ngưỡng, thì được.
 
-## Ngưỡng xóa và sao lưu
+Hóa Đơn Đầu Vào và Hóa Đơn Đầu Ra được đồng bộ theo khóa, không theo số dòng. Khóa Hóa Đơn Đầu Vào là `Số Hóa Đơn` + `Mã SP`. Excel dừng ở dòng 369 trong khi Sheet còn dòng 370–376 nghĩa là Sheet đang có thêm khóa mà Excel chưa có. Khóa chỉ có trên Sheet và chưa có trong bản chụp được đưa sang Excel ở lần xuất. Khóa đã có trong bản chụp mà Excel không còn thì tính là xóa trên Sheet, vẫn chịu ngưỡng 10 dòng.
+
+## Ngưỡng xóa
 
 Mặc định dừng nếu một lượt định xóa quá 10 dòng (đếm trước khi lọc các mã được giữ). Đổi bằng Script Property `NGUONG_XOA_DONG`.
 
-Mỗi lượt có việc ghi thì sao lưu Excel và Sheet trước khi ghi ô đầu tiên. Bản sao là file mới. Script không ghi đè Excel gốc, Sheet gốc, và không ghi đè bản sao lưu nền `1FgWLfap4NZXWH-oyjRAIgLkgQNdDFVQP`.
+Script ghi thẳng vào đúng file Excel và đúng Google Sheet đang có. Không tạo bản sao trên Drive mỗi lượt. Excel được `Drive.Files.update` đúng id đang dùng, thành một phiên bản mới của cùng file. Google Sheet được sửa trên cùng id. Lịch sử phiên bản của Drive và của Sheet là chỗ hoàn tác.
+
+File nền `1FgWLfap4NZXWH-oyjRAIgLkgQNdDFVQP` không bị ghi đè. Bản chụp `PHIEU BAO GIA VAN PHAT - SNAPSHOT.xlsx` là mốc để biết ô nào vừa sửa. Nếu `SNAPSHOT_FILE_ID` đang là id nền, lượt ghi thành công đầu tiên copy một lần ra file snapshot riêng, các lượt sau cập nhật đúng id đó.
 
 Khóa `LockService` 20 giây. Lượt sau đến khi lượt trước chưa xong thì bỏ qua.
 
@@ -89,7 +93,7 @@ Cách lấy bản đó làm bản chụp nền:
 
 Nhìn `soGhiSheet`, `soThem`, `soXoa`, `soXungDot` và `mau` trước khi tắt dry-run. `soXoa` lớn nghĩa là Sheet có dòng mà Excel không có (hóa đơn, khách, nhóm). Lượt đầu coi Excel là nguồn những dòng đó và sẽ xóa trên Sheet nếu dưới ngưỡng. Quá ngưỡng thì cả lượt dừng, không ghi. Nếu số xóa không đúng ý anh, dừng ở dry-run.
 
-Khi bảng tóm tắt đúng: đặt `DRY_RUN` = `false`, chạy `chayDongBo` một lần. Script vẫn tự sao lưu thêm một bản ngay trước khi ghi. Sau lượt thành công, nếu bản chụp đang là file nền 12:40, script copy Excel vừa ghi thành file mới `PHIEU BAO GIA VAN PHAT - SNAPSHOT.xlsx` và lưu id vào `SNAPSHOT_FILE_ID`. Các lượt sau cập nhật file snapshot đó. Không bao giờ `update` vào id nền.
+Khi bảng tóm tắt đúng: đặt `DRY_RUN` = `false`, chạy `chayDongBo` một lần. Script ghi thẳng vào Excel và Sheet đang có. Sau lượt thành công, nếu bản chụp đang là file nền 12:40, script copy Excel vừa ghi thành file mới `PHIEU BAO GIA VAN PHAT - SNAPSHOT.xlsx` và lưu id vào `SNAPSHOT_FILE_ID`. Các lượt sau cập nhật file snapshot đó. Không bao giờ `update` vào id nền.
 
 ## Lịch
 
@@ -113,7 +117,7 @@ Muốn quay lại xuất một chiều: `goTriggerDongBo` ở project này, rồ
 
 ## Dry-run
 
-`chayDryRun` luôn là dry-run. `DRY_RUN` = `true` thì cả trigger và `chayDongBo` cũng không sao lưu, không ghi Sheet, không ghi Excel, không tạo sổ nhật ký.
+`chayDryRun` luôn là dry-run. `DRY_RUN` = `true` thì cả trigger và `chayDongBo` chỉ đọc và gộp. Không ghi Sheet, không ghi Excel, không tạo sổ nhật ký, không tạo file trên Drive.
 
 Dry-run vẫn tải và gộp. `LAST_RUN_JSON` có `muc` = `DRY_RUN` và số dòng dự kiến.
 
@@ -125,7 +129,7 @@ Guard trước khi ghi Excel, cùng câu chặn với phần xuất cũ:
 
 1. Đủ 13 sheet, đúng thứ tự.
 2. Mã `VP001` .. `VPn` liên tục, không mất mã so với Excel hiện tại.
-3. Giá số lớn hơn 0 trên Excel không bị 0, trống hoặc chữ đè lên.
+3. Giá lớn hơn 0 trên Excel không bị file xuất ghi thành 0 hoặc trống. Chuỗi giá đọc được (ví dụ `45.000 đ`) tính là số. Ô trống hoặc 0 được xử lý trước, theo từng ô. Nếu file xuất sau khi ghi Sheet vẫn làm mất giá thật thì dừng trước `Drive.Files.update`.
 4. Cột S tiêu đề `Thương Hiệu`, cột T tiêu đề `Quy Cách`.
 5. File là xlsx (ký tự `PK`) và từ 1.000.000 byte.
 6. Id và tên Excel sau khi ghi không đổi. Cách ghi là `Drive.Files.update`. Không `Files.create` cho file giá.
@@ -144,7 +148,7 @@ Không có secret.
 | `LAST_SHEET_MODIFIED_TIME` | Script | `modifiedTime` Sheet sau khi script ghi, để lượt sau không tưởng đó là người sửa |
 | `LAST_RUN_JSON` | Script | Tóm tắt lần chạy gần nhất |
 | `LAST_GUARD_JSON` | Script | Lần dừng gần nhất. Xóa khi ghi thành công |
-| `LAST_BACKUP_JSON` | Script | Id hai bản sao lưu của lượt vừa ghi |
+| `LAST_BACKUP_JSON` | — | Không còn dùng. Khóa cũ nếu còn thì bỏ qua. Script không xóa file Drive |
 | `SYNC_LOG_ID` | Script | Id sổ `VanPhat SYNC Nhat Ky` |
 | `NGUONG_XOA_DONG` | Anh, nếu muốn | Số dòng xóa tối đa. Trống thì 10 |
 
@@ -181,4 +185,4 @@ Advanced service: **Drive API**, phiên bản **v3**, mã định danh `Drive`.
 
 Sửa code sau này: dán bản mới rồi lưu. Trigger giữ nguyên. Project này không triển khai dạng ứng dụng web.
 
-Giới hạn Apps Script: một lần chạy khoảng 6 phút. File xuất phải là xlsx và từ 1 MB. File giá hiện khoảng vài MB đến dưới 10 MB.
+Giới hạn Apps Script: một lần chạy khoảng 6 phút. File xuất phải là xlsx và từ 1 MB. File giá hiện khoảng vài MB đến dưới 10 MB. Script chỉ đọc công thức tới dòng dữ liệu cuối, ghi ô theo cụm trên từng dòng, và chép cột Q–T một lượt trên xml.

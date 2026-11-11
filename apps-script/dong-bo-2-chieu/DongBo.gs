@@ -1,7 +1,7 @@
 /**
- * Vòng đồng bộ 15 phút. Guard trượt hoặc xóa quá ngưỡng thì không ghi file giá.
- * Đưa thay đổi vào Sheet trước, rồi mới xuất lại Excel.
- * Không gọi KiotViet. Không ghi đè bản sao lưu nền.
+ * Vòng đồng bộ. Guard trượt hoặc xóa quá ngưỡng thì không ghi file giá.
+ * Đưa thay đổi vào Sheet trước, rồi xuất lại Excel đúng id đang có.
+ * Không tạo file sao lưu trên Drive. Không gọi KiotViet. Không ghi đè bản sao lưu nền.
  */
 
 function props_() {
@@ -123,11 +123,6 @@ function dongBoTrongKhoa_(deps, opts, now) {
     return tom;
   }
   var luc = dinhDangSaigon_(now);
-  var bu = deps.saoLuu(luc);
-  if (!bu || bu.excelId === EXCEL_ID || bu.sheetId === GSHEET_ID || idCamGhi_(bu.excelId) || idCamGhi_(bu.sheetId)) {
-    throw new Error('sao lưu trả về đúng file đang dùng');
-  }
-  deps.setProp('LAST_BACKUP_JSON', catJson_(bu));
   if (deps.apDung && ((plan.ghiSheet && plan.ghiSheet.length) || (plan.themDong && plan.themDong.length) || (plan.xoaDong && plan.xoaDong.length))) {
     plan.apDung = deps.apDung(plan);
   }
@@ -161,8 +156,8 @@ function dongBoTrongKhoa_(deps, opts, now) {
     ok: true,
     ghi: true,
     muc: 'DA_GHI',
+    saoLuu: false,
     dayExcel: !!dayExcel,
-    backup: bu,
     version: after && after.version,
     soGhiSheet: plan.soGhiSheet,
     soThem: plan.soThem,
@@ -172,6 +167,50 @@ function dongBoTrongKhoa_(deps, opts, now) {
   };
   ghiKet_(deps, xong);
   return xong;
+}
+
+function ghiLoat_(sh, ds, dem) {
+  var byRow = {};
+  var i;
+  for (i = 0; i < ds.length; i++) {
+    var o = ds[i];
+    if (!o.row || o.col == null || o.col < 0) continue;
+    var rk = String(o.row);
+    if (!byRow[rk]) byRow[rk] = {};
+    byRow[rk][o.col] = o.giaTri;
+  }
+  Object.keys(byRow).forEach(function (rk) {
+    var map = byRow[rk];
+    var cols = Object.keys(map).map(function (n) { return +n; }).sort(function (a, b) { return a - b; });
+    if (!cols.length) return;
+    var minC = cols[0];
+    var maxC = cols[cols.length - 1];
+    var span = sh.getRange(+rk, minC + 1, 1, maxC - minC + 1);
+    var formulas = span.getFormulas ? (span.getFormulas()[0] || []) : null;
+    var runs = [];
+    var cur = null;
+    cols.forEach(function (col) {
+      var f = '';
+      if (formulas) f = formulas[col - minC] || '';
+      else if (sh.getRange(+rk, col + 1).getFormula) f = sh.getRange(+rk, col + 1).getFormula() || '';
+      if (f) {
+        dem.boQua++;
+        cur = null;
+        return;
+      }
+      if (cur && col === cur.end + 1) {
+        cur.vals.push(map[col]);
+        cur.end = col;
+      } else {
+        cur = { start: col, end: col, vals: [map[col]] };
+        runs.push(cur);
+      }
+    });
+    runs.forEach(function (run) {
+      sh.getRange(+rk, run.start + 1, 1, run.vals.length).setValues([run.vals]);
+      dem.ghi += run.vals.length;
+    });
+  });
 }
 
 function apDungKeHoach_(ss, keHoach) {
@@ -190,14 +229,7 @@ function apDungKeHoach_(ss, keHoach) {
     if (!cfg || cfg.cheDo === 'cam' || cfg.cheDo === 'cong-thuc') return;
     var sh = ss.getSheetByName(ten);
     if (!sh) throw new Error('thiếu tab ' + ten);
-    theo[ten].ghi.forEach(function (o) {
-      if (!o.row || o.col == null || o.col < 0) return;
-      var range = sh.getRange(o.row, o.col + 1);
-      var f = range.getFormula ? range.getFormula() : '';
-      if (f) { dem.boQua++; return; }
-      range.setValue(o.giaTri);
-      dem.ghi++;
-    });
+    ghiLoat_(sh, theo[ten].ghi, dem);
     var xoa = [];
     theo[ten].xoa.forEach(function (d) {
       if (d.row > 0 && xoa.indexOf(d.row) < 0) xoa.push(d.row);
@@ -207,6 +239,7 @@ function apDungKeHoach_(ss, keHoach) {
       sh.deleteRow(r);
       dem.xoa++;
     });
+    var dongKe = 0;
     theo[ten].them.forEach(function (dong) {
       var soCot = sh.getLastColumn ? sh.getLastColumn() : 20;
       if (soCot < 1) soCot = 1;
@@ -217,7 +250,7 @@ function apDungKeHoach_(ss, keHoach) {
         return -1;
       }
       var khoaIdx = (cfg.khoa || []).map(idxCot).filter(function (x) { return x >= 0; });
-      var dest = dongTrongDauTien_(sh, Object.keys(dong.cells || {}).map(Number).concat(khoaIdx));
+      var dest = dongKe || dongTrongDauTien_(sh, Object.keys(dong.cells || {}).map(Number).concat(khoaIdx));
       var last = dest - 1;
       Object.keys(dong.cells || {}).forEach(function (ck) {
         sh.getRange(dest, (+ck) + 1).setValue(dong.cells[ck]);
@@ -236,6 +269,7 @@ function apDungKeHoach_(ss, keHoach) {
         });
       }
       dem.them++;
+      dongKe = dest + 1;
     });
   });
   return dem;
@@ -304,6 +338,7 @@ function ghiNhatKy_(ss, keHoach, luc) {
 }
 
 function ghiExcelCungId_(blob) {
+  // Cùng EXCEL_ID: Drive giữ phiên bản của file này, không tạo file mới.
   var r = Drive.Files.update(
     { name: EXPECTED_TITLE, mimeType: XLSX_MIME },
     EXCEL_ID,
@@ -316,6 +351,7 @@ function ghiExcelCungId_(blob) {
   return r;
 }
 
+// Chỉ khi bản chụp đang trỏ vào file nền (cấm ghi đè). Không gọi mỗi lượt đồng bộ.
 function saoChepFile_(id, ten) {
   if (idCamGhi_(id) && ten.indexOf('SNAPSHOT') >= 0) {
     throw new Error('không ghi đè bản sao lưu nền');
@@ -399,13 +435,20 @@ function moSheetGia_() {
       continue;
     }
     var values = sh.getRange(1, 1, lastR, lastC).getValues();
-    var formulas = sh.getRange(1, 1, lastR, lastC).getFormulas();
-    var grid = {};
+    var lastData = 0;
     var r;
     var c;
     for (r = 0; r < values.length; r++) {
       for (c = 0; c < values[r].length; c++) {
-        var f = formulas[r][c] ? String(formulas[r][c]) : '';
+        if (values[r][c] !== '' && values[r][c] != null) { lastData = r + 1; break; }
+      }
+    }
+    // Đuôi tab chỉ còn công thức trả về trống (kéo tới hàng nghìn dòng) không tham gia khóa.
+    var formulas = lastData ? sh.getRange(1, 1, lastData, lastC).getFormulas() : [];
+    var grid = {};
+    for (r = 0; r < lastData; r++) {
+      for (c = 0; c < values[r].length; c++) {
+        var f = formulas[r] && formulas[r][c] ? String(formulas[r][c]) : '';
         if ((values[r][c] == null || values[r][c] === '') && !f) continue;
         if (!grid[r + 1]) grid[r + 1] = {};
         grid[r + 1][c] = {
@@ -464,12 +507,6 @@ function taoDepsThat_() {
     unzip: function (blob) { return tepBlob_(blob); },
     zip: function (files) { return zipTep_(files); },
     updateExcel: function (blob) { return ghiExcelCungId_(blob); },
-    saoLuu: function (luc) {
-      var tem = String(luc || '').replace(/[^\d]/g, '');
-      var excelCopy = saoChepFile_(EXCEL_ID, 'PHIEU BAO GIA VAN PHAT - 2026_BACKUP_' + tem + '.xlsx');
-      var sheetCopy = saoChepFile_(GSHEET_ID, 'PHIEU BAO GIA VAN PHAT - 2026_BACKUP_' + tem + ' SHEET');
-      return { excelId: excelCopy.id, sheetId: sheetCopy.id, luc: luc };
-    },
     capNhatSnapshot: function (blob, snapId) { return capNhatSnapshotThat_(blob, snapId); },
     apDung: function (plan) { return apDungKeHoach_(SpreadsheetApp.openById(GSHEET_ID), plan); },
     ghiNhatKy: function (plan, luc) { return ghiNhatKy_(moSoNhatKy_(), plan, luc); },
