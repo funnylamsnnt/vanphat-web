@@ -697,9 +697,9 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP238",
-      "ten": "Giấy ghi chú màu vàng có keo dán (76x127mm)",
+      "ten": "Giấy ghi chú 4x6 (102x152mm)",
       "dvt": "Tập",
-      "gia": 0,
+      "gia": 22000,
       "anh": "",
       "ton": 0
     },
@@ -789,6 +789,18 @@
       "thuongHieu": "Supreme"
     },
     {
+      "nhom": "Giấy",
+      "nhomId": "giay",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP606",
+      "ten": "Giấy bìa carton",
+      "dvt": "Xấp",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
       "nhom": "Bìa Hồ Sơ",
       "nhomId": "bia-ho-so",
       "linhVucId": "vpp",
@@ -868,10 +880,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP069",
-      "ten": "Bìa Còng 7 cm - Elephant",
+      "ten": "Bìa Còng 15 cm",
       "dvt": "Cái",
-      "gia": 55000,
-      "anh": "https://lh3.googleusercontent.com/d/1UfoXzvIjz9Jg6P3nrVlszeik0f46ccYU",
+      "gia": 185000,
+      "anh": "Không có hàng",
       "ton": 0,
       "thuongHieu": "Elephant"
     },
@@ -1404,10 +1416,10 @@
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP297",
-      "ten": "Kìm bấm 1 lỗ/OT-HP1001",
-      "dvt": "Cái",
-      "gia": 0,
-      "anh": "",
+      "ten": "Kẹp giấy tam giác (G62 GS)",
+      "dvt": "Hộp",
+      "gia": 4500,
+      "anh": "https://lh3.googleusercontent.com/d/1bv-Y0dCFqVksvQDnGO35yIpMmWMe84bJ",
       "ton": 5
     },
     {
@@ -2403,6 +2415,18 @@
       "dvt": "Cây",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1GroMWbRgpBPPHsGpit8vYdm-tDqEIJcB",
+      "ton": 0
+    },
+    {
+      "nhom": "Bút & Mực",
+      "nhomId": "but-muc",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP607",
+      "ten": "Bút Gel BIZER- GEL 23",
+      "dvt": "Cây",
+      "gia": 28000,
+      "anh": "https://lh3.googleusercontent.com/d/1bkMkfxPQBxPxRGnRgUf5Qu-FdpglIuHW",
       "ton": 0
     },
     {
@@ -4984,9 +5008,9 @@
       "linhVucTen": "Văn phòng phẩm",
       "ma": "VP371",
       "ten": "Sáp đếm tiền",
-      "dvt": "Cái",
-      "gia": 10000,
-      "anh": "",
+      "dvt": "Hộp",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/12LMNaoR6FuoMltnb61AlFhK0UxzlLVvk",
       "ton": 0
     },
     {
@@ -5427,6 +5451,18 @@
       "dvt": "Quyển",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1C7xscb20o_HC1HLIL66VzbTmPIUGq01u",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP608",
+      "ten": "Sổ Lò Xo A7 Kẻ Ngang 160 Trang",
+      "dvt": "Quyển",
+      "gia": 7000,
+      "anh": "https://lh3.googleusercontent.com/d/1xh07bNQChNqm2DlM6J_uFXpRTD46-r5n",
       "ton": 0
     },
     {
@@ -7289,5 +7325,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261111_1450.xlsx"
+  "syncedFrom": "source_sheet_20261112_1445.xlsx"
 }
