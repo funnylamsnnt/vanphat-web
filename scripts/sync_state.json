@@ -7,7 +7,7 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-11-10T07:50:00Z",
+  "lastSyncAt": "2026-11-13T07:52:00Z",
   "lastSyncResult": {
     "changed": true,
     "count": 569,
@@ -1035,8 +1035,8 @@
     "note": "Sheet A–F 603 mã trùng live products.json (567 SKU, 0 lệch giá/tên/ĐVT/nhóm/ảnh) và trùng bản 07/11 → không chạy generator, không push.",
     "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
   },
-  "sheetModifiedTime": "2026-11-11T01:16:34.278Z",
-  "bridgeFileBuiltAt": "2026-11-11T07:55:00Z",
+  "sheetModifiedTime": "2026-11-12T16:35:36Z",
+  "bridgeFileBuiltAt": "2026-11-13T07:44:00Z",
   "bridgeImportPending": true,
   "webSync_20261111_1450": {
     "source": "Google Sheet Danh Mục Vật Tư (đọc connector, dựng xlsx cục bộ, không xuất Sheet→Excel)",
@@ -1076,5 +1076,28 @@
     "zeroPrice_count": 40,
     "zeroPriceNew": [],
     "bridge": "pending: cần Import→Replace bằng trình duyệt (subagent không có trình duyệt); _UPLOAD_BRIDGE.xlsx đã dựng"
+  },
+  "webSync_20261113_1450": {
+    "source": "Google Sheet Danh Mục Vật Tư (export xlsx qua Drive connector, chỉ đọc; không xuất Sheet→Excel); chạy trên clone sạch /workspace/clean-vanphat-web-0113",
+    "sourceModifiedTime": "2026-11-12T16:35:36Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261113_1450.xlsx",
+    "log": "/workspace/vanphat-sync/_sync_run_20261113_1450.log",
+    "count": 572,
+    "with_img": 451,
+    "added": [],
+    "removed": [],
+    "priceChanges": [
+      [
+        "VP270",
+        15000,
+        16200
+      ]
+    ],
+    "slugChanges": [],
+    "zeroPrice_count": 39,
+    "zeroPriceNew": [],
+    "note": "Ngoài giá VP270, đổi tồn kho (availability schema) nhiều mã. Pages OK; VP415 404; sitemap 603 URL; 3 lĩnh vực 200.",
+    "commit": "d04379f3",
+    "bridge": "pending: cần Import→Replace bằng trình duyệt; _UPLOAD_BRIDGE.xlsx dựng 13/11 (625 SKU)"
   }
 }
