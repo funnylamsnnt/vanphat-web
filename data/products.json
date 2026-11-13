@@ -187,7 +187,7 @@
       "dvt": "Ram",
       "gia": 138000,
       "anh": "https://lh3.googleusercontent.com/d/1JowvxohHnt6yVinjQhRrst7M_hbs8P9L",
-      "ton": 25,
+      "ton": 10,
       "thuongHieu": "IK Plus"
     },
     {
@@ -250,7 +250,7 @@
       "dvt": "Ram",
       "gia": 138000,
       "anh": "https://lh3.googleusercontent.com/d/1npMCD9o-BprfcnEJENB_qQnHGEPHKisS",
-      "ton": 25,
+      "ton": -10,
       "thuongHieu": "Supreme"
     },
     {
@@ -263,7 +263,7 @@
       "dvt": "Ram",
       "gia": 80000,
       "anh": "https://lh3.googleusercontent.com/d/1VzuqsIYMA2S1A9wgCGKLJ-ylIRskMR18",
-      "ton": 100,
+      "ton": 75,
       "thuongHieu": "Double A"
     },
     {
@@ -289,7 +289,7 @@
       "dvt": "Ram",
       "gia": 69000,
       "anh": "https://lh3.googleusercontent.com/d/16OVwFlUO-TrYTNHbAqiBvffc9gfPhyDd",
-      "ton": 603,
+      "ton": 168,
       "thuongHieu": "IK Plus"
     },
     {
@@ -302,7 +302,7 @@
       "dvt": "Ram",
       "gia": 64000,
       "anh": "https://lh3.googleusercontent.com/d/128Q0FLSHghH9qYqWv3O89Hg9PcgRLVxD",
-      "ton": -5
+      "ton": 0
     },
     {
       "nhom": "Giấy",
@@ -339,7 +339,7 @@
       "dvt": "Ram",
       "gia": 63000,
       "anh": "https://lh3.googleusercontent.com/d/1FXCl8YNMhVIB34ZWE1UYEmJMA9_KzxTe",
-      "ton": 57,
+      "ton": 30,
       "thuongHieu": "Smartis"
     },
     {
@@ -352,7 +352,7 @@
       "dvt": "Ram",
       "gia": 69000,
       "anh": "https://lh3.googleusercontent.com/d/1dJmTpg1hEnahXy5jyJktYmWB4DCs7nkA",
-      "ton": 200,
+      "ton": -10,
       "thuongHieu": "Supreme"
     },
     {
@@ -443,7 +443,7 @@
       "dvt": "Ram",
       "gia": 36000,
       "anh": "https://lh3.googleusercontent.com/d/1Eb114kKdzze0FVggw1GskdF-nPQf9Aov",
-      "ton": 100,
+      "ton": 95,
       "thuongHieu": "IK Plus"
     },
     {
@@ -495,7 +495,7 @@
       "dvt": "Xấp",
       "gia": 78000,
       "anh": "",
-      "ton": 0,
+      "ton": -5,
       "quyCach": "100 tờ/xấp"
     },
     {
@@ -609,7 +609,7 @@
       "dvt": "Xấp",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/18OJ6FSGPFW5iEO0sjiAehK7GagEgxKko",
-      "ton": 424,
+      "ton": 87,
       "thuongHieu": "Pronoti"
     },
     {
@@ -673,7 +673,7 @@
       "dvt": "Xấp",
       "gia": 9500,
       "anh": "https://lh3.googleusercontent.com/d/10FV-sto8b-ByayF0862v2cC07pHAusFh",
-      "ton": 74,
+      "ton": 39,
       "thuongHieu": "Bitex",
       "quyCach": "100 tờ/xấp"
     },
@@ -687,7 +687,7 @@
       "dvt": "Xấp",
       "gia": 19000,
       "anh": "https://lh3.googleusercontent.com/d/1rzkZUgwvb2vLamy0povUo_nnKw8RcHvZ",
-      "ton": 12,
+      "ton": -7,
       "thuongHieu": "Bitex",
       "quyCach": "100 tờ/xấp"
     },
@@ -834,7 +834,7 @@
       "dvt": "Cái",
       "gia": 18000,
       "anh": "https://lh3.googleusercontent.com/d/12xENjtM7qXC5aJwLaMudE9euZRwIHE5U",
-      "ton": 50
+      "ton": 20
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -846,7 +846,7 @@
       "dvt": "Cái",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1orgR3oDiEDpkk3WDsiLcqXbRXWkOWYUf",
-      "ton": 50
+      "ton": 11
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -923,7 +923,7 @@
       "dvt": "Cái",
       "gia": 64000,
       "anh": "https://lh3.googleusercontent.com/d/14eGkYHgb72IXkHgN7EW3074-O8rthe6o",
-      "ton": 180,
+      "ton": 28,
       "thuongHieu": "PLUS"
     },
     {
@@ -962,7 +962,7 @@
       "dvt": "Cái",
       "gia": 55000,
       "anh": "https://lh3.googleusercontent.com/d/1oDL_qbtrQOrriM7ZMck0ltUWUCZ-lOP4",
-      "ton": 0,
+      "ton": -24,
       "thuongHieu": "King Jim"
     },
     {
@@ -975,7 +975,7 @@
       "dvt": "Cái",
       "gia": 58000,
       "anh": "https://lh3.googleusercontent.com/d/1WpRydb6xBRcIWqpWPVI1o0ZKRaMR373z",
-      "ton": 0,
+      "ton": -20,
       "thuongHieu": "King Jim"
     },
     {
@@ -1014,7 +1014,7 @@
       "dvt": "Cái",
       "gia": 96000,
       "anh": "https://lh3.googleusercontent.com/d/1P96_uWNRN5bsdSbkCpEJeJEDHKJl38lE",
-      "ton": 10,
+      "ton": 5,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -1101,7 +1101,7 @@
       "dvt": "Xấp",
       "gia": 75000,
       "anh": "https://lh3.googleusercontent.com/d/13wvykyr82P1vhtMElpguyKlSGfu3wAs7",
-      "ton": 20,
+      "ton": 15,
       "quyCach": "100 bìa/xấp"
     },
     {
@@ -1114,7 +1114,7 @@
       "dvt": "Cái",
       "gia": 1900,
       "anh": "https://lh3.googleusercontent.com/d/1yYTiG8a8MRxIha-AzoF7SsY2AikLk57p",
-      "ton": 1500
+      "ton": 900
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1126,7 +1126,7 @@
       "dvt": "Xấp",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/1cz0pwwbiZy61fk7Bd9SUCBkpp3Us_qEd",
-      "ton": 20,
+      "ton": 15,
       "quyCach": "100 cái/xấp"
     },
     {
@@ -1139,7 +1139,7 @@
       "dvt": "Xấp",
       "gia": 39000,
       "anh": "https://lh3.googleusercontent.com/d/1kz1k9PMThs5vw5nzM5gIiQAnzhRckqAQ",
-      "ton": 50,
+      "ton": 10,
       "quyCach": "100 cái/xấp"
     },
     {
@@ -1178,7 +1178,7 @@
       "dvt": "Cái",
       "gia": 28000,
       "anh": "https://lh3.googleusercontent.com/d/1UXY45sfMV_qO6QS65L8bLqQ9gRfdo2dG",
-      "ton": 30,
+      "ton": 10,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -1251,7 +1251,7 @@
       "dvt": "Cái",
       "gia": 3500,
       "anh": "https://lh3.googleusercontent.com/d/1paK6cPDuPLiQ4wHMPrwKwCpmkI3ZN-Km",
-      "ton": 1560
+      "ton": 783
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1275,7 +1275,7 @@
       "dvt": "Xấp",
       "gia": 75000,
       "anh": "https://lh3.googleusercontent.com/d/1-prUgea3hrlKn1NH6cMDb4ckFTXnF18u",
-      "ton": 10
+      "ton": 8
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1287,7 +1287,7 @@
       "dvt": "Xấp",
       "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1x5Isl9iD6F3FcaZWEnj1xHYtP-ZFE_Zp",
-      "ton": 55
+      "ton": 27
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1335,7 +1335,7 @@
       "dvt": "Cái",
       "gia": 23000,
       "anh": "https://lh3.googleusercontent.com/d/1yYXSposN3KvBJBh3FDH0M7KKvkIjYpVH",
-      "ton": 10
+      "ton": 4
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1372,7 +1372,7 @@
       "dvt": "Cái",
       "gia": 29000,
       "anh": "https://lh3.googleusercontent.com/d/1EfdV2R2zjgsr_xs3AKMSA8YZfVyv7W64",
-      "ton": 20
+      "ton": -20
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1384,7 +1384,7 @@
       "dvt": "Cái",
       "gia": 26000,
       "anh": "https://lh3.googleusercontent.com/d/1LobjFvbrygt2Mdf-TN9jzyVOpaE1DZOn",
-      "ton": 30
+      "ton": 23
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1420,7 +1420,7 @@
       "dvt": "Hộp",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1bv-Y0dCFqVksvQDnGO35yIpMmWMe84bJ",
-      "ton": 5
+      "ton": 0
     },
     {
       "nhom": "Bìa Hồ Sơ",
@@ -1432,7 +1432,7 @@
       "dvt": "Cái",
       "gia": 78000,
       "anh": "https://lh3.googleusercontent.com/d/1O2OtsRG2JhJpdKAtoWtkCzhzUr474oSh",
-      "ton": 15,
+      "ton": 5,
       "thuongHieu": "Deli"
     },
     {
@@ -1445,7 +1445,7 @@
       "dvt": "Cây",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/1MimVXqvgKviTMKaXIcd__eE6bHKd8xDU",
-      "ton": 0,
+      "ton": -12,
       "thuongHieu": "Pilot",
       "quyCach": "12 cây/hộp"
     },
@@ -1500,7 +1500,7 @@
       "dvt": "Cây",
       "gia": 11000,
       "anh": "https://lh3.googleusercontent.com/d/1fANntIMWrCaoh77ZgPzVLzdV5QEteNxZ",
-      "ton": 200,
+      "ton": 180,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1513,7 +1513,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1i-dc1_r7Ro8vLrq5jSBZ3fYXdKEjBXnv",
-      "ton": 100,
+      "ton": 80,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1526,7 +1526,7 @@
       "dvt": "Cây",
       "gia": 0,
       "anh": "https://lh3.googleusercontent.com/d/1fwPxfUc_zTe-3MV7VI12mRE9ctzkd3tv",
-      "ton": 10,
+      "ton": 0,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1539,7 +1539,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1lG-KgIvAIB1WdSkFagYLEB7aYdsKrdhT",
-      "ton": 360,
+      "ton": 358,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1552,7 +1552,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/13iz1K38V173AhI_1uI7G3Dtv2ucJZJgd",
-      "ton": 60,
+      "ton": 0,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1565,7 +1565,7 @@
       "dvt": "Cây",
       "gia": 4500,
       "anh": "https://lh3.googleusercontent.com/d/1IsJcKlXujhZqJAaiXIdAvC3b1b0B0SUU",
-      "ton": 760,
+      "ton": 1411,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1591,7 +1591,7 @@
       "dvt": "Cây",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/18w2z1oUUCaUdrbOIlCSqm4K-GiRpqaJI",
-      "ton": 300,
+      "ton": 290,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1656,7 +1656,7 @@
       "dvt": "cây",
       "gia": 5500,
       "anh": "https://lh3.googleusercontent.com/d/1IUaAQEBnB6QnRo-U32wV5O2jqqIagRZP",
-      "ton": 156,
+      "ton": 102,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1682,7 +1682,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/153uYES86G3O8GBCSudgRCGQuKc3NiZYZ",
-      "ton": 140,
+      "ton": 133,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -1695,7 +1695,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1pkSwtnBGwdbryCjlQ4DSr4n6djjUtM3Y",
-      "ton": 50,
+      "ton": 0,
       "thuongHieu": "FlexOffice"
     },
     {
@@ -1708,7 +1708,7 @@
       "dvt": "Cây",
       "gia": 11000,
       "anh": "https://lh3.googleusercontent.com/d/1v1f3Id7n2ILA1oj8ZcR-wTo3I7hZmXz_",
-      "ton": 100,
+      "ton": -3,
       "quyCach": "10 cây/hộp"
     },
     {
@@ -1721,7 +1721,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1sRLd5zbzjzlt45EMpcPuzR4mT6YpICYU",
-      "ton": 150,
+      "ton": 130,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1734,7 +1734,7 @@
       "dvt": "Cây",
       "gia": 16000,
       "anh": "https://lh3.googleusercontent.com/d/1IEelWAnShKRBia47kHSBz_Wxq91Iz5Rv",
-      "ton": 20,
+      "ton": 10,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1760,7 +1760,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
-      "ton": 60,
+      "ton": 59,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1773,7 +1773,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1tC5cv85m9XRQmVoXCKX7Tes53sAsiFDB",
-      "ton": 60,
+      "ton": 58,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1786,7 +1786,7 @@
       "dvt": "Cây",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/1jy0EmJeiRIvcY-fAwQ_N1lYSncJrD-fh",
-      "ton": 140,
+      "ton": -40,
       "thuongHieu": "Thiên Long",
       "quyCach": "20 cây/hộp"
     },
@@ -1826,7 +1826,7 @@
       "dvt": "Cây",
       "gia": 8500,
       "anh": "https://lh3.googleusercontent.com/d/10H8aDbzBpEjQHX46LU7SiQlI83za-sdN",
-      "ton": 200,
+      "ton": 195,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1839,7 +1839,7 @@
       "dvt": "Cây",
       "gia": 8500,
       "anh": "https://lh3.googleusercontent.com/d/1W2-gKfTVX3UPP0WSvFy3QHcb4MMLBCDF",
-      "ton": 150,
+      "ton": 145,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1852,7 +1852,7 @@
       "dvt": "Cây",
       "gia": 8500,
       "anh": "https://lh3.googleusercontent.com/d/1jPvamqc_maSvhdhR4xA8kkh34SV-Tfi7",
-      "ton": 930,
+      "ton": 909,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1865,7 +1865,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1LymDzBXyYYK0VYdKLeg3QTKUfCHS34i9",
-      "ton": 10
+      "ton": 1
     },
     {
       "nhom": "Bút & Mực",
@@ -1877,7 +1877,7 @@
       "dvt": "Cây",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1WMgmE1iL5qgms7jVGMZT_2lcUzUUCm7j",
-      "ton": 1540,
+      "ton": 1515,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1890,7 +1890,7 @@
       "dvt": "Cây",
       "gia": 10500,
       "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
-      "ton": 0,
+      "ton": -10,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1916,7 +1916,7 @@
       "dvt": "Cây",
       "gia": 9500,
       "anh": "https://lh3.googleusercontent.com/d/1ROjqqU5bQ2efHSBUfRjtBw8QrDH6WMhZ",
-      "ton": 1590,
+      "ton": 1580,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -1942,7 +1942,7 @@
       "dvt": "Cây",
       "gia": 37000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
-      "ton": 180,
+      "ton": 170,
       "thuongHieu": "Uni-ball"
     },
     {
@@ -1955,7 +1955,7 @@
       "dvt": "Cây",
       "gia": 37000,
       "anh": "https://lh3.googleusercontent.com/d/1ldQcdtFzBCM2bq7SfwccCBwCvr41gCcw",
-      "ton": 120,
+      "ton": 235,
       "thuongHieu": "Uni-ball"
     },
     {
@@ -2007,7 +2007,7 @@
       "dvt": "Cây",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1uKutKE8xEsFxMGyjZMOgqZw57yfE41WZ",
-      "ton": 960,
+      "ton": 850,
       "thuongHieu": "Thiên Long",
       "quyCach": "10 cây/hộp"
     },
@@ -2033,7 +2033,7 @@
       "dvt": "Chai",
       "gia": 43000,
       "anh": "https://lh3.googleusercontent.com/d/1wAdOpDBJBAHSRj2RdbBBiVioKgCbSoEE",
-      "ton": 5
+      "ton": 2
     },
     {
       "nhom": "Bút & Mực",
@@ -2057,7 +2057,7 @@
       "dvt": "Hộp",
       "gia": 22000,
       "anh": "https://lh3.googleusercontent.com/d/1T-6e0BTZZjxK1hstIOGwkEbeg7h9HBc5",
-      "ton": 30,
+      "ton": 28,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -2199,7 +2199,7 @@
       "dvt": "Cây",
       "gia": 7500,
       "anh": "https://lh3.googleusercontent.com/d/1r5Ybs5AQMjWTakMffmuYDofJnfLCgSKD",
-      "ton": 120
+      "ton": 115
     },
     {
       "nhom": "Bút & Mực",
@@ -2451,7 +2451,7 @@
       "dvt": "Cuộn",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1B86TOJT_Db8URIcd9D2q06MHP3oUt6dT",
-      "ton": 48
+      "ton": 47
     },
     {
       "nhom": "Băng Keo",
@@ -2463,7 +2463,7 @@
       "dvt": "Cuộn",
       "gia": 6500,
       "anh": "https://lh3.googleusercontent.com/d/1OKp0AMaSiD2vpVfyDZhSoiOT9zEAcp9x",
-      "ton": 72
+      "ton": 60
     },
     {
       "nhom": "Băng Keo",
@@ -2499,7 +2499,7 @@
       "dvt": "Cuộn",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1886S94rDmAueC9jJE2l-OSSK-tavGsRm",
-      "ton": 72
+      "ton": 70
     },
     {
       "nhom": "Băng Keo",
@@ -2523,7 +2523,7 @@
       "dvt": "Cuộn",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1YqzD-E3sq6-OhatElnlHCqKUq5M1yker",
-      "ton": 112,
+      "ton": 99,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2561,7 +2561,7 @@
       "dvt": "Cuộn",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1ePGemScJvBcWYEivvC78iWebfPfhav2w",
-      "ton": 24,
+      "ton": 13,
       "quyCach": "8 cuộn/cây"
     },
     {
@@ -2718,7 +2718,7 @@
       "dvt": "Cuộn",
       "gia": 14000,
       "anh": "https://lh3.googleusercontent.com/d/1OfeAwXL_GdjyBTj-pXJjw8OT1lQDYQJV",
-      "ton": 38
+      "ton": -6
     },
     {
       "nhom": "Băng Keo",
@@ -2802,7 +2802,7 @@
       "dvt": "Cuộn",
       "gia": 20000,
       "anh": "https://lh3.googleusercontent.com/d/1IssVE1pZaesxUCWSubo71BCLAzU3LCXq",
-      "ton": 10
+      "ton": 8
     },
     {
       "nhom": "Băng Keo",
@@ -2826,7 +2826,7 @@
       "dvt": "Lọ",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1z8RkBjxT1YQR8t-CVG1rJUPudHg5Zykz",
-      "ton": 0
+      "ton": 180
     },
     {
       "nhom": "Băng Keo",
@@ -2851,7 +2851,7 @@
       "dvt": "Cái",
       "gia": 36000,
       "anh": "https://lh3.googleusercontent.com/d/19sWqJ9N1bu4O68ITsWyZQ49YzV8cS9wT",
-      "ton": -1,
+      "ton": 0,
       "thuongHieu": "KW-triO"
     },
     {
@@ -2954,7 +2954,7 @@
       "dvt": "Cái",
       "gia": 32000,
       "anh": "https://lh3.googleusercontent.com/d/1hi6axlBkC-BfSxaD1UZ55UJYELC4iWbC",
-      "ton": 30,
+      "ton": 31,
       "thuongHieu": "PLUS"
     },
     {
@@ -3006,7 +3006,7 @@
       "dvt": "Cái",
       "gia": 550000,
       "anh": "https://lh3.googleusercontent.com/d/15v4sYAWFp8Dv1uWsRYE6Yp_mkEtzWgBI",
-      "ton": -12,
+      "ton": 0,
       "thuongHieu": "KW-triO"
     },
     {
@@ -3045,7 +3045,7 @@
       "dvt": "Cái",
       "gia": 175000,
       "anh": "https://lh3.googleusercontent.com/d/1k1aN463BwBf3B4_chfA-CZJgIYpCG084",
-      "ton": 8,
+      "ton": 2,
       "thuongHieu": "Double A"
     },
     {
@@ -3197,7 +3197,7 @@
       "dvt": "Cây",
       "gia": 25000,
       "anh": "https://lh3.googleusercontent.com/d/1OHfuzYGI9rZc9tQnOeUwpkJywyWxHULv",
-      "ton": 100
+      "ton": 89
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3209,7 +3209,7 @@
       "dvt": "Xấp",
       "gia": 350,
       "anh": "https://lh3.googleusercontent.com/d/1osVtP6S9lTqCdPtSTHafJuGhP2gmF8hR",
-      "ton": 1500,
+      "ton": 1499,
       "quyCach": "100 cái/xấp"
     },
     {
@@ -3222,7 +3222,7 @@
       "dvt": "Cái",
       "gia": 350,
       "anh": "https://lh3.googleusercontent.com/d/1IhAREGaX42U3zWA6yoG1rMSg7tkgx2rg",
-      "ton": -1,
+      "ton": 0,
       "quyCach": "25 cái/xấp"
     },
     {
@@ -3324,7 +3324,7 @@
       "dvt": "Cái",
       "gia": 225000,
       "anh": "https://lh3.googleusercontent.com/d/1lBQ4ngjeHAR2Exrmqj8ClXJ1O35Bfl8B",
-      "ton": 1
+      "ton": -1
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3336,7 +3336,7 @@
       "dvt": "Cái",
       "gia": 38000,
       "anh": "https://lh3.googleusercontent.com/d/1gASeQY1GuPPuagv1iw6WwnMwQzIJ_REk",
-      "ton": 29
+      "ton": 24
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3360,7 +3360,7 @@
       "dvt": "Cái",
       "gia": 55000,
       "anh": "https://lh3.googleusercontent.com/d/12iOzJP2T2KonM677tAIlQMigpi9kLtLZ",
-      "ton": -6
+      "ton": 2
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3372,7 +3372,7 @@
       "dvt": "Cái",
       "gia": 46000,
       "anh": "https://lh3.googleusercontent.com/d/1W2ZG0F6SmW9x0Inr9AYh4_uQtwGg8ESt",
-      "ton": 1
+      "ton": 5
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3509,7 +3509,7 @@
       "dvt": "Viên",
       "gia": 14000,
       "anh": "https://lh3.googleusercontent.com/d/1ufj89Aw-3TM5A4c-A5EEiIVFiPMPNSH6",
-      "ton": 20
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3521,7 +3521,7 @@
       "dvt": "Cái",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/1GWT4PrdsyvvfYGPMK7ADTYSHEvjkCpYc",
-      "ton": 0
+      "ton": 5
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3533,7 +3533,7 @@
       "dvt": "Cái",
       "gia": 65000,
       "anh": "https://lh3.googleusercontent.com/d/1f2Cx408kDyBFnVuV-f1oBMk0ZIvLNyTi",
-      "ton": 0,
+      "ton": 1,
       "thuongHieu": "SDI"
     },
     {
@@ -3546,7 +3546,7 @@
       "dvt": "Cái",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1-GKHejrD3u8N3DystCxA0Kvbi4tWI2eM",
-      "ton": 0
+      "ton": 5
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3558,7 +3558,7 @@
       "dvt": "Cái",
       "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1TEukkw5ukE2l-FEDRPIcjfHcgMKgkrGd",
-      "ton": 0,
+      "ton": 1,
       "thuongHieu": "SDI"
     },
     {
@@ -3656,7 +3656,7 @@
       "dvt": "Bịch",
       "gia": 55000,
       "anh": "https://lh3.googleusercontent.com/d/1K6n_4NEVxPJXXYBwIwKqHTxyngt6FOXw",
-      "ton": 0
+      "ton": -1
     },
     {
       "nhom": "Dụng cụ VP",
@@ -3783,7 +3783,7 @@
       "dvt": "Cái",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1Jt9a0C0EF5NZH9weQ3tyKOOYYQZPanH1",
-      "ton": 24,
+      "ton": 20,
       "thuongHieu": "KW-triO"
     },
     {
@@ -3796,7 +3796,7 @@
       "dvt": "Cái",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/1vZYC674aDDAsrQgaLRyV37eNi4Wg1ViE",
-      "ton": 24,
+      "ton": 23,
       "thuongHieu": "KW-triO"
     },
     {
@@ -3873,7 +3873,7 @@
       "dvt": "Viên",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1_gv_mCikMG-r-RNyi4XPvp4gDZiTXdhe",
-      "ton": 60,
+      "ton": 52,
       "thuongHieu": "Thiên Long"
     },
     {
@@ -4005,7 +4005,7 @@
       "ma": "VP270",
       "ten": "Keo dán 502 (K-14)",
       "dvt": "Chai",
-      "gia": 15000,
+      "gia": 16200,
       "anh": "https://lh3.googleusercontent.com/d/1bTKlm7UcaIiVaG7VVOS05ZCSzRO6LCJe",
       "ton": 0
     },
@@ -4019,7 +4019,7 @@
       "dvt": "Lọ",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1EBwXCpHppgzDfl09ztlbAEtk9NrwdR9W",
-      "ton": 12,
+      "ton": 54,
       "quyCach": "12 lọ/khay"
     },
     {
@@ -4044,7 +4044,7 @@
       "dvt": "Ống",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1z8RkBjxT1YQR8t-CVG1rJUPudHg5Zykz",
-      "ton": 10,
+      "ton": 106,
       "quyCach": "400 ống/thùng"
     },
     {
@@ -4106,7 +4106,7 @@
       "dvt": "Vỉ",
       "gia": 30000,
       "anh": "https://lh3.googleusercontent.com/d/1RcGr5O0MvtcADpZw2v5zPiYPPRnOasYe",
-      "ton": 48,
+      "ton": 35,
       "quyCach": "1 cây/vỉ"
     },
     {
@@ -4119,7 +4119,7 @@
       "dvt": "Hộp",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1sbTLhRDdV_l8EzjdiRtk1ydfjoQXigF8",
-      "ton": 756,
+      "ton": 717,
       "thuongHieu": "G-Star"
     },
     {
@@ -4144,7 +4144,7 @@
       "dvt": "Hộp",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1sbTLhRDdV_l8EzjdiRtk1ydfjoQXigF8",
-      "ton": 648,
+      "ton": 555,
       "thuongHieu": "G-Star"
     },
     {
@@ -4157,7 +4157,7 @@
       "dvt": "Hộp",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1sbTLhRDdV_l8EzjdiRtk1ydfjoQXigF8",
-      "ton": 420,
+      "ton": 241,
       "thuongHieu": "G-Star"
     },
     {
@@ -4182,7 +4182,7 @@
       "dvt": "Hộp",
       "gia": 14000,
       "anh": "https://lh3.googleusercontent.com/d/1TywEtwJmMVdLuqxoDub2K357drHqwxYR",
-      "ton": 300,
+      "ton": 267,
       "thuongHieu": "G-Star"
     },
     {
@@ -4207,7 +4207,7 @@
       "dvt": "Hộp",
       "gia": 20000,
       "anh": "https://lh3.googleusercontent.com/d/1TywEtwJmMVdLuqxoDub2K357drHqwxYR",
-      "ton": 120,
+      "ton": 112,
       "thuongHieu": "G-Star"
     },
     {
@@ -4232,7 +4232,7 @@
       "dvt": "Hộp",
       "gia": 29000,
       "anh": "https://lh3.googleusercontent.com/d/1Fa0HUUNo_TfO5BHWc2JrQcoPiZHEfAxQ",
-      "ton": 45,
+      "ton": 20,
       "thuongHieu": "G-Star"
     },
     {
@@ -4310,7 +4310,7 @@
       "dvt": "Hộp",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/16PDg8r6raIZHTHMf0GmPdTWG5IBHKf54",
-      "ton": 120,
+      "ton": 99,
       "thuongHieu": "Double A"
     },
     {
@@ -4323,7 +4323,7 @@
       "dvt": "Hộp",
       "gia": 24000,
       "anh": "https://lh3.googleusercontent.com/d/1G67KF2NeGZebypkZ5BpP-SJHUcdGsB0r",
-      "ton": 5,
+      "ton": 1,
       "thuongHieu": "Pulppy",
       "quyCach": "180 tờ/hộp, 2 lớp"
     },
@@ -4337,7 +4337,7 @@
       "dvt": "Hộp",
       "gia": 25000,
       "anh": "https://lh3.googleusercontent.com/d/1thhSBKHrpulHV0iTCa2mru_ReKcVkytC",
-      "ton": 10
+      "ton": 8
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4349,7 +4349,7 @@
       "dvt": "Hộp",
       "gia": 4000,
       "anh": "https://lh3.googleusercontent.com/d/1sowS1T_ahyeIRt_LEV1raRZJufFAljmk",
-      "ton": 20,
+      "ton": -36,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4362,7 +4362,7 @@
       "dvt": "Hộp",
       "gia": 21000,
       "anh": "https://lh3.googleusercontent.com/d/1lKSlkvd4ogS73aGiC_vkwNpUrR71zZ_u",
-      "ton": 20,
+      "ton": 19,
       "thuongHieu": "KW-triO"
     },
     {
@@ -4427,7 +4427,7 @@
       "dvt": "Hộp",
       "gia": 4000,
       "anh": "https://lh3.googleusercontent.com/d/1tqNVoKOpbnkAMhC2DHuK32n7myJcbCQ4",
-      "ton": 72
+      "ton": 80
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4452,7 +4452,7 @@
       "dvt": "Cái",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/1pit6J4yGE3lYAhOwQz1YhD3lDHGYlfNR",
-      "ton": 18,
+      "ton": 12,
       "thuongHieu": "Deli"
     },
     {
@@ -4490,7 +4490,7 @@
       "dvt": "Vỉ",
       "gia": 25000,
       "anh": "https://lh3.googleusercontent.com/d/1TMraE9OVHtGlPVcaoPTYKQBlk4m8_aah",
-      "ton": 0
+      "ton": 18
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4502,7 +4502,7 @@
       "dvt": "Vỉ",
       "gia": 16000,
       "anh": "https://lh3.googleusercontent.com/d/17RbxlPRaRxVto6W_QC1b7dkCkOLr2K2f",
-      "ton": 0
+      "ton": 38
     },
     {
       "nhom": "Dụng cụ VP",
@@ -4591,7 +4591,7 @@
       "dvt": "Hộp",
       "gia": 19000,
       "anh": "https://lh3.googleusercontent.com/d/1vVn2E2QkKkJhLoUEf5o7SGSfLx6CYMxK",
-      "ton": 25,
+      "ton": 20,
       "thuongHieu": "G-Star"
     },
     {
@@ -4616,7 +4616,7 @@
       "dvt": "Xấp",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/12R-f3n7v7doFEj1JDlZeHhrlthwlqwQM",
-      "ton": 630,
+      "ton": 605,
       "thuongHieu": "Bitex"
     },
     {
@@ -4680,7 +4680,7 @@
       "dvt": "Túi",
       "gia": 14800,
       "anh": "",
-      "ton": 0,
+      "ton": -58,
       "quyCach": "5 màu × 20 tờ/túi"
     },
     {
@@ -4766,7 +4766,7 @@
       "dvt": "Cặp",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/1JnpzuoIQHsa4TGu2M3Yl_gRxJa3fV0Xe",
-      "ton": 460,
+      "ton": 340,
       "thuongHieu": "Maxell"
     },
     {
@@ -4819,7 +4819,7 @@
       "dvt": "Cặp",
       "gia": 7000,
       "anh": "https://lh3.googleusercontent.com/d/13qSoayTUhUSAUFsajfVOEGW22qZlT4mf",
-      "ton": 200,
+      "ton": 60,
       "thuongHieu": "Maxell"
     },
     {
@@ -4845,7 +4845,7 @@
       "dvt": "Cặp",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1nRR_2pBp7Yhk0PLoblCH806jVLT0a7HG",
-      "ton": 1100,
+      "ton": 1080,
       "thuongHieu": "Panasonic"
     },
     {
@@ -4858,7 +4858,7 @@
       "dvt": "Viên",
       "gia": 13000,
       "anh": "https://lh3.googleusercontent.com/d/1G2y_bG1r3cI_7ntW2gjZwCL0Y5gCaD5o",
-      "ton": 60,
+      "ton": 55,
       "thuongHieu": "Maxell",
       "quyCach": "5 viên/vỉ"
     },
@@ -4924,7 +4924,7 @@
       "dvt": "Cặp",
       "gia": 15000,
       "anh": "https://lh3.googleusercontent.com/d/1xaQhF-BOzG7oUCEHADU2313kYYKxe895",
-      "ton": 30
+      "ton": 22
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5023,7 +5023,7 @@
       "dvt": "Tập",
       "gia": 68000,
       "anh": "https://lh3.googleusercontent.com/d/1vodeJDsomtkWy0FjUkVJPbnUi_ZqP5QC",
-      "ton": 20,
+      "ton": 18,
       "thuongHieu": "Hải Tiến"
     },
     {
@@ -5072,7 +5072,7 @@
       "dvt": "Quyển",
       "gia": 35000,
       "anh": "https://lh3.googleusercontent.com/d/11WjuT1xlfsP8Z8cYZkkktpmRt-ZVRpVw",
-      "ton": 15
+      "ton": 0
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5096,7 +5096,7 @@
       "dvt": "Quyển",
       "gia": 28000,
       "anh": "https://lh3.googleusercontent.com/d/1QBuZsCsqSol7PuAIatmcNz5C49tnqdza",
-      "ton": 0
+      "ton": -17
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5120,7 +5120,7 @@
       "dvt": "Quyển",
       "gia": 23000,
       "anh": "https://lh3.googleusercontent.com/d/1tt-4KJ04rgLAt7CQ6wFFGR_egd_2nPFz",
-      "ton": 20,
+      "ton": 18,
       "thuongHieu": "Hải Tiến"
     },
     {
@@ -5133,7 +5133,7 @@
       "dvt": "Quyển",
       "gia": 45000,
       "anh": "https://lh3.googleusercontent.com/d/1pz0iMWB2oGEFkkq63k84mS9vyZLhvcs8",
-      "ton": 15
+      "ton": 10
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5230,7 +5230,7 @@
       "dvt": "Cây",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1v4RpQZ6rOXHXMndBk4dT-MSm0xkap_Fc",
-      "ton": 50
+      "ton": 45
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5279,7 +5279,7 @@
       "dvt": "Xấp",
       "gia": 128000,
       "anh": "https://lh3.googleusercontent.com/d/1nybnDrXtSbbajpB33g6JNrYzTypvXCR6",
-      "ton": 3,
+      "ton": 2,
       "quyCach": "100 tờ/xấp"
     },
     {
@@ -5292,7 +5292,7 @@
       "dvt": "Xấp",
       "gia": 235000,
       "anh": "https://lh3.googleusercontent.com/d/1kB7bBHw2L4olJANZwuZZNRvnFw3NHRae",
-      "ton": 2,
+      "ton": 1,
       "quyCach": "100 tờ/xấp"
     },
     {
@@ -5391,7 +5391,7 @@
       "dvt": "Quyển",
       "gia": 48000,
       "anh": "https://lh3.googleusercontent.com/d/1lUkZAv_5xtCbs_1igVi35uJMuQk2utlE",
-      "ton": 0
+      "ton": 60
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5415,7 +5415,7 @@
       "dvt": "Cặp",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1YRP8cvIaCZ3md00jzebzHjG7lb3EYCw7",
-      "ton": 60
+      "ton": 46
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5451,7 +5451,7 @@
       "dvt": "Quyển",
       "gia": 12000,
       "anh": "https://lh3.googleusercontent.com/d/1C7xscb20o_HC1HLIL66VzbTmPIUGq01u",
-      "ton": 0
+      "ton": 22
     },
     {
       "nhom": "Dụng cụ VP",
@@ -5499,7 +5499,7 @@
       "dvt": "Cái",
       "gia": 148000,
       "anh": "",
-      "ton": 0
+      "ton": -4
     },
     {
       "nhom": "Điện",
@@ -5535,7 +5535,7 @@
       "dvt": "Cái",
       "gia": 148000,
       "anh": "",
-      "ton": 12
+      "ton": 11
     },
     {
       "nhom": "Điện",
@@ -5597,7 +5597,7 @@
       "dvt": "Cái",
       "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1Hwc5X51v2wbTXMcNr-vvK57phFx7O2k2",
-      "ton": 0
+      "ton": -30
     },
     {
       "nhom": "Nước uống",
@@ -5687,7 +5687,7 @@
       "dvt": "Chai",
       "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1WYNHupNdid6fpssYesEQ--qSjolrTUh8",
-      "ton": 240,
+      "ton": 0,
       "thuongHieu": "Vikoda"
     },
     {
@@ -5700,7 +5700,7 @@
       "dvt": "Chai",
       "gia": 6000,
       "anh": "https://lh3.googleusercontent.com/d/1AmkLy1IiGeL9CpAbV5k4cD7OSByOJsii",
-      "ton": 240,
+      "ton": 0,
       "thuongHieu": "Vikoda"
     },
     {
@@ -6385,7 +6385,7 @@
       "dvt": "",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1dnk2wpMubSgoK8wjO8H15wmq5n3CWrTH",
-      "ton": -1
+      "ton": 0
     },
     {
       "nhom": "Nước uống",
@@ -6469,7 +6469,7 @@
       "dvt": "Chai",
       "gia": 8000,
       "anh": "https://lh3.googleusercontent.com/d/1dnk2wpMubSgoK8wjO8H15wmq5n3CWrTH",
-      "ton": -1
+      "ton": 0
     },
     {
       "nhom": "Nước uống",
@@ -6673,7 +6673,7 @@
       "dvt": "Bịch",
       "gia": 0,
       "anh": "",
-      "ton": -1
+      "ton": 0
     },
     {
       "nhom": "TP Khác",
@@ -7325,5 +7325,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261112_1445.xlsx"
+  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
 }
