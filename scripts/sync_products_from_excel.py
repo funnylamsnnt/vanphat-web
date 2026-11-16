@@ -6,6 +6,8 @@ fixed count of domains). Placeholder nhóm such as Bánh stay in the catalog
 even when Excel has zero SKUs.
 
 Images already stored for a mã are kept when the Excel cell is empty.
+A cell that is not an image URL (for example «Không có hàng») is stored as no image.
+Each sync writes lastSyncResult.excluded_nhom from excludeGroups plus the mã dropped.
 Customer order-form / Apps Script links are not written.
 
 After a successful export this script regenerates indexable category, lĩnh vực,
@@ -147,6 +149,63 @@ def is_excluded_nhom(raw_nhom: str, phrases: set) -> bool:
         if folded == phrase or folded.startswith(phrase + " ") or f" {phrase} " in padded:
             return True
     return False
+
+
+_IMAGE_EXT = re.compile(r"\.(?:jpe?g|png|gif|webp|svg|avif|ico)(?:$|[?#])", re.I)
+
+
+def web_image_url(value) -> str:
+    """Ảnh thật (http, data, đường dẫn file). Câu trạng thái thì rỗng."""
+    src = clean(value)
+    if not src:
+        return ""
+    if src.startswith(("http://", "https://", "data:", "/", "assets/")):
+        return src
+    if _IMAGE_EXT.search(src):
+        return src
+    return ""
+
+
+def excluded_nhom_state(found: dict | None = None, ia: dict | None = None) -> dict:
+    """Nhóm loại trừ → mã. Luôn có mọi cụm trong excludeGroups, kể cả khi Excel không có dòng."""
+    ia = ia if ia is not None else load_ia()
+    names: list[str] = []
+    for name in list(DEFAULT_EXCLUDE_GROUPS) + list(ia.get("excludeGroups") or []):
+        text = clean(name)
+        if text and text not in names:
+            names.append(text)
+    buckets: dict[str, list[str]] = {name: [] for name in names}
+    for raw, codes in (found or {}).items():
+        label = clean(raw) or "(trống)"
+        target = None
+        for name in names:
+            if is_excluded_nhom(label, {nhom_key(name)}):
+                target = name
+                break
+        slot = buckets.setdefault(target or label, [])
+        rows = [codes] if isinstance(codes, str) else codes
+        if not isinstance(rows, list):
+            continue
+        for code in rows:
+            text = str(code or "").strip().upper()
+            if text and text not in slot:
+                slot.append(text)
+    return buckets
+
+
+def persist_excluded_nhom(found: dict | None) -> None:
+    """Ghi lastSyncResult.excluded_nhom sau mỗi lượt sync, không đụng các trường khác."""
+    path = ROOT / "scripts" / "sync_state.json"
+    if not path.is_file():
+        return
+    state = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(state, dict):
+        return
+    result = state.get("lastSyncResult")
+    result = dict(result) if isinstance(result, dict) else {}
+    result["excluded_nhom"] = excluded_nhom_state(found)
+    state["lastSyncResult"] = result
+    path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 # Ô trống và nhãn «Khác» không có lĩnh vực khớp. Nhóm có tên thì tự xếp.
@@ -369,6 +428,15 @@ def assert_exclusion_rules() -> None:
     kept = drop_internal_products(sample_rows, {"vp415"}, phrases)
     if [row["ma"] for row in kept] != ["vp1"]:
         raise SystemExit("drop_internal_products must remove internal codes before write")
+    folded = excluded_nhom_state({"Không đưa lên web (nội bộ)": ["vp9", "VP9", ""]})
+    if folded.get("Không đưa lên web") != ["VP9"]:
+        raise SystemExit(f"excluded_nhom must fold onto excludeGroups: {folded}")
+    if excluded_nhom_state({}).get("Không đưa lên web") != []:
+        raise SystemExit("excludeGroups must stay in excluded_nhom when Excel has no matching row")
+    if web_image_url("Không có hàng") or web_image_url("  "):
+        raise SystemExit("status text must not be stored as an image")
+    if not web_image_url("https://lh3.googleusercontent.com/d/abc").startswith("https://"):
+        raise SystemExit("a real image URL must be kept")
 
 
 def excluded_codes_from_state(path: Path | None = None) -> set[str]:
@@ -512,10 +580,11 @@ def export(xlsx_path: Path, out_json: Path) -> dict:
         dvt = clean(cell("dvt"))
         gia = to_int(cell("gia"))
         gia = gia if gia is not None and gia >= 0 else 0
-        anh = clean(cell("anh"))
-        if not anh:
+        raw_anh = clean(cell("anh"))
+        anh = web_image_url(raw_anh)
+        if not raw_anh:
             old = prev_by_ma.get(ma) or {}
-            anh = clean(old.get("anh"))
+            anh = web_image_url(old.get("anh"))
         ton = to_int(cell("ton"))
         record = {
             "nhom": meta["TenNhom"],
@@ -662,6 +731,7 @@ def main():
         sys.exit(ABORT_EXIT)
     out = Path(args.out)
     stats = export(Path(args.xlsx), out)
+    persist_excluded_nhom(stats.get("excludedGroups") or {})
     print(json.dumps(stats, ensure_ascii=False))
     regenerate_catalog_pages(out)
 

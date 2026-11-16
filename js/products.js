@@ -93,8 +93,14 @@
       .toLowerCase();
   }
 
+  function usableImage(url) {
+    if (window.VanPhat && window.VanPhat.usableImage) return window.VanPhat.usableImage(url);
+    const src = String(url || "").trim();
+    return /^(https?:|data:)/i.test(src) ? src : "";
+  }
+
   function pictureHTML(url, alt) {
-    const src = url || window.VanPhat.placeholderSvg();
+    const src = usableImage(url) || window.VanPhat.placeholderSvg();
     const webp = window.VanPhat.driveImage(src, 480, true);
     const jpeg = window.VanPhat.driveImage(src, 480, false);
     const shown = webp || jpeg;
@@ -134,7 +140,7 @@
         data-ten="${escapeAttr(p.ten)}"
         data-gia="${escapeAttr(p.gia)}"
         data-dvt="${escapeAttr(p.dvt)}"
-        data-anh="${escapeAttr(p.anh || "")}"
+        data-anh="${escapeAttr(usableImage(p.anh))}"
         data-nhom="${escapeAttr(p.nhom)}"
         data-linh-vuc-id="${escapeAttr(p.linhVucId || "")}"${factAttrs(p)}>
         <div class="product-img" data-product-zoom role="button" tabindex="0"
@@ -185,7 +191,7 @@
     try {
       const data = await loadData();
       const lvMap = lvById(data);
-      const withImg = data.sanpham.filter((p) => p.anh && String(p.anh).trim());
+      const withImg = data.sanpham.filter((p) => usableImage(p.anh));
       const byLv = {};
       withImg.forEach((p) => {
         const key = p.linhVucId || p.nhom || "khac";

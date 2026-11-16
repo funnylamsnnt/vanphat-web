@@ -238,7 +238,9 @@ def apply_sync_result(state: dict, modified_time: str, title: str, stats: dict, 
     result["slugChanges"] = stats.get("slugChanges") or []
     result["zeroPrice"] = stats.get("zeroPrice") or []
     result["autoPlacedGroups"] = stats.get("autoPlacedGroups") or []
-    result["excluded_nhom"] = stats.get("excludedGroups") or {}
+    from sync_products_from_excel import excluded_nhom_state
+
+    result["excluded_nhom"] = excluded_nhom_state(stats.get("excludedGroups") or {})
     result["heldUnmappedGroups"] = stats.get("heldUnmappedGroups") or {}
     state["lastSyncResult"] = result
     bridge = scrub_bridge(dict(state.get("bridgeRefresh") or {}))
