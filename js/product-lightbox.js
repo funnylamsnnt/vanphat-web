@@ -117,11 +117,18 @@
     });
   }
 
+  function usable(url) {
+    if (window.VanPhat && window.VanPhat.usableImage) return window.VanPhat.usableImage(url);
+    const src = String(url || "").trim();
+    return /^(https?:|data:)/i.test(src) ? src : "";
+  }
+
   function imageSrc(card, product) {
     const img = card.querySelector(".product-img img");
-    const live = img && img.getAttribute("src");
+    const live = usable(img && img.getAttribute("src"));
     if (live) return live;
-    if (product.anh) return product.anh;
+    const stored = usable(product.anh);
+    if (stored) return stored;
     return placeholder();
   }
 
@@ -136,7 +143,7 @@
 
     const img = dialog.querySelector("[data-lb-img]");
     img.alt = product.ten || "Sản phẩm";
-    const original = product.anh || src || "";
+    const original = usable(product.anh) || usable(src) || "";
     const drive = window.VanPhat && window.VanPhat.driveImage;
     const webp = drive ? drive(original, 960, true) : original;
     const jpeg = drive ? drive(original, 960, false) : original;

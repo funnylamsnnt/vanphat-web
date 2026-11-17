@@ -125,17 +125,25 @@
     return groups.length + " nhóm · " + sku + " sản phẩm";
   }
 
+  function realImage(url) {
+    if (window.VanPhat && window.VanPhat.usableImage) return window.VanPhat.usableImage(url);
+    const src = String(url || "").trim();
+    return /^(https?:|data:)/i.test(src) ? src : "";
+  }
+
   function imagesFor(data, lv, groups, limit) {
     const picked = [];
     const products = data.sanpham || [];
     groups.forEach((g) => {
       if (picked.length >= limit) return;
-      const hit = products.find((p) => (p.nhomId === g.id || p.nhom === groupName(g)) && p.anh);
-      if (hit && picked.indexOf(hit.anh) === -1) picked.push(hit.anh);
+      const hit = products.find((p) => (p.nhomId === g.id || p.nhom === groupName(g)) && realImage(p.anh));
+      const src = hit ? realImage(hit.anh) : "";
+      if (src && picked.indexOf(src) === -1) picked.push(src);
     });
     products.forEach((p) => {
       if (picked.length >= limit) return;
-      if (p.linhVucId === lv.id && p.anh && picked.indexOf(p.anh) === -1) picked.push(p.anh);
+      const src = p.linhVucId === lv.id ? realImage(p.anh) : "";
+      if (src && picked.indexOf(src) === -1) picked.push(src);
     });
     return picked.slice(0, limit);
   }
@@ -298,7 +306,8 @@
   function suggestThumb(product) {
     const drive = window.VanPhat && window.VanPhat.driveImage;
     const placeholder = window.VanPhat && window.VanPhat.placeholderSvg ? window.VanPhat.placeholderSvg() : "";
-    const src = drive ? drive(product.anh, 96, true) : product.anh || "";
+    const photo = realImage(product.anh);
+    const src = drive ? drive(photo, 96, true) : photo;
     return `<img class="sg-thumb" src="${esc(src || placeholder)}" alt="" width="48" height="48" loading="lazy" />`;
   }
 

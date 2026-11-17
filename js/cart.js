@@ -87,7 +87,7 @@
         ten: product.ten || "",
         gia: Number(product.gia) || 0,
         dvt: product.dvt || "",
-        anh: product.anh || "",
+        anh: (window.VanPhat && window.VanPhat.usableImage && window.VanPhat.usableImage(product.anh)) || "",
         nhom: product.nhom || "",
         qty: q,
       });
@@ -525,7 +525,8 @@
     }
     list.innerHTML = items
       .map((it) => {
-        const img = it.anh || placeholder();
+        const usable = window.VanPhat && window.VanPhat.usableImage;
+        const img = (usable && usable(it.anh)) || placeholder();
         return `
         <div class="cart-item" data-ma="${escapeAttr(it.ma)}">
           <div class="cart-item-img">

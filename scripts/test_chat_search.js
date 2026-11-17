@@ -144,9 +144,16 @@ function testBinder(search, catalog) {
     return;
   }
   const got = new Set(mas(result));
-  ["VP076", "VP069"].forEach((ma) => {
-    if (!got.has(ma)) fail("«giá bìa còng 7cm bao nhiêu»: thiếu " + ma + " (có " + mas(result).join(", ") + ")");
-  });
+  if (!got.has("VP076")) {
+    fail("«giá bìa còng 7cm bao nhiêu»: thiếu VP076 (có " + mas(result).join(", ") + ")");
+  }
+  if (got.has("VP069")) {
+    fail("«giá bìa còng 7cm bao nhiêu»: VP069 đã là Bìa Còng 15 cm, không còn khớp 7cm");
+  }
+  const fifteen = search(catalog, "giá bìa còng 15cm", 8);
+  if (!fifteen || fifteen.mode !== "match" || mas(fifteen).indexOf("VP069") === -1) {
+    fail("«giá bìa còng 15cm»: thiếu VP069 (có " + mas(fifteen).join(", ") + ")");
+  }
 }
 
 function testQuestionOnly(search, catalog) {

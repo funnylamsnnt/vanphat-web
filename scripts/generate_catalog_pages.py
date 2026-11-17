@@ -19,12 +19,15 @@ import argparse
 import html
 import json
 import re
+import sys
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+from sync_products_from_excel import web_image_url  # noqa: E402
 SITE = "https://vanphatcompany.vn"
 MARKER = "vp-generated-catalog"
 CSS_V = "2026102103"
@@ -1020,8 +1023,8 @@ def breadcrumb_ld(items: list[tuple[str, str]]) -> dict:
 
 
 def image_src(product: dict | None) -> str:
-    src = str((product or {}).get("anh") or "").strip()
-    return src or PLACEHOLDER_SVG
+    """Ảnh để gắn vào src. Câu trạng thái trong ô ảnh không được thành URL."""
+    return web_image_url((product or {}).get("anh")) or PLACEHOLDER_SVG
 
 
 def sized_drive_image(url: str, width: int, webp: bool) -> str:
@@ -1066,7 +1069,7 @@ def product_picture(
 
 
 def absolute_image(product: dict | None) -> str:
-    src = str((product or {}).get("anh") or "").strip()
+    src = web_image_url((product or {}).get("anh"))
     if src.startswith("http://") or src.startswith("https://"):
         sized = sized_drive_image(src, 1200, False)
         return sized or src
@@ -1094,7 +1097,7 @@ def ensure_og_image() -> None:
 
 def first_with_image(products: list[dict]) -> dict | None:
     for product in products:
-        if str(product.get("anh") or "").startswith("http"):
+        if web_image_url(product.get("anh")).startswith("http"):
             return product
     return None
 
@@ -1232,7 +1235,7 @@ def card_html(
         data-ten="{esc(product.get('ten'))}"
         data-gia="{esc(product.get('gia'))}"
         data-dvt="{esc(product.get('dvt'))}"
-        data-anh="{esc(product.get('anh') or '')}"
+        data-anh="{esc(web_image_url(product.get('anh')))}"
         data-nhom="{esc(product.get('nhom'))}"
         data-linh-vuc-id="{esc(product.get('linhVucId') or '')}"{fact_attr_lines(product)}>
         <div class="product-img" data-product-zoom role="button" tabindex="0"
@@ -1769,7 +1772,7 @@ def build_product_page(
           data-ten="{esc(product.get('ten'))}"
           data-gia="{esc(product.get('gia'))}"
           data-dvt="{esc(product.get('dvt'))}"
-          data-anh="{esc(product.get('anh') or '')}"
+          data-anh="{esc(web_image_url(product.get('anh')))}"
           data-nhom="{esc(product.get('nhom'))}"
           data-linh-vuc-id="{esc(product.get('linhVucId') or '')}"{fact_attr_lines(product, "          ")}>
           <div class="product-img product-detail-media" data-product-zoom role="button" tabindex="0"
@@ -2572,6 +2575,16 @@ def assert_seo_helpers() -> None:
         raise SystemExit(f"drive image sizing mismatch: {webp} {jpeg}")
     if sized_drive_image("https://example.com/a.jpg", 480, True) != "https://example.com/a.jpg":
         raise SystemExit("non-drive images must stay unchanged")
+    if image_src({"anh": "Không có hàng"}) != PLACEHOLDER_SVG or image_src({"anh": ""}) != PLACEHOLDER_SVG:
+        raise SystemExit("status text must not become an image URL")
+    bare = card_html(
+        {"ma": "VP069", "ten": "Bìa Còng 15 cm", "gia": 185000, "dvt": "Cái", "anh": "Không có hàng", "nhom": "Bìa Hồ Sơ"},
+        "vp069-bia-cong-15-cm.html",
+        "nhom-bia-ho-so.html",
+        "VPP · Bìa Hồ Sơ",
+    )
+    if "Không có hàng" in bare or "data:image/svg+xml" not in bare or 'data-anh=""' not in bare:
+        raise SystemExit("card leaked a status sentence as the image URL")
     sample = product_picture("https://lh3.googleusercontent.com/d/abcFILE", "Tên", 400, 400, loading="lazy")
     if "<picture" in sample or "=w480-rw" not in sample or "dataset.fb" not in sample or "=w480" not in sample:
         raise SystemExit(f"image markup mismatch: {sample}")
@@ -3250,7 +3263,7 @@ def select_local_products(products: list[dict], spec: dict) -> list[dict]:
         if spec.get("brand") and product_brand(product) != spec.get("brand"):
             continue
         matched.append(product)
-    matched.sort(key=lambda product: (0 if product.get("anh") else 1, str(product.get("ma") or "")))
+    matched.sort(key=lambda product: (0 if web_image_url(product.get("anh")) else 1, str(product.get("ma") or "")))
     limit = int(spec.get("limit") or 8)
     return matched[:limit]
 
@@ -3585,7 +3598,7 @@ def main() -> None:
     for product in products:
         expected.add(product["_file"])
         same = [p for p in by_group[product["nhom"]] if p["ma"] != product["ma"]]
-        with_img = [p for p in same if p.get("anh")]
+        with_img = [p for p in same if web_image_url(p.get("anh"))]
         pool = with_img or same
         related = pool[:4]
         page = build_product_page(product, groups, cat_files, related, ia, dup_names)

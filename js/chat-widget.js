@@ -673,7 +673,8 @@
   }
 
   function productThumb(product) {
-    const raw = (product && product.anh) || "";
+    const usable = window.VanPhat && window.VanPhat.usableImage;
+    const raw = usable ? usable(product && product.anh) : "";
     const placeholder = window.VanPhat && window.VanPhat.placeholderSvg ? window.VanPhat.placeholderSvg() : "";
     const drive = window.VanPhat && window.VanPhat.driveImage;
     const source = raw || placeholder;
@@ -949,7 +950,9 @@
       ? prefix + catMap[p.nhom]
       : prefix + "san-pham.html?nhom=" + encodeURIComponent(p.nhom || "");
     const badge = [p.linhVucTen, p.nhom].filter(Boolean).join(" · ");
-    const src = p.anh || (window.VanPhat ? window.VanPhat.placeholderSvg() : "");
+    const usable = window.VanPhat && window.VanPhat.usableImage;
+    const photo = usable ? usable(p.anh) : "";
+    const src = photo || (window.VanPhat ? window.VanPhat.placeholderSvg() : "");
     const webp = window.VanPhat && window.VanPhat.driveImage ? window.VanPhat.driveImage(src, 480, true) : src;
     const jpeg = window.VanPhat && window.VanPhat.driveImage ? window.VanPhat.driveImage(src, 480, false) : src;
     const shown = webp || jpeg;
@@ -967,7 +970,7 @@
       '" data-dvt="' +
       escapeAttr(p.dvt) +
       '" data-anh="' +
-      escapeAttr(p.anh || "") +
+      escapeAttr(photo) +
       '" data-nhom="' +
       escapeAttr(p.nhom) +
       '">' +

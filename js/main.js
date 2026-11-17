@@ -41,9 +41,19 @@
         .replace(/Đ/g, "d")
         .toLowerCase();
     },
+    usableImage(url) {
+      const src = String(url || "").trim();
+      if (!src) return "";
+      if (/^(https?:|data:)/i.test(src)) return src;
+      if (src.charAt(0) === "/" || src.indexOf("assets/") === 0) return src;
+      if (/\.(?:jpe?g|png|gif|webp|svg|avif|ico)(?:$|[?#])/i.test(src)) return src;
+      return "";
+    },
     driveImage(url, width, webp) {
-      const match = String(url || "").match(/^(https:\/\/lh3\.googleusercontent\.com\/d\/[A-Za-z0-9_-]+)/);
-      if (!match) return String(url || "");
+      const raw = window.VanPhat.usableImage(url);
+      if (!raw) return "";
+      const match = raw.match(/^(https:\/\/lh3\.googleusercontent\.com\/d\/[A-Za-z0-9_-]+)/);
+      if (!match) return raw;
       return match[1] + "=w" + width + (webp ? "-rw" : "");
     },
   };
