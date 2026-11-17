@@ -2,45 +2,45 @@
   "items": [
     {
       "hang": 1,
-      "ma": "VP206",
-      "ten": "Giấy A4 70 gsm IK plus",
-      "href": "san-pham/vp206-giay-a4-70-gsm-ik-plus.html",
-      "gia": 69000
-    },
-    {
-      "hang": 2,
-      "ma": "VP072",
-      "ten": "Bìa còng 9F Plus",
-      "href": "san-pham/vp072-bia-cong-9f-plus.html",
-      "gia": 64000
-    },
-    {
-      "hang": 3,
-      "ma": "VP337",
-      "ten": "Nước suối Vikoda (500ml)",
-      "href": "san-pham/vp337-nuoc-suoi-vikoda-500ml.html",
-      "gia": 6000
-    },
-    {
-      "hang": 4,
-      "ma": "VP336",
-      "ten": "Nước suối Vikoda (350ml)",
-      "href": "san-pham/vp336-nuoc-suoi-vikoda-350ml.html",
-      "gia": 5000
-    },
-    {
-      "hang": 5,
       "ma": "VP211",
       "ten": "Giấy A4 70 gsm Supreme",
       "href": "san-pham/vp211-giay-a4-70-gsm-supreme.html",
       "gia": 69000
     },
     {
+      "hang": 2,
+      "ma": "VP206",
+      "ten": "Giấy A4 70 gsm IK plus",
+      "href": "san-pham/vp206-giay-a4-70-gsm-ik-plus.html",
+      "gia": 69000
+    },
+    {
+      "hang": 3,
+      "ma": "VP072",
+      "ten": "Bìa còng 9F Plus",
+      "href": "san-pham/vp072-bia-cong-9f-plus.html",
+      "gia": 64000
+    },
+    {
+      "hang": 4,
+      "ma": "VP337",
+      "ten": "Nước suối Vikoda (500ml)",
+      "href": "san-pham/vp337-nuoc-suoi-vikoda-500ml.html",
+      "gia": 6000
+    },
+    {
+      "hang": 5,
+      "ma": "VP336",
+      "ten": "Nước suối Vikoda (350ml)",
+      "href": "san-pham/vp336-nuoc-suoi-vikoda-350ml.html",
+      "gia": 5000
+    },
+    {
       "hang": 6,
-      "ma": "VP327",
-      "ten": "Note nhựa 5 màu (Pronoti)",
-      "href": "san-pham/vp327-note-nhua-5-mau-pronoti.html",
-      "gia": 13000
+      "ma": "VP203",
+      "ten": "Giấy A3 70 gsm Supreme",
+      "href": "san-pham/vp203-giay-a3-70-gsm-supreme.html",
+      "gia": 138000
     },
     {
       "hang": 7,
@@ -51,24 +51,24 @@
     },
     {
       "hang": 8,
+      "ma": "VP160",
+      "ten": "Bút xóa TL-CP02 (hộp 10c)",
+      "href": "san-pham/vp160-but-xoa-tl-cp02-hop-10c.html",
+      "gia": 22000
+    },
+    {
+      "hang": 9,
+      "ma": "VP089",
+      "ten": "Bìa lỗ 380g (100 cái/xấp)",
+      "href": "san-pham/vp089-bia-lo-380g-100-cai-xap.html",
+      "gia": 39000
+    },
+    {
+      "hang": 10,
       "ma": "VP210",
       "ten": "Giấy A4 70 gsm Smartis",
       "href": "san-pham/vp210-giay-a4-70-gsm-smartis.html",
       "gia": 63000
-    },
-    {
-      "hang": 9,
-      "ma": "VP120",
-      "ten": "Bút bi TL-027 (Xanh)",
-      "href": "san-pham/vp120-but-bi-tl-027-xanh.html",
-      "gia": 4500
-    },
-    {
-      "hang": 10,
-      "ma": "VP098",
-      "ten": "Bìa nút F4 (My Clear A4)",
-      "href": "san-pham/vp098-bia-nut-f4-my-clear-a4.html",
-      "gia": 3500
     }
   ]
 }

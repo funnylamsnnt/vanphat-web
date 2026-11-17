@@ -2,40 +2,42 @@
   "driveFileId": "1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR",
   "driveFileName": "PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "driveLink": "https://docs.google.com/spreadsheets/d/1xgIKFgdd1iki3uoeIRh29FMrOzxRfreR/edit",
-  "lastModifiedTime": "2026-10-27T07:33:53.012Z",
+  "lastModifiedTime": "2026-11-16T11:52:12.303Z",
   "previousModifiedTime": "2026-10-26T07:21:56.761Z",
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-11-13T07:52:00Z",
+  "lastSyncAt": "2026-11-17T01:06:49Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 569,
-    "with_img": 447,
-    "added": [],
+    "count": 573,
+    "with_img": 451,
+    "added": [
+      "VP626"
+    ],
     "removed": [],
     "priceChanges": [
       {
-        "ma": "VP604",
-        "old": 60000,
-        "new": 45000
+        "ma": "VP452",
+        "old": 9000,
+        "new": 10000
       },
       {
-        "ma": "VP605",
-        "old": 5000,
-        "new": 12000
+        "ma": "VP453",
+        "old": 8000,
+        "new": 9000
       }
     ],
     "slugChanges": [
       {
-        "ma": "VP604",
-        "old": "Búa đóng ghim",
-        "new": "Búa cao su cán gỗ"
+        "ma": "VP452",
+        "old": "Trà bí đao Wonderfarm Lon 320ml",
+        "new": "Trà bí đao Wonderfarm Lon 310ml"
       }
     ],
-    "zeroPriceCount": 40,
-    "commit": "b25119c4",
-    "source": "Google Sheet 1Hwslun… modified 2026-11-09T09:10:37Z",
+    "zeroPriceCount": 39,
+    "commit": "ed254866",
+    "source": "Google Sheet 1Hwslun… modified 2026-11-17T00:52:41Z; Excel copy 2026-11-16T11:52:12Z; local work file kept VP391 (Sheet row blanked), omitted VP627–629 (duplicate name of VP391)",
     "excluded_nhom": {
       "Không đưa lên web": [
         "VP415",
@@ -73,9 +75,32 @@
         "VP447",
         "VP448",
         "VP531",
-        "VP571"
+        "VP571",
+        "VP609",
+        "VP610",
+        "VP611",
+        "VP612",
+        "VP613",
+        "VP614",
+        "VP615",
+        "VP616",
+        "VP617",
+        "VP618",
+        "VP619",
+        "VP620",
+        "VP621",
+        "VP622",
+        "VP623",
+        "VP624",
+        "VP625"
       ]
-    }
+    },
+    "excludedCount": 53,
+    "keptRealPrices": 0,
+    "nonUrlImageCells": [
+      "VP069"
+    ],
+    "banChayPushed": true
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "lastCheckAt": "2026-11-08T07:45:00Z",
@@ -655,7 +680,7 @@
     "type": "google_sheet",
     "fileId": "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM",
     "title": "PHIEU BAO GIA VAN PHAT - 2026",
-    "modifiedTime": "2026-11-07T06:55:07.403Z"
+    "modifiedTime": "2026-11-17T00:52:41.462Z"
   },
   "bridgeRefresh": {
     "status": "done",
@@ -845,7 +870,7 @@
     "note": "Không xuất Sheet→Excel.",
     "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
   },
-  "lastSyncNote": "05/11 14:45–15:13 ICT: Sheet→web chỉ đổi ảnh VP237 (96c144e6, Pages OK); bridge LIVE OK 603 SKU; không đổi giá. Session Google đăng xuất sau import (đã xong, không cần báo).",
+  "lastSyncNote": "17/11 sáng: đẩy catalog + bán chạy theo yêu cầu anh Hà. Không xuất đè Excel chính thức vì Sheet thiếu VP391 (dòng chỉ còn nhóm Không đưa lên web) và có VP627–629 trùng tên VP391. A4 Copy VP626 lên web 69.000đ.",
   "webSync_20261030_1435": {
     "source": "Google Sheet (Danh Mục Vật Tư), export xlsx qua Drive connector (chỉ đọc)",
     "sourceModifiedTime": "2026-10-30T06:52:09.701Z",

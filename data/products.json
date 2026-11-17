@@ -801,6 +801,18 @@
       "ton": 0
     },
     {
+      "nhom": "Giấy",
+      "nhomId": "giay",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP626",
+      "ten": "Giấy A4 70 gsm Copy",
+      "dvt": "Ram",
+      "gia": 69000,
+      "anh": "https://lh3.googleusercontent.com/d/1LcU5rYXfvaNND0wYCqsdN8Jcj1dXCgAZ",
+      "ton": 0
+    },
+    {
       "nhom": "Bìa Hồ Sơ",
       "nhomId": "bia-ho-so",
       "linhVucId": "vpp",
@@ -5713,7 +5725,7 @@
       "dvt": "Lon",
       "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1BvYq00OrfveEO7UaBS5sj1yamXaMnIdF",
-      "ton": 6
+      "ton": 30
     },
     {
       "nhom": "Nước uống",
@@ -5972,7 +5984,7 @@
       "dvt": "Chai",
       "gia": 11000,
       "anh": "https://lh3.googleusercontent.com/d/1PBzh3h2Oh3aVu_1KDa_ZFew8VbkMj8_m",
-      "ton": 0,
+      "ton": 12,
       "thuongHieu": "C2"
     },
     {
@@ -6020,11 +6032,11 @@
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
       "ma": "VP452",
-      "ten": "Trà bí đao Wonderfarm Lon 320ml",
+      "ten": "Trà bí đao Wonderfarm Lon 310ml",
       "dvt": "Lon",
-      "gia": 9000,
+      "gia": 10000,
       "anh": "https://lh3.googleusercontent.com/d/1dJx3NCSPVCegR0HqyatY2u6IK7-1lQba",
-      "ton": 24,
+      "ton": 54,
       "thuongHieu": "Wonderfarm"
     },
     {
@@ -6035,9 +6047,9 @@
       "ma": "VP453",
       "ten": "Trà bí đao Wonderfarm Chai 280ml",
       "dvt": "Chai",
-      "gia": 8000,
+      "gia": 9000,
       "anh": "https://lh3.googleusercontent.com/d/1btRxHv_CSrKRr-F9tpeZ67wm76ROSYR8",
-      "ton": 0,
+      "ton": 12,
       "thuongHieu": "Wonderfarm"
     },
     {
@@ -7325,5 +7337,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx"
+  "syncedFrom": "web_sync_20261117.xlsx"
 }
