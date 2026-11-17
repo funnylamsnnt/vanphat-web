@@ -5478,6 +5478,30 @@
       "ton": 0
     },
     {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP627",
+      "ten": "Đèn pin TrustFire (T11R)",
+      "dvt": "Cây",
+      "gia": 1400000,
+      "anh": "https://lh3.googleusercontent.com/d/11PTyWcvcnM2B3maSODo3sOCDvwmZtkDY",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP628",
+      "ten": "Bàn Chải Sắt Cầm Tay (15cm)",
+      "dvt": "Cái",
+      "gia": 38000,
+      "anh": "https://lh3.googleusercontent.com/d/1lG4aP6qP-lLtS8wlEazWkPdgR8TWVtxA",
+      "ton": 0
+    },
+    {
       "nhom": "Điện",
       "nhomId": "dien",
       "linhVucId": "dien-gia-dung",
@@ -5714,18 +5738,6 @@
       "anh": "https://lh3.googleusercontent.com/d/1AmkLy1IiGeL9CpAbV5k4cD7OSByOJsii",
       "ton": 0,
       "thuongHieu": "Vikoda"
-    },
-    {
-      "nhom": "Nước uống",
-      "nhomId": "nuoc-uong",
-      "linhVucId": "nuoc-banh",
-      "linhVucTen": "Nước uống & Bánh",
-      "ma": "VP391",
-      "ten": "Trà bí đao (310 ML Lon)",
-      "dvt": "Lon",
-      "gia": 9000,
-      "anh": "https://lh3.googleusercontent.com/d/1BvYq00OrfveEO7UaBS5sj1yamXaMnIdF",
-      "ton": 30
     },
     {
       "nhom": "Nước uống",
@@ -6604,6 +6616,18 @@
       "ton": 0
     },
     {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP640",
+      "ten": "Trà bí đao (310 ML Lon)",
+      "dvt": "Lon",
+      "gia": 9000,
+      "anh": "https://lh3.googleusercontent.com/d/1BvYq00OrfveEO7UaBS5sj1yamXaMnIdF",
+      "ton": 0
+    },
+    {
       "nhom": "TP Khác",
       "nhomId": "tp-khac",
       "linhVucId": "nuoc-banh",
@@ -7337,5 +7361,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "web_sync_20261117.xlsx"
+  "syncedFrom": "source_sheet_20261117_1425.xlsx"
 }

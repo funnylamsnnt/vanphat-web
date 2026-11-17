@@ -7,7 +7,7 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-11-17T01:06:49Z",
+  "lastSyncAt": "2026-11-17T07:30:00Z",
   "lastSyncResult": {
     "changed": true,
     "count": 573,
@@ -324,13 +324,13 @@
     "bridge": "OK 14:22 ICT, 500 rows verified"
   },
   "bridge": {
-    "lastRefreshAt": "2026-11-05 15:13 ICT",
-    "sourceModifiedTime": "2026-11-05T06:55:05.449Z",
-    "bridgeLiveModifiedTime": "2026-11-05T08:13:00Z",
-    "rows_verified": "604 rows (603 SKU), B604=VP603",
+    "lastRefreshAt": "2026-11-15 08:44 ICT",
+    "sourceModifiedTime": "2026-11-12T16:35:36Z",
+    "bridgeLiveModifiedTime": "2026-11-15T01:44:43Z",
+    "rows_verified": "626 rows (625 SKU), B626=VP625",
     "uploadFile": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "lastVerifiedAt": "2026-11-05 15:13 ICT",
-    "note": "Import Replace OK; Google signed out after verify (không gõ mật khẩu). Tab đóng, không pkill."
+    "lastVerifiedAt": "2026-11-15 08:44 ICT",
+    "note": "Ghi bằng Google Sheets connector (user-Google-sheets, parseInput/USER_ENTERED), không dùng trình duyệt Import→Replace. Tab Danh Mục Vật Tư A1:F626; không tạo tab/bản sao Drive. Đối chiếu _Live_DanhMuc IMPORTRANGE: VP270=16200, VP606 giá trống, có VP610–VP625. Không mã nào bị giữ giá cũ (file không đè giá thật bằng 0/trống)."
   },
   "webSync_20261019": {
     "sourceModifiedTime": "2026-10-19T08:09:17.071Z",
@@ -684,30 +684,44 @@
   },
   "bridgeRefresh": {
     "status": "done",
-    "at": "2026-11-05T15:13:00+07:00",
-    "builtAt": "2026-11-05T14:46:00+07:00",
-    "rows": 604,
-    "skus": 603,
-    "lastMa": "VP603",
+    "at": "2026-11-15T08:44:43+07:00",
+    "builtAt": "2026-11-13T14:44:00+07:00",
+    "rows": 626,
+    "skus": 625,
+    "lastMa": "VP625",
     "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "verified": "603 SKU B2:B604, last VP603; tabs DMVT + CSĐT; session signed out after import (ok)",
+    "verified": "625 SKU B2:B626, last VP625; VP270=16200, VP606 giá trống; IMPORTRANGE _Live_DanhMuc đã hiện dữ liệu mới; chỉ ghi tab DMVT, không đụng CSĐT / LIVE Đơn Đặt Hàng / Sheet chính",
+    "method": "Google Sheets connector write_range parseInput=true",
+    "added": 16,
+    "removed": 0,
+    "priceChanges": 36,
     "prev": {
       "status": "done",
-      "builtAt": "2026-10-31T14:42:00+07:00",
-      "rows": 590,
-      "skus": 589,
-      "lastMa": "VP589",
+      "at": "2026-11-05T15:13:00+07:00",
+      "builtAt": "2026-11-05T14:46:00+07:00",
+      "rows": 604,
+      "skus": 603,
+      "lastMa": "VP603",
       "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-      "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+      "verified": "603 SKU B2:B604, last VP603; tabs DMVT + CSĐT; session signed out after import (ok)",
       "prev": {
         "status": "done",
-        "at": "2026-10-29T14:43:00+07:00",
-        "rows": 589,
-        "lastMa": "VP588",
-        "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
-      },
-      "at": "2026-10-31T14:45:00+07:00",
-      "verified": "590 rows (589 SKU), B590=VP589, VP164=38000; tabs DMVT + CSĐT, xóa tab (1) thừa"
+        "builtAt": "2026-10-31T14:42:00+07:00",
+        "rows": 590,
+        "skus": 589,
+        "lastMa": "VP589",
+        "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
+        "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+        "prev": {
+          "status": "done",
+          "at": "2026-10-29T14:43:00+07:00",
+          "rows": 589,
+          "lastMa": "VP588",
+          "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
+        },
+        "at": "2026-10-31T14:45:00+07:00",
+        "verified": "590 rows (589 SKU), B590=VP589, VP164=38000; tabs DMVT + CSĐT, xóa tab (1) thừa"
+      }
     }
   },
   "webSync_20261026_1443": {
@@ -1100,9 +1114,9 @@
     "note": "Sheet A–F 603 mã trùng live products.json (567 SKU, 0 lệch giá/tên/ĐVT/nhóm/ảnh) và trùng bản 07/11 → không chạy generator, không push.",
     "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
   },
-  "sheetModifiedTime": "2026-11-12T16:35:36Z",
+  "sheetModifiedTime": "2026-11-17T06:49:51.020Z",
   "bridgeFileBuiltAt": "2026-11-13T07:44:00Z",
-  "bridgeImportPending": true,
+  "bridgeImportPending": false,
   "webSync_20261111_1450": {
     "source": "Google Sheet Danh Mục Vật Tư (đọc connector, dựng xlsx cục bộ, không xuất Sheet→Excel)",
     "sourceModifiedTime": "2026-11-11T01:16:34.278Z",
@@ -1163,6 +1177,27 @@
     "zeroPriceNew": [],
     "note": "Ngoài giá VP270, đổi tồn kho (availability schema) nhiều mã. Pages OK; VP415 404; sitemap 603 URL; 3 lĩnh vực 200.",
     "commit": "d04379f3",
-    "bridge": "pending: cần Import→Replace bằng trình duyệt; _UPLOAD_BRIDGE.xlsx dựng 13/11 (625 SKU)"
+    "bridge": "đã nhập 15/11 2026-11-15 08:44 ICT: 625 SKU (B626=VP625) bằng Sheets connector, không cần trình duyệt"
+  },
+  "webSync_20261115_bridge": {
+    "bridge": "OK 2026-11-15 08:44 ICT, 626 dòng (625 SKU), B626=VP625; +16 mã VP610–VP625; 36 đổi giá (vd VP270 15000→16200); 0 mã bỏ; IMPORTRANGE _Live_DanhMuc đã khớp"
+  },
+  "webSync_20261117_1425": {
+    "source": "Google Sheet Danh Mục Vật Tư (export xlsx qua Drive connector, chỉ đọc)",
+    "sourceModifiedTime": "2026-11-17T06:49:51.020Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261117_1425.xlsx",
+    "log": "/workspace/vanphat-sync/_sync_run_20261117_1425.log",
+    "count": 575,
+    "added": [
+      "VP627",
+      "VP628",
+      "VP640"
+    ],
+    "removed": [
+      "VP391 (đổi thành VP640 cùng tên)"
+    ],
+    "priceChanges": [],
+    "zeroPrice_count": 39,
+    "bridge": "pending: cần Import→Replace bằng trình duyệt"
   }
 }
