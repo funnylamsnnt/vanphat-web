@@ -1116,7 +1116,7 @@
   },
   "sheetModifiedTime": "2026-11-17T06:49:51.020Z",
   "bridgeFileBuiltAt": "2026-11-13T07:44:00Z",
-  "bridgeImportPending": false,
+  "bridgeImportPending": true,
   "webSync_20261111_1450": {
     "source": "Google Sheet Danh Mục Vật Tư (đọc connector, dựng xlsx cục bộ, không xuất Sheet→Excel)",
     "sourceModifiedTime": "2026-11-11T01:16:34.278Z",
@@ -1198,6 +1198,8 @@
     ],
     "priceChanges": [],
     "zeroPrice_count": 39,
-    "bridge": "pending: cần Import→Replace bằng trình duyệt"
+    "bridge": "pending: _UPLOAD_BRIDGE.xlsx dựng 17/11 14:27 (628 SKU, 629 dòng gồm tiêu đề); cần Import→Replace bằng trình duyệt",
+    "commit": "14e9e56a",
+    "pages": "success"
   }
 }
