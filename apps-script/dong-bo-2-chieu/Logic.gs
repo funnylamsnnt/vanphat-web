@@ -894,6 +894,11 @@ function gopKhoa_(ten, cfg, nenTab, excelTab, sheetTab, opts, tui) {
 
   Object.keys(eRows).forEach(function (k) {
     if (khoaHong_(k) || sRows[k]) return;
+    // Tab có Mã SP là công thức theo số dòng (Danh Mục): mã đã có trong bản chụp mà Sheet
+    // không còn nghĩa là Sheet đã xóa mã (đã ghi xung đột "giữ mã" ở bước xóa). Không thêm
+    // lại dòng: dòng thêm sẽ nhận mã theo số dòng mới (VP641, VP642…) chứ không phải mã cũ,
+    // nên lượt sau mã cũ vẫn thiếu và dòng bị nhân bản mỗi 30 phút (lỗi VP391 17–18/11/2026).
+    if (cfg.lienTucVp && !opts.dayExcel && bRows[k]) return;
     var cells = {};
     cot.forEach(function (idx) {
       var cell = eRows[k].cells[idx];
