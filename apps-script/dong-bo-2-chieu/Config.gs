@@ -23,6 +23,20 @@ var XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.she
 var MIN_XLSX_BYTES = 1000000;
 var NGUONG_XOA_DONG = 10;
 
+/**
+ * Mã Danh Mục cố ý để trống. Dòng vẫn giữ vì cột Mã SP là công thức
+ * "VP"&TEXT(ROW()-1;"000") — không xóa dòng, không thêm lại dòng.
+ * Guard "mã VP liên tục" chấp nhận đúng các lỗ này.
+ * Guard "mất mã so với Excel" không tính các mã này, nên lần xuất
+ * được bỏ chúng khỏi Excel (Sheet là nguồn). Lỗ khác vẫn chặn.
+ * Giá 0 hoặc trống đè giá thật vẫn chặn.
+ */
+var MA_BO_TRONG = [
+  'VP391',
+  'VP629', 'VP630', 'VP631', 'VP632', 'VP633',
+  'VP634', 'VP635', 'VP636', 'VP637', 'VP638', 'VP639'
+];
+
 var SHEET_NAMES = [
   'Đơn Đặt Hàng',
   'Danh Mục Vật Tư',
