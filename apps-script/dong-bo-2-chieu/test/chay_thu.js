@@ -292,7 +292,11 @@ function depsCoBan(opt) {
       return opt.backup || { excelId: 'bak-excel', sheetId: 'bak-sheet', luc: 'x' };
     },
     apDung: function (plan) { mark('apDung'); d.plan = plan; return { ghi: (plan.ghiSheet || []).length }; },
-    ghiNhatKy: function () { mark('ghiNhatKy'); },
+    nhatKy: [],
+    ghiNhatKy: function (plan, luc) {
+      mark('ghiNhatKy');
+      d.nhatKy.push({ plan: plan, luc: luc });
+    },
     exportXlsx: function () { mark('export'); return opt.blob || blobPk(opt.filesXuat); },
     unzip: function (blob) { mark('unzip'); return blob._files; },
     zip: function (files) { mark('zip'); d.zipFiles = files; return blobPk(files); },
@@ -851,6 +855,142 @@ test('guard xuất giữ câu chặn cũ', function () {
   assert.match(context.kiemXuatTuFiles_(thieuT, cat).errs.join(' '), /thiếu cột Quy Cách/);
 });
 
+function maThu_(n) {
+  var s = String(n);
+  while (s.length < 3) s = '0' + s;
+  return 'VP' + s;
+}
+
+function dayMa_(tu, den, bo) {
+  var tap = {};
+  (bo || []).forEach(function (m) { tap[m] = true; });
+  var ds = [];
+  var i;
+  for (i = tu; i <= den; i++) {
+    var code = maThu_(i);
+    if (!tap[code]) ds.push(code);
+  }
+  return ds;
+}
+
+function catalogMa_(codes, them) {
+  var items = {};
+  codes.forEach(function (c) {
+    items[c] = { name: c, price: 1000, S: 'TL', T: 'Cai' };
+  });
+  Object.keys(them || {}).forEach(function (c) { items[c] = them[c]; });
+  return {
+    sheetNames: context.SHEET_NAMES.slice(),
+    header: context.timCauHinh_(DM).tieuDe.slice(),
+    items: items
+  };
+}
+
+test('mã bỏ trống cho phép: lỗ cố ý thì qua, lỗ lạ vẫn chặn, VP391 không tính là mất', function () {
+  assert.equal(context.MA_BO_TRONG.join(','), [
+    'VP391',
+    'VP629', 'VP630', 'VP631', 'VP632', 'VP633',
+    'VP634', 'VP635', 'VP636', 'VP637', 'VP638', 'VP639'
+  ].join(','));
+  var bo = context.MA_BO_TRONG.slice();
+  var codes = dayMa_(1, 640, bo);
+  assert.equal(codes.length, 628);
+  assert.equal(codes[0], 'VP001');
+  assert.equal(codes[codes.length - 1], 'VP640');
+  assert.equal(codes.indexOf('VP391'), -1);
+  assert.equal(codes.indexOf('VP629'), -1);
+  assert.equal(codes.indexOf('VP639'), -1);
+  assert.ok(codes.indexOf('VP627') >= 0);
+  assert.ok(codes.indexOf('VP628') >= 0);
+  assert.ok(codes.indexOf('VP400') >= 0);
+
+  var dayDu = dayMa_(1, 640, []);
+  var nguyen = context.kiemTraXuat_(catalogMa_(dayDu), catalogMa_(dayDu));
+  assert.equal(nguyen.ok, true, nguyen.errs.join(' | '));
+
+  var moi = catalogMa_(codes);
+  var cu = catalogMa_(codes, {
+    VP391: { name: 'Tra bi dao', price: 12000, S: 'TL', T: 'Lon' }
+  });
+  var kiem = context.kiemTraXuat_(moi, cu);
+  assert.equal(kiem.ok, true, kiem.errs.join(' | '));
+  assert.equal(kiem.errs.some(function (e) { return /mất mã/.test(e); }), false);
+  assert.equal(kiem.errs.some(function (e) { return /không liên tục/.test(e); }), false);
+  assert.match(kiem.notes.join(' '), /VP391/);
+  assert.match(kiem.notes.join(' '), /VP629/);
+  assert.match(kiem.notes.join(' '), /VP639/);
+
+  var tuFile = context.kiemXuatTuFiles_(filesVoiDm(dmXml({ codes: codes })), cu);
+  assert.equal(tuFile.ok, true, tuFile.errs.join(' | '));
+
+  var coLo = dayMa_(1, 640, bo.concat(['VP400']));
+  var lo = context.kiemTraXuat_(catalogMa_(coLo), catalogMa_(coLo));
+  assert.equal(lo.ok, false);
+  assert.match(lo.errs.join(' '), /mã VP không liên tục/);
+  assert.match(lo.errs.join(' '), /VP400/);
+  assert.equal(/VP391/.test(lo.errs.join(' ')), false);
+  assert.equal(/VP629/.test(lo.errs.join(' ')), false);
+
+  var moiMat = catalogMa_(codes);
+  var cuMat = catalogMa_(codes, {
+    VP391: { name: 'Tra bi dao', price: 12000, S: 'TL', T: 'Lon' },
+    VP641: { name: 'Ma la', price: 9000, S: 'TL', T: 'Cai' }
+  });
+  var mat = context.kiemTraXuat_(moiMat, cuMat);
+  assert.equal(mat.ok, false);
+  var dongMat = mat.errs.filter(function (e) { return /mất mã so với Excel hiện tại/.test(e); }).join(' ');
+  assert.match(dongMat, /VP641/);
+  assert.equal(/VP391/.test(dongMat), false);
+  assert.equal(mat.errs.some(function (e) { return /không liên tục/.test(e); }), false);
+
+  var cuGia = catalogMa_(codes);
+  var moiGia = catalogMa_(codes);
+  cuGia.items.VP452.price = 10000;
+  moiGia.items.VP452.price = 0;
+  cuGia.items.VP453.price = 9000;
+  moiGia.items.VP453.price = '';
+  var chanGia = context.kiemTraXuat_(moiGia, cuGia);
+  assert.equal(chanGia.ok, false);
+  assert.match(chanGia.errs.join(' '), /giá 0\/trống sẽ đè giá thật/);
+  assert.match(chanGia.errs.join(' '), /VP452/);
+  assert.match(chanGia.errs.join(' '), /VP453/);
+  assert.equal(chanGia.errs.some(function (e) { return /không liên tục|mất mã/.test(e); }), false);
+});
+
+test('ketDung_ ghi lý do dừng vào SYNC_Log, dry-run thì không ghi', function () {
+  var tabs = {};
+  var ss = {
+    getSheetByName: function (n) { return tabs[n] || null; },
+    insertSheet: function (n) {
+      tabs[n] = taoSheetNho(n, [], []);
+      return tabs[n];
+    }
+  };
+  var props = {};
+  var deps = {
+    props: props,
+    setProp: function (k, v) { props[k] = String(v); },
+    log: function () {},
+    ghiNhatKy: function (plan, luc) { context.ghiNhatKy_(ss, plan, luc); }
+  };
+  var lyDo = 'đã ghi Sheet nhưng chưa ghi Excel: mã VP không liên tục: 628 mã, cuối VP640 || mất mã so với Excel hiện tại (1): VP391';
+  var kq = context.ketDung_(deps, lyDo, 'KHONG_GHI', { now: lucSaigon(2026, 11, 18, 15, 10) });
+  assert.equal(kq.ok, false);
+  assert.equal(kq.ghi, false);
+  assert.match(props.LAST_GUARD_JSON, /628 mã, cuối VP640/);
+  assert.match(props.LAST_RUN_JSON, /KHONG_GHI/);
+  var text = JSON.stringify(tabs[context.TEN_LOG]._data);
+  assert.match(text, /"dung"/);
+  assert.match(text, /628 mã, cuối VP640/);
+  assert.match(text, /VP391/);
+  assert.match(text, /2026-11-18 15:10:00/);
+  assert.equal(text.includes('GEMINI_BI_MAT'), false);
+
+  var dry = { goi: false, setProp: function () {}, log: function () {}, ghiNhatKy: function () { dry.goi = true; } };
+  context.ketDung_(dry, 'Excel id/tên sai', null, { boQuaNhatKy: true, now: lucSaigon(2026, 11, 18, 15, 10) });
+  assert.equal(dry.goi, false);
+});
+
 test('vòng: khóa, khung cấm, dry-run, thứ tự ghi, không đè snapshot nền', function () {
   var goc = moDayDu();
   var excel = clone(goc);
@@ -918,6 +1058,18 @@ test('vòng: khóa, khung cấm, dry-run, thứ tự ghi, không đè snapshot n
   assert.match(kq.lyDo, /Excel id/);
   assert.equal(sai.calls.includes('taiExcel'), false);
   assert.equal(sai.calls.includes('updateExcel'), false);
+  assert.equal(sai.nhatKy.length, 1);
+  assert.equal(sai.nhatKy[0].plan.log[0].nguon, 'dung');
+  assert.match(sai.nhatKy[0].plan.log[0].ghiChu, /Excel id/);
+
+  var drySai = depsCoBan({
+    excelMeta: { id: 'sai', name: 'khac.xlsx', md5Checksum: 'x' },
+    dryProp: true
+  });
+  kq = context.dongBoVong_(drySai, { boQuaLich: true, dryRun: true, minBytes: 1 });
+  assert.equal(kq.ok, false);
+  assert.match(kq.lyDo, /Excel id/);
+  assert.equal(drySai.calls.includes('ghiNhatKy'), false);
 
   var xong = depsCoBan({
     excelPack: pack,
@@ -972,6 +1124,11 @@ test('vòng: khóa, khung cấm, dry-run, thứ tự ghi, không đè snapshot n
   assert.equal(guard.calls.includes('apDung'), true);
   assert.equal(guard.calls.includes('updateExcel'), false);
   assert.equal(guard.props.LAST_EXCEL_MD5, 'cu-md5');
+  assert.ok(guard.nhatKy.some(function (n) {
+    return (n.plan.log || []).some(function (d) {
+      return d.nguon === 'dung' && /đã ghi Sheet nhưng chưa ghi Excel/.test(d.ghiChu) && /giá 0\/trống sẽ đè giá thật/.test(d.ghiChu);
+    });
+  }));
 
   var huy = depsCoBan({ excelPack: { moHinh: excel, files: files }, sheetMo: sheet, nenMo: clone(goc) });
   var lech = clone(excel);

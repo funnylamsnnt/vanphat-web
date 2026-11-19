@@ -782,6 +782,54 @@ function thatBai_(lyDo) {
   };
 }
 
+function maVp_(n) {
+  var s = String(n);
+  while (s.length < 3) s = '0' + s;
+  return 'VP' + s;
+}
+
+function tapMa_(ds) {
+  var tap = {};
+  var i;
+  for (i = 0; i < (ds || []).length; i++) {
+    var ma = String(ds[i] == null ? '' : ds[i]).trim().toUpperCase();
+    if (/^VP\d{3,}$/.test(ma)) tap[ma] = true;
+  }
+  return tap;
+}
+
+/** Lỗ từ VP001 tới mã cuối mà không nằm trong danh sách cho phép. */
+function loHongVp_(codes, tapBo) {
+  if (!codes.length) return ['(không có mã)'];
+  var cuoi = soVp_(codes[codes.length - 1]);
+  if (!isFinite(cuoi) || cuoi < 1) return ['(mã cuối không hợp lệ)'];
+  var co = {};
+  var thieu = [];
+  var i;
+  for (i = 0; i < codes.length; i++) co[codes[i]] = true;
+  for (i = 1; i <= cuoi; i++) {
+    var ma = maVp_(i);
+    if (!co[ma] && !tapBo[ma]) thieu.push(ma);
+  }
+  return thieu;
+}
+
+/** Mã cho phép bỏ trống, nằm trong 1..cuối, và không có trong bản ghi. */
+function maBoTrongTrongDay_(codes, tapBo) {
+  if (!codes.length) return [];
+  var cuoi = soVp_(codes[codes.length - 1]);
+  if (!isFinite(cuoi) || cuoi < 1) return [];
+  var co = {};
+  var ds = [];
+  var i;
+  for (i = 0; i < codes.length; i++) co[codes[i]] = true;
+  for (i = 1; i <= cuoi; i++) {
+    var ma = maVp_(i);
+    if (!co[ma] && tapBo[ma]) ds.push(ma);
+  }
+  return ds;
+}
+
 function kiemTraXuat_(moi, cu) {
   var errs = [];
   var notes = [];
@@ -790,13 +838,22 @@ function kiemTraXuat_(moi, cu) {
   if (!cungDanhSach_(moi.sheetNames, SHEET_NAMES)) {
     errs.push('danh sách sheet lệch: ' + (moi.sheetNames || []).join(' | '));
   }
-  var codes = Object.keys(moi.items || {}).sort(soSanhVp_);
+  var codes = Object.keys(moi.items || {}).filter(function (c) {
+    return /^VP\d{3,}$/.test(c);
+  }).sort(soSanhVp_);
   var cuoi = codes.length ? codes[codes.length - 1] : 'không có';
-  if (!codes.length || codes[0] !== 'VP001' || soVp_(codes[codes.length - 1]) !== codes.length) {
-    errs.push('mã VP không liên tục: ' + codes.length + ' mã, cuối ' + cuoi);
+  var tapBo = tapMa_(typeof MA_BO_TRONG !== 'undefined' ? MA_BO_TRONG : []);
+  var thieu = loHongVp_(codes, tapBo);
+  var loThat = thieu.filter(function (m) { return /^VP\d{3,}$/.test(m); });
+  var batDauSai = !codes.length || (codes[0] !== 'VP001' && !tapBo.VP001);
+  if (batDauSai || thieu.length) {
+    var chuThieu = loThat.length ? ', thiếu ' + loThat.slice(0, 10).join(', ') : '';
+    errs.push('mã VP không liên tục: ' + codes.length + ' mã, cuối ' + cuoi + chuThieu);
   }
+  var boTrong = maBoTrongTrongDay_(codes, tapBo);
   var lost = [];
   Object.keys(cu.items || {}).forEach(function (c) {
+    if (tapBo[String(c == null ? '' : c).trim().toUpperCase()]) return;
     if (!moi.items || !moi.items[c]) lost.push(c);
   });
   lost.sort(soSanhVp_);
@@ -815,6 +872,7 @@ function kiemTraXuat_(moi, cu) {
     if (!co) errs.push('Sheet thiếu cột ' + c.ten + ' (cột ' + c.cot + ', web đọc cột này) – chép bù Q–T trước');
   });
   notes.push('mã: bản ghi ' + codes.length + ' / Excel ' + Object.keys(cu.items || {}).length);
+  if (boTrong.length) notes.push('mã bỏ trống cho phép (' + boTrong.length + '): ' + boTrong.join(', '));
   return { ok: errs.length === 0, errs: errs, notes: notes };
 }
 

@@ -21,10 +21,19 @@ function ghiKet_(deps, obj) {
   return obj;
 }
 
-function ketDung_(deps, lyDo, muc) {
+function ketDung_(deps, lyDo, muc, tuyChon) {
+  tuyChon = tuyChon || {};
   var obj = { ok: false, ghi: false, muc: muc || 'KHONG_GHI', lyDo: lyDo };
   ghiKet_(deps, obj);
   if (deps.setProp) deps.setProp('LAST_GUARD_JSON', catJson_(obj));
+  if (!tuyChon.boQuaNhatKy && deps.ghiNhatKy) {
+    var luc = tuyChon.luc || dinhDangSaigon_(tuyChon.now || new Date());
+    deps.ghiNhatKy({
+      log: [{ tab: '', khoa: '', cot: '', o: '', nguon: 'dung', cu: '', moi: '', ghiChu: lyDo }],
+      xungDot: [],
+      lyDo: lyDo
+    }, luc);
+  }
   return { ok: false, ghi: false, dung: true, lyDo: lyDo, errs: [lyDo], skipped: false };
 }
 
@@ -62,13 +71,18 @@ function dongBoVong_(deps, opts) {
 }
 
 function dongBoTrongKhoa_(deps, opts, now) {
+  var dry = !!(opts.dryRun || (deps.isDryRun && deps.isDryRun()));
+  var lucChay = dinhDangSaigon_(now);
+  function dung_(lyDo, muc) {
+    return ketDung_(deps, lyDo, muc, { boQuaNhatKy: dry, luc: lucChay });
+  }
   var excelMeta = deps.excelMeta();
   if (!excelMeta || excelMeta.id !== EXCEL_ID || excelMeta.name !== EXPECTED_TITLE) {
-    return ketDung_(deps, 'Excel id/tên sai: ' + (excelMeta && excelMeta.id) + ' ' + (excelMeta && excelMeta.name));
+    return dung_('Excel id/tên sai: ' + (excelMeta && excelMeta.id) + ' ' + (excelMeta && excelMeta.name));
   }
   var sheetMeta = deps.sheetMeta();
   if (!sheetMeta || sheetMeta.id !== GSHEET_ID) {
-    return ketDung_(deps, 'Sheet id sai: ' + (sheetMeta && sheetMeta.id));
+    return dung_('Sheet id sai: ' + (sheetMeta && sheetMeta.id));
   }
   var lastMd5 = String((deps.getProp && deps.getProp('LAST_EXCEL_MD5')) || '');
   var lastExcelMod = String((deps.getProp && deps.getProp('LAST_EXCEL_MODIFIED_TIME')) || '');
@@ -90,7 +104,6 @@ function dongBoTrongKhoa_(deps, opts, now) {
   plan.modifiedExcel = excelMeta.modifiedTime || '';
   plan.modifiedSheet = sheetMeta.modifiedTime || '';
   plan.dayExcel = !!dayExcel;
-  var dry = !!(opts.dryRun || (deps.isDryRun && deps.isDryRun()));
   var tom = tomTatKeHoach_(plan);
   tom.dayExcel = !!dayExcel;
   tom.snapId = snapId;
@@ -122,23 +135,22 @@ function dongBoTrongKhoa_(deps, opts, now) {
     ghiKet_(deps, tom);
     return tom;
   }
-  var luc = dinhDangSaigon_(now);
   if (deps.apDung && ((plan.ghiSheet && plan.ghiSheet.length) || (plan.themDong && plan.themDong.length) || (plan.xoaDong && plan.xoaDong.length))) {
     plan.apDung = deps.apDung(plan);
   }
-  if (deps.ghiNhatKy) deps.ghiNhatKy(plan, luc);
+  if (deps.ghiNhatKy) deps.ghiNhatKy(plan, lucChay);
   var after = null;
   if (plan.canXuat) {
     var minBytes = opts.minBytes == null ? MIN_XLSX_BYTES : opts.minBytes;
     var blob = deps.exportXlsx();
-    if (!laXlsxBlob_(blob, minBytes)) return ketDung_(deps, 'đã ghi Sheet nhưng file xuất không phải xlsx hợp lệ, chưa ghi Excel');
+    if (!laXlsxBlob_(blob, minBytes)) return dung_('đã ghi Sheet nhưng file xuất không phải xlsx hợp lệ, chưa ghi Excel');
     var filesMoi = deps.unzip(blob);
     var daChep = chepBuGiuNhiPhan_(filesMoi, excelPack.files);
     var kiem = kiemXuatTuFiles_(daChep.filesXml, catalogTuExcel_(excelPack.moHinh));
-    if (!kiem.ok) return ketDung_(deps, 'đã ghi Sheet nhưng chưa ghi Excel: ' + kiem.errs.join(' || '));
+    if (!kiem.ok) return dung_('đã ghi Sheet nhưng chưa ghi Excel: ' + kiem.errs.join(' || '));
     chuanHoaNgayXlsx_(daChep.files);
     var zipBlob = deps.zip(daChep.files);
-    if (!laXlsxBlob_(zipBlob, minBytes)) return ketDung_(deps, 'đã ghi Sheet nhưng file xlsx sau khi chép Q–T không hợp lệ, chưa ghi Excel');
+    if (!laXlsxBlob_(zipBlob, minBytes)) return dung_('đã ghi Sheet nhưng file xlsx sau khi chép Q–T không hợp lệ, chưa ghi Excel');
     after = deps.updateExcel(zipBlob);
     if (!after || after.id !== EXCEL_ID || after.name !== EXPECTED_TITLE || idCamGhi_(after.id)) {
       throw new Error('id/tên sau khi ghi sai: ' + (after && after.id) + ' ' + (after && after.name));
