@@ -7,37 +7,24 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-11-17T07:30:00Z",
+  "lastSyncAt": "2026-11-19T07:36:33Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 573,
-    "with_img": 451,
+    "count": 577,
+    "with_img": 453,
     "added": [
-      "VP626"
+      "VP641",
+      "VP643"
     ],
     "removed": [],
-    "priceChanges": [
-      {
-        "ma": "VP452",
-        "old": 9000,
-        "new": 10000
-      },
-      {
-        "ma": "VP453",
-        "old": 8000,
-        "new": 9000
-      }
+    "priceChanges": [],
+    "slugChanges": [],
+    "zeroPriceCount": 40,
+    "zeroPriceNew": [
+      "VP641"
     ],
-    "slugChanges": [
-      {
-        "ma": "VP452",
-        "old": "Trà bí đao Wonderfarm Lon 320ml",
-        "new": "Trà bí đao Wonderfarm Lon 310ml"
-      }
-    ],
-    "zeroPriceCount": 39,
-    "commit": "ed254866",
-    "source": "Google Sheet 1Hwslun… modified 2026-11-17T00:52:41Z; Excel copy 2026-11-16T11:52:12Z; local work file kept VP391 (Sheet row blanked), omitted VP627–629 (duplicate name of VP391)",
+    "commit": null,
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư) modified 2026-11-19T07:28:04.448Z; export xlsx cục bộ, không xuất Sheet→Excel trên Drive",
     "excluded_nhom": {
       "Không đưa lên web": [
         "VP415",
@@ -92,15 +79,14 @@
         "VP622",
         "VP623",
         "VP624",
-        "VP625"
+        "VP625",
+        "VP642"
       ]
     },
-    "excludedCount": 53,
+    "excludedCount": 54,
     "keptRealPrices": 0,
-    "nonUrlImageCells": [
-      "VP069"
-    ],
-    "banChayPushed": true
+    "autoPlacedGroups": [],
+    "pages": "pending"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "lastCheckAt": "2026-11-08T07:45:00Z",
@@ -680,7 +666,8 @@
     "type": "google_sheet",
     "fileId": "1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM",
     "title": "PHIEU BAO GIA VAN PHAT - 2026",
-    "modifiedTime": "2026-11-17T00:52:41.462Z"
+    "modifiedTime": "2026-11-19T07:28:04.448Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261119_1435.xlsx"
   },
   "bridgeRefresh": {
     "status": "done",
@@ -884,7 +871,7 @@
     "note": "Không xuất Sheet→Excel.",
     "bridge": "OK 14:49 ICT, 572 dòng (571 SKU), B572=VP571"
   },
-  "lastSyncNote": "17/11 sáng: đẩy catalog + bán chạy theo yêu cầu anh Hà. Không xuất đè Excel chính thức vì Sheet thiếu VP391 (dòng chỉ còn nhóm Không đưa lên web) và có VP627–629 trùng tên VP391. A4 Copy VP626 lên web 69.000đ.",
+  "lastSyncNote": "19/11 14:35: chạy lại sync vì lượt 14:22–14:30 dùng bản Sheet 18/11 07:51Z, thiếu 3 mã thêm lúc ~14:25. Nguồn Sheet 07:28:04Z. Web 575→577: +VP641 (chưa giá/ĐVT), +VP643 14.000đ; VP642 ẩn (Không đưa lên web). Không đổi giá mã cũ. Không xuất Sheet→Excel.",
   "webSync_20261030_1435": {
     "source": "Google Sheet (Danh Mục Vật Tư), export xlsx qua Drive connector (chỉ đọc)",
     "sourceModifiedTime": "2026-10-30T06:52:09.701Z",
@@ -1114,7 +1101,7 @@
     "note": "Sheet A–F 603 mã trùng live products.json (567 SKU, 0 lệch giá/tên/ĐVT/nhóm/ảnh) và trùng bản 07/11 → không chạy generator, không push.",
     "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
   },
-  "sheetModifiedTime": "2026-11-17T06:49:51.020Z",
+  "sheetModifiedTime": "2026-11-19T07:28:04.448Z",
   "bridgeFileBuiltAt": "2026-11-13T07:44:00Z",
   "bridgeImportPending": true,
   "webSync_20261111_1450": {
@@ -1201,5 +1188,32 @@
     "bridge": "pending: _UPLOAD_BRIDGE.xlsx dựng 17/11 14:27 (628 SKU, 629 dòng gồm tiêu đề); cần Import→Replace bằng trình duyệt",
     "commit": "14e9e56a",
     "pages": "success"
+  },
+  "webSync_20261119_1435": {
+    "source": "Google Sheet Danh Mục Vật Tư (export xlsx qua Drive connector, chỉ đọc; không xuất Sheet→Excel)",
+    "sourceModifiedTime": "2026-11-19T07:28:04.448Z",
+    "localExport": "/workspace/vanphat-sync/source_sheet_20261119_1435.xlsx",
+    "log": "/workspace/vanphat-sync/_sync_run_20261119_1435.log",
+    "count": 577,
+    "with_img": 453,
+    "added": [
+      "VP641",
+      "VP643"
+    ],
+    "removed": [],
+    "priceChanges": [],
+    "slugChanges": [],
+    "zeroPrice_count": 40,
+    "zeroPriceNew": [
+      "VP641"
+    ],
+    "excluded_khong_dua_len_web": 54,
+    "excluded_added": [
+      "VP642"
+    ],
+    "note": "Web 575→577. VP641 Sữa TH TRUE trái cây vị chuối (Nước uống, chưa có giá/ĐVT, để 0 trên web). VP643 Bò Húc chai thuỷ tinh Thái Lan (chai, 14.000đ, Nước uống). VP642 Khăn ướt Huggies xanh 80 tờ ẩn vì nhóm Không đưa lên web. Không đè giá thật bằng 0. IA 3 lĩnh vực giữ nguyên; lightbox giữ. Cầu nối LIVE sẽ refresh sau push.",
+    "commit": null,
+    "pages": "pending",
+    "bridge": "pending"
   }
 }
