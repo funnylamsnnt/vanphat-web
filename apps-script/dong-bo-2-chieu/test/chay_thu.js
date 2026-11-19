@@ -711,6 +711,9 @@ test('xóa dòng: dưới ngưỡng thì xóa, quá ngưỡng thì dừng, Sheet
   assert.equal(plan.ok, true);
   assert.equal(plan.soXoa, 0);
   assert.ok(plan.xungDot.some(function (d) { return d.khoa === 'VP003' && /giữ mã/.test(d.ketLuan); }));
+  // Hồi quy VP391 (18/11/2026): Sheet xóa mã, Excel còn → không được thêm lại dòng vào Sheet,
+  // vì Mã SP là công thức theo số dòng nên dòng thêm mang mã mới và bị nhân bản mỗi lượt.
+  assert.equal(plan.themDong.filter(function (d) { return d.tab === DM; }).length, 0);
 
   plan = context.gopBaBen_(nen, excel, sheet, { nguong: 0 });
   assert.equal(plan.ok, false);
