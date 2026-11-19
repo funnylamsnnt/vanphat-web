@@ -23,7 +23,7 @@
     "zeroPriceNew": [
       "VP641"
     ],
-    "commit": null,
+    "commit": "dfda8649",
     "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư) modified 2026-11-19T07:28:04.448Z; export xlsx cục bộ, không xuất Sheet→Excel trên Drive",
     "excluded_nhom": {
       "Không đưa lên web": [
@@ -86,7 +86,7 @@
     "excludedCount": 54,
     "keptRealPrices": 0,
     "autoPlacedGroups": [],
-    "pages": "pending"
+    "pages": "success"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "lastCheckAt": "2026-11-08T07:45:00Z",
@@ -671,43 +671,57 @@
   },
   "bridgeRefresh": {
     "status": "done",
-    "at": "2026-11-15T08:44:43+07:00",
-    "builtAt": "2026-11-13T14:44:00+07:00",
-    "rows": 626,
-    "skus": 625,
-    "lastMa": "VP625",
+    "at": "2026-11-19T14:40:33+07:00",
+    "builtAt": "2026-11-19T14:37:00+07:00",
+    "rows": 632,
+    "skus": 631,
+    "lastMa": "VP643",
     "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-    "verified": "625 SKU B2:B626, last VP625; VP270=16200, VP606 giá trống; IMPORTRANGE _Live_DanhMuc đã hiện dữ liệu mới; chỉ ghi tab DMVT, không đụng CSĐT / LIVE Đơn Đặt Hàng / Sheet chính",
-    "method": "Google Sheets connector write_range parseInput=true",
-    "added": 16,
+    "verified": "631 SKU, B632=VP643; chỉ ghi thêm A630:F632 (VP641 chưa giá/ĐVT, VP642 nhóm Không đưa lên web, VP643=14000). Không đụng tab Chính Sách Đối Tác. IMPORTRANGE _Live_DanhMuc đã có 3 mã.",
+    "method": "Google Sheets connector write_range parseInput=true (chỉ 3 dòng mới; 628 mã cũ khớp 0 lệch)",
+    "added": 3,
     "removed": 0,
-    "priceChanges": 36,
+    "priceChanges": 0,
     "prev": {
       "status": "done",
-      "at": "2026-11-05T15:13:00+07:00",
-      "builtAt": "2026-11-05T14:46:00+07:00",
-      "rows": 604,
-      "skus": 603,
-      "lastMa": "VP603",
+      "at": "2026-11-15T08:44:43+07:00",
+      "builtAt": "2026-11-13T14:44:00+07:00",
+      "rows": 626,
+      "skus": 625,
+      "lastMa": "VP625",
       "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-      "verified": "603 SKU B2:B604, last VP603; tabs DMVT + CSĐT; session signed out after import (ok)",
+      "verified": "625 SKU B2:B626, last VP625; VP270=16200, VP606 giá trống; IMPORTRANGE _Live_DanhMuc đã hiện dữ liệu mới; chỉ ghi tab DMVT, không đụng CSĐT / LIVE Đơn Đặt Hàng / Sheet chính",
+      "method": "Google Sheets connector write_range parseInput=true",
+      "added": 16,
+      "removed": 0,
+      "priceChanges": 36,
       "prev": {
         "status": "done",
-        "builtAt": "2026-10-31T14:42:00+07:00",
-        "rows": 590,
-        "skus": 589,
-        "lastMa": "VP589",
+        "at": "2026-11-05T15:13:00+07:00",
+        "builtAt": "2026-11-05T14:46:00+07:00",
+        "rows": 604,
+        "skus": 603,
+        "lastMa": "VP603",
         "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
-        "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+        "verified": "603 SKU B2:B604, last VP603; tabs DMVT + CSĐT; session signed out after import (ok)",
         "prev": {
           "status": "done",
-          "at": "2026-10-29T14:43:00+07:00",
-          "rows": 589,
-          "lastMa": "VP588",
-          "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
-        },
-        "at": "2026-10-31T14:45:00+07:00",
-        "verified": "590 rows (589 SKU), B590=VP589, VP164=38000; tabs DMVT + CSĐT, xóa tab (1) thừa"
+          "builtAt": "2026-10-31T14:42:00+07:00",
+          "rows": 590,
+          "skus": 589,
+          "lastMa": "VP589",
+          "file": "/workspace/vanphat-sync/_UPLOAD_BRIDGE.xlsx",
+          "reason": "LIVE 588 SKU: thiếu VP589, VP164 48000→38000",
+          "prev": {
+            "status": "done",
+            "at": "2026-10-29T14:43:00+07:00",
+            "rows": 589,
+            "lastMa": "VP588",
+            "verified": "2026-10-30T14:40:00+07:00 khớp nguồn, không cần import lại"
+          },
+          "at": "2026-10-31T14:45:00+07:00",
+          "verified": "590 rows (589 SKU), B590=VP589, VP164=38000; tabs DMVT + CSĐT, xóa tab (1) thừa"
+        }
       }
     }
   },
@@ -1102,8 +1116,8 @@
     "bridge": "không cần import: DMVT A–F 603 SKU và tab Chính Sách Đối Tác trùng bản 07/11 (đã khớp LIVE bridge); không mở trình duyệt"
   },
   "sheetModifiedTime": "2026-11-19T07:28:04.448Z",
-  "bridgeFileBuiltAt": "2026-11-13T07:44:00Z",
-  "bridgeImportPending": true,
+  "bridgeFileBuiltAt": "2026-11-19T07:37:00Z",
+  "bridgeImportPending": false,
   "webSync_20261111_1450": {
     "source": "Google Sheet Danh Mục Vật Tư (đọc connector, dựng xlsx cục bộ, không xuất Sheet→Excel)",
     "sourceModifiedTime": "2026-11-11T01:16:34.278Z",
@@ -1212,8 +1226,8 @@
       "VP642"
     ],
     "note": "Web 575→577. VP641 Sữa TH TRUE trái cây vị chuối (Nước uống, chưa có giá/ĐVT, để 0 trên web). VP643 Bò Húc chai thuỷ tinh Thái Lan (chai, 14.000đ, Nước uống). VP642 Khăn ướt Huggies xanh 80 tờ ẩn vì nhóm Không đưa lên web. Không đè giá thật bằng 0. IA 3 lĩnh vực giữ nguyên; lightbox giữ. Cầu nối LIVE sẽ refresh sau push.",
-    "commit": null,
-    "pages": "pending",
-    "bridge": "pending"
+    "commit": "dfda8649",
+    "pages": "success",
+    "bridge": "OK 2026-11-19 14:41 ICT, 632 dòng (631 SKU), B632=VP643; +VP641 VP642 VP643; IMPORTRANGE _Live_DanhMuc đã khớp"
   }
 }
