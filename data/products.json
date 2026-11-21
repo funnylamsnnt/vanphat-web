@@ -6620,18 +6620,6 @@
       "nhomId": "nuoc-uong",
       "linhVucId": "nuoc-banh",
       "linhVucTen": "Nước uống & Bánh",
-      "ma": "VP640",
-      "ten": "Trà bí đao (310 ML Lon)",
-      "dvt": "Lon",
-      "gia": 9000,
-      "anh": "https://lh3.googleusercontent.com/d/1BvYq00OrfveEO7UaBS5sj1yamXaMnIdF",
-      "ton": 0
-    },
-    {
-      "nhom": "Nước uống",
-      "nhomId": "nuoc-uong",
-      "linhVucId": "nuoc-banh",
-      "linhVucTen": "Nước uống & Bánh",
       "ma": "VP641",
       "ten": "Sữa TH TRUE trái cây vị chuối",
       "dvt": "",
@@ -7385,5 +7373,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261119_1435.xlsx"
+  "syncedFrom": "src.xlsx"
 }
