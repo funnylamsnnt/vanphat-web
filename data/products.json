@@ -6640,6 +6640,18 @@
       "ton": 0
     },
     {
+      "nhom": "Nước uống",
+      "nhomId": "nuoc-uong",
+      "linhVucId": "nuoc-banh",
+      "linhVucTen": "Nước uống & Bánh",
+      "ma": "VP644",
+      "ten": "PS Pepsi xanh lon 330ml",
+      "dvt": "",
+      "gia": 0,
+      "anh": "",
+      "ton": 0
+    },
+    {
       "nhom": "TP Khác",
       "nhomId": "tp-khac",
       "linhVucId": "nuoc-banh",
@@ -7373,5 +7385,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "src.xlsx"
+  "syncedFrom": "source_sheet_20261122.xlsx"
 }

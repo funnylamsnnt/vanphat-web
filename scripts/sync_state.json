@@ -7,20 +7,22 @@
   "localCopy": "/workspace/vanphat-sync/PHIEU_BAO_GIA_VAN_PHAT_2026.xlsx",
   "previousDriveFileId": "1XaaO5_qTTAdyj8YNBHXOPOuzUbkeXgiK",
   "repo": "funnylamsnnt/vanphat-web",
-  "lastSyncAt": "2026-11-21T07:45:00Z",
+  "lastSyncAt": "2026-11-22T07:45:00Z",
   "lastSyncResult": {
     "changed": true,
-    "count": 576,
+    "count": 577,
     "with_img": 452,
-    "added": [],
-    "removed": [
-      "VP640"
+    "added": [
+      "VP644"
     ],
+    "removed": [],
     "priceChanges": [],
     "slugChanges": [],
-    "zeroPriceCount": 40,
-    "zeroPriceNew": [],
-    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư) modified 2026-11-21T01:46:47Z; đọc bằng connector Sheets, không xuất Sheet→Excel",
+    "zeroPriceCount": 41,
+    "zeroPriceNew": [
+      "VP644"
+    ],
+    "source": "Google Sheet 1Hwslun92TLrhXAMgiVDdd6wyvVXP6sqOQbuTKiLKRrM (Danh Mục Vật Tư) modified 2026-11-21T07:31:45Z; đọc bằng connector Sheets (xlsx cục bộ /workspace/vanphat-sync/source_sheet_20261122.xlsx), không xuất Sheet→Excel",
     "excluded_nhom": {
       "Không đưa lên web": [
         "VP415",
@@ -82,7 +84,8 @@
     "excludedCount": 54,
     "keptRealPrices": 0,
     "autoPlacedGroups": [],
-    "pages": "success"
+    "pages": "pending",
+    "bridge": "pending"
   },
   "note": "Official source switched 25/09/2026 per anh Hà to PHIEU BAO GIA VAN PHAT - 2026.xlsx",
   "lastCheckAt": "2026-11-08T07:45:00Z",
