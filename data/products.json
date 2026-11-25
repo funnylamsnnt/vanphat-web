@@ -5261,6 +5261,18 @@
       "nhomId": "dung-cu-vp",
       "linhVucId": "vpp",
       "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP391",
+      "ten": "Dây rút dài 35cm",
+      "dvt": "Bịch",
+      "gia": 35000,
+      "anh": "https://lh3.googleusercontent.com/d/1ObJ_ISfawc5AiJy_4nG68Y1yrlrh4gYz",
+      "ton": 0
+    },
+    {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
       "ma": "VP414",
       "ten": "Bảng Trắng Mica 80x120cm",
       "dvt": "Cái",
@@ -7385,5 +7397,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261122.xlsx"
+  "syncedFrom": "source_sheet_20261125.xlsx"
 }
