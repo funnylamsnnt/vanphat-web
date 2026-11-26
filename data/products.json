@@ -2281,7 +2281,7 @@
       "ma": "VP527",
       "ten": "Bút bi Thiên Long TL-105 (Xanh)",
       "dvt": "Cây",
-      "gia": 5500,
+      "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1rJbwVPdvjk1GMidZutvX1MFTd8KYNmMq",
       "ton": 400
     },
@@ -2293,7 +2293,7 @@
       "ma": "VP528",
       "ten": "Bút bi Thiên Long TL-105 (Đỏ)",
       "dvt": "Cây",
-      "gia": 5500,
+      "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/16rZHqGjl5cYGZomguSDfGxTUdq1N2SCW",
       "ton": 0
     },
@@ -2305,7 +2305,7 @@
       "ma": "VP529",
       "ten": "Bút bi Thiên Long TL-105 (Đen)",
       "dvt": "Cây",
-      "gia": 5500,
+      "gia": 5000,
       "anh": "https://lh3.googleusercontent.com/d/1D9uD3lXNjOSb7_vmy3G7RsTWihx2BPYR",
       "ton": 0
     },
@@ -5514,6 +5514,18 @@
       "ton": 0
     },
     {
+      "nhom": "Dụng cụ VP",
+      "nhomId": "dung-cu-vp",
+      "linhVucId": "vpp",
+      "linhVucTen": "Văn phòng phẩm",
+      "ma": "VP629",
+      "ten": "Kim bấm 23/15 (TriO)",
+      "dvt": "Hộp",
+      "gia": 25000,
+      "anh": "https://lh3.googleusercontent.com/d/1XBpX2PJ2GEORx_Lle8zsOUc2tf0l7Dkj",
+      "ton": 0
+    },
+    {
       "nhom": "Điện",
       "nhomId": "dien",
       "linhVucId": "dien-gia-dung",
@@ -7397,5 +7409,5 @@
     }
   ],
   "hotline": "033 5652 832",
-  "syncedFrom": "source_sheet_20261125.xlsx"
+  "syncedFrom": "source_sheet_20261126.xlsx"
 }
